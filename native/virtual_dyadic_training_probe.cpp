@@ -132,7 +132,9 @@ void forecast_eleven(const training::Driver& driver) {
     const auto copy_work=2*(2*p.page_limits.image_words+
         64*((image_bytes+training::sweep_stream_scratch_bytes-1)/training::sweep_stream_scratch_bytes)+32);
     const auto composed=p.total_work+copy_work+training::compact_encoding_work(g)+training::factored_metadata_work(p);
-    std::cout<<"{\"status\":\"FORECAST_ONLY\",\"training_invocations\":0,\"rank_calls\":0"
+    const auto entries=p.entries+training::sweep_stream_entries+32+8192+2048;
+    const auto payload=p.payload_bits+training::sweep_stream_payload_bits+2048+524288+131072;
+    std::cout<<"{\"status\":\"FORECAST_ONLY\",\"training_admitted\":false,\"quality_gate\":null,\"training_invocations\":0,\"rank_calls\":0"
         <<",\"deck_cards\":"<<game.deck.size()<<",\"rows\":"<<g.rows<<",\"slots\":"<<g.slots
         <<",\"D_bits\":"<<p.denominator_bits<<",\"value_bits\":"<<game.value_bits
         <<",\"normalizer\":"<<p.normalizer<<",\"d5\":"<<game.divisors.back()
@@ -144,6 +146,7 @@ void forecast_eleven(const training::Driver& driver) {
         <<",\"compact_retained_bytes\":"<<p.output_bytes
         <<",\"wire_bytes\":"<<p.output_bytes+2*(image_bytes+training::sweep_stream_header_bytes)
         <<",\"entries\":"<<p.entries<<",\"payload_bits\":"<<p.payload_bits
+        <<",\"composed_entries\":"<<entries<<",\"composed_payload_bits\":"<<payload
         <<",\"stage_arithmetic_work\":"<<p.stage_arithmetic_work
         <<",\"quantizer_terms\":["<<p.quantizer_terms[0]<<','<<p.quantizer_terms[1]<<','<<p.quantizer_terms[2]<<']'
         <<",\"work\":{\"template\":"<<p.template_work<<",\"chance\":"<<p.chance_work

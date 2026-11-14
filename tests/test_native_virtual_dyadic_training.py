@@ -619,7 +619,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual(receipt['factored_composed_work'],1_902_260_898)
 
     def test_eleven_card_forecast_is_rank_free_and_matches_independent_ledger(self):
-        from scripts.project_virtual_dyadic_eleven import forecast, stage_arithmetic
+        from scripts.project_virtual_dyadic_eleven import forecast, stage_arithmetic, project
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule
         directory,process=self.observe('forecast_eleven',
@@ -628,6 +628,10 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         receipt=exact_json((directory/'stdout.bin').read_bytes())
         path=ROOT/'benchmarks/results/native-dyadic-eleven-card-forecast-v1/forecast.json'
         prior=exact_json(path.read_bytes())['n11_prospective']
+        reconstructed=project(11,
+            stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True),
+            directory_trace(ten_card=False,eleven_card=True),prior['component_work']['chance'])
+        self.assertEqual(reconstructed,prior)
         pages=stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True,zero_policy_bootstrap=True)
         rows,slots=pages['rows'],pages['slots']
         self.assertEqual((receipt['status'],receipt['training_invocations'],receipt['rank_calls']),
@@ -636,6 +640,10 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                           receipt['D_bits'],receipt['value_bits'],receipt['normalizer'],receipt['d5']),
                          (11,rows,slots,639,646,29,420))
         self.assertEqual((receipt['rank_planes'],receipt['rank_calls_per_training']),(56,144))
+        self.assertIs(receipt['training_admitted'],False)
+        self.assertIsNone(receipt['quality_gate'])
+        self.assertEqual((receipt['entries'],receipt['payload_bits'],receipt['composed_entries'],
+                          receipt['composed_payload_bits']),(621_312,22_126_080,635_684,23_045_888))
         self.assertEqual((receipt['page_image_words'],receipt['page_requests'],receipt['page_read_words'],
                           receipt['page_write_words'],receipt['page_write_requests']),
                          (pages['image_words'],pages['logical_read_calls']+pages['direct_write_calls'],
@@ -657,6 +665,20 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         self.assertEqual((receipt['compact_retained_bytes'],receipt['wire_bytes']),
                          (9_614_478,9_614_478+2*(8*pages['image_words']+32)))
         self.assertGreater(expected['composed'],receipt['comparison_caps']['composed'])
+
+    def test_eleven_forecast_rejects_training_and_scratch_requests(self):
+        for name,request,args,message in (
+            ('train_eleven',b'DYADIC_T2_V1 TRAIN_ELEVEN\n',[],b'unsupported fixed dyadic request'),
+            ('admit_eleven',b'DYADIC_T2_V1 ADMIT_ELEVEN\n',[],b'unsupported fixed dyadic request'),
+            ('forecast_with_scratch',b'DYADIC_T2_V1 FORECAST_ELEVEN\n',
+             [str(self.output/'page-images')],b'fixed request scratch argument count')):
+            with self.subTest(name=name):
+                directory,process=self.observe(name,lambda p:run_bounded_child(
+                    [str(self.exe),*args],request,p,stdout_limit=65536))
+                self.assertEqual(process['returncode'],2)
+                self.assertEqual((directory/'stdout.bin').read_bytes(),b'')
+                self.assertIn(message,(directory/'stderr.bin').read_bytes())
+        self.assertFalse((self.output/'page-images').exists())
 
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
