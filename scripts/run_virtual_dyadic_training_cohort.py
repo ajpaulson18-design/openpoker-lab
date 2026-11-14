@@ -1554,12 +1554,14 @@ def main():
     modes.add_argument('--ten-pair-complement',action='store_true')
     modes.add_argument('--ten-bounded-division',action='store_true')
     modes.add_argument('--ten-packed-policy',action='store_true')
+    modes.add_argument('--ten-packed-policy-v2',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    bounded_division=args.ten_bounded_division or args.ten_packed_policy
+    packed_policy=args.ten_packed_policy or args.ten_packed_policy_v2
+    bounded_division=args.ten_bounded_division or packed_policy
     pair_complement=args.ten_pair_complement or bounded_division
     bounded_stage_width=args.ten_bounded_stage_width or pair_complement
     first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage or bounded_stage_width
@@ -1574,7 +1576,7 @@ def main():
             factored=args.ten_factored or checked_history,checked_history=checked_history,
             history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
             zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=first_regret_bound,
-            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=bounded_stage_width,pair_complement=pair_complement,bounded_division=bounded_division,packed_policy=args.ten_packed_policy),sort_keys=True))
+            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=bounded_stage_width,pair_complement=pair_complement,bounded_division=bounded_division,packed_policy=packed_policy,packed_policy_v2=args.ten_packed_policy_v2),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

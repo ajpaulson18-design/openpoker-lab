@@ -176,7 +176,8 @@ public:
     // Little-endian unsigned fixed-stride words. The caller supplies clipped
     // weights with a common positive scale; no wide integers are built for shortcuts.
     [[nodiscard]] Policy packed_policy(std::span<const std::uint64_t> input,
-            std::size_t count, std::size_t value_bits, ImageKind kind, bool first_sweep=false) {
+            std::size_t count, std::size_t value_bits, ImageKind kind, bool first_sweep=false,
+            bool defer_width=false) {
         if (failed_) fail(ErrorCode::failed_owner, "dyadic policy owner already failed");
         try {
             if (limits_.profile!=Profile::proof10 || limits_.division_kernel!=DivisionKernel::bounded_complement ||
@@ -188,27 +189,53 @@ public:
             if (input.size()!=count*stride)
                 fail(ErrorCode::invalid_row, "invalid packed policy size");
             const auto scan=add(16,mul(4*count,add(stride,1)));
-            // At most one classification pass and one comparison pass over
-            // each slot; reserve both bounded scans before any word access.
+            // Padding, support, both equality operands and one representative
+            // width pass touch at most count+(3*count-1)*stride words. The
+            // retained allowance covers that bound before any word access.
             charge(scan);
             std::array<bool,4> positive{};
             std::size_t positives=0, first=0, max_bits=0;
             bool equal=true;
-            for (std::size_t i=0;i<count;++i) {
-                std::size_t bits=0;
-                for (std::size_t j=0;j<stride;++j) {
-                    const auto w=input[i*stride+j];
-                    if (j==stride-1 && value_bits%64 && (w>>(value_bits%64)))
+            if (defer_width) {
+                // Validate padding even when nonzero detection can stop early.
+                // Mixed rows let allocate inspect widths once. Pure/equal rows
+                // need the width of only their first positive representative.
+                for (std::size_t i=0;i<count;++i) {
+                    const auto row=input.subspan(i*stride,stride);
+                    if (value_bits%64 && (row.back()>>(value_bits%64)))
                         fail(ErrorCode::invalid_row, "nonzero packed policy padding");
-                    if (w) bits=64*j+std::bit_width(w);
+                    if (std::any_of(row.begin(),row.end(),[](auto word) {return word!=0;})) {
+                        positive[i]=true;
+                        if (!positives) first=i;
+                        else if (!std::equal(row.begin(),row.end(),input.begin()+first*stride))
+                            equal=false;
+                        ++positives;
+                    }
                 }
-                max_bits=std::max(max_bits,bits);
-                if (bits) {
-                    positive[i]=true;
-                    if (!positives) first=i;
-                    else for (std::size_t j=0;j<stride;++j)
-                        if (input[i*stride+j]!=input[first*stride+j]) equal=false;
-                    ++positives;
+                if (positives && (positives==1 || equal)) {
+                    const auto row=input.subspan(first*stride,stride);
+                    for (std::size_t j=stride;j-- > 0;) if (row[j]) {
+                        max_bits=64*j+std::bit_width(row[j]);
+                        break;
+                    }
+                }
+            } else {
+                for (std::size_t i=0;i<count;++i) {
+                    std::size_t bits=0;
+                    for (std::size_t j=0;j<stride;++j) {
+                        const auto w=input[i*stride+j];
+                        if (j==stride-1 && value_bits%64 && (w>>(value_bits%64)))
+                            fail(ErrorCode::invalid_row, "nonzero packed policy padding");
+                        if (w) bits=64*j+std::bit_width(w);
+                    }
+                    max_bits=std::max(max_bits,bits);
+                    if (bits) {
+                        positive[i]=true;
+                        if (!positives) first=i;
+                        else for (std::size_t j=0;j<stride;++j)
+                            if (input[i*stride+j]!=input[first*stride+j]) equal=false;
+                        ++positives;
+                    }
                 }
             }
             if (first_sweep && positives==count)
@@ -247,6 +274,7 @@ public:
             else if (positives==1) ++packed.pure_rows;
             else if (equal) ++packed.equal_rows;
             else { ++packed.mixed_rows; packed.imported_slots=add(packed.imported_slots,count); }
+            // Retained input extent, not a count of scalar memory loads.
             packed.words_scanned=add(packed.words_scanned,count*stride);
             packed.scan_work=add(packed.scan_work,scan);
             return result;
