@@ -100,6 +100,30 @@ def forecast(n,bits,base_bits,divisions,*,first_regret_bound=False):
     return out
 
 
+def stage_arithmetic(n,bits):
+    """Bound each signed mix using the remaining decision path."""
+    deck=tuple(sorted((*PROOF9,*range(n-9))))
+    support={(street,p):sum(supported_prefixes(deck,p,hand,street,ranges) for hand,_ in ranges[p])
+             for street in (0,3,4,5) for p in (0,1)}
+    by_sweep=[0,0]
+    def visit(i,past):
+        node=template.nodes[i]
+        if node.phase=='decision':
+            p=node.state.player
+            menu=len(node.edges)
+            exponent=decision_tail(template.root)-past[1-p]-decision_tail(i)+1
+            input_shift=52*exponent
+            require(0<=input_shift<=bits,'factored staging input scale')
+            row_weight=(16*menu+8)*support[node.street,p]
+            for k,unit_width in enumerate((uniform_exp(menu),52)):
+                by_sweep[k]+=row_weight*words(bits-input_shift+unit_width+2)
+            past=tuple(v+int(j==p) for j,v in enumerate(past))
+        for edge in node.edges:
+            visit(edge.child,past)
+    visit(template.root,(0,0))
+    return by_sweep
+
+
 def collect(n,bits,base_bits):
     deck=tuple(sorted((*PROOF9,*range(n-9))))
     occupied=[set(a)|set(b) for a,_ in ranges[0] for b,_ in ranges[1] if set(a).isdisjoint(b)]

@@ -87,8 +87,19 @@ struct PagedStrategy {
     bool zero_policy_bootstrap=false;
     bool first_regret_bound=false;
     bool initial_packed_stage=false;
+    bool bounded_stage_width=false;
 };
 inline constexpr std::uint64_t initial_uniform_policy_work=32;
+// Child action values share the regret scale plus one grid factor.
+// Multiplication by a partition of the grid and a signed delta each
+// fit within this normalized intermediate width.
+inline std::size_t stage_width(std::size_t value_bits,std::size_t regret_shift,std::size_t actions,bool first) {
+    const auto input_shift=regret_shift+dyadic_policy::grid_bits;
+    if (actions<2 || actions>4 || input_shift>value_bits)
+        throw std::logic_error("invalid factored staging width");
+    const auto exponent=first && actions!=3?actions/2:dyadic_policy::grid_bits;
+    return value_bits-input_shift+exponent+2;
+}
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
 struct ActionStorage {
     std::size_t token_slots, catalog_keys, stored_tokens, stored_menus;
@@ -508,6 +519,8 @@ class State final {
         if (paged && paged->first_regret_bound && (!paged->zero_policy_bootstrap ||
             paged->division_kernel!=dyadic_policy::DivisionKernel::equal_complement))
             fail(ErrorCode::invalid_forecast,"first regret bound requires the virtual-zero equal quantizer");
+        if (paged && paged->bounded_stage_width && !paged->first_regret_bound)
+            fail(ErrorCode::invalid_forecast,"bounded staging width requires the owned two-sweep zero image");
         if (paged && paged->initial_packed_stage && !paged->first_regret_bound)
             fail(ErrorCode::invalid_forecast,"initial packed stages require the owned two-sweep zero image");
         if (paged && paged->factored &&
@@ -1627,11 +1640,15 @@ private:
             // Constant bounded backend width inspection/sign checks precede
             // arithmetic. Inputs are caller-owned and never mutated.
             charge(64+128*count);
+            const bool bounded_width=paged_ && paged_->bounded_stage_width;
+            const auto input_shift=bounded_width?regret_row.shift+dyadic_policy::grid_bits:0;
             for (std::size_t a=0;a<count;++a) {
                 if constexpr (factored) {
                     const auto bits=action_values[a].expanded_bits();
                     if (bits>forecast_.value_bits)
                         fail(ErrorCode::integer_width,"factored state input exceeds fixed value width");
+                    if (bounded_width && bits && action_values[a].shift()<input_shift)
+                        fail(ErrorCode::arithmetic,"factored state input lacks the certified row scale");
                     receipt_.peak_input_bits=std::max(receipt_.peak_input_bits,std::size_t{bits});
                 } else input_width(action_values[a]);
                 if (scaled_shift) {
@@ -1642,7 +1659,8 @@ private:
                 } else input_width(average_action_increments[a]);
                 if (average_action_increments[a]<0) fail(ErrorCode::invalid_row,"state average increment must be nonnegative");
             }
-            const auto temp_bits=forecast_.value_bits+58;
+            const auto temp_bits=bounded_width?stage_width(forecast_.value_bits,regret_row.shift,count,!receipt_.completed_sweeps):
+                forecast_.value_bits+58;
             charge(times(16*count+8,words(temp_bits)));
             receipt_.peak_arithmetic_bits=std::max(receipt_.peak_arithmetic_bits,temp_bits);
             Value mixed{};

@@ -1024,7 +1024,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,stage_state_work=None):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1062,7 +1062,8 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
     if zero_policy_bootstrap:
         for phase in ('plan','actual'):
             work, parent = 'work_'+phase, 'parent_work_'+phase
-            expected[work]=dict(expected[work],state=before[work]['state']+32*rows,
+            state_work=before[work]['state']+32*rows if stage_state_work is None else stage_state_work
+            expected[work]=dict(expected[work],state=state_work,
                                 parent=before[work]['parent']-route_removed)
             expected[parent]=dict(before[parent],route=before[parent]['route']-route_removed)
         counts=dict(expected_paging['counts'])
@@ -1549,12 +1550,13 @@ def main():
     modes.add_argument('--ten-zero-policy-bootstrap',action='store_true')
     modes.add_argument('--ten-first-regret-bound',action='store_true')
     modes.add_argument('--ten-initial-packed-stage',action='store_true')
+    modes.add_argument('--ten-bounded-stage-width',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage
+    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage or args.ten_bounded_stage_width
     zero_policy_bootstrap=args.ten_zero_policy_bootstrap or first_regret_bound
     reuse_snapshot=args.ten_reuse_snapshot or zero_policy_bootstrap
     equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
@@ -1566,7 +1568,7 @@ def main():
             factored=args.ten_factored or checked_history,checked_history=checked_history,
             history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
             zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=first_regret_bound,
-            initial_packed_stage=args.ten_initial_packed_stage),sort_keys=True))
+            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=args.ten_bounded_stage_width),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
