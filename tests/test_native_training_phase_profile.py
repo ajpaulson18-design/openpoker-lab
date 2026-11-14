@@ -17,11 +17,12 @@ class NativeTrainingPhaseProfileTests(unittest.TestCase):
         expected = identity[1]['executable_sha256']
         self.assertEqual(sha(exe), expected)
         with TemporaryDirectory() as directory:
-            observed = run_bounded_child([str(exe)], b'', Path(directory), stdout_limit=128*1024)
+            output=Path(directory)/'probe'
+            observed = run_bounded_child([str(exe)], b'', output, stdout_limit=128*1024)
             self.assertEqual(observed['status'], 'exited')
             self.assertEqual(observed['returncode'], 0)
-            self.assertEqual((Path(directory)/'stderr.bin').read_bytes(), b'')
-            lines = (Path(directory)/'stdout.bin').read_text(encoding='ascii').splitlines()
+            self.assertEqual((output/'stderr.bin').read_bytes(), b'')
+            lines = (output/'stdout.bin').read_text(encoding='ascii').splitlines()
         self.assertEqual(sha(exe), expected)
         self.assertEqual(authenticate(exe, ROOT, 'training-phase-profile-controls'), identity)
         names = ('plan_preflight', 'chance_setup', 'owners_setup', 'row_registration', 'freeze',
