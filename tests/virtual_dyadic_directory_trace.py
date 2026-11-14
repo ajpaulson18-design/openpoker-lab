@@ -12,12 +12,17 @@ from tests.virtual_betting_template_reference import build_reference_template
 from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_ranges
 
 
-def directory_trace(*, ten_card=True, eleven_card=False, sweeps=2, quality32=False):
+def directory_trace(*, ten_card=True, eleven_card=False, sweeps=2, quality32=False,
+                    reuse_snapshot=False):
     """Return the named directory append and exact direct-mapped read schedule."""
     if type(eleven_card) is not bool or (ten_card and eleven_card):
         raise ValueError('select at most one expanded deck size')
     if type(quality32) is not bool or (quality32 and (ten_card or eleven_card or sweeps!=32)):
         raise ValueError('quality32 requires the exact nine-card T32 directory')
+    if type(reuse_snapshot) is not bool:
+        raise ValueError('reuse_snapshot must be boolean')
+    if reuse_snapshot and (quality32 or sweeps != 2 or not (ten_card or eleven_card)):
+        raise ValueError('snapshot reuse requires the exact N10/N11 T2 directory')
     if not quality32 and ((eleven_card and sweeps!=2) or (not eleven_card and (ten_card, sweeps) not in ((True, 2), (False, 3), (False, 4)))):
         raise ValueError('unsupported directory trace profile')
     deck = tuple(sorted((*PROOF9, *range(11-len(PROOF9))))) if eleven_card else tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
@@ -69,12 +74,14 @@ def directory_trace(*, ten_card=True, eleven_card=False, sweeps=2, quality32=Fal
             slots += len(node.edges)
         for edge in node.edges:
             visit(edge.child, board)
-        events.extend(own_rows)  # staging in postorder
+        if not reuse_snapshot:
+            events.extend(own_rows)  # staging in postorder
 
     visit(template.root, ())
     expected_rows, expected_slots = ((380172, 892910) if eleven_card else
                                      (119196, 281066) if ten_card else (24420, 58164))
-    if (rows, slots, len(events)) != (expected_rows, expected_slots, 2*expected_rows):
+    expected_events = expected_rows if reuse_snapshot else 2*expected_rows
+    if (rows, slots, len(events)) != (expected_rows, expected_slots, expected_events):
         raise ValueError('independent row/slot/trace census differs')
     page_rows, cache_pages, row_bytes = 128, 8, 32
     pages = (rows + page_rows - 1) // page_rows
@@ -112,7 +119,7 @@ def directory_trace(*, ten_card=True, eleven_card=False, sweeps=2, quality32=Fal
               'hits': sum(p['hits'] for p in phases),
               'misses': sum(p['misses'] for p in phases),
               'read_bytes': sum(p['read_bytes'] for p in phases)}
-    calls = (2+4*sweeps)*rows
+    calls = (2+3*sweeps if reuse_snapshot else 2+4*sweeps)*rows
     if result['logical_reads'] != calls or result['hits'] + result['misses'] != calls:
         raise ValueError('directory trace count differs')
     return result

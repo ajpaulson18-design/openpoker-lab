@@ -210,6 +210,48 @@ def division_count(values_by_row, *, complement=False):
     return count
 
 
+def count_unequal_pairs(rows):
+    count=0
+    for values in rows.values():
+        support=[v for v in values if v>0]
+        count+=len(support)==2 and support[0]!=support[1]
+    return count
+
+
+def equal_quantizer_schedule(values_by_row, ordered, row_scales, field):
+    """Rebuild the executed proof10 charge from independent packed row masses."""
+    result = dict(work=0, equal_rows=0, equal_divisions_avoided=0)
+    words = lambda bits: (bits+63)//64
+    for (key, menu), scales in zip(ordered, row_scales, strict=True):
+        result["work"] += 64+16*menu
+        values = values_by_row[key]
+        shift = scales[field]
+        require(all(value >= 0 and value % (1 << shift) == 0 for value in values),
+                "saved quantizer input is outside packed grid")
+        positive = [value >> shift for value in values if value > 0]
+        count = len(positive)
+        if count < 2:
+            result["work"] += 256+32*menu
+            continue
+        widths = [value.bit_length() for value in positive]
+        result["work"] += 16+4*menu*(words(max(widths))+1)
+        if min(positive) == max(positive):
+            result["work"] += 256+32*menu
+            result["equal_rows"] += 1
+            result["equal_divisions_avoided"] += count-1
+            continue
+        result["work"] += sum(4*(words(width)+1) for width in widths)
+        common = min((value & -value).bit_length()-1 for value in positive)
+        effective = max(widths)-common
+        total = effective+(count-1).bit_length()+1
+        scaled = effective+52
+        window = max(total, scaled, 53)
+        result["work"] += (256+16*menu*(words(window)+1)
+                           +8*count*(words(scaled)*words(total)+4*words(window)+8)
+                           +4*menu*menu*(words(total)+1))
+    return result
+
+
 def rank_index_costs(planes):
     require(type(planes) is int and 1<=planes<=64,'invalid rank index capacity')
     bits=planes.bit_length()
@@ -228,7 +270,7 @@ def phase_payload_bits(rows,value_bits,*,row_batched=False):
 
 
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False):
+           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False,equal_quantizer=False,zero_policy_bootstrap=False,first_regret_bound=False,pair_complement=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and type(proof9_quality32) is bool and type(proof9_linear32) is bool and sum((proof9_t3,proof9_t4,proof9_quality32,proof9_linear32))<=1,
@@ -252,6 +294,15 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     require(not extended or (paired and rank_sets and not ten_card and checkpoint_digests is not None
                              and images is None and packed_images is None),
             'extended PROOF9 replay requires paired rank-set digest-only checkpoints')
+    require(type(equal_quantizer) is bool and (not equal_quantizer or complement),
+            'equal quantizer requires complement replay')
+    require(type(zero_policy_bootstrap) is bool and
+            (not zero_policy_bootstrap or equal_quantizer and count_policy_divisions),
+            'initial policy bootstrap requires counted equal-quantizer replay')
+    require(type(first_regret_bound) is bool and (not first_regret_bound or zero_policy_bootstrap),
+            'first regret support bound requires initial policy bootstrap')
+    require(type(pair_complement) is bool and (not pair_complement or first_regret_bound),
+            'pair complement requires the first-regret profile')
     sweep_count=32 if quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 2
     require(sum(x is not None for x in (images,packed_images,checkpoint_digests))<=1,
             'choose one checkpoint transport')
@@ -332,10 +383,23 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         regrets=average=first=None
         changes=0
         divisions=0
+        initial_policy_work=0 if zero_policy_bootstrap else sum(320+48*menu for _,menu in ordered)
+        equal_receipt=dict(work=initial_policy_work,
+                           equal_rows=0,equal_divisions_avoided=0)
+        pair_rows={}
         sweeps=[]
         for t in range(1,sweep_count+1):
             if count_policy_divisions and regrets is not None:
                 divisions+=division_count(regrets,complement=complement)
+                if equal_quantizer:
+                    for field,value in equal_quantizer_schedule(regrets,ordered,row_scales,1).items():
+                        equal_receipt[field]+=value
+            if pair_complement and t==2:
+                pair_rows['second_policy']=count_unequal_pairs(regrets)
+            if first_regret_bound and t==2:
+                require(all(len(regrets[key])==menu and all(value>=0 for value in regrets[key]) and
+                            any(value==0 for value in regrets[key]) for key,menu in ordered),
+                        'independent first-sweep regret support exceeds its bound')
             expected=fixture.grid(regrets)
             policy={}
             for key,menu in ordered:
@@ -372,6 +436,12 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         require(changes>0,'saved T2 feedback missing')
         if count_policy_divisions:
             divisions+=division_count(average,complement=complement)
+        if equal_quantizer:
+            for field,value in equal_quantizer_schedule(average,ordered,row_scales,0).items():
+                equal_receipt[field]+=value
+            divisions-=equal_receipt['equal_divisions_avoided']
+        if pair_complement:
+            pair_rows['average_export']=count_unequal_pairs(average)
         expected=fixture.grid(average,average=True)
         saved={}
         for key,menu in ordered:
@@ -452,6 +522,11 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             result['checkpoint_verification']='independent_compact_digest'
     if packed_images is not None:
         result['packed_checkpoint_images']=packed_details
+    if equal_quantizer:
+        require(equal_receipt['work']==actual['quantizer'],'saved equal quantizer work differs')
+        result['equal_quantizer']=equal_receipt
+    if pair_complement:
+        result['unequal_two_positive_rows']=pair_rows
     if count_policy_divisions:
         result['combined_divisions']=divisions
     if phase_payload:
@@ -474,6 +549,10 @@ def main():
     parser.add_argument('--row-batched',action='store_true')
     parser.add_argument('--indexed-cache',action='store_true')
     parser.add_argument('--complement-divisions',action='store_true')
+    parser.add_argument('--equal-quantizer',action='store_true')
+    parser.add_argument('--zero-policy-bootstrap',action='store_true')
+    parser.add_argument('--first-regret-bound',action='store_true')
+    parser.add_argument('--pair-complement',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -499,7 +578,9 @@ def main():
                             packed_images=packed_images,checkpoint_digests=args.sweep_checkpoint_digest,ten_card=args.ten_card,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
                             count_policy_divisions=args.count_policy_divisions,phase_payload=args.phase_payload,
                             row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32,
-                            complement=args.complement_divisions),sort_keys=True))
+                            complement=args.complement_divisions,equal_quantizer=args.equal_quantizer,
+                            zero_policy_bootstrap=args.zero_policy_bootstrap,first_regret_bound=args.first_regret_bound,
+                            pair_complement=args.pair_complement),sort_keys=True))
 
 
 if __name__=='__main__':main()

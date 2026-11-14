@@ -1263,3 +1263,109 @@ uses exact reconstruction to reduce the fixed trainer's numerical output.
 The eleven-card rank-free projection fits the current native output
 ceiling with this format. Compute admission, a native eleven-card run
 and independently verified quality remain required.
+
+## Factored arithmetic in ten-card training
+
+The factored profile runs through both sweeps of the fixed four-street
+game, including direct packed regret and average updates. The frozen
+source study matched the accepted compact wire and both checkpoints
+byte for byte. Independent saved-policy replay passed. The same
+executable comparison recorded a median paired ratio of 0.947 on a
+Windows host. The eleven-card work caps remain unresolved.
+[Execution contract](native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
+[Evidence manifest](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)
+
+## Checked History in ten-card training
+
+The cursor retains its checked physical board code and combines the
+source and visible street checks. The fixed ten-card schedule consumed
+62,890,960 History work units. A frozen run reproduced both checkpoints
+and every numerical section, with two expected work receipt changes.
+The eleven-card projection still exceeds the existing History cap.
+[Cursor contract and evidence](native-dyadic-two-sweep.md#checked-history-cursor)
+
+## Reusing the checked public visit
+
+The ten-card factored trainer reuses the authenticated occurrence along
+child edges. A frozen two-sweep run exactly realized 34,741,384 History
+units. Independent replay reproduced both checkpoints, all policy and
+root values, and the best responses. The eleven-card rank-free History
+projection fits with 1,311,840 units of headroom. State, quantizer and
+whole-request compute admission are still open.
+[Visit contract](native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
+
+## Equal-weight quantization in ten-card training
+
+The equal-weight path reproduced both checkpoints, all policy and root
+values, and both best responses. An independent scan of the regenerated
+packed row masses counted 94,164 shortcut rows and 113,224 avoided wide
+divisions. Realized quantizer work fell from 241,704,336 to 206,392,024
+units. The conservative reservation increases to cover comparisons even
+when every row follows the generic path. Eleven-card admission remains
+open.
+[Quantizer contract](native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
+
+## Owned row snapshots during State staging
+
+The ten-card traversal keeps an owned four-unit row snapshot across
+recursion and gives it back to State during exact staging. The independent
+trace checks directory cache behavior, and saved policies reconstruct
+the mixed policy spill read count. The retained arithmetic work
+reservation has yet to be reduced for the wider fixture.
+[Snapshot verification](native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)
+
+## First-sweep policy from the owned zero image
+
+The ten-card trainer now builds its first frozen policy from State's
+virtual-zero invariant. It removes one packed regret read and one
+generic quantizer call per row. The eleven-card forecast retires
+158,431,968 net work units, with 542,211,544 State units and 797,578,200
+quantizer units still above their individual caps.
+[Initial policy contract](native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)
+
+
+## Bounded first-sweep regret support
+
+The ten-card admission forecast now accounts for at least one clipped
+zero after the initial regret update and uses the packed row widths
+for raw quantizer scans. This retires 94,781,792 quantizer work units
+from the ten-card reservation. The eleven-card quantizer projection
+still exceeds its cap by 494,146,272 work units.
+[Regret support contract](native-dyadic-two-sweep.md#first-sweep-regret-support-and-packed-widths)
+
+
+## Direct first-sweep packed State updates
+
+The ten-card profile writes both first-sweep State fields directly from
+their increments. It skips the synthetic zero image reads while retaining
+the signed exactness checks, row coverage, and fixed checkpoint layout.
+The same schedule projects zero synthetic first-sweep reads at eleven cards.
+[Direct staging contract](native-dyadic-two-sweep.md#direct-first-sweep-packed-updates)
+
+
+## Certified State arithmetic widths
+
+Packed State staging charges the factored mix and signed difference
+using each row's certified scale. This saves 56,387,712 State work units
+in the ten-card receipt. The eleven-card rank-free forecast still
+exceeds the State cap by 362,607,040 units.
+[Factored width contract](native-dyadic-two-sweep.md#factored-staging-width-by-row)
+
+
+## Exact allocation for two positive weights
+
+The ten-card quantizer can allocate two unequal positive weights with
+one quotient/remainder and one complementary-remainder comparison.
+This removes remainder sorting for those rows while preserving the
+policy grid and legal-action tie order.
+[Two-positive policy contract](native-dyadic-two-sweep.md#exact-two-positive-policy-allocation)
+
+
+## Compiled eleven-card resource boundary
+
+The native planner now exposes a forecast-only eleven-card request.
+It matches independent tree and integer schedules with 5,954,402,351
+composed work units and 165,201,774 wire bytes. State, quantizer and
+whole-request limits remain exceeded under the ten-card comparison
+ceilings. The request reports zero training and rank calls.
+[Native forecast contract](native-dyadic-storage-census.md#compiled-eleven-card-forecast)

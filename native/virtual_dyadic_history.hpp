@@ -2,6 +2,7 @@
 // Literal card-free path + complete visible prefix. No shared-state row alias.
 #include "full_deck_public_chance.hpp"
 #include "virtual_betting_template.hpp"
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <cstddef>
@@ -57,7 +58,7 @@ class History final {
         if (work>limits_.work-receipt_.work) {failed_=true;throw Error("compact history work exceeded");}
         receipt_.work+=work;
     }
-    std::uint64_t board_code(std::span<const std::uint8_t> board) const {
+    std::uint64_t board_code(std::span<const std::uint8_t> board,std::uint64_t* checked_mask=nullptr) const {
         const auto n=board.size();
         if (n!=0 && n!=3 && n!=4 && n!=5) throw Error("compact history prefix length");
         if (n>=3 && !(board[0]<board[1] && board[1]<board[2])) throw Error("compact history flop order");
@@ -68,6 +69,7 @@ class History final {
                 throw Error("compact history foreign or repeated card");
             mask|=std::uint64_t{1}<<c;code|=static_cast<std::uint64_t>(c)<<(6*i);
         }
+        if (checked_mask) *checked_mask=mask;
         return code;
     }
 public:
@@ -75,12 +77,32 @@ public:
         friend class History;
         const History* owner_=nullptr;
         std::uint64_t generation_=0;
-        std::size_t path_=0,size_=0;
+        std::uint32_t path_=0;
+        std::uint8_t size_=0;
         std::array<std::uint8_t,5> board_{};
+        std::uint64_t board_code_=0,board_mask_=0;
         Cursor(const History* owner,std::uint64_t gen,std::size_t path,std::size_t size,
-               std::array<std::uint8_t,5> board):owner_(owner),generation_(gen),path_(path),size_(size),board_(board){}
+               std::array<std::uint8_t,5> board,std::uint64_t code,std::uint64_t mask)
+            :owner_(owner),generation_(gen),path_(static_cast<std::uint32_t>(path)),
+             size_(static_cast<std::uint8_t>(size)),board_(board),board_code_(code),board_mask_(mask){}
     public: Cursor()=default;
     };
+    static_assert(sizeof(Cursor)<=48,"compact cursor stack bound");
+    // Authenticated by this owner once at public visit entry. The copied
+    // cursor keeps the complete physical board identity during recursion.
+    class Visit final {
+        friend class History;
+        Cursor cursor_;
+        explicit Visit(const Cursor& cursor):cursor_(cursor){}
+    };
+    // Work units cover bounded scalar operations and fixed size loads/copies.
+    // Entry uses the existing validation charge. The surrounding parent Visit
+    // reservation covers the source/street comparison and key construction.
+    // Actions add one validity check group, one indexed read and a cursor copy.
+    // Reveals also cover a checked three-card pack, or four comparisons and
+    // one card append, including code, mask and cursor construction.
+    static constexpr std::uint64_t visit_action_work=16,visit_reveal_work=48;
+    static_assert(sizeof(Visit)==sizeof(Cursor));
     struct DecisionKey {
         std::size_t ordinal,source,depth,actor,actions;
     };
@@ -97,8 +119,7 @@ private:
         return p;
     }
     [[nodiscard]] std::size_t encoded_ordinal(Cursor c) const {
-        return static_cast<std::size_t>((static_cast<std::uint64_t>(c.path_)<<33)|
-            board_code({c.board_.data(),c.size_}));
+        return static_cast<std::size_t>((static_cast<std::uint64_t>(c.path_)<<33)|c.board_code_);
     }
 public:
     // Template construction is separately charged by the enclosing training owner.
@@ -119,6 +140,7 @@ public:
             deck_mask_|=std::uint64_t{1}<<deck.cards[i];
         }
         const auto count=source.receipt().logical_occurrences;
+        if (count>UINT32_MAX) throw Error("compact history cursor path index overflow");
         if (!count || count>limits.nodes || count>((limits.entries-1)/32) ||
             count>(limits.owned_bytes/sizeof(Occurrence))) throw Error("compact literal history storage admission");
         if (source.receipt().history_suffix_only || source.root()>=source.nodes().size() ||
@@ -181,7 +203,7 @@ public:
     History(History&&)=delete;History& operator=(History&&)=delete;
     [[nodiscard]] Cursor root() const {
         if (failed_) throw Error("compact history owner failed");
-        charge(8);return Cursor(this,generation_,0,0,{});
+        charge(8);return Cursor(this,generation_,0,0,{},0,0);
     }
     [[nodiscard]] std::size_t ordinal(Cursor c) const {
         validate(c);
@@ -199,7 +221,7 @@ public:
             // Turn and river each contribute one card. Zero pads shorter paths.
             auto position=p.depth+(p.visible?2:0);
             std::fill_n(order->data()+position,order->size()-position,std::uint8_t{0});
-            for (auto at=c.path_;at;at=paths_[at].parent) {
+            for (std::size_t at=c.path_;at;at=paths_[at].parent) {
                 const auto& child=paths_[at];
                 if (child.reveal) {
                     const auto first=paths_[child.parent].visible;
@@ -232,28 +254,86 @@ public:
     [[nodiscard]] std::size_t depth(Cursor c) const {return validate(c).depth;}
     [[nodiscard]] std::size_t visible_size(Cursor c) const {validate(c);return c.size_;}
     [[nodiscard]] std::array<std::uint8_t,5> visible_board(Cursor c) const {validate(c);return c.board_;}
+    // Fused visit check for callers that need both source identity and visible prefix size.
+    [[nodiscard]] bool identity_matches(Cursor c,std::size_t source,std::size_t visible) const {
+        const auto& p=validate(c);
+        return p.source==source && c.size_==visible;
+    }
     [[nodiscard]] Cursor append_action(Cursor c,std::size_t edge) {
         try {
             const auto& p=validate(c);charge(32);
             if (edge>=p.children.size() || p.phase!=betting::Phase::decision || edge>=p.count)
                 throw Error("compact history invalid action");
-            return Cursor(this,generation_,p.children[edge],c.size_,c.board_);
+            return Cursor(this,generation_,p.children[edge],c.size_,c.board_,c.board_code_,c.board_mask_);
         } catch (...) {failed_=true;throw;}
     }
+private:
+    [[nodiscard]] const Occurrence& live_visit(const Visit& visit) const {
+        const auto& c=visit.cursor_;
+        if (failed_ || c.owner_!=this || c.generation_!=generation_)
+            throw Error("foreign or failed compact history visit");
+        // The private constructor authenticates the path and street once.
+        return paths_[c.path_];
+    }
+    [[nodiscard]] Cursor reveal_from(const Cursor& c,const Occurrence& p,
+                                      std::span<const std::uint8_t> prefix) {
+        std::array<std::uint8_t,5> board{};
+        if (p.phase!=betting::Phase::reveal || prefix.size()!=p.next_street ||
+            prefix.size()>board.size() || c.size_>prefix.size())
+            throw Error("compact history invalid reveal phase");
+        std::uint64_t code=0,mask=0;
+        if (c.size_==0) {
+            code=board_code(prefix,&mask);
+            std::copy(prefix.begin(),prefix.end(),board.begin());
+        } else {
+            if (prefix.size()!=std::size_t{c.size_}+1)
+                throw Error("compact history must reveal one card after flop");
+            if (!std::equal(prefix.begin(),prefix.begin()+c.size_,c.board_.begin()))
+                throw Error("compact history changed past card");
+            const auto card=prefix[c.size_];
+            if (card>=52) throw Error("compact history foreign or repeated card");
+            const auto bit=std::uint64_t{1}<<card;
+            if (!(deck_mask_&bit) || (c.board_mask_&bit))
+                throw Error("compact history foreign or repeated card");
+            board=c.board_;
+            board[c.size_]=card;
+            mask=c.board_mask_|bit;
+            code=(c.board_code_&~(std::uint64_t{7}<<30))|
+                (static_cast<std::uint64_t>(card)<<(6*c.size_))|
+                (static_cast<std::uint64_t>(prefix.size())<<30);
+        }
+        return Cursor(this,generation_,p.children[0],prefix.size(),board,code,mask);
+    }
+public:
     [[nodiscard]] Cursor append_reveal(Cursor c,std::span<const std::uint8_t> prefix) {
         try {
             const auto& p=validate(c);charge(64);
-            std::array<std::uint8_t,5> board{};
-            if (p.phase!=betting::Phase::reveal || prefix.size()!=p.next_street ||
-                prefix.size()>board.size() || c.size_>prefix.size())
-                throw Error("compact history invalid reveal phase");
-            (void)board_code(prefix);
-            for (std::size_t i=0;i<prefix.size();++i) {
-                const auto card=prefix[i];
-                if (i<c.size_ && card!=c.board_[i]) throw Error("compact history changed past card");
-                board[i]=card;
-            }
-            return Cursor(this,generation_,p.children[0],prefix.size(),board);
+            return reveal_from(c,p,prefix);
+        } catch (...) {failed_=true;throw;}
+    }
+    [[nodiscard]] Visit enter_visit(const Cursor& c,std::size_t source,std::size_t visible,
+                                    std::size_t& decision_ordinal) const {
+        const auto& p=validate(c);
+        if (p.source!=source || c.size_!=visible) throw Error("compact history visit identity differs");
+        decision_ordinal=p.phase==betting::Phase::decision?encoded_ordinal(c):0;
+        return Visit(c);
+    }
+    [[nodiscard]] Cursor visit_action(const Visit& visit,std::size_t edge) {
+        try {
+            charge(visit_action_work);
+            const auto& p=live_visit(visit);
+            if (p.phase!=betting::Phase::decision || edge>=p.count)
+                throw Error("compact history visit action differs");
+            auto child=visit.cursor_;
+            // Construction checked every menu count and child extent.
+            child.path_=static_cast<std::uint32_t>(p.children[edge]);
+            return child;
+        } catch (...) {failed_=true;throw;}
+    }
+    [[nodiscard]] Cursor visit_reveal(const Visit& visit,std::span<const std::uint8_t> prefix) {
+        try {
+            charge(visit_reveal_work);
+            return reveal_from(visit.cursor_,live_visit(visit),prefix);
         } catch (...) {failed_=true;throw;}
     }
     // Export is charged separately; returned strings belong to the enclosing owner.
@@ -267,7 +347,7 @@ public:
             receipt_.peak_scratch_entries=std::max(receipt_.peak_scratch_entries,scratch);
             receipt_.peak_total_bytes=std::max(receipt_.peak_total_bytes,receipt_.owned_bytes+bytes);
             std::vector<std::string> result;result.reserve(depth);
-            for (auto at=c.path_;at;at=paths_[at].parent) {
+            for (std::size_t at=c.path_;at;at=paths_[at].parent) {
                 const auto& p=paths_[at];
                 if (!p.reveal) result.emplace_back(p.incoming.data(),p.incoming_size);
                 else {

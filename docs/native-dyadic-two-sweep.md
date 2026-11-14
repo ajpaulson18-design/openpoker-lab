@@ -818,3 +818,369 @@ The packet preserves the earlier format-only run before separate
 encoding-work accounting, the intermediate metered run, and the final
 compatibility adjustment.
 [Compact transport evidence](../benchmarks/results/native-dyadic-compact-wire-v1/manifest.json)
+
+## Factored payoff arithmetic and direct packed updates
+
+The opt-in `TEN_FACTORED` profile uses the same ten-card game and two
+completed CFR+ sweeps as compact transport. Each traversal value stores a
+signed integer coefficient and an implicit power of two. Terminal scaling
+multiplies by the exact stake and street-divisor ratio. Addition aligns only
+the coefficient with the larger shift. A row mix factors out the common
+power of two in the nonzero policy units before applying the exact
+`2^52` denominator. Pure rows return the selected value after validating
+the partition. The driver expands four numerators at each sweep boundary.
+
+State subtracts each mixed value from its action values and converts the
+delta to the certified regret row scale. If this conversion requires a
+right shift, the low magnitude bits must be zero. The packed update reads
+the shifted sign and magnitude directly, checks overflow, and clips
+negative regrets at zero. Average increments already arrive in the
+certified row units. The update writes a field's staged words only after
+all actions in that field succeed. If average staging fails after regret
+staging, State marks the owner failed and prevents committing the sweep.
+The packed arithmetic controls cover separate update failure atomicity.
+The fixed full-game replay covers successful State staging and commit.
+Synthetic nondivisible factored deltas and a forced average failure after
+regret staging are still uncovered at the State boundary.
+
+The existing Parent work reservations still cover wide arithmetic.
+At eleven words, each of the 1,329,176 terminal scaling calls frees 60
+units inside that reservation by avoiding the second multiply and
+expanded shift. The 1,420,012 additions need at most 46 extra units each
+for one coefficient copy, one in-place alignment and signed addition.
+The resulting 14,430,008-unit balance stays within Parent. The old footer
+charges are preserved. State's mixed-value allowance covers bounded
+products, alignment, addition and exact division. Its regret arithmetic
+and codec allowance cover the aligned difference and checked quotient.
+The retained per-slot and per-word codec reservation covers packed word
+extraction, comparison, carry or borrow, and scratch copies.
+
+A shared execution counter charges 64 units for each conversion,
+addition, subtraction, terminal scale and root expansion, and 320 per
+policy mix. The native driver and independent host check each realized
+event count. The added metadata reservation is 380,819,456 units.
+Composed work is 2,137,373,778 against the existing 2.15-billion cap.
+With 65,536 bytes of additional scratch reserved, the composed counts are
+372,660 entries and 20,827,008 payload bits. The work and storage
+reservations are modeled. Packed word receipt counts describe the
+target words touched.
+
+The frozen run at `e455b94` verified both checkpoint images and all policy,
+root and compact-wire bytes against the existing exact result. The
+saved-only replay reproduced the updates and best responses. Maximum
+observed coefficient width was 430 bits and maximum implicit shift was
+628 bits, across different values. The two-sweep exploitability was
+2.9843178536 big blinds with no quality threshold set. Eleven-card
+compute admission remains open.
+
+In four alternating pairs on one Windows host, the factored profile
+was faster in three pairs. The median within-pair time ratio was 0.947,
+with medians of 6.464 seconds for the baseline and 5.986 seconds for
+factored execution. Peak working set was 5.04–5.05 MB in both modes.
+Each complete native call and capture reproduced the same bytes. The
+timing excludes host expansion and independent replay.
+
+All 54 controls passed normally and with optimized Python. The evidence
+archive preserves both logs, the initial controller count mismatch,
+source and binary identities, the saved policy, independent replay, and
+all eight timing observations.
+[Factored training evidence](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)
+
+## Checked History cursor
+
+The opt-in ten-card checked History profile uses the factored trainer.
+A private cursor carries the physical board code and card mask. The flop
+establishes their values after verifying sorted, distinct deck members.
+Turn and river each verify the existing prefix and append one checked
+physical card. Betting edges preserve the board bits. The literal path
+ordinal still distinguishes different action histories through a shared
+template node, and the board code still distinguishes turn and river order.
+
+A single checked lookup verifies the expected source node and visible
+street at each visit. Owner, generation, cursor extent and phase guards
+remain in the transition path. The cursor fits the 48-byte bound without
+growing the resident occurrence array. The action, reveal, ordinal and
+ordered registration charges retain their previous rates.
+
+The exact History reservation counts construction, one root acquisition,
+all three public walks, the learning decision ordinals, ordered catalog
+rows and one read per distinct sealed menu. For the fixed two-sweep
+schedule, with action edges A, reveal edges Q, visits V, public decision
+occurrences D, rows R, menu sources M and menu tokens T, this is
+4096 × 1105 + 1288 + 3 × (40A + 72Q + 8V) + 64D + 64R + 24M + 16T.
+The new profile requires the complete History receipt to match the
+reservation. Its 62,890,960 units are 6,934,704 below the earlier realized
+charge and 36,863,656 below the earlier conservative forecast. Composed
+factored admission is 2,100,510,122 units against the 2.15-billion cap.
+
+The frozen run at 8bd8274 reproduced both checkpoints and every numerical
+section. The expanded artifact differed in the two History work words.
+The independent verifier checked both work words, all saved policies
+and updates, and the two best responses. The initial MSVC freeze
+failed on the narrowing of a backwalk index before training. The
+successful freeze explicitly retains occurrence-width backwalk indices.
+
+The independent rank-free schedule projects 185,692,384 History units
+for eleven cards against its 100-million cap. Other owner limits and
+the composed work cap also need separate changes. The forecast script
+counts 355,446 literal decision visits per walk from the physical prefix
+geometry and reconstructs the earlier ten-card ledger as a calibration.
+
+Four alternating pairs on one Windows host reproduced both complete
+streams and both image hashes against their respective frozen receipts.
+Median full native call times were 7.161 seconds for factored training
+and 6.583 seconds for checked traversal. The median paired ratio was
+0.9077. Three checked calls were faster and one was slower. The
+4,096-byte peak working-set difference was one memory page. Host
+expansion and independent replay followed the measured native calls.
+
+The focused controls cover the exact ordinal on 5,525 records and
+reject a changed prefix, a foreign card and a repeated card at the
+turn boundary. The archive preserves the first control failure, caused
+by counting two mismatch checks in the single-call work measurement.
+The test-only correction was checked against the original trainer and
+State build source closures.
+[Checked History evidence](../benchmarks/results/native-dyadic-checked-history-v1/manifest.json)
+[Rank-free projection](../scripts/project_virtual_dyadic_history.py)
+
+## Reusing a validated public visit
+
+The ten-card visit profile authenticates the cursor once when it enters
+a traversal frame. The checked occurrence supplies the decision ordinal
+from the already packed board code. Child edges take that same visit
+value. It retains owner and generation identity, and each edge rejects
+a failed or foreign owner before reading the occurrence. The parent can
+use its visit again after returning from a child. Sealed row catalog
+registration still checks each holding and reconstructs its strict
+traversal order.
+
+The History model retains 8 units for the cursor validation at visit
+entry. The existing parent visit reservation covers matching the
+source and street and forming the key from the checked occurrence and
+board code. Action descent reserves 16 units for the bounded owner,
+phase and menu checks, child index read and fixed cursor copy. Reveal
+descent reserves 48 for its guards and the checked three-card flop pack,
+or the short prior-prefix comparison and one checked physical card append.
+Both edge paths charge before running those operations. The separate
+learning ordinal charge disappears because the visit supplies it.
+These are modeled operation units. They do not predict elapsed time.
+
+The complete ten-card schedule reserves 34,741,384 History units, down
+from 62,890,960, and 2,072,360,546 units across the factored profile.
+The rank-free eleven-card History projection is 98,688,160 against
+100,000,000, leaving 1,311,840 units of projected headroom. The State,
+quantizer and composed work gates remain open. The projection uses
+the same three traversal schedule and unchanged catalog charges.
+
+The frozen run at 9a9f48f matched both checkpoint images and every
+numerical section. Only the two History work words differed in the
+expanded artifact. All 55 focused controls passed with normal and
+optimized Python. Across four alternating pairs on one Windows host,
+the median complete native call took 8.241 seconds for checked History
+and 8.282 seconds for visit reuse. The median paired ratio was 1.0050,
+with two faster and two slower pairs. The comparison established
+no elapsed-time improvement.
+[Visit reuse evidence](../benchmarks/results/native-dyadic-history-visit-v1/manifest.json)
+
+## Equal positive weights in the policy quantizer
+
+The opt-in ten-card equal quantizer inherits the visit profile. After
+validating the entire input, it checks whether all positive weights
+are equal. For k equal positive weights, each receives floor(2^52/k)
+grid units and the first 2^52 mod k positive actions in legal order
+receive one extra unit. Zero and negative regret entries receive
+zero units, and negative average masses are rejected. This rule is
+the same largest-remainder allocation because all positive
+remainders tie. A positive equal row has no uniform fallback flag.
+Unequal rows use the existing complement division path.
+
+The two potentially mixed row phases each reserve 16 plus four times
+the menu size times (maximum limb words plus one) for the equality
+check. Each phase keeps the existing full generic reservation. The
+first sweep starts with zero regrets and never enters the equality
+check. With 119,196 rows and 281,066 action slots, the total additional
+reservation is 30,796,608 units. The quantizer reserves 464,268,936
+units and composed factored admission reserves 2,103,157,154. The
+rank-free eleven-card projection would add 97,884,864 units under
+the same conservative scheme. Equality frequency at eleven cards
+must be measured separately.
+
+The first strict native build rejected two obsolete local declarations.
+The corrected build and exact replay use frozen source 53a2f7b.
+
+Independent saved replay verified every numerical section and both
+checkpoint images. The expected change from the visit profile is in
+the two quantizer work words. It rebuilt the realized quantizer charge
+from exact packed row masses and matched all three figures. The shortcut
+handled 94,164 rows, avoided 113,224 multiprecision divisions, and left
+72,928 such divisions. Realized quantizer work fell to 206,392,024
+from 241,704,336 units. All 61 focused controls passed in both modes.
+
+On a Windows host, the shortcut was faster in all four matched pairs.
+The median within-pair time ratio was 0.9749, and median complete
+native calls took 3.475 seconds versus 3.649 seconds for the preceding
+visit profile. The timing excludes host replay and covers only this
+fixed game and budget.
+[Equal-weight quantizer evidence](../benchmarks/results/native-dyadic-equal-quantizer-v1/manifest.json)
+
+## Reusing an owned frozen row during staging
+
+The opt-in ten-card snapshot profile copies the four policy slots into
+an internal State-issued object before visiting children. It retains the
+authenticated descriptor by value, with menu views that borrow immutable
+catalog storage. Staging checks State ownership, the active sweep and
+its generation, and rejects a duplicate row before applying the exact
+regret and average updates. No directory or policy cache pointer is
+retained across recursion. Public copy APIs keep their current behavior.
+
+The two-sweep directory schedule falls from ten to eight reads per row.
+The independent direct-mapped trace predicts 953,568 logical row
+lookups, down from 1,191,960. The modeled
+page-read count falls from 7,656 to 7,456, or 819,200 fewer requested
+bytes. Policy spill loads fall from three passes per sweep to two.
+Packed regret and average traffic is accounted separately. State retains
+the prior conservative work reservations, and the composed entry and
+payload allowances include 16 KiB for the snapshot frames.
+
+The independent eleven-card trace projects 760,344 fewer directory
+lookups across two sweeps and 582 fewer page reads, saving 2,383,872
+requested directory bytes. The policy spill schedule removes one
+logical load per row per sweep. Eleven-card physical mixed reads still
+depend on its policy. The eleven-card training path remains outside
+the current State and quantizer work limits.
+
+The first build caught that the snapshot object exceeded the proposed
+MSVC size bound. The corrected source at 617919c raised the per-object
+ceiling to 160 bytes and reserved 16 KiB for the recursive frame scratch.
+The frozen run and replay reproduced the complete compact output,
+checkpoints and best responses byte for byte. The independent directory
+trace matched all observed logical and physical counters. Both test
+modes passed 61 controls.
+
+Four matched native-call pairs on one Windows host all verified the
+same compact wire and both checkpoints. The snapshot mode was faster
+in two pairs and slower in two. Median full-call time was 5.746 seconds
+versus 5.646 seconds for the preceding path. Median paired time was
+2.0 percent higher. Measured I/O reductions establish no elapsed-time
+gain on this fixture.
+[Owned snapshot evidence](../benchmarks/results/native-dyadic-owned-snapshot-v1/manifest.json)
+
+## Initial policy from virtual zero
+
+The opt-in ten-card initial-policy profile uses State's fresh virtual-zero
+image to register the uniform policy tag for each first-sweep row. State
+validates the row menu and spill order. Reading a tag reconstructs the
+same 52-bit policy units in legal-action order, including the extra unit
+for the first action in a three-action menu. The second sweep and average
+export retain the equal-weight quantizer.
+
+The first-sweep build uses 119,196 fewer synthetic regret reads and skips
+1,666,910 synthetic words. The physical read count and requested words
+stay at 1,498 and 6,130,244. Net reserved work across State, quantizer and
+parent falls by 49,726,752 units, from 2,103,157,154 to 2,053,430,402
+including transport and factored execution. The independent byte
+comparison permits eight changed work counters in the expanded footer.
+
+The rank-free eleven-card schedule projects 380,172 fewer synthetic
+reads, 5,536,052 fewer synthetic words and 158,431,968 fewer net work
+units. State and quantizer are still projected above their respective
+caps. The projection uses the same two-sweep lifecycle and contains
+zero native training or hand-ranking calls.
+[Initial policy evidence](../benchmarks/results/native-dyadic-initial-policy-v1/manifest.json)
+
+
+## First-sweep regret support and packed widths
+
+Starting at zero, a row's first CFR+ update clips the difference between
+each action value and their policy-weighted mean. At least one action
+value is at or below that mean. Its clipped regret is zero, so a menu
+of size m has at most m minus one positive regrets for the next policy.
+A two-action menu therefore takes the zero-or-single-positive path.
+The named ten-card profile enforces this support bound at quantization.
+
+The forecast also uses each packed column's certified bit width for
+equality and trailing-zero scans. The width used for ratio arithmetic
+continues to follow the separate bound on normalized masses. The export
+receives a narrower scan reservation from its packed layout and may
+still have positive mass on every action.
+
+The ten-card quantizer reservation falls from 412,635,048 to 317,853,256
+work units. The saved-only replay verifies both sweeps and best responses.
+Against the initial-policy profile, the expanded stream changes only
+the quantizer forecast word, and realized work charges match. The
+eleven-card structural projection reduces the quantizer forecast
+by 303,431,928 units to 1,014,146,272. The eleven-card State and quantizer
+forecasts remain above their caps.
+[Regret support evidence](../benchmarks/results/native-dyadic-first-regret-bound-v1/manifest.json)
+
+
+## Direct first-sweep packed updates
+
+The opt-in ten-card profile constructs first-sweep packed regret and
+average rows from the owned virtual-zero image. It validates signed
+regret divisibility before clipping and checks the retained width and
+extent before staging. The packed writer records every word, including
+required zero padding. Later sweeps continue to update committed rows.
+
+Compared with the first-regret-bound profile, the ten-card schedule
+removes 238,392 synthetic requests and 2,962,722 synthetic words.
+Physical reads, physical writes and checkpoint coverage keep their
+previous counts. The paging reservation falls by 3,814,272 units while
+the State arithmetic and codec reservations remain conservative.
+Eleven-card geometry projects 760,344 fewer synthetic requests and
+9,724,202 fewer synthetic words. Its State and quantizer admission
+caps still prevent training.
+The independent replay reproduced both policies, checkpoints and best
+responses. The expanded file differs in four paging-work words. All 65
+focused controls passed in both modes. In four alternating same-binary
+pairs on one Windows host, the direct mode was slower in every pair.
+Median native-call times were 4.833 versus 4.337 seconds, a 13.6 percent
+median paired slowdown. The broader local test run was active on the
+host during timing.
+[Direct staging evidence](../benchmarks/results/native-dyadic-initial-packed-stage-v1/manifest.json)
+
+
+## Factored staging width by row
+
+The opt-in ten-card profile charges factored regret arithmetic at the
+row's certified scale. A terminal numerator carries one factor of
+2^52 for every decision absent from the opponent reach or the remaining
+continuation. Reveal sums preserve the common factor. At a decision,
+the child values have at least one additional factor of 2^52 over the
+stored regret shift. State checks the factored scale of each nonzero
+child value before charging the reduced width.
+
+The policy units partition the 52-bit grid, which bounds every prefix
+of the normalized weighted sum. The first uniform policy uses one
+fractional bit for two actions, two for four actions, and up to 52 for
+three actions. The second policy reserves all 52 bits. The calculation
+keeps two extra bits for signed differences and scratch. Fixed checks,
+packed codec and pager charges still use their previous formulas.
+
+The ten-card State forecast and realized work both fall from 264,839,656
+to 208,451,944 units. The independent byte comparison changes only the
+two State work words. The eleven-card projection falls by 179,604,504
+units to 662,607,040, above the 300,000,000 cap.
+[Factored width evidence](../benchmarks/results/native-dyadic-bounded-stage-width-v1/manifest.json)
+
+
+## Exact two-positive policy allocation
+
+For two positive weights, the complement kernel computes the first
+weight's quotient and remainder on the policy grid. A nonzero remainder
+leaves one grid unit to assign. The earlier action gets it if its
+remainder is at least the complementary remainder. The opt-in kernel
+implements this directly, preserving tie order, sparse rows, equal rows
+and the generic path for wider positive support.
+
+The ten-card comparison uses the row-specific State work profile as its
+baseline. Both versions perform the same number of divisions and carry
+the same work reservations. The complete native output and both
+checkpoints match.
+Independent replay counted 15,794 eligible second-policy rows and
+2,820 eligible average-export rows. Four alternating same-binary pairs
+on one Windows host produced three slower runs and one faster run for
+the shortcut. Median native call time was 4.711 versus 4.505 seconds,
+a 4.1 percent median paired slowdown. The broader local suite was active
+on that host during timing.
+[Two-positive policy evidence](../benchmarks/results/native-dyadic-pair-complement-v1/manifest.json)

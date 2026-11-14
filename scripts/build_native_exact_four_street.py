@@ -19,7 +19,12 @@ DEPENDENCY = ROOT / "third_party/boost-multiprecision-1.92.0"
 DEPENDENCY_MANIFEST_SHA256 = "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
 HEADER_ARCHIVE_SHA256 = "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
 LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
-TARGETS = {"converter": ("native-exact-binary64-probe", (
+TARGETS = {
+    "factored-dyadic-controls": ("native-factored-dyadic-controls", (
+        "tests/native/factored_dyadic_controls.cpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/exact_binary64.hpp")),
+    "packed-signed-update-controls": ("native-packed-signed-update-controls", (
+        "tests/native/packed_signed_update_controls.cpp", "native/packed_signed_update.hpp", "native/exact_binary64.hpp")),
+    "converter": ("native-exact-binary64-probe", (
     "native/exact_binary64_probe.cpp", "native/exact_binary64.hpp")),
     "kernel": ("native-exact-selected-vectors", (
         "native/exact_selected_kernel_probe.cpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
@@ -72,7 +77,7 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
     "virtual-dyadic-training": ("native-virtual-dyadic-training-probe", (
         "native/virtual_dyadic_training_probe.cpp", "native/virtual_dyadic_training.hpp",
         "native/prepared_public_chance.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_dyadic_state.hpp",
-        "native/virtual_dyadic_paged_image.hpp",
+        "native/virtual_dyadic_paged_image.hpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/packed_signed_update.hpp",
         "native/dyadic_policy.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-history-controls": ("native-virtual-dyadic-history-controls", (
@@ -81,7 +86,7 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-state-controls": ("native-virtual-dyadic-state-controls", (
         "tests/native/virtual_dyadic_state_controls.cpp", "native/virtual_dyadic_state.hpp",
-        "native/virtual_dyadic_paged_image.hpp",
+        "native/virtual_dyadic_paged_image.hpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/packed_signed_update.hpp",
         "native/dyadic_policy.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
         "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "prepared-public-chance-controls": ("native-prepared-public-chance-controls", (
@@ -242,7 +247,9 @@ def build(output_directory, *, target="converter", sanitize=False):
     _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
           "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
-        "scope": ("Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
+        "scope": ("Bounded exact factored value arithmetic controls."
+                  if target == "factored-dyadic-controls" else "Bounded packed signed limb updates."
+                  if target == "packed-signed-update-controls" else "Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
                   if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."
                   if target == "kernel" else "Graph-only public-history index conformance helper; no trainer integration or capacity admission."
                   if target == "history-index" else "Numeric Q/prefix routing conformance helper; no trainer or larger-capacity acceptance."

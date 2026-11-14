@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement, eleven_card_forecast
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -56,6 +56,7 @@ inline constexpr std::size_t entries_cap=2000000, payload_cap=std::size_t{1}<<30
 inline constexpr std::uint64_t chance_setup_bound=65536;
 inline constexpr std::uint64_t proof9_t3_parent_cap=298417808;
 inline constexpr std::size_t proof9_t3_directory_page_limit=2122;
+inline constexpr std::size_t directory_forecast_pages11=24350;
 inline constexpr std::uint64_t proof9_t3_general_quantizer_expected=78506392;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_copy_work=3669084;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_image_bytes=4853840;
@@ -95,6 +96,7 @@ inline void require(bool condition,const char* message) { if (!condition) throw 
 
 inline constexpr std::array<std::uint8_t,9> deck_cards{16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::uint8_t,10> ten_cards{0,16,17,24,32,33,35,37,43,48};
+inline constexpr std::array<std::uint8_t,11> eleven_cards{0,1,16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::array<chance::WeightedHand,2>,2> ranges{
     std::array{chance::WeightedHand{{43,48},std::bit_cast<std::uint64_t>(.125)},
                chance::WeightedHand{{32,43},std::bit_cast<std::uint64_t>(.75)}},
@@ -273,6 +275,12 @@ inline constexpr Fixture proof10{
     ten_cards,{1,20,60,120},{1,46,156,340},{288946,270487,18458,49182,77857,88290,119196,281066},
     644,637,17,42,103020,70912,2150000000,450000000,100000000,300000000,520000000,1200000000,9833076
 };
+// Apply the ten-card comparison caps to the eleven-card forecast only.
+inline constexpr Fixture proof11_forecast{
+    eleven_cards,{1,35,140,420},{1,75,340,1120},{892441,834475,57965,121355,239515,280372,380172,892910},
+    646,639,56,144,339360,176530,proof10.work_limit,proof10.chance_limit,proof10.history_limit,
+    proof10.state_limit,proof10.quantizer_limit,proof10.payload_limit,proof10.output_limit
+};
 inline constexpr Fixture proof9_t3{
     deck_cards,{1,10,20,20},{1,25,56,60},{61099,57363,3735,15662,16631,17356,24420,58164},
     642,635,3,7,18180,22168,750000000,125000000,32000000,77000000,184000000,
@@ -299,6 +307,7 @@ struct Plan {
     const Fixture* fixture=&proof9;
     [[nodiscard]] const Fixture& game() const noexcept { return *fixture; }
     [[nodiscard]] bool ten_card() const noexcept { return fixture==&proof10; }
+    [[nodiscard]] bool eleven_card_forecast() const noexcept { return fixture==&proof11_forecast; }
     [[nodiscard]] bool proof9_three_sweep() const noexcept { return fixture==&proof9_t3; }
     [[nodiscard]] bool proof9_four_sweep() const noexcept { return fixture==&proof9_t4; }
     [[nodiscard]] bool proof9_q32_base() const noexcept { return fixture==&proof9_q32; }
@@ -326,6 +335,18 @@ struct Plan {
     bool indexed_cache=false;
     bool complement_division=false;
     bool compact_wire=false;
+    bool factored=false;
+    bool checked_history=false;
+    bool history_visit=false;
+    bool equal_quantizer=false;
+    bool reuse_snapshot=false;
+    bool zero_policy_bootstrap=false;
+    bool first_regret_bound=false;
+    bool initial_packed_stage=false;
+    bool bounded_stage_width=false;
+    bool pair_complement=false;
+    std::uint64_t stage_arithmetic_work=0;
+    std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -389,6 +410,21 @@ inline std::uint64_t compact_encoding_work(const Counts& c) {
     require(slots<=limit-rows,"compact encoding work overflow");
     return rows+slots;
 }
+
+inline factored_dyadic::Receipt factored_census(const Plan& p) {
+    factored_dyadic::Receipt counts;
+    counts.additions=p.parent[work_index(Work::value_add)]/add_cost(p.game().value_bits);
+    require(counts.additions*add_cost(p.game().value_bits)==p.parent[work_index(Work::value_add)],
+        "factored addition census is not integral");
+    counts.from_values=2*p.seat_passes*(p.shape.folds+p.showdown_contractions);
+    counts.scales=4*p.requested_sweeps*(p.shape.folds+p.shape.showdowns);
+    counts.subtractions=p.requested_sweeps*p.shape.slots;
+    counts.expansions=4*p.requested_sweeps;
+    counts.mixes=p.requested_sweeps*p.shape.rows;
+    counts.work=64*(counts.from_values+counts.scales+counts.additions+counts.subtractions+counts.expansions)+320*counts.mixes;
+    return counts;
+}
+inline std::uint64_t factored_metadata_work(const Plan& p) { return factored_census(p).work; }
 
 class Forecast final {
     struct Suffix { std::size_t decisions=0,uniform=0; unsigned mark=0; };
@@ -480,11 +516,19 @@ class Forecast final {
         }
         return sum;
     }
-    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) const {
-        const auto sum=effective+logceil(n)+1,scaled=effective+grid_bits;
+    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t input_bits,
+                                std::size_t max_positive) const {
+        const auto sparse=256+32*n;
+        const auto inspect=64+16*n;
+        if (max_positive==1) return inspect+sparse;
+        const auto sum=effective+logceil(max_positive)+1,scaled=effective+grid_bits;
         const auto bits=std::max({std::size_t{53},sum,scaled});
-        return 64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
-            8*n*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+4*n*n*(words(sum)+1);
+        const auto scans=words(input_bits)+1;
+        const auto equal=plan_.equal_quantizer?16+4*n*scans:0;
+        const auto mixed=4*max_positive*scans+256+16*n*(words(bits)+1)+
+            8*max_positive*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+
+            4*n*n*(words(sum)+1);
+        return inspect+equal+std::max(sparse,mixed);
     }
     void literal(std::size_t id,std::array<std::size_t,2> past,std::array<std::size_t,2> first) {
         meter_.charge(Work::geometry,256);
@@ -501,6 +545,7 @@ class Forecast final {
             const auto actor=node.state.actor;
             require(actor<2 && m>=2 && m<=4,"pinned decision census");
             const auto rows=population.supported[actor],slots=rows*m;
+            plan_.history_decisions+=np;
             shape.rows+=rows;
             shape.slots+=slots;
             shape.actions+=np*m;
@@ -512,17 +557,28 @@ class Forecast final {
             require(E+plan_.M<=plan_.shift && EA<=plan_.shift,"pinned fixed-scale divisibility forecast");
             if (plan_.packed_averages)
                 plan_.packed_average_limbs+=slots*words(value_bits-(plan_.shift-EA));
+            auto regret_bits=value_bits;
             if (plan_.packed_regrets) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
-                plan_.packed_regret_limbs+=slots*words(value_bits-shift);
+                regret_bits=value_bits-shift;
+                if (plan_.bounded_stage_width) {
+                    const auto first_width=state::stage_width(value_bits,shift,m,true);
+                    const auto second_width=state::stage_width(value_bits,shift,m,false);
+                    plan_.stage_arithmetic_work+=rows*(16*m+8)*(words(first_width)+words(second_width));
+                }
+                plan_.packed_regret_limbs+=slots*words(regret_bits);
             }
-            plan_.quantizer_terms[0]+=rows*(320+48*m);
-            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,value_bits);
+            if (!plan_.zero_policy_bootstrap) plan_.quantizer_terms[0]+=rows*(320+48*m);
+            // One clipped update from zero has at least one zero action.
+            // The packed image separately bounds raw widths before cancellation.
+            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,
+                plan_.first_regret_bound?regret_bits:value_bits,plan_.first_regret_bound?m-1:m);
             plan_.quantizer_terms[2]+=rows*quantizer_cost(m,
-                base_bits+(plan_.proof9_q32_base()?(plan_.proof9_linear32()?9:5):2)+EA,value_bits);
+                base_bits+(plan_.proof9_q32_base()?(plan_.proof9_linear32()?9:5):2)+EA,
+                plan_.first_regret_bound?value_bits-(plan_.shift-EA):value_bits,m);
             for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
-                plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits);
+                plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits,m);
             }
             plan_.max_actor_depth[actor]=std::max(plan_.max_actor_depth[actor],past[actor]+1);
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
@@ -600,7 +656,7 @@ class Forecast final {
         const auto flop=remaining*(remaining-1)*(remaining-2)/6;
         require(game.divisors==std::array<std::uint64_t,4>{1,flop,flop*(remaining-3),flop*(remaining-3)*(remaining-4)},"pinned chance divisor drift");
         plan_.denominator_base=plan_.normalizer*game.divisors[3];
-        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.ten_card()?3480u:580u),"pinned root prior changed");
+        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.eleven_card_forecast()?12180u:plan_.ten_card()?3480u:580u),"pinned root prior changed");
     }
 public:
     Forecast(const betting::Template& source,Meter& meter,Traversal mode,StrategyProfile profile)
@@ -620,7 +676,19 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire;
+        const bool eleven=profile==StrategyProfile::eleven_card_forecast;
+        plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
+        plan_.pair_complement=profile==StrategyProfile::ten_card_pair_complement;
+        plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement || eleven;
+        plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound ||
+            plan_.initial_packed_stage || plan_.bounded_stage_width;
+        plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap || plan_.first_regret_bound;
+        plan_.reuse_snapshot=profile==StrategyProfile::ten_card_reuse_snapshot || plan_.zero_policy_bootstrap;
+        plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer || plan_.reuse_snapshot;
+        plan_.history_visit=profile==StrategyProfile::ten_card_history_visit || plan_.equal_quantizer;
+        plan_.checked_history=profile==StrategyProfile::ten_card_checked_history || plan_.history_visit;
+        plan_.factored=profile==StrategyProfile::ten_card_factored || plan_.checked_history;
+        plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire || plan_.factored;
         plan_.complement_division=profile==StrategyProfile::ten_card_complement || plan_.compact_wire;
         plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache || plan_.complement_division;
         plan_.row_batched=profile==StrategyProfile::ten_card_row_batched || plan_.indexed_cache || q32;
@@ -633,11 +701,12 @@ public:
         plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
         const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state || bounded;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
-        if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
-        if (buffered) plan_.page_limits.write_requests=q32?paging::n9_q32_write_requests:t3?5931:t4?paging::n9_t4_write_requests:virtual_zero?18836:19560;
+        if (eleven) plan_.fixture=&proof11_forecast;
+        else if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
+        if (buffered) plan_.page_limits.write_requests=q32?paging::n9_q32_write_requests:t3?5931:t4?paging::n9_t4_write_requests:eleven?59328:virtual_zero?18836:19560;
         plan_.page_limits.virtual_initial_zero=virtual_zero;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded;
+        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded || eleven;
         require(!plan_.split_checkpoint || (q32 || plan_.requested_sweeps<=4),"split checkpoint sweep count exceeds fixed receipt");
         plan_.rank_board_sets=profile==StrategyProfile::rank_sets || plan_.split_checkpoint;
         plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
@@ -654,6 +723,7 @@ public:
         const bool bounded=t3||t4||q32;
         const auto& game=plan_.game();
         const auto value_bits=game.value_bits;
+        const bool eleven=plan_.eleven_card_forecast();
         const auto& template_receipt=source_.receipt();
         require(template_receipt.nodes==template_count && template_receipt.edges==410 &&
             template_receipt.logical_occurrences==literal_count && template_receipt.max_depth==15 &&
@@ -739,9 +809,25 @@ public:
             plan_.registration_path_work=history::History::decision_path_work*R;
             plan_.history_work+=plan_.registration_path_work;
         }
+        if (plan_.checked_history) {
+            // Construction and one root. Three traversals, one checked
+            // source/street lookup per visit, and ordinals only in learning.
+            // Sealed registration calls decision_key once per holding and
+            // decision_actions once for each distinct menu source.
+            require((plan_.ten_card() || eleven) && plan_.sealed_menus && plan_.ordered_state &&
+                public_walks==plan_.requested_sweeps,"checked History requires the fixed ordered lifecycle");
+            plan_.history_work=4096*literal_count+1288+
+                (public_walks+1)*((plan_.history_visit?history::History::visit_action_work:40)*g.actions+
+                    (plan_.history_visit?history::History::visit_reveal_work:72)*g.reveals+8*g.visits)+
+                (plan_.history_visit?0:32*public_walks*plan_.history_decisions)+64*R+
+                24*plan_.sealed_menu_count+16*plan_.sealed_token_count;
+        }
         plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+registration_work+8*S+2*R+
-            plan_.requested_sweeps*(4*R+16*R+4*S+64*R+128*S+(16*S+8*R)*words(value_bits+58)+4*R)+
+            plan_.requested_sweeps*(4*R+16*R+4*S+64*R+128*S+4*R)+
             (4*words(value_bits)+4)*S+20*R+4*S;
+        plan_.state_work+=plan_.bounded_stage_width?plan_.stage_arithmetic_work:
+            plan_.requested_sweeps*(16*S+8*R)*words(value_bits+58);
+        if (plan_.zero_policy_bootstrap) plan_.state_work+=state::initial_uniform_policy_work*R;
         for (const auto work:plan_.quantizer_terms) plan_.quantizer_work+=work;
         plan_.quantizer_work+=plan_.general_quantizer_work;
         auto& w=plan_.parent;
@@ -777,9 +863,10 @@ public:
             // The two page files retain sweep 1 and sweep 2. The split
             // stream skips both fields of both checkpoint scans.
             const auto request_units=plan_.row_batched?R:S;
-            const auto requests=(plan_.split_checkpoint?11:15)*request_units;
+            const auto requests=(plan_.split_checkpoint?11:15)*request_units-(plan_.zero_policy_bootstrap?R:0)
+                -(plan_.initial_packed_stage?2*R:0);
             const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
-            const auto read_words=q32?paging::n9_q32_read_words:t4?paging::n9_t4_read_words:t3?2223164u:virtual_zero?6130244u:
+            const auto read_words=q32?paging::n9_q32_read_words:t4?paging::n9_t4_read_words:t3?2223164u:eleven?20750932u:virtual_zero?6130244u:
                 plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
             const auto write_requests=q32?paging::n9_q32_write_requests:t4?paging::n9_t4_write_requests:plan_.page_limits.write_requests;
             plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,
@@ -815,12 +902,17 @@ public:
         if (plan_.compact_directory) {
             // Table initialization plus compact row encode/decode across both
             // sweeps and checkpoint export. Probes use the existing lookup budget.
+            if (eleven) {
+                plan_.admitted_directory_page_limit=directory_forecast_pages11;
+                plan_.admitted_directory_read_rows=directory_forecast_pages11*128;
+            }
             if (bounded) {
                 plan_.admitted_directory_page_limit=proof9_t3_directory_page_limit;
                 if (t4) plan_.admitted_directory_page_limit=state::proof9_t4_directory_page_limit;
                 if (q32) plan_.admitted_directory_page_limit=state::State::proof9_q32_directory_page_limit;
                 plan_.admitted_directory_read_rows=plan_.admitted_directory_page_limit*128;
             }
+            // Retain the earlier work envelope while changing the read schedule.
             plan_.directory_work=plan_.paged_directory?
                 4*state::State::row_directory_resident_entries+16*R+
                     16*(bounded?(2+4*plan_.requested_sweeps):10)*R+4*plan_.admitted_directory_read_rows:96*R;
@@ -834,12 +926,23 @@ public:
         if (q32) w[work_index(Work::output)]+=plan_.requested_sweeps*sizeof(state::PolicySpillSweep);
         const auto other_work=plan_.template_work+plan_.chance_work+plan_.history_work+
             plan_.state_work+plan_.quantizer_work;
-        require(other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
-        if (plan_.packed_regrets) plan_.parent_allowance=game.work_limit-other_work;
+        require(eleven || other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
+        if (plan_.packed_regrets) plan_.parent_allowance=other_work<=game.work_limit?game.work_limit-other_work:0;
         plan_.total_work=other_work+sum_work(w);
         plan_.state_entries=1024+16*R+10*S;
         plan_.state_payload=(5*S+256)*(value_bits+58)+640*S+16*R;
-        if (plan_.packed_averages) {
+        if (eleven) {
+            // Reuse the fixed State envelope and add the new row-tag bytes.
+            // This projection deliberately does not authorize the pager or State.
+            const auto added_tags=R-proof10.shape.rows;
+            const auto baseline=state::State::storage_forecast(
+                {119196,281066,2,15,644,1,1}, {388,410,true}, {1295812,1666910},
+                paging::Limits{2962722,4096,16,6130244,5925444,1311156,2,
+                    paging::Profile::proof10,1295812,18836,true}, true,true,true,true,true,
+                state::Lifecycle::fixed_two_sweep,state::PayloadModel::paged_phases,true);
+            plan_.state_entries=baseline.entries+added_tags;
+            plan_.state_payload=baseline.payload_bits+8*added_tags;
+        } else if (plan_.packed_averages) {
             const auto storage=state::State::storage_forecast(
                 {static_cast<std::size_t>(R),static_cast<std::size_t>(S),plan_.requested_sweeps,15,value_bits,
             plan_.state_work,plan_.quantizer_work},
@@ -880,6 +983,7 @@ public:
             require(plan_.parent_allowance==game.work_limit-other_work,
                 "bounded PROOF9 parent allowance setup changed");
         }
+        if (eleven) return plan_;
         require(plan_.template_work<=template_cap,"pinned template forecast exceeds fixture cap");
         require(plan_.chance_work<=game.chance_limit,"pinned chance forecast exceeds fixture cap");
         require(plan_.history_work<=game.history_limit,"pinned history forecast exceeds fixture cap");
@@ -899,8 +1003,10 @@ public:
 struct Reach { Values numerators{1,1}; std::size_t exponent=0; };
 struct Marginal { Values numerators{}; std::uint64_t scale=0; };
 
-template<bool Paired> class Walk final {
+template<bool Paired,bool Factored=false> class Walk final {
     static constexpr std::size_t lanes=Paired?targets:1;
+    using Value=std::conditional_t<Factored,factored_dyadic::Value,Integer>;
+    using Values=std::array<Value,2>;
     using LaneValues=std::array<Values,lanes>;
     using Marginals=std::array<Marginal,lanes>;
     const betting::Template& source_;
@@ -911,6 +1017,7 @@ template<bool Paired> class Walk final {
     state::State& state_;
     std::size_t target_;
     const std::size_t averaging_sweep_;
+    factored_dyadic::Execution* factored_;
     Counts shape_{};
     std::uint64_t showdown_contractions_=0,hidden_candidates_=0;
     static constexpr std::size_t catalog=targets;
@@ -918,9 +1025,16 @@ template<bool Paired> class Walk final {
     [[nodiscard]] std::size_t seat(std::size_t lane) const { return Paired?lane:target_; }
     static const Reach& opposite(std::size_t player,const Reach& sb,const Reach& bb) { return player?sb:bb; }
 
+    Value make_value(Integer value) {
+        if constexpr (Factored) return factored_->from_integer(std::move(value));
+        else return value;
+    }
     void add_values(Values& total,const Values& child) {
         meter_.charge(Work::value_add,2*add_cost(plan_.game().value_bits));
-        for (std::size_t holding=0;holding<2;++holding) total[holding]+=child[holding];
+        for (std::size_t holding=0;holding<2;++holding) {
+            if constexpr (Factored) total[holding]=factored_->added(total[holding],child[holding]);
+            else total[holding]+=child[holding];
+        }
     }
     void add_lanes(LaneValues& total,const LaneValues& child) {
         for (std::size_t lane=0;lane<lanes;++lane) add_values(total[lane],child[lane]);
@@ -953,7 +1067,7 @@ template<bool Paired> class Walk final {
         for (std::size_t lane=0;lane<lanes;++lane) {
             const auto target=seat(lane);
             auto result=contraction(target,board,chance::TerminalKind::showdown,opposite(target,sb,bb));
-            values[lane]={std::move(result.numerators[0]),std::move(result.numerators[1])};
+            values[lane]={make_value(std::move(result.numerators[0])),make_value(std::move(result.numerators[1]))};
         }
         return values;
     }
@@ -995,16 +1109,21 @@ template<bool Paired> class Walk final {
             for (std::size_t lane=0;lane<lanes;++lane) {
                 const auto target=seat(lane);
                 auto raw=contraction(target,prefix,chance::TerminalKind::fold,opposite(target,sb,bb));
-                result[lane]={std::move(raw.numerators[0]),std::move(raw.numerators[1])};
+                result[lane]={make_value(std::move(raw.numerators[0])),make_value(std::move(raw.numerators[1]))};
             }
         }
         const auto divisor=showdown?game.divisors.back():game.divisors[street_index(prefix.size)];
         const auto factor=money.significand*(game.divisors.back()/divisor);
         for (std::size_t lane=0;lane<lanes;++lane)
             for (auto& value:result[lane]) {
-                value*=factor;
-                value<<=shifts[lane];
-                if (!showdown && node.winner!=seat(lane)) value=-value;
+                if constexpr (Factored) {
+                    value=factored_->scaled(value,factor,shifts[lane],!showdown && node.winner!=seat(lane));
+                    require(value.expanded_bits()<=value_bits,"factored terminal exceeds fixed value width");
+                } else {
+                    value*=factor;
+                    value<<=shifts[lane];
+                    if (!showdown && node.winner!=seat(lane)) value=-value;
+                }
             }
         return result;
     }
@@ -1070,8 +1189,16 @@ template<bool Paired> class Walk final {
                      const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
         meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
         require(++shape_.visits<=plan_.shape.visits && support[0] && support[1] &&
-            id<source_.nodes().size() && history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
+            id<source_.nodes().size(),"dense public visit identity changed");
+        std::optional<history::History::Visit> checked;
+        std::size_t checked_ordinal=0;
+        if (plan_.history_visit) checked.emplace(history_.enter_visit(cursor,id,prefix.size,checked_ordinal));
+        else require(plan_.checked_history?history_.identity_matches(cursor,id,prefix.size):
+            history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
             "dense public visit identity changed");
+        const auto action_cursor=[&](std::size_t action) {
+            return checked?history_.visit_action(*checked,action):history_.append_action(cursor,action);
+        };
         const auto& node=source_.nodes()[id];
         require(node.state.street==prefix.size,"dense visible street changed");
         if (node.state.phase==betting::Phase::reveal) {
@@ -1085,7 +1212,7 @@ template<bool Paired> class Walk final {
                 const auto live=physical_support(next.mask);
                 if (!live[0]) return; // prior physical support only
                 require(++shape_.reveals<=plan_.shape.reveals,"dense positive reveal count changed");
-                const auto child=history_.append_reveal(cursor,next.view());
+                const auto child=checked?history_.visit_reveal(*checked,next.view()):history_.append_reveal(cursor,next.view());
                 if (target_==catalog) (void)visit(node.edges[0].child,child,next,live,sb,bb,prior,past);
                 else {
                     const auto child_prior=marginal(next,live);
@@ -1127,21 +1254,25 @@ template<bool Paired> class Walk final {
             }
             for (std::size_t action=0;action<menu;++action) {
                 ++shape_.actions;
-                const auto child=history_.append_action(cursor,action);
+                const auto child=action_cursor(action);
                 (void)visit(node.edges[action].child,child,prefix,support,sb,bb,prior,past);
             }
             return {};
         }
-        const auto key=history_.ordinal(cursor);
+        const auto key=checked?checked_ordinal:history_.ordinal(cursor);
         std::array<std::size_t,2> row_ids{};
         std::array<std::array<std::uint64_t,4>,2> policy_copies{};
+        std::array<std::optional<state::State::FrozenRow>,2> snapshots{};
         std::array<std::span<const std::uint64_t>,2> policy{};
         for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
             meter_.charge(Work::route,16);
             require(shape_.rows<state_.row_count(),"dense policy row overflow");
             const auto row=static_cast<std::size_t>(shape_.rows++);
             state::PolicySnapshot snapshot{};
-            if (plan_.paged_directory) snapshot=state_.copy_policy_snapshot(row,policy_copies[holding]);
+            if (plan_.reuse_snapshot) {
+                snapshots[holding].emplace(state_.capture_frozen_row(row));
+                snapshot={snapshots[holding]->descriptor(),snapshots[holding]->units()};
+            } else if (plan_.paged_directory) snapshot=state_.copy_policy_snapshot(row,policy_copies[holding]);
             const auto record=plan_.paged_directory?snapshot.descriptor.row:state_.row_at(row);
             // Menus come from the same immutable source used at registration.
             // Check the complete identity and packed extent before policy access.
@@ -1163,12 +1294,12 @@ template<bool Paired> class Walk final {
             } else policy[holding]=state_.policy_units(row);
         }
         LaneValues result{};
-        std::array<std::array<Integer,4>,2> action_values{};
+        std::array<std::array<Value,4>,2> action_values{};
         const auto& actor_reach=actor?bb:sb;
         const std::size_t acting_lane=Paired?actor:(actor==target_?0:lanes);
         for (std::size_t action=0;action<menu;++action) {
             require(++shape_.actions<=plan_.shape.actions,"dense action count changed");
-            const auto child=history_.append_action(cursor,action);
+            const auto child=action_cursor(action);
             const auto next=advance(actor_reach,policy,action,support[actor]);
             auto values=actor?visit(node.edges[action].child,child,prefix,support,sb,next,prior,past):
                 visit(node.edges[action].child,child,prefix,support,next,bb,prior,past);
@@ -1182,13 +1313,21 @@ template<bool Paired> class Walk final {
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
                 std::array<Integer,4> increments{};
                 const std::span<Integer> average{increments.data(),menu};
-                const std::span<const Integer> values{action_values[holding].data(),menu};
+                const std::span<const Value> values{action_values[holding].data(),menu};
                 if (plan_.scaled_averages) {
                     stage_scaled_average(average,policy[holding],prior[acting_lane],actor_reach,holding,row_shift);
-                    result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
+                    if constexpr (Factored) {
+                        if (snapshots[holding])
+                            result[acting_lane][holding]=state_.stage_frozen_row(*snapshots[holding],values,{average,row_shift});
+                        else result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,{average,row_shift});
+                    }
+                    else result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
                 } else {
-                    stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
-                    result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                    if constexpr (Factored) require(false,"factored traversal requires scaled averages");
+                    else {
+                        stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
+                        result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                    }
                 }
             }
         }
@@ -1196,9 +1335,11 @@ template<bool Paired> class Walk final {
     }
 public:
     Walk(const betting::Template& source,const Plan& plan,Meter& meter,history::History& history,
-         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target,std::size_t averaging_sweep=1)
+         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target,std::size_t averaging_sweep=1,factored_dyadic::Execution* factored=nullptr)
         :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target),
-         averaging_sweep_(averaging_sweep) {}
+         averaging_sweep_(averaging_sweep),factored_(factored) {
+        require(!Factored || factored_,"factored traversal needs its admitted execution owner");
+    }
     LaneValues run(Cursor root) {
         require(Paired?(target_==0 && plan_.traversal==Traversal::paired):
             (target_==catalog || (target_<catalog && plan_.traversal==Traversal::by_seat)),"invalid fixed sweep target");
@@ -1310,8 +1451,10 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
-    std::uint64_t combined_divisions=0,compact_encoding_work=0;
+    std::uint64_t combined_divisions=0,compact_encoding_work=0,equal_rows=0,equal_divisions_avoided=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
+    std::optional<factored_dyadic::Receipt> factored;
+    packed_signed_update::Counts packed_updates{};
 };
 
 inline constexpr std::uint64_t sweep_stream_frames=sweeps;
@@ -1451,6 +1594,7 @@ class Driver final {
             state.completed_sweeps==p.requested_sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
+        require(!p.checked_history || history.work==p.history_work,"checked History census realization differs");
         require((chance.sparse_pair_visits>0)==p.sparse_chance,"sparse chance execution receipt differs");
         out.text(p.proof9_linear32()?"OPLDSL32":p.proof9_quality32()?"OPLDSQ32":p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
             p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
@@ -1498,6 +1642,7 @@ public:
     [[nodiscard]] std::uint64_t admission_work() const noexcept { return meter_.total(); }
 
     void validate_sweep_stream() const {
+        require(!plan_.eleven_card_forecast(),"eleven-card forecast has no stream entry");
         const auto& p=plan_;
         const auto& game=p.game();
         if (p.proof9_q32_base()) {
@@ -1577,10 +1722,16 @@ public:
         require(!p.compact_wire || (32<=entries_cap-p.entries-sweep_stream_entries &&
             2048<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits),
             "compact encoder scratch exceeds composed storage cap");
+        require(!p.factored || (factored_metadata_work(p)<=
+            game.work_limit-p.total_work-sweep_stream_copy_work-compact_encoding_work(p.shape) &&
+            (8192+(p.reuse_snapshot?2048:0))<=entries_cap-p.entries-sweep_stream_entries-32 &&
+            (524288+(p.reuse_snapshot?131072:0))<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
+            "factored execution exceeds composed resource caps");
     }
 
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
                      bool streamed_checkpoints=false) {
+        require(!plan_.eleven_card_forecast(),"eleven-card forecast has no training entry");
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;
@@ -1621,8 +1772,13 @@ public:
         if (p.shared_policy) meter_.charge(Work::route,p.policy_spill_work);
         if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
         auto division_kernel=dyadic_policy::DivisionKernel::separate;
-        if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
+        if (p.pair_complement) division_kernel=dyadic_policy::DivisionKernel::pair_complement;
+        else if (p.equal_quantizer) division_kernel=dyadic_policy::DivisionKernel::equal_complement;
+        else if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
         else if (p.single_division) division_kernel=dyadic_policy::DivisionKernel::combined;
+        std::optional<factored_dyadic::Execution> factored_execution;
+        if (p.factored) factored_execution.emplace(factored_metadata_work(p));
+        static_assert(sizeof(factored_dyadic::Value)<=sizeof(Integer)+16);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),p.requested_sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
@@ -1632,10 +1788,10 @@ public:
              static_cast<std::size_t>(p.packed_regret_limbs)},
             p.paged_strategy?std::optional<state::PagedStrategy>{
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
-                    p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
+                    p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1653,7 +1809,12 @@ public:
             state.begin_sweep();
             feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory,p.compact_wire);
             std::array<Values,targets> roots{};
-            if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
+            if (p.factored) {
+                auto values=Walk<true,true>(source_,p,meter_,history,chance,state,0,sweep+1,&*factored_execution).run(root);
+                for (std::size_t lane=0;lane<targets;++lane)
+                    for (std::size_t holding=0;holding<2;++holding)
+                        roots[lane][holding]=factored_execution->expanded(values[lane][holding]);
+            } else if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
             else {
                 auto sb=Walk<false>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
                 auto bb=Walk<false>(source_,p,meter_,history,chance,state,1,sweep+1).run(root);
@@ -1692,6 +1853,16 @@ public:
         out.finish();
         TrainingIO result;
         result.compact_encoding_work=out.compact_work();
+        if (factored_execution) {
+            result.factored=factored_execution->receipt();
+            const auto expected=factored_census(p);
+            const auto& actual=*result.factored;
+            require(actual.work==expected.work && actual.from_values==expected.from_values &&
+                actual.scales==expected.scales && actual.additions==expected.additions &&
+                actual.subtractions==expected.subtractions && actual.mixes==expected.mixes &&
+                actual.expansions==expected.expansions,"factored event realization differs");
+            result.packed_updates=state.packed_update_counts();
+        }
         result.paging=state.paged_receipt();
         if (p.bounded_proof9()) {
             const auto receipts=state.policy_sweep_receipts();
@@ -1702,6 +1873,8 @@ public:
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         result.combined_divisions=state_receipt.combined_divisions;
+        result.equal_rows=state_receipt.equal_rows;
+        result.equal_divisions_avoided=state_receipt.equal_divisions_avoided;
         if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();
         return result;
     }

@@ -27,6 +27,12 @@ Larger-game work, integer/payload admission and scalable independent
 verification remain open. PR #285 is the integration review; development
 publication and merge acceptance are separate gates.
 
+The [ten-card initial-policy profile](../native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)
+uses State's fresh zero image to build the first sweep's uniform policy.
+It retires 119,196 synthetic regret reads and 49,726,752 modeled work units
+with matching policy and checkpoint bytes. The projected eleven-card
+State and quantizer work remain above their caps.
+
 The [N9 32-sweep study](../native-dyadic-quality32.md#frozen-result-and-preserved-target-miss)
 passes recovered source-only replay of every checkpoint and the complete wire
 hash. Fixed-game exploitability improves from 2.242 at T4 to 0.397 at T32;
@@ -1055,3 +1061,39 @@ records additional encoder work within the existing cap, and reduces
 retained numerical output by 68.4 percent. The eleven-card output-size
 projection fits the current ceiling. Whole-request work admission
 and eleven-card quality remain unresolved.
+
+## Factored exact traversal
+
+The opt-in ten-card profile keeps powers of two implicit in traversal
+values and updates packed regret and average words directly. Both sweep
+checkpoints, the complete compact stream, and independent replay match
+the earlier two-sweep result. The additional scalar work reservation
+leaves 12,626,222 units in the existing ten-card budget. The eleven-card
+work limits remain open.
+[Factored training contract](../native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
+
+## Checked History traversal
+
+The factored ten-card trainer has an opt-in checked cursor that preserves
+complete physical board order and literal betting paths. Its exact
+History reservation is 62.9 million work units. Independent saved replay
+matches the earlier numerical result and checkpoints. The eleven-card
+History projection is 185.7 million units against the 100-million cap.
+[Checked History contract](../native-dyadic-two-sweep.md#checked-history-cursor)
+
+The ten-card visit profile reduces the verified History schedule to
+34.7 million units. Its eleven-card rank-free projection is 98.7 million
+against the 100-million History cap. Wider training remains gated by
+State, quantizer and aggregate work admission.
+[Visit reuse evidence](../native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
+
+The opt-in equal-weight quantizer preserves exact largest-remainder
+allocation and avoids 60.8 percent of wide divisions on the verified
+two-sweep ten-card fixture. Its whole-request forecast allows every
+potentially mixed row to use the generic path.
+[Equal-weight quantizer](../native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
+
+The owned State row snapshot reuses the frozen policy and authenticated
+row descriptor during staging. On the ten-card fixture, it eliminates
+238,392 directory lookups and 238,392 policy loads across two sweeps.
+[Snapshot contract](../native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)

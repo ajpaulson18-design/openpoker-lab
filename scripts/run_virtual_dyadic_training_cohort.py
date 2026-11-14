@@ -663,7 +663,8 @@ def verify_division_receipt(directory,admission):
     return record
 
 
-def verify_policy_spill(directory,stream,admission):
+def verify_policy_spill(directory,stream,admission,*,reuse_snapshot=False):
+    passes=2 if reuse_snapshot else 3
     sweeps=admission['requested_sweeps']
     if sweeps in (3,4,32):
         extent=sweep_stream_contract(proof9_sweeps=sweeps)['retained_bytes']
@@ -698,7 +699,7 @@ def verify_policy_spill(directory,stream,admission):
     with policy.open('rb') as spilled:
         for sweep in range(sweeps):
             counts=dict(uniform_rows=0,pure_rows=0,mixed_rows=0,extent_words=0,write_words=0,
-                        read_calls=3*rows,mixed_read_calls=0,read_words=0)
+                        read_calls=passes*rows,mixed_read_calls=0,read_words=0)
             offset=0
             for menu in menus:
                 units=struct.unpack_from(f'<{menu}Q',raw,at)
@@ -717,17 +718,17 @@ def verify_policy_spill(directory,stream,admission):
                         require(spilled.read(8*(menu-1))==raw[at:at+8*(menu-1)],'policy spill word bytes differ')
                 offset+=menu-1
                 at+=8*menu
-            counts['mixed_read_calls']=3*counts['mixed_rows']
-            counts['read_words']=3*counts['write_words']
+            counts['mixed_read_calls']=passes*counts['mixed_rows']
+            counts['read_words']=passes*counts['write_words']
             expected.append(counts)
             at+=4*(1+11)*8
     require(expected==exact_json(receipt.read_bytes()) and size==8*expected[-1]['extent_words']
-            and 3*rows==admission['policy_spill_read_call_limit']
+            and passes*rows==admission['policy_spill_read_call_limit']
             and slots-rows==admission['policy_spill_word_limit'],'policy spill receipt differs from saved grids')
     return {'sweeps':expected,'retained_extent_bytes':size,'sha256':sha(policy)}
 
 
-def verify_row_directory(directory, stream, admission):
+def verify_row_directory(directory, stream, admission, *, reuse_snapshot=False):
     """Authenticate every immutable directory record against independent rows."""
     directory=unlinked_path(directory)
     require(directory.is_dir(),'row directory is missing')
@@ -738,7 +739,7 @@ def verify_row_directory(directory, stream, admission):
     receipt=exact_json(receipt_path.read_bytes())
     sweeps=admission.get('requested_sweeps',2)
     ten_card=sweeps==2
-    trace=directory_trace() if ten_card else directory_trace(ten_card=False,sweeps=sweeps,quality32=sweeps==32)
+    trace=directory_trace(reuse_snapshot=reuse_snapshot) if ten_card else directory_trace(ten_card=False,sweeps=sweeps,quality32=sweeps==32)
     rows,slots=admission['rows'],admission['slots']
     require(trace['rows']==rows and trace['slots']==slots and trace['page_rows']==128
             and trace['cache_pages']==8 and trace['misses']==admission['row_directory_page_limit']
@@ -1023,7 +1024,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,stage_state_work=None):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1039,11 +1040,49 @@ def compare_ten_card_complement(source,result,path,replay):
     fields=('sweeps','profile_and_br','checkpoint_images','shape','changed_current_rows',
             'quality_gate','planned_entries','planned_payload_bits','parent_work_plan',
             'parent_work_actual','state_payload_bits','work_plan','work_actual','chance_actual')
-    require(all(before[key]==replay[key] for key in fields) and
-            all(prior[key]==result[key] for key in ('paging','row_directory','policy_spill','sweep_capture')),
+    expected=before
+    if checked_history_work is not None:
+        require(type(checked_history_work) is int and 0<checked_history_work<before['work_actual']['history'],
+                'checked History budget must reduce realized work')
+        expected=dict(before,work_plan=dict(before['work_plan'],history=checked_history_work),
+            work_actual=dict(before['work_actual'],history=checked_history_work))
+    equal_receipt=replay.get('equal_quantizer')
+    rows, slots = before['shape']['rows'], before['shape']['slots']
+    removed_initial_work = 320*rows+48*slots if zero_policy_bootstrap else 0
+    if equal_quantizer_plan is not None:
+        require(checked_history_work is not None and type(equal_receipt) is dict and
+                0<equal_receipt['equal_divisions_avoided']<186_152 and
+                (first_regret_bound or equal_quantizer_plan+removed_initial_work>before['work_plan']['quantizer']),
+                'equal quantizer work or savings receipt differs')
+        expected=dict(expected,
+            work_plan=dict(expected['work_plan'],quantizer=equal_quantizer_plan),
+            work_actual=dict(expected['work_actual'],quantizer=equal_receipt['work']))
+    route_removed=(16*rows if zero_policy_bootstrap else 0)+(32*rows if initial_packed_stage else 0)
+    expected_paging=prior['paging']
+    if zero_policy_bootstrap:
+        for phase in ('plan','actual'):
+            work, parent = 'work_'+phase, 'parent_work_'+phase
+            state_work=before[work]['state']+32*rows if stage_state_work is None else stage_state_work
+            expected[work]=dict(expected[work],state=state_work,
+                                parent=before[work]['parent']-route_removed)
+            expected[parent]=dict(before[parent],route=before[parent]['route']-route_removed)
+        counts=dict(expected_paging['counts'])
+        for key in ('read_calls','synthetic_read_calls'):
+            counts[key]-=rows*(3 if initial_packed_stage else 1)
+        for key in ('logical_read_words','synthetic_read_words'):
+            counts[key]-=1_666_910+(2_962_722 if initial_packed_stage else 0)
+        expected_paging=dict(expected_paging,counts=counts)
+    io_fields=('sweep_capture',) if reuse_snapshot else ('row_directory','policy_spill','sweep_capture')
+    if reuse_snapshot:
+        require(prior['row_directory']['rows_sha256']==result['row_directory']['rows_sha256'] and
+                prior['policy_spill']['sha256']==result['policy_spill']['sha256'],
+                'reused snapshot directory or policy spill content differs')
+    require(all(expected[key]==replay[key] for key in fields) and
+            expected_paging==result['paging'] and all(prior[key]==result[key] for key in io_fields),
             'complement changed saved training evidence or work receipts')
     require(before['combined_divisions']==prior['quantizer']['combined_divisions']==325_666 and
-            replay['combined_divisions']==result['quantizer']['combined_divisions']==186_152,
+            replay['combined_divisions']==result['quantizer']['combined_divisions']==186_152-
+                (equal_receipt['equal_divisions_avoided'] if equal_quantizer_plan is not None else 0),
             'complement division counts differ from the frozen ten-card census')
     archive_name=f'{directory}/verification.zip'
     archive=ROOT/archive_name
@@ -1054,15 +1093,44 @@ def compare_ten_card_complement(source,result,path,replay):
         member=zipped.getinfo('cohort/train_ten_indexed_cache/stdout.bin')
         require(member.file_size==TEN_CARD_SPLIT_BYTES,'indexed baseline stream extent differs')
         old=zipped.read(member)
-    require(path.read_bytes()==old and
-            hashlib.sha256(old).hexdigest()==before['saved_output_sha256']==replay['saved_output_sha256'],
-            'complement changed the retained numerical stream')
+    require(hashlib.sha256(old).hexdigest()==before['saved_output_sha256'],
+            'indexed retained numerical stream identity differs')
+    candidate=path.read_bytes()
+    if checked_history_work is not None:
+        expected_bytes=bytearray(old)
+        # Six plan words followed by six actual words at the start of the
+        # 512-byte footer payload. History is index 2 in both families.
+        for offset,key in ((496,'work_plan'),(448,'work_actual')):
+            require(int.from_bytes(old[-offset:-offset+8],'little')==before[key]['history'],
+                    'indexed History footer location differs')
+            expected_bytes[-offset:-offset+8]=checked_history_work.to_bytes(8,'little')
+        if equal_quantizer_plan is not None:
+            # Quantizer occupies index 4 of each six-word work family.
+            for offset,key in ((480,'work_plan'),(432,'work_actual')):
+                require(int.from_bytes(old[-offset:-offset+8],'little')==before[key]['quantizer'],
+                        'indexed quantizer footer location differs')
+                expected_bytes[-offset:-offset+8]=expected[key]['quantizer'].to_bytes(8,'little')
+        if zero_policy_bootstrap:
+            for offset,key,component in (
+                    (488,'work_plan','state'),(440,'work_actual','state'),
+                    (472,'work_plan','parent'),(424,'work_actual','parent'),
+                    (360,'parent_work_plan','route'),(288,'parent_work_actual','route')):
+                require(int.from_bytes(old[-offset:-offset+8],'little')==before[key][component],
+                        'indexed bootstrap footer location differs')
+                expected_bytes[-offset:-offset+8]=expected[key][component].to_bytes(8,'little')
+        old=expected_bytes
+    require(candidate==old and hashlib.sha256(candidate).hexdigest()==replay['saved_output_sha256'],
+            'retained numerical stream differs beyond admitted work counters')
     return {'indexed_baseline_head':prior['source_head'],
             'combined_divisions_before':before['combined_divisions'],
             'combined_divisions_after':replay['combined_divisions'],
             'combined_divisions_removed':before['combined_divisions']-replay['combined_divisions'],
             'retained_sha256':replay['saved_output_sha256'],
-            'wire_sha256':result['sweep_capture']['wire_sha256']}
+            'wire_sha256':(result['compact_sweep_capture']['wire_sha256'] if checked_history_work is not None
+                           else result['sweep_capture']['wire_sha256']),
+            **({'expected_history_footer_changes':2} if checked_history_work is not None else {}),
+            **({'expected_quantizer_footer_changes':2} if equal_quantizer_plan is not None else {}),
+            **({'expected_state_and_parent_footer_changes':6} if zero_policy_bootstrap else {})}
 
 
 def compare_proof9_t3_prefix(path,source,frames):
@@ -1474,14 +1542,35 @@ def main():
     modes.add_argument('--ten-indexed-cache',action='store_true')
     modes.add_argument('--ten-complement',action='store_true')
     modes.add_argument('--ten-compact-wire',action='store_true')
+    modes.add_argument('--ten-factored',action='store_true')
+    modes.add_argument('--ten-checked-history',action='store_true')
+    modes.add_argument('--ten-history-visit',action='store_true')
+    modes.add_argument('--ten-equal-quantizer',action='store_true')
+    modes.add_argument('--ten-reuse-snapshot',action='store_true')
+    modes.add_argument('--ten-zero-policy-bootstrap',action='store_true')
+    modes.add_argument('--ten-first-regret-bound',action='store_true')
+    modes.add_argument('--ten-initial-packed-stage',action='store_true')
+    modes.add_argument('--ten-bounded-stage-width',action='store_true')
+    modes.add_argument('--ten-pair-complement',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    if args.ten_compact_wire:
+    bounded_stage_width=args.ten_bounded_stage_width or args.ten_pair_complement
+    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage or bounded_stage_width
+    zero_policy_bootstrap=args.ten_zero_policy_bootstrap or first_regret_bound
+    reuse_snapshot=args.ten_reuse_snapshot or zero_policy_bootstrap
+    equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
+    history_visit=args.ten_history_visit or equal_quantizer
+    checked_history=args.ten_checked_history or history_visit
+    if args.ten_compact_wire or args.ten_factored or checked_history:
         from scripts.run_virtual_dyadic_compact_cohort import run_compact
-        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train),sort_keys=True))
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,
+            factored=args.ten_factored or checked_history,checked_history=checked_history,
+            history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
+            zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=first_regret_bound,
+            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=bounded_stage_width,pair_complement=args.ten_pair_complement),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

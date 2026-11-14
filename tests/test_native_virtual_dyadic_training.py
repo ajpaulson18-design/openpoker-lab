@@ -500,6 +500,186 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             with self.assertRaises(ValueError):
                 legacy_admission(bad)
 
+    def test_factored_training_admission_preserves_the_packed_lifecycle(self):
+        from scripts.run_virtual_dyadic_compact_cohort import legacy_admission
+        directory,process=self.observe('admit_ten_factored',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_FACTORED',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        legacy_admission(receipt,factored=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['factored_composed_work'],receipt['factored_composed_entries'],
+                          receipt['factored_composed_payload_bits']),(2_137_373_778,372_660,20_827_008))
+        with self.assertRaises(ValueError):legacy_admission(receipt)
+
+    def test_checked_history_admission_binds_exact_schedule(self):
+        from scripts.run_virtual_dyadic_compact_cohort import checked_history_baseline
+        directory,process=self.observe('admit_ten_checked_history',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_CHECKED_HISTORY',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        checked_history_baseline(receipt)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['component_work']['history'],receipt['factored_composed_work']),
+                         (62_890_960,2_100_510_122))
+        for field in ('history_decisions_per_walk','factored_composed_work','parent_allowance'):
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                checked_history_baseline(dict(receipt,**{field:receipt[field]+1}))
+
+    def test_history_visit_admission_checks_separate_ledger(self):
+        from scripts.run_virtual_dyadic_compact_cohort import checked_history_baseline
+        directory,process=self.observe('admit_ten_history_visit',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_HISTORY_VISIT',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        checked_history_baseline(receipt,history_visit=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['component_work']['history'],receipt['factored_composed_work']),
+                         (34_741_384,2_072_360_546))
+        with self.assertRaises(ValueError):checked_history_baseline(receipt)
+
+    def test_equal_quantizer_admits_comparisons_for_every_potential_mixed_row(self):
+        from scripts.run_virtual_dyadic_compact_cohort import equal_quantizer_baseline
+        directory,process=self.observe('admit_ten_equal_quantizer',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_EQUAL_QUANTIZER',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        equal_quantizer_baseline(receipt)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual((receipt['component_work']['quantizer'],receipt['factored_composed_work']),
+                         (464_268_936,2_103_157_154))
+        bad=dict(receipt,quantizer_terms=[*receipt['quantizer_terms'][:2],receipt['quantizer_terms'][2]-1])
+        with self.assertRaises(ValueError):equal_quantizer_baseline(bad)
+
+    def test_initial_uniform_policy_admission_retires_the_first_regret_read(self):
+        from scripts.run_virtual_dyadic_compact_cohort import zero_policy_bootstrap_baseline
+        from tests.virtual_dyadic_stage_schedule import stage_schedule
+        directory,process=self.observe('admit_ten_zero_policy_bootstrap',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_ZERO_POLICY_BOOTSTRAP',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        zero_policy_bootstrap_baseline(receipt)
+        schedule=stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True,
+                                zero_policy_bootstrap=True)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual(receipt['quantizer_terms'][0],0)
+        self.assertEqual(receipt['component_work']['quantizer'],412_635_048)
+        self.assertEqual(receipt['factored_composed_work'],2_053_430_402)
+        self.assertEqual(receipt['page_request_limit'],
+                         schedule['logical_read_calls']+schedule['direct_write_calls'])
+        self.assertEqual(schedule['read_epochs'][0]['logical_reads'],0)
+        self.assertEqual(schedule['physical_read_words'],receipt['page_read_word_limit'])
+        for bad in (dict(receipt,page_request_limit=receipt['page_request_limit']+1),
+                    dict(receipt,quantizer_terms=[1,*receipt['quantizer_terms'][1:]])):
+            with self.assertRaises(ValueError):zero_policy_bootstrap_baseline(bad)
+
+    def test_first_regret_support_admission(self):
+        from scripts.run_virtual_dyadic_compact_cohort import first_regret_bound_baseline
+        directory,process=self.observe('admit_ten_first_regret_bound',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_FIRST_REGRET_BOUND',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        first_regret_bound_baseline(receipt)
+        self.assertEqual((receipt['rank_calls'],receipt['training_invocations']),(0,0))
+        self.assertEqual(receipt['quantizer_terms'],[0,91_070_736,226_782_520])
+        self.assertEqual(receipt['factored_composed_work'],1_958_648_610)
+        bad=dict(receipt,quantizer_terms=[0,91_070_735,226_782_521])
+        with self.assertRaises(ValueError):first_regret_bound_baseline(bad)
+
+    def test_initial_packed_stage_needs_no_virtual_reads(self):
+        from scripts.run_virtual_dyadic_compact_cohort import initial_packed_stage_baseline
+        from tests.virtual_dyadic_stage_schedule import stage_schedule
+        directory,process=self.observe('admit_ten_initial_packed_stage',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_INITIAL_PACKED_STAGE',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        initial_packed_stage_baseline(receipt)
+        schedule=stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True,
+                                zero_policy_bootstrap=True,initial_packed_stage=True)
+        self.assertEqual(receipt['factored_composed_work'],1_954_834_338)
+        self.assertEqual(receipt['page_request_limit'],
+                         schedule['logical_read_calls']+schedule['direct_write_calls'])
+        self.assertEqual(schedule['virtual_read_calls'],0)
+        self.assertEqual(schedule['physical_read_words'],receipt['page_read_word_limit'])
+
+    def test_factored_stage_admits_width_by_row(self):
+        from scripts.run_virtual_dyadic_compact_cohort import bounded_stage_width_baseline
+        directory,process=self.observe('admit_ten_bounded_stage_width',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_BOUNDED_STAGE_WIDTH',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        bounded_stage_width_baseline(receipt)
+        self.assertEqual(receipt['stage_arithmetic_work'],63_526_016)
+        self.assertEqual(receipt['component_work']['state'],208_451_944)
+        self.assertEqual(receipt['factored_composed_work'],1_902_260_898)
+
+    def test_eleven_card_forecast_is_rank_free_and_matches_independent_ledger(self):
+        from scripts.project_virtual_dyadic_eleven import forecast, stage_arithmetic, project
+        from tests.virtual_dyadic_directory_trace import directory_trace
+        from tests.virtual_dyadic_stage_schedule import stage_schedule
+        directory,process=self.observe('forecast_eleven',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'FORECAST_ELEVEN',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        path=ROOT/'benchmarks/results/native-dyadic-eleven-card-forecast-v1/forecast.json'
+        prior=exact_json(path.read_bytes())['n11_prospective']
+        reconstructed=project(11,
+            stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True),
+            directory_trace(ten_card=False,eleven_card=True),prior['component_work']['chance'])
+        self.assertEqual(json.loads(json.dumps(reconstructed)),prior)
+        pages=stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True,zero_policy_bootstrap=True)
+        rows,slots=pages['rows'],pages['slots']
+        self.assertEqual((receipt['status'],receipt['training_invocations'],receipt['rank_calls']),
+                         ('FORECAST_ONLY',0,0))
+        self.assertEqual((receipt['deck_cards'],receipt['rows'],receipt['slots'],
+                          receipt['D_bits'],receipt['value_bits'],receipt['normalizer'],receipt['d5']),
+                         (11,rows,slots,639,646,29,420))
+        self.assertEqual((receipt['rank_planes'],receipt['rank_calls_per_training']),(56,144))
+        self.assertIs(receipt['training_admitted'],False)
+        self.assertIsNone(receipt['quality_gate'])
+        self.assertEqual((receipt['entries'],receipt['payload_bits'],receipt['composed_entries'],
+                          receipt['composed_payload_bits']),(621_312,22_126_080,635_684,23_045_888))
+        self.assertEqual((receipt['page_image_words'],receipt['page_requests'],receipt['page_read_words'],
+                          receipt['page_write_words'],receipt['page_write_requests']),
+                         (pages['image_words'],pages['logical_read_calls']+pages['direct_write_calls'],
+                          pages['physical_read_words'],pages['written_words'],pages['batched_write_calls']))
+        self.assertEqual(receipt['directory_page_limit'],directory_trace(ten_card=False,eleven_card=True)['misses'])
+        stage=sum(stage_arithmetic(11,646))
+        terms=forecast(11,646,14,1,first_regret_bound=True)
+        self.assertEqual((receipt['stage_arithmetic_work'],receipt['quantizer_terms']),(stage,terms))
+        expected=dict(prior['component_work'],history=98_688_160,
+                      state=prior['component_work']['state']+32*rows-22*(16*slots+8*rows)+stage,
+                      quantizer=sum(terms),parent=prior['component_work']['parent']-16*rows)
+        expected['numerical']=sum(expected.values())
+        factored_events=(8*(prior['shape']['folds']+prior['shape']['showdown_contractions'])+
+                         8*(prior['shape']['folds']+prior['shape']['showdowns'])+
+                         prior['parent_work']['value_add']//35+2*slots+8)
+        expected['composed']=(expected['numerical']+prior['transport_work']+208*rows+64*slots+
+                              16*((rows+7)//8)+64*factored_events+640*rows)
+        self.assertEqual(receipt['work'],expected)
+        self.assertEqual((receipt['compact_retained_bytes'],receipt['wire_bytes']),
+                         (9_614_478,9_614_478+2*(8*pages['image_words']+32)))
+        self.assertGreater(expected['composed'],receipt['comparison_caps']['composed'])
+
+    def test_eleven_forecast_rejects_training_and_scratch_requests(self):
+        for name,request,args,message in (
+            ('train_eleven',b'DYADIC_T2_V1 TRAIN_ELEVEN\n',[],b'unsupported fixed dyadic request'),
+            ('admit_eleven',b'DYADIC_T2_V1 ADMIT_ELEVEN\n',[],b'unsupported fixed dyadic request'),
+            ('forecast_with_scratch',b'DYADIC_T2_V1 FORECAST_ELEVEN\n',
+             [str(self.output/'page-images')],b'fixed request scratch argument count')):
+            with self.subTest(name=name):
+                directory,process=self.observe(name,lambda p:run_bounded_child(
+                    [str(self.exe),*args],request,p,stdout_limit=65536))
+                self.assertEqual(process['returncode'],2)
+                self.assertEqual((directory/'stdout.bin').read_bytes(),b'')
+                self.assertIn(message,(directory/'stderr.bin').read_bytes())
+        self.assertFalse((self.output/'page-images').exists())
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

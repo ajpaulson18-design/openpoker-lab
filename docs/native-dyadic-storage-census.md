@@ -339,3 +339,38 @@ is 625,444 entries and 22,390,528 payload bits. Ten-card training and
 full exact replay validate the format; eleven-card native admission
 and quality remain open.
 [Output and resource projection](../benchmarks/results/native-dyadic-compact-wire-v1/manifest.json)
+
+
+### Compiled eleven-card forecast
+
+The native request `DYADIC_T2_V1 FORECAST_ELEVEN` now runs the actual
+training planner on the pinned eleven-card deck and ranges. It reports
+380,172 rows, 892,910 action slots, 56 prospective rank planes, and
+646-bit retained values. Rank-free Python schedules independently
+reconstruct the tree, row, History, staging, quantizer and pager work.
+The Chance component is calibrated to the retained independent Chance
+forecast. The compiled request performs zero training and hand-ranking calls.
+
+| Resource | Compiled projection | Ten-card comparison ceiling |
+| --- | --- | --- |
+| Chance work | 448,157,615 | 450,000,000 |
+| History work | 98,688,160 | 100,000,000 |
+| State work | 662,607,040 | 300,000,000 |
+| Quantizer work | 1,014,146,272 | 520,000,000 |
+| Composed work | 5,954,402,351 | 2,150,000,000 |
+| Composed entries | 635,684 | 2,000,000 |
+| Composed payload bits | 23,045,888 | 1,200,000,000 |
+| Compact retained bytes | 9,614,478 | 9,833,076 |
+
+The composed work includes checkpoint transport, compact encoding and
+factored execution metadata. The wire contains 165,201,774 bytes,
+including both checkpoint frames. The storage envelope extends the
+ten-card row-tag and scratch census. Eleven-card State and pager
+construction still need their own admitted profiles and verification.
+
+The output marks training admission false and quality unknown. Native
+training and stream entry guards reject the forecast profile, and the
+public request parser rejects eleven-card training. The test packet
+also checks rejection of scratch arguments and exact integers above
+2^32.
+[Compiled forecast evidence](../benchmarks/results/native-dyadic-eleven-native-forecast-v1/manifest.json)

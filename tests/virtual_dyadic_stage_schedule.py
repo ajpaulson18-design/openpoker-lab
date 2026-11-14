@@ -13,7 +13,7 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, sweeps=2, batch_rows=False, quality32=False):
+def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, sweeps=2, batch_rows=False, quality32=False, zero_policy_bootstrap=False, initial_packed_stage=False):
     """Return independently reconstructed direct and dirty-run write receipts.
 
     The dirty-run model owns one page buffer per field. A page change flushes
@@ -27,6 +27,10 @@ def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, swe
         raise ValueError('quality32 requires the exact nine-card virtual-zero row-batched T32 schedule')
     if type(batch_rows) is not bool or (batch_rows and not (quality32 or (ten_card or eleven_card) and virtual_zero and sweeps==2)):
         raise ValueError('row batching requires the named expanded virtual-zero T2 schedule')
+    if type(zero_policy_bootstrap) is not bool or (zero_policy_bootstrap and (quality32 or not batch_rows)):
+        raise ValueError('initial policy bootstrap requires the expanded row-batched virtual-zero schedule')
+    if type(initial_packed_stage) is not bool or (initial_packed_stage and not zero_policy_bootstrap):
+        raise ValueError('initial packed staging requires the first-policy bootstrap')
     if not quality32 and sweeps!=2 and (sweeps not in (3,4) or ten_card or eleven_card or not virtual_zero):
         raise ValueError('unsupported staged sweep schedule')
     deck = tuple(sorted((*PROOF9, *range(11-len(PROOF9))))) if eleven_card else tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
@@ -230,8 +234,10 @@ def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, swe
                                    (name, *(a - b for a, b in zip(after, before))))))
 
         for sweep in range(1, sweeps+1):
-            epoch(f'sweep_{sweep}_policy', preorder, (1,), zero=sweep == 1)
-            epoch(f'sweep_{sweep}_stage', postorder, (1, 0), zero=sweep == 1)
+            policy_rows = () if zero_policy_bootstrap and sweep == 1 else preorder
+            epoch(f'sweep_{sweep}_policy', policy_rows, (1,), zero=sweep == 1)
+            staged_reads = () if initial_packed_stage and sweep == 1 else postorder
+            epoch(f'sweep_{sweep}_stage', staged_reads, (1, 0), zero=sweep == 1)
             tags[:] = [None] * 16
         epoch('export_average', preorder, (0,))
         result.update({'read_epochs': epochs, 'logical_read_calls': logical_reads,
@@ -250,6 +256,12 @@ def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, swe
                               (834372,10555076,357588,4629632,1498,6130244))
         if quality32:
             expected_reads = (2_368_740,30_811_206,73_260,954_766,7_566,30_657_954)
+        if zero_policy_bootstrap:
+            expected_reads = tuple(value - removed for value, removed in zip(
+                expected_reads, (rows, regret_words, rows, regret_words, 0, 0), strict=True))
+        if initial_packed_stage:
+            expected_reads = tuple(value - removed for value, removed in zip(
+                expected_reads, (2*rows, image_words, 2*rows, image_words, 0, 0), strict=True))
         if actual_reads != expected_reads:
             raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result
