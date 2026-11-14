@@ -5,6 +5,7 @@
 #include <boost/multiprecision/integer.hpp>
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -40,6 +41,10 @@ struct Limits {
     Profile profile = Profile::legacy;
     DivisionKernel division_kernel = DivisionKernel::separate;
 };
+struct PackedReceipt {
+    std::uint64_t rows = 0, zero_rows = 0, pure_rows = 0, equal_rows = 0, mixed_rows = 0;
+    std::uint64_t words_scanned = 0, imported_slots = 0, scan_work = 0;
+};
 struct Receipt {
     std::uint64_t work = 0, rows = 0;
     std::size_t max_input_bits = 0, peak_forecast_bits = 0;
@@ -47,7 +52,9 @@ struct Receipt {
     std::size_t peak_integer_payload_bits = 0;
     std::uint64_t combined_divisions = 0;
     std::uint64_t equal_rows = 0, equal_divisions_avoided = 0;
+    PackedReceipt packed{};
 };
+static_assert(sizeof(Receipt)<=32*sizeof(std::uint64_t));
 class Quantizer;
 class Policy final {
     std::array<std::uint64_t, maximum_actions> units_{};
@@ -166,6 +173,85 @@ public:
     Quantizer& operator=(Quantizer&&) = delete;
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
     [[nodiscard]] bool failed() const noexcept { return failed_; }
+    // Little-endian unsigned fixed-stride words. The caller supplies clipped
+    // weights with a common positive scale; no wide integers are built for shortcuts.
+    [[nodiscard]] Policy packed_policy(std::span<const std::uint64_t> input,
+            std::size_t count, std::size_t value_bits, ImageKind kind, bool first_sweep=false) {
+        if (failed_) fail(ErrorCode::failed_owner, "dyadic policy owner already failed");
+        try {
+            if (limits_.profile!=Profile::proof10 || limits_.division_kernel!=DivisionKernel::bounded_complement ||
+                count<2 || count>4 || !value_bits || value_bits>limits_.integer_bits || value_bits>704 ||
+                (kind!=ImageKind::current_regret && kind!=ImageKind::exported_average) ||
+                (first_sweep && kind!=ImageKind::current_regret))
+                fail(ErrorCode::invalid_row, "invalid packed policy contract");
+            const auto stride=(value_bits+63)/64;
+            if (input.size()!=count*stride)
+                fail(ErrorCode::invalid_row, "invalid packed policy size");
+            const auto scan=add(16,mul(4*count,add(stride,1)));
+            // At most one classification pass and one comparison pass over
+            // each slot; reserve both bounded scans before any word access.
+            charge(scan);
+            std::array<bool,4> positive{};
+            std::size_t positives=0, first=0, max_bits=0;
+            bool equal=true;
+            for (std::size_t i=0;i<count;++i) {
+                std::size_t bits=0;
+                for (std::size_t j=0;j<stride;++j) {
+                    const auto w=input[i*stride+j];
+                    if (j==stride-1 && value_bits%64 && (w>>(value_bits%64)))
+                        fail(ErrorCode::invalid_row, "nonzero packed policy padding");
+                    if (w) bits=64*j+std::bit_width(w);
+                }
+                max_bits=std::max(max_bits,bits);
+                if (bits) {
+                    positive[i]=true;
+                    if (!positives) first=i;
+                    else for (std::size_t j=0;j<stride;++j)
+                        if (input[i*stride+j]!=input[first*stride+j]) equal=false;
+                    ++positives;
+                }
+            }
+            if (first_sweep && positives==count)
+                fail(ErrorCode::invalid_row, "first-sweep clipped regret row must contain a zero");
+            Policy result;
+            if (positives>=2 && !equal) {
+                std::array<Integer,4> values{};
+                for (std::size_t i=0;i<count;++i) {
+                    const auto first_word=input.begin()+i*stride;
+                    boost::multiprecision::import_bits(values[i],first_word,first_word+stride,64,false);
+                }
+                result=allocate(std::span<const Integer>(values.data(),count),kind,first_sweep);
+            } else {
+                // Mirror allocate's logical reservations and extrema exactly.
+                charge(64+16*count);
+                receipt_.max_input_bits=std::max(receipt_.max_input_bits,max_bits);
+                if (positives>=2)
+                    charge(add(16,mul(4*count,add(words(max_bits),1))));
+                admit(count,53,256+32*count);
+                result.count_=count; result.kind_=kind; result.uniform_fallback_=positives==0;
+                const auto divisor=positives ? positives : count;
+                const auto base=grid_units/divisor, left=grid_units%divisor;
+                std::size_t rank=0;
+                for (std::size_t i=0;i<count;++i) if (!positives || positive[i]) {
+                    result.units_[i]=base+(rank<left ? 1U : 0U); ++rank;
+                }
+                if (positives>=2) {
+                    ++receipt_.equal_rows;
+                    receipt_.equal_divisions_avoided=add(receipt_.equal_divisions_avoided,positives-1);
+                }
+                partition(result); ++receipt_.rows;
+            }
+            auto& packed=receipt_.packed;
+            ++packed.rows;
+            if (!positives) ++packed.zero_rows;
+            else if (positives==1) ++packed.pure_rows;
+            else if (equal) ++packed.equal_rows;
+            else { ++packed.mixed_rows; packed.imported_slots=add(packed.imported_slots,count); }
+            packed.words_scanned=add(packed.words_scanned,count*stride);
+            packed.scan_work=add(packed.scan_work,scan);
+            return result;
+        } catch (...) { failed_=true; throw; }
+    }
     [[nodiscard]] Policy regret_policy(std::span<const Integer> regrets) {
         return allocate(regrets,ImageKind::current_regret);
     }

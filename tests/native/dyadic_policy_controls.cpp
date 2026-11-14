@@ -333,6 +333,69 @@ bool first_sweep_regret_controls() {
     return false;
 }
 
+bool packed_controls() {
+    grid::Limits limits{}; limits.profile=grid::Profile::proof10; limits.integer_bits=702;
+    limits.entries=336; limits.division_kernel=grid::DivisionKernel::bounded_complement;
+    grid::Quantizer packed(limits), baseline(limits);
+    std::size_t rows=0;
+    for (std::size_t n=2;n<=4;++n) for (std::size_t bits : {std::size_t(1),std::size_t(64),std::size_t(65),std::size_t(129),std::size_t(640)})
+    for (unsigned mask=0;mask<(1u<<n);++mask) for (int unequal=0;unequal<2;++unequal)
+    for (int kind=0;kind<2;++kind) {
+        const auto stride=(bits+63)/64;
+        std::vector<std::uint64_t> words(n*stride);
+        std::vector<Integer> values(n);
+        for (std::size_t i=0;i<n;++i) if (mask&(1u<<i)) {
+            values[i]=Integer(1)<<(bits-1);
+            if (unequal && i && bits>1) values[i]+=1;
+            Integer v=values[i];
+            for (std::size_t j=0;j<stride;++j) {words[i*stride+j]=(v & ((Integer(1)<<64)-1)).convert_to<std::uint64_t>();v>>=64;}
+        }
+        const auto before=baseline.receipt();
+        const auto expected=kind?baseline.average_export(values):baseline.regret_policy(values);
+        const auto actual=packed.packed_policy(words,n,bits,kind?grid::ImageKind::exported_average:grid::ImageKind::current_regret);
+        const auto& a=packed.receipt(); const auto& b=baseline.receipt();
+        const auto scan=16+4*n*(stride+1);
+        if (!std::equal(actual.units().begin(),actual.units().end(),expected.units().begin(),expected.units().end()) ||
+            actual.uniform_fallback()!=expected.uniform_fallback() || actual.kind()!=expected.kind() ||
+            a.work!=b.work+a.packed.scan_work || a.max_input_bits!=b.max_input_bits ||
+            a.peak_forecast_bits!=b.peak_forecast_bits || a.peak_scratch_entries!=b.peak_scratch_entries ||
+            a.peak_integer_payload_bits!=b.peak_integer_payload_bits || a.equal_rows!=b.equal_rows ||
+            a.equal_divisions_avoided!=b.equal_divisions_avoided || a.combined_divisions!=b.combined_divisions ||
+            b.work<=before.work || scan==0)
+            throw std::runtime_error("packed policy parity or receipt mismatch");
+        std::cout<<"PACKED "<<kind<<' '<<n<<' '<<actual.uniform_fallback();
+        for (std::size_t i=0;i<n;++i) std::cout<<' '<<hex(values[i])<<' '<<actual.units()[i];
+        std::cout<<'\n'; ++rows;
+    }
+    const auto& r=packed.receipt().packed;
+    if (r.rows!=rows || r.rows!=r.zero_rows+r.pure_rows+r.equal_rows+r.mixed_rows ||
+        !r.zero_rows || !r.pure_rows || !r.equal_rows || !r.mixed_rows || !r.imported_slots || !r.words_scanned)
+        throw std::runtime_error("packed receipt categories");
+    auto guard=[&](const char* label, grid::Limits lim, const std::vector<std::uint64_t>& words,
+                   std::size_t n,std::size_t bits,grid::ImageKind kind,bool first,grid::ErrorCode code) {
+        grid::Quantizer q(lim);
+        bool ok=rejects(label,code,[&]{(void)q.packed_policy(words,n,bits,kind,first);});
+        ok=rejects("packed_poison",grid::ErrorCode::failed_owner,[&]{(void)q.packed_policy(words,n,bits,kind,first);})&&ok;
+        return ok && q.failed() && q.receipt().packed.rows==0;
+    };
+    const auto k=grid::ImageKind::current_regret;
+    bool ok=true;
+    ok=guard("packed_padding",limits,{0,2,0,0},2,65,k,false,grid::ErrorCode::invalid_row)&&ok;
+    ok=guard("packed_size",limits,{0},2,64,k,false,grid::ErrorCode::invalid_row)&&ok;
+    ok=guard("packed_menu",limits,{0},1,64,k,false,grid::ErrorCode::invalid_row)&&ok;
+    ok=guard("packed_bits",limits,{0,0},2,703,k,false,grid::ErrorCode::invalid_row)&&ok;
+    ok=guard("packed_first",limits,{1,1},2,64,k,true,grid::ErrorCode::invalid_row)&&ok;
+    auto bad=limits; bad.division_kernel=grid::DivisionKernel::combined;
+    ok=guard("packed_kernel",bad,{0,0},2,64,k,false,grid::ErrorCode::invalid_row)&&ok;
+    bad=limits; bad.work=1;
+    ok=guard("packed_work",bad,{0,0},2,64,k,false,grid::ErrorCode::work_limit)&&ok;
+    bad=limits; bad.entries=100;
+    ok=guard("packed_entries",bad,{1,1,1,1},4,64,k,false,grid::ErrorCode::storage_limit)&&ok;
+    bad=limits; bad.integer_payload_bits=2048;
+    ok=guard("packed_payload",bad,{1,1,1},3,64,k,false,grid::ErrorCode::payload_limit)&&ok;
+    std::cout<<"PACKED_END "<<rows<<' '<<(ok?"PASS":"FAIL")<<'\n'; return ok;
+}
+
 int main() {
     try {
         grid::Quantizer owner;
@@ -367,7 +430,7 @@ int main() {
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
         const bool legacy=guards();
         return combined_controls() && complement_controls() && equal_complement_controls() &&
-            pair_complement_controls() && first_sweep_regret_controls() && legacy ? 0 : 1;
+            pair_complement_controls() && first_sweep_regret_controls() && legacy && packed_controls() ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }

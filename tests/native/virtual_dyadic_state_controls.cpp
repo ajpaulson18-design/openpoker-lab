@@ -1604,6 +1604,43 @@ void phase_payload_controls(h::History& history,const b::Template& source,const 
     require(batched_short_rejected && !std::filesystem::exists(batched_path) &&
         !std::filesystem::exists(batched_path.string()+"-rows"),
         "one-bit-short batched payload allocated scratch");
+    const s::Limits packed_policy_limits{plan.own_work+plan.quantizer_work,702,2000000,1200000000};
+    openpoker::factored_dyadic::Execution packed_policy_factored(1000000000);
+    const auto make_packed_policy_strategy=[&](const std::filesystem::path& path) {
+        s::PagedStrategy strategy{path,pages_limits,true,true,true,true,true,7656,
+            s::Lifecycle::fixed_two_sweep,p::DivisionKernel::bounded_complement,
+            s::PayloadModel::paged_phases,true};
+        strategy.factored=&packed_policy_factored;
+        strategy.reuse_snapshot=true;
+        strategy.zero_policy_bootstrap=true;
+        strategy.first_regret_bound=true;
+        strategy.packed_policy=true;
+        return strategy;
+    };
+    const auto valid_path=scratch/"packed-policy-valid";
+    {
+        auto strategy=make_packed_policy_strategy(valid_path);
+        s::State accepted(history,{2,2},1,plan,packed_policy_limits,catalog,packed,strategy);
+        require(std::filesystem::exists(valid_path.string()+"-rows"),
+            "valid packed policy shortcut baseline was not admitted");
+    }
+    for (int variant=0;variant<5;++variant) {
+        const auto guard_path=scratch/("packed-policy-guard-"+std::to_string(variant));
+        auto guard_plan=plan;
+        auto strategy=make_packed_policy_strategy(guard_path);
+        const auto guard_packed=variant==4?s::PackedAverageCapacity{packed.limb_count,0}:packed;
+        if (variant==0) strategy.division_kernel=p::DivisionKernel::separate;
+        if (variant==1) strategy.row_batched=false;
+        if (variant==2) strategy.zero_policy_bootstrap=false;
+        if (variant==3) guard_plan.sweeps=1;
+        bool expected_error=false;
+        try {s::State state(history,{2,2},1,guard_plan,packed_policy_limits,catalog,guard_packed,strategy);}
+        catch (const s::Error& error) {expected_error=error.code()==ErrorCode::invalid_forecast;}
+        require(expected_error && !std::filesystem::exists(guard_path) &&
+            !std::filesystem::exists(guard_path.string()+"-rows"),
+            "packed policy shortcut guard did not reject its isolated invalid condition before scratch allocation");
+    }
+    std::cout<<"PACKED_POLICY_GUARDS PASS\n";
     bool mode_mismatch_rejected=false;
     try {(void)s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true,
         s::Lifecycle::fixed_two_sweep,s::PayloadModel::legacy,true);}

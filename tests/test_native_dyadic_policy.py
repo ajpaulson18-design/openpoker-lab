@@ -178,5 +178,19 @@ class NativeDyadicPolicyTests(unittest.TestCase):
         self.assertIn('GUARD complement_menu PASS',self.lines)
 
 
+    def test_packed_images_against_fraction_oracle(self):
+        rows = [line.split() for line in self.lines if line.startswith('PACKED ')]
+        self.assertEqual(len(rows), 560)
+        for fields in rows:
+            kind, count, fallback = map(int, fields[1:4])
+            weights = [int(x, 16) for x in fields[4::2]]
+            units = list(map(int, fields[5::2]))
+            expected, total = allocation(weights, average=bool(kind))
+            self.assertEqual(len(weights), count)
+            self.assertEqual(units, expected)
+            self.assertEqual(bool(fallback), not total)
+        self.assertIn('PACKED_END 560 PASS', self.lines)
+
+
 if __name__ == '__main__':
     unittest.main()

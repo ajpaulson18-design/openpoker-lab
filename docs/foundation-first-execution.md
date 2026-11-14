@@ -1380,3 +1380,16 @@ pairs on one Windows host measured an 8.6 percent median paired
 improvement, with background-load limits preserved in the packet.
 The existing weighted-invocation work model is unchanged.
 [Bounded division contract](native-dyadic-two-sweep.md#bounded-exact-policy-grid-division)
+
+
+## Quantizing packed rows without integer imports
+
+The opt-in ten-card policy path scans packed row words and emits exact
+zero, pure and equal-positive policies directly. Only mixed rows import
+large integers. Independent replay counts 421,138 avoided action-slot
+imports while reproducing both checkpoints, policies and best responses.
+The extra word scans have an explicit reservation; they do not reduce
+the inherited modeled work envelope. Four alternating pairs measured
+a 2.1 percent median paired slowdown on one Windows host, so the path
+remains opt-in.
+[Packed policy contract](native-dyadic-two-sweep.md#policy-shortcuts-from-packed-state-rows)

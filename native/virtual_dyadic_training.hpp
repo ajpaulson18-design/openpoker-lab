@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement, eleven_card_forecast, ten_card_bounded_division
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement, eleven_card_forecast, ten_card_bounded_division, ten_card_packed_policy
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -346,6 +346,8 @@ struct Plan {
     bool bounded_stage_width=false;
     bool pair_complement=false;
     bool bounded_division=false;
+    bool packed_policy=false;
+    std::uint64_t packed_policy_scan_work=0;
     std::uint64_t stage_arithmetic_work=0;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
@@ -679,7 +681,8 @@ public:
         }
         const bool eleven=profile==StrategyProfile::eleven_card_forecast;
         plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
-        plan_.bounded_division=profile==StrategyProfile::ten_card_bounded_division;
+        plan_.packed_policy=profile==StrategyProfile::ten_card_packed_policy;
+        plan_.bounded_division=profile==StrategyProfile::ten_card_bounded_division || plan_.packed_policy;
         plan_.pair_complement=profile==StrategyProfile::ten_card_pair_complement || plan_.bounded_division;
         plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement || eleven;
         plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound ||
@@ -832,6 +835,14 @@ public:
         if (plan_.zero_policy_bootstrap) plan_.state_work+=state::initial_uniform_policy_work*R;
         for (const auto work:plan_.quantizer_terms) plan_.quantizer_work+=work;
         plan_.quantizer_work+=plan_.general_quantizer_work;
+        if (plan_.packed_policy) {
+            // One fixed-stride scan for each second-policy and final-average row.
+            // This is additional to the retained weighted quantizer invocation model.
+            require(plan_.ten_card() && plan_.requested_sweeps==2 && plan_.zero_policy_bootstrap,
+                "packed policy scan requires the fixed ten-card lifecycle");
+            plan_.packed_policy_scan_work=32*R+4*(plan_.packed_average_limbs+plan_.packed_regret_limbs+2*S);
+            plan_.quantizer_work+=plan_.packed_policy_scan_work;
+        }
         auto& w=plan_.parent;
         w[work_index(Work::geometry)]=3000000;
         w[work_index(Work::visit)]=(8+public_walks*visit_cost(plan_.traversal))*g.visits;
@@ -1456,6 +1467,7 @@ struct TrainingIO {
     std::uint64_t combined_divisions=0,compact_encoding_work=0,equal_rows=0,equal_divisions_avoided=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
     std::optional<factored_dyadic::Receipt> factored;
+    std::optional<dyadic_policy::PackedReceipt> packed_policy;
     packed_signed_update::Counts packed_updates{};
 };
 
@@ -1794,7 +1806,7 @@ public:
                     p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width,p.packed_policy}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();
@@ -1876,6 +1888,7 @@ public:
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         result.combined_divisions=state_receipt.combined_divisions;
+        if (p.packed_policy) result.packed_policy=state.packed_policy_receipt();
         result.equal_rows=state_receipt.equal_rows;
         result.equal_divisions_avoided=state_receipt.equal_divisions_avoided;
         if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();
