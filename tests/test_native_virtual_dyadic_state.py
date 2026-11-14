@@ -154,7 +154,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ',
                              'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ', 'PROOF9_T4_GUARDS ',
                              'PROOF9_Q32_STATE ', 'PROOF9_Q32_GUARDS ', 'PROOF9_Q32_PAGER ',
-                             'PHASE_PAYLOAD ' , 'PHASE_PAYLOAD_GUARDS ')
+                             'PHASE_PAYLOAD ' , 'PHASE_PAYLOAD_GUARDS ', 'PACKED_POLICY_GUARDS ')
         rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
