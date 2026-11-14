@@ -168,5 +168,13 @@ int main() {
     catch (const std::overflow_error&) { failed=true; }
     require(failed && clipped_target[0]==0x123456789abcdef0ULL &&
             clipped_counts.subtractions==0 && clipped_counts.words_written==0);
+    Counts subtraction_counts{};
+    subtraction_counts.subtractions=std::numeric_limits<std::uint64_t>::max();
+    failed=false;
+    try { initialize_from_zero(clipped_target,-1,0,true,64,subtraction_counts); }
+    catch (const std::overflow_error&) { failed=true; }
+    require(failed && clipped_target[0]==0x123456789abcdef0ULL &&
+            subtraction_counts.subtractions==std::numeric_limits<std::uint64_t>::max() &&
+            subtraction_counts.clipped==0 && subtraction_counts.words_written==0);
     std::cout << "packed signed update controls passed\n";
 }
