@@ -1341,3 +1341,12 @@ their increments. It skips the synthetic zero image reads while retaining
 the signed exactness checks, row coverage, and fixed checkpoint layout.
 The same schedule projects zero synthetic first-sweep reads at eleven cards.
 [Direct staging contract](native-dyadic-two-sweep.md#direct-first-sweep-packed-updates)
+
+
+## Certified State arithmetic widths
+
+Packed State staging charges the factored mix and signed difference
+using each row's certified scale. This saves 56,387,712 State work units
+in the ten-card receipt. The eleven-card rank-free forecast still
+exceeds the State cap by 362,607,040 units.
+[Factored width contract](native-dyadic-two-sweep.md#factored-staging-width-by-row)

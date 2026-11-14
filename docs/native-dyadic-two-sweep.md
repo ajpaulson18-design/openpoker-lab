@@ -1138,3 +1138,27 @@ Median native-call times were 4.833 versus 4.337 seconds, a 13.6 percent
 median paired slowdown. The broader local test run was active on the
 host during timing.
 [Direct staging evidence](../benchmarks/results/native-dyadic-initial-packed-stage-v1/manifest.json)
+
+
+## Factored staging width by row
+
+The opt-in ten-card profile charges factored regret arithmetic at the
+row's certified scale. A terminal numerator carries one factor of
+2^52 for every decision absent from the opponent reach or the remaining
+continuation. Reveal sums preserve the common factor. At a decision,
+the child values have at least one additional factor of 2^52 over the
+stored regret shift. State checks the factored scale of each nonzero
+child value before charging the reduced width.
+
+The policy units partition the 52-bit grid, which bounds every prefix
+of the normalized weighted sum. The first uniform policy uses one
+fractional bit for two actions, two for four actions, and up to 52 for
+three actions. The second policy reserves all 52 bits. The calculation
+keeps two extra bits for signed differences and scratch. Fixed checks,
+packed codec and pager charges still use their previous formulas.
+
+The ten-card State forecast and realized work both fall from 264,839,656
+to 208,451,944 units. The independent byte comparison changes only the
+two State work words. The eleven-card projection falls by 179,604,504
+units to 662,607,040, above the 300,000,000 cap.
+[Factored width evidence](../benchmarks/results/native-dyadic-bounded-stage-width-v1/manifest.json)
