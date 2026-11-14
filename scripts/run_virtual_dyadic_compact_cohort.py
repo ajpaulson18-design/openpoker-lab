@@ -256,7 +256,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -275,7 +275,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
     cohort.require(type(bounded_stage_width) is bool and
                    (not bounded_stage_width or first_regret_bound and not initial_packed_stage),
                    "bounded staging arithmetic requires the preceding owned-row profile")
-    suffix=("TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(pair_complement) is bool and (not pair_complement or bounded_stage_width),
+                   "two-positive complement requires bounded factored staging")
+    suffix=("TEN_PAIR_COMPLEMENT" if pair_complement else "TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -325,7 +327,11 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
         if bounded_stage_width:
-            legacy=bounded_stage_width_baseline(admission)
+            cohort.require(admission.get("pair_complement",False) is pair_complement,
+                           "two-positive complement selection differs")
+            normalized=dict(admission)
+            normalized.pop("pair_complement",None)
+            legacy=bounded_stage_width_baseline(normalized)
         elif initial_packed_stage:
             legacy=initial_packed_stage_baseline(admission)
         elif first_regret_bound:
@@ -394,6 +400,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
             if equal_quantizer: args.append("--equal-quantizer")
             if zero_policy_bootstrap: args.append("--zero-policy-bootstrap")
             if first_regret_bound: args.append("--first-regret-bound")
+            if pair_complement: args.append("--pair-complement")
             command=cohort.source_only_command(bootstrap,
                 source["files"]["scripts/run_virtual_frozen_source_only.py"]["raw_sha256"],
                 "scripts.verify_virtual_dyadic_training",receipt_path,args)

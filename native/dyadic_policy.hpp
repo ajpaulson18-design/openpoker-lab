@@ -18,7 +18,7 @@ inline constexpr std::uint64_t grid_units = std::uint64_t{1} << grid_bits;
 inline constexpr std::size_t maximum_actions = 20;
 enum class ImageKind { current_regret, exported_average };
 enum class Profile { legacy, proof10, proof9_q32 };
-enum class DivisionKernel { separate, combined, complement, equal_complement };
+enum class DivisionKernel { separate, combined, complement, equal_complement, pair_complement };
 inline constexpr std::uint64_t proof10_work_cap = 520000000;
 inline constexpr std::uint64_t proof9_q32_work_cap = 1870000000;
 inline constexpr std::size_t proof10_integer_bits = 702;
@@ -144,10 +144,12 @@ public:
                 (limits.division_kernel!=DivisionKernel::separate &&
                  limits.division_kernel!=DivisionKernel::combined &&
                  limits.division_kernel!=DivisionKernel::complement &&
-                 limits.division_kernel!=DivisionKernel::equal_complement) ||
+                 limits.division_kernel!=DivisionKernel::equal_complement &&
+                 limits.division_kernel!=DivisionKernel::pair_complement) ||
                 ((limits.division_kernel==DivisionKernel::combined && !proof10 && !proof9_q32) ||
                  ((limits.division_kernel==DivisionKernel::complement ||
-                  limits.division_kernel==DivisionKernel::equal_complement) && !proof10)) ||
+                  limits.division_kernel==DivisionKernel::equal_complement ||
+                  limits.division_kernel==DivisionKernel::pair_complement) && !proof10)) ||
                 !limits.work || limits.work > (proof10?proof10_work_cap:proof9_q32?proof9_q32_work_cap:500000000) || !limits.integer_bits ||
                 limits.integer_bits > ((proof10||proof9_q32)?proof10_integer_bits:65536) ||
                 limits.entries < receipt_.retained_entries ||
@@ -181,10 +183,11 @@ private:
             if (!count || count > maximum_actions)
                 fail(ErrorCode::invalid_row, "dyadic policy menu width");
             if ((limits_.division_kernel==DivisionKernel::complement ||
-                 limits_.division_kernel==DivisionKernel::equal_complement) && count>4)
+                 limits_.division_kernel==DivisionKernel::equal_complement ||
+                 limits_.division_kernel==DivisionKernel::pair_complement) && count>4)
                 fail(ErrorCode::invalid_row, "complement kernel menu width");
             charge(64+16*count);
-            std::size_t positives = 0, positive_index = 0, max_positive_bits = 0;
+            std::size_t positives = 0, first_positive_index = 0, positive_index = 0, max_positive_bits = 0;
             for (std::size_t i=0; i<count; ++i) {
                 const auto bits = width(regrets[i]);
                 if (bits > limits_.integer_bits)
@@ -193,6 +196,7 @@ private:
                     fail(ErrorCode::invalid_row, "dyadic average mass must be nonnegative");
                 receipt_.max_input_bits = std::max(receipt_.max_input_bits,bits);
                 if (regrets[i] > 0) {
+                    if (positives==0) first_positive_index=i;
                     ++positives; positive_index = i;
                     max_positive_bits = std::max(max_positive_bits,bits);
                 }
@@ -214,7 +218,8 @@ private:
             }
             // Equal-weight rows can be emitted without any wide arithmetic.
             // Charge the bounded equality scan before comparing input integers.
-            if (limits_.division_kernel==DivisionKernel::equal_complement) {
+            if (limits_.division_kernel==DivisionKernel::equal_complement ||
+                limits_.division_kernel==DivisionKernel::pair_complement) {
                 charge(add(16,mul(4*count,add(words(max_positive_bits),1))));
                 const Integer* first_positive=nullptr;
                 bool equal_positive_weights=true;
@@ -249,8 +254,11 @@ private:
             const auto scaled_bits = effective+grid_bits;
             const auto bits = std::max({sum_bits,scaled_bits,std::size_t{53}});
             const auto division = mul(words(scaled_bits),words(sum_bits));
+            const bool pair_complement=limits_.division_kernel==DivisionKernel::pair_complement && positives==2;
             const bool combined=limits_.division_kernel!=DivisionKernel::separate;
-            const bool complement=limits_.division_kernel==DivisionKernel::complement || limits_.division_kernel==DivisionKernel::equal_complement;
+            const bool complement=limits_.division_kernel==DivisionKernel::complement ||
+                limits_.division_kernel==DivisionKernel::equal_complement ||
+                limits_.division_kernel==DivisionKernel::pair_complement;
             // Keep the conservative combined reservation for the complement.
             // The separate receipt counts actual divide_qr invocations.
             const auto division_factor=combined?1U:2U;
@@ -260,9 +268,32 @@ private:
             admit(count,bits,work);
             Integer sum = 0;
             for (const auto& value : regrets) if (value > 0) sum += value >> common;
+            Policy policy; policy.count_ = count; policy.kind_ = kind;
+            if (pair_complement) {
+                const auto first=first_positive_index;
+                const auto second=positive_index;
+                const Integer scaled=(regrets[first] >> common) << grid_bits;
+                Integer quotient=0, remainder=0;
+                boost::multiprecision::divide_qr(scaled,sum,quotient,remainder);
+                ++receipt_.combined_divisions;
+                if (quotient<0 || quotient>grid_units)
+                    fail(ErrorCode::arithmetic,"dyadic policy quotient outside unit grid");
+                policy.units_[first]=quotient.convert_to<std::uint64_t>();
+                if (remainder==0) {
+                    policy.units_[second]=grid_units-policy.units_[first];
+                } else {
+                    const Integer complementary_remainder=sum-remainder;
+                    if (complementary_remainder<=0)
+                        fail(ErrorCode::arithmetic,"dyadic policy complementary remainder");
+                    policy.units_[second]=grid_units-policy.units_[first]-1;
+                    // Exact ties go to the earlier positive action in legal order.
+                    if (remainder>=complementary_remainder) ++policy.units_[first];
+                    else ++policy.units_[second];
+                }
+                partition(policy); ++receipt_.rows; return policy;
+            }
             std::array<Integer,maximum_actions> remainders{};
             std::array<std::size_t,maximum_actions> order{};
-            Policy policy; policy.count_ = count; policy.kind_ = kind;
             std::uint64_t allocated = 0;
             Integer residue = 0;
             std::uint64_t carry = 0;

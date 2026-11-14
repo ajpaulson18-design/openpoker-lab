@@ -1551,12 +1551,14 @@ def main():
     modes.add_argument('--ten-first-regret-bound',action='store_true')
     modes.add_argument('--ten-initial-packed-stage',action='store_true')
     modes.add_argument('--ten-bounded-stage-width',action='store_true')
+    modes.add_argument('--ten-pair-complement',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage or args.ten_bounded_stage_width
+    bounded_stage_width=args.ten_bounded_stage_width or args.ten_pair_complement
+    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage or bounded_stage_width
     zero_policy_bootstrap=args.ten_zero_policy_bootstrap or first_regret_bound
     reuse_snapshot=args.ten_reuse_snapshot or zero_policy_bootstrap
     equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
@@ -1568,7 +1570,7 @@ def main():
             factored=args.ten_factored or checked_history,checked_history=checked_history,
             history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
             zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=first_regret_bound,
-            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=args.ten_bounded_stage_width),sort_keys=True))
+            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=bounded_stage_width,pair_complement=args.ten_pair_complement),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

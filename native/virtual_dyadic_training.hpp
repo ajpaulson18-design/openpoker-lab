@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -335,6 +335,7 @@ struct Plan {
     bool first_regret_bound=false;
     bool initial_packed_stage=false;
     bool bounded_stage_width=false;
+    bool pair_complement=false;
     std::uint64_t stage_arithmetic_work=0;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
@@ -667,7 +668,8 @@ public:
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
         plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
-        plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width;
+        plan_.pair_complement=profile==StrategyProfile::ten_card_pair_complement;
+        plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement;
         plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound ||
             plan_.initial_packed_stage || plan_.bounded_stage_width;
         plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap || plan_.first_regret_bound;
@@ -1740,7 +1742,8 @@ public:
         if (p.shared_policy) meter_.charge(Work::route,p.policy_spill_work);
         if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
         auto division_kernel=dyadic_policy::DivisionKernel::separate;
-        if (p.equal_quantizer) division_kernel=dyadic_policy::DivisionKernel::equal_complement;
+        if (p.pair_complement) division_kernel=dyadic_policy::DivisionKernel::pair_complement;
+        else if (p.equal_quantizer) division_kernel=dyadic_policy::DivisionKernel::equal_complement;
         else if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
         else if (p.single_division) division_kernel=dyadic_policy::DivisionKernel::combined;
         std::optional<factored_dyadic::Execution> factored_execution;

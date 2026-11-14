@@ -224,6 +224,81 @@ bool equal_complement_controls() {
         <<(receipt_ok&&restricted?"PASS":"FAIL")<<'\n';
     return receipt_ok&&restricted;
 }
+
+bool pair_complement_controls() {
+    grid::Limits limits{};
+    limits.profile=grid::Profile::proof10;
+    limits.integer_bits=702; limits.entries=336;
+    limits.division_kernel=grid::DivisionKernel::pair_complement;
+    auto complement_limits=limits; complement_limits.division_kernel=grid::DivisionKernel::complement;
+    auto equal_limits=limits; equal_limits.division_kernel=grid::DivisionKernel::equal_complement;
+    auto separate_limits=limits; separate_limits.division_kernel=grid::DivisionKernel::separate;
+    grid::Quantizer pair(limits),complement(complement_limits),equal_complement(equal_limits),separate(separate_limits);
+    const Integer units=grid::grid_units;
+    const std::array<std::vector<Integer>,6> cases{{
+        {0,1,-9,2*units-1},               // exact half-unit tie: earlier positive action wins
+        {0,1,-9,2*units},                 // remainder below its complement: later action wins
+        {0,Integer(3)<<600,-7,Integer(7)<<600},
+        {(Integer(1)<<640)+1,0,-11,Integer(1)<<602},
+        {0,3,0,7},                        // unequal pair with interspersed zero
+        {0,3,5,7}                         // non-pair fallback retains complement behavior
+    }};
+    std::uint64_t expected_divisions=0;
+    for (const auto& input : cases) {
+        const auto a=separate.regret_policy(input);
+        const auto b=complement.regret_policy(input);
+        const auto c=pair.regret_policy(input);
+        const auto equal_units=[](const auto& lhs,const auto& rhs) {
+            return lhs.size()==rhs.size() &&
+                std::equal(lhs.units().begin(),lhs.units().end(),rhs.units().begin(),rhs.units().end());
+        };
+        if (!equal_units(a,b) || !equal_units(a,c))
+            throw std::runtime_error("pair-complement policy differs from generic division");
+        std::size_t positive_count=0,first=0,second=0;
+        for (std::size_t i=0;i<input.size();++i) if (input[i]>0) {
+            if (positive_count==0) first=i;
+            else if (positive_count==1) second=i;
+            ++positive_count;
+        }
+        if (positive_count==2 && input[first]!=input[second]) {
+            ++expected_divisions;
+            if (input[0]==0 && input[1]==1 && input[3]==2*units-1 &&
+                (c.units()[1]!=1 || c.units()[3]!=units-1))
+                throw std::runtime_error("pair-complement exact tie did not favor earlier positive action");
+            if (input[0]==0 && input[1]==1 && input[3]==2*units &&
+                (c.units()[1]!=0 || c.units()[3]!=units))
+                throw std::runtime_error("pair-complement non-tie remainder allocation changed");
+        } else if (positive_count>1) {
+            expected_divisions+=positive_count-1;
+        }
+    }
+    const std::array<Integer,4> equal{0,Integer(1)<<640,0,Integer(1)<<640};
+    const auto eq_pair=pair.regret_policy(equal);
+    const auto eq_baseline=equal_complement.regret_policy(equal);
+    if (!std::equal(eq_pair.units().begin(),eq_pair.units().end(),eq_baseline.units().begin(),eq_baseline.units().end()))
+        throw std::runtime_error("pair-complement equal row changed");
+    const std::array<Integer,4> avg{0,1,0,2*units-1};
+    const auto avg_separate=separate.average_export(avg);
+    const auto avg_pair=pair.average_export(avg);
+    const auto avg_equal=equal_complement.average_export(avg);
+    if (!std::equal(avg_separate.units().begin(),avg_separate.units().end(),avg_pair.units().begin(),avg_pair.units().end()) ||
+        !std::equal(avg_equal.units().begin(),avg_equal.units().end(),avg_pair.units().begin(),avg_pair.units().end()) ||
+        avg_pair.units()[1]!=1 || avg_pair.units()[3]!=units-1)
+        throw std::runtime_error("pair-complement average tie or generic parity changed");
+    expected_divisions+=1;
+    const bool receipts=pair.receipt().combined_divisions==expected_divisions &&
+        pair.receipt().equal_rows==equal_complement.receipt().equal_rows &&
+        pair.receipt().equal_divisions_avoided==equal_complement.receipt().equal_divisions_avoided &&
+        pair.receipt().work==equal_complement.receipt().work;
+    const bool profile_rejects=rejects("pair_q32_profile",grid::ErrorCode::invalid_limits,[&]{
+        auto bad=limits; bad.profile=grid::Profile::proof9_q32; grid::Quantizer q(bad);
+    });
+    const bool menu_rejects=failed_row("pair_menu",limits,fixture(5,3),grid::ErrorCode::invalid_row);
+    std::cout<<"PAIR_COMPLEMENT_END "<<pair.receipt().combined_divisions<<' '
+        <<pair.receipt().equal_rows<<' '<<pair.receipt().work<<' '
+        <<(receipts&&profile_rejects&&menu_rejects?"PASS":"FAIL")<<'\n';
+    return receipts&&profile_rejects&&menu_rejects;
+}
 } // namespace
 
 bool first_sweep_regret_controls() {
@@ -281,7 +356,8 @@ int main() {
             throw std::runtime_error("policy fixed coverage incomplete");
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
         const bool legacy=guards();
-        return combined_controls() && complement_controls() && equal_complement_controls() && first_sweep_regret_controls() && legacy ? 0 : 1;
+        return combined_controls() && complement_controls() && equal_complement_controls() &&
+            pair_complement_controls() && first_sweep_regret_controls() && legacy ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }
