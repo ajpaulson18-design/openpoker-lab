@@ -89,6 +89,7 @@ struct PagedStrategy {
     bool initial_packed_stage=false;
     bool bounded_stage_width=false;
     bool packed_policy=false;
+    bool packed_policy_v2=false;
 };
 inline constexpr std::uint64_t initial_uniform_policy_work=32;
 // Child action values share the regret scale plus one grid factor.
@@ -526,6 +527,8 @@ class State final {
              paged->division_kernel!=dyadic_policy::DivisionKernel::pair_complement &&
                       paged->division_kernel!=dyadic_policy::DivisionKernel::bounded_complement)))
             fail(ErrorCode::invalid_forecast,"first regret bound requires the virtual-zero equal quantizer");
+        if (paged && paged->packed_policy_v2 && !paged->packed_policy)
+            fail(ErrorCode::invalid_forecast,"deferred packed widths require packed policies");
         if (paged && paged->packed_policy && (!expanded || !paged->row_batched ||
             paged->division_kernel!=dyadic_policy::DivisionKernel::bounded_complement ||
             paged->lifecycle!=Lifecycle::fixed_two_sweep ||
@@ -721,7 +724,7 @@ class State final {
         const auto count=actions*stride;
         read_compact_row_words(field,offset,shift,actions,std::span(scratch).first(count));
         return quantizer_.packed_policy(std::span(scratch).first(count),actions,
-            forecast_.value_bits-shift,kind,first_sweep);
+            forecast_.value_bits-shift,kind,first_sweep,paged_->packed_policy_v2);
     }
     enum class BatchUpdate { regret_delta, average_increment, average_scaled_increment };
     void stage_compact_row(PackedField field,std::size_t offset,std::size_t shift,

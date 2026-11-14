@@ -190,6 +190,7 @@ class NativeDyadicPolicyTests(unittest.TestCase):
             self.assertEqual(units, expected)
             self.assertEqual(bool(fallback), not total)
         self.assertIn('PACKED_END 560 PASS', self.lines)
+        self.assertIn('PACKED_DEFERRED_END 560 PASS', self.lines)
 
 
 if __name__ == '__main__':

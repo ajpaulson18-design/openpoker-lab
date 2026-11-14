@@ -1617,14 +1617,15 @@ void phase_payload_controls(h::History& history,const b::Template& source,const 
         strategy.packed_policy=true;
         return strategy;
     };
-    const auto valid_path=scratch/"packed-policy-valid";
-    {
+    for (int deferred=0;deferred<2;++deferred) {
+        const auto valid_path=scratch/("packed-policy-valid-"+std::to_string(deferred));
         auto strategy=make_packed_policy_strategy(valid_path);
+        strategy.packed_policy_v2=deferred!=0;
         s::State accepted(history,{2,2},1,plan,packed_policy_limits,catalog,packed,strategy);
         require(std::filesystem::exists(valid_path.string()+"-rows"),
             "valid packed policy shortcut baseline was not admitted");
     }
-    for (int variant=0;variant<5;++variant) {
+    for (int variant=0;variant<6;++variant) {
         const auto guard_path=scratch/("packed-policy-guard-"+std::to_string(variant));
         auto guard_plan=plan;
         auto strategy=make_packed_policy_strategy(guard_path);
@@ -1633,6 +1634,7 @@ void phase_payload_controls(h::History& history,const b::Template& source,const 
         if (variant==1) strategy.row_batched=false;
         if (variant==2) strategy.zero_policy_bootstrap=false;
         if (variant==3) guard_plan.sweeps=1;
+        if (variant==5) { strategy.packed_policy=false; strategy.packed_policy_v2=true; }
         bool expected_error=false;
         try {s::State state(history,{2,2},1,guard_plan,packed_policy_limits,catalog,guard_packed,strategy);}
         catch (const s::Error& error) {expected_error=error.code()==ErrorCode::invalid_forecast;}

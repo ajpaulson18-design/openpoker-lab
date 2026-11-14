@@ -336,7 +336,18 @@ bool first_sweep_regret_controls() {
 bool packed_controls() {
     grid::Limits limits{}; limits.profile=grid::Profile::proof10; limits.integer_bits=702;
     limits.entries=336; limits.division_kernel=grid::DivisionKernel::bounded_complement;
-    grid::Quantizer packed(limits), baseline(limits);
+    grid::Quantizer packed(limits), deferred(limits), baseline(limits);
+    const auto receipts_equal=[](const grid::Receipt& a,const grid::Receipt& b) {
+        return a.work==b.work && a.rows==b.rows && a.max_input_bits==b.max_input_bits &&
+            a.peak_forecast_bits==b.peak_forecast_bits && a.retained_entries==b.retained_entries &&
+            a.peak_scratch_entries==b.peak_scratch_entries && a.peak_integer_payload_bits==b.peak_integer_payload_bits &&
+            a.combined_divisions==b.combined_divisions && a.equal_rows==b.equal_rows &&
+            a.equal_divisions_avoided==b.equal_divisions_avoided &&
+            a.packed.rows==b.packed.rows && a.packed.zero_rows==b.packed.zero_rows &&
+            a.packed.pure_rows==b.packed.pure_rows && a.packed.equal_rows==b.packed.equal_rows &&
+            a.packed.mixed_rows==b.packed.mixed_rows && a.packed.words_scanned==b.packed.words_scanned &&
+            a.packed.imported_slots==b.packed.imported_slots && a.packed.scan_work==b.packed.scan_work;
+    };
     std::size_t rows=0;
     for (std::size_t n=2;n<=4;++n) for (std::size_t bits : {std::size_t(1),std::size_t(64),std::size_t(65),std::size_t(129),std::size_t(640)})
     for (unsigned mask=0;mask<(1u<<n);++mask) for (int unequal=0;unequal<2;++unequal)
@@ -353,6 +364,11 @@ bool packed_controls() {
         const auto before=baseline.receipt();
         const auto expected=kind?baseline.average_export(values):baseline.regret_policy(values);
         const auto actual=packed.packed_policy(words,n,bits,kind?grid::ImageKind::exported_average:grid::ImageKind::current_regret);
+        const auto delayed=deferred.packed_policy(words,n,bits,kind?grid::ImageKind::exported_average:grid::ImageKind::current_regret,false,true);
+        if (delayed.kind()!=actual.kind() || delayed.uniform_fallback()!=actual.uniform_fallback() ||
+            !std::equal(delayed.units().begin(),delayed.units().end(),actual.units().begin(),actual.units().end()) ||
+            !receipts_equal(packed.receipt(),deferred.receipt()))
+            throw std::runtime_error("deferred packed policy or receipt mismatch");
         const auto& a=packed.receipt(); const auto& b=baseline.receipt();
         const auto scan=16+4*n*(stride+1);
         if (!std::equal(actual.units().begin(),actual.units().end(),expected.units().begin(),expected.units().end()) ||
@@ -373,14 +389,23 @@ bool packed_controls() {
         throw std::runtime_error("packed receipt categories");
     auto guard=[&](const char* label, grid::Limits lim, const std::vector<std::uint64_t>& words,
                    std::size_t n,std::size_t bits,grid::ImageKind kind,bool first,grid::ErrorCode code) {
-        grid::Quantizer q(lim);
-        bool ok=rejects(label,code,[&]{(void)q.packed_policy(words,n,bits,kind,first);});
-        ok=rejects("packed_poison",grid::ErrorCode::failed_owner,[&]{(void)q.packed_policy(words,n,bits,kind,first);})&&ok;
-        return ok && q.failed() && q.receipt().packed.rows==0;
+        bool all=true;
+        for (int mode=0;mode<2;++mode) {
+            grid::Quantizer q(lim);
+            const auto mode_label=std::string(label)+(mode?"_deferred":"");
+            bool ok=rejects(mode_label.c_str(),code,[&]{(void)q.packed_policy(words,n,bits,kind,first,mode!=0);});
+            ok=rejects(mode?"packed_poison_deferred":"packed_poison",grid::ErrorCode::failed_owner,[&]{
+                (void)q.packed_policy(words,n,bits,kind,first,mode!=0);
+            })&&ok;
+            all=all && ok && q.failed() && q.receipt().packed.rows==0;
+        }
+        return all;
     };
     const auto k=grid::ImageKind::current_regret;
     bool ok=true;
     ok=guard("packed_padding",limits,{0,2,0,0},2,65,k,false,grid::ErrorCode::invalid_row)&&ok;
+    ok=guard("packed_late_padding",limits,{1,0,0,0,0,2},3,65,k,false,grid::ErrorCode::invalid_row)&&ok;
+    ok=guard("packed_partial_padding",limits,{1,0,0,0,0,8},3,67,k,false,grid::ErrorCode::invalid_row)&&ok;
     ok=guard("packed_size",limits,{0},2,64,k,false,grid::ErrorCode::invalid_row)&&ok;
     ok=guard("packed_menu",limits,{0},1,64,k,false,grid::ErrorCode::invalid_row)&&ok;
     ok=guard("packed_bits",limits,{0,0},2,703,k,false,grid::ErrorCode::invalid_row)&&ok;
@@ -393,7 +418,22 @@ bool packed_controls() {
     ok=guard("packed_entries",bad,{1,1,1,1},4,64,k,false,grid::ErrorCode::storage_limit)&&ok;
     bad=limits; bad.integer_payload_bits=2048;
     ok=guard("packed_payload",bad,{1,1,1},3,64,k,false,grid::ErrorCode::payload_limit)&&ok;
-    std::cout<<"PACKED_END "<<rows<<' '<<(ok?"PASS":"FAIL")<<'\n'; return ok;
+    // Leading zero limbs, equal three-positive subset and valid first-sweep
+    // rows exercise widths independent of the fixed packed stride.
+    for (const std::vector<std::uint64_t>& input : std::array<std::vector<std::uint64_t>,4>{{
+            {7,0,0, 7,0,0, 0,0,0, 7,0,0},
+            {0,0,0, 1,1,0, 0,0,0, 2,0,0},
+            {0,0,0, 0,0,0, 0,0,0, 0,0,0},
+            {0,0,0, 0,0,0, 1,0,0, 0,0,0}}}) {
+        grid::Quantizer eager(limits), lazy(limits);
+        const auto x=eager.packed_policy(input,4,129,k,true);
+        const auto y=lazy.packed_policy(input,4,129,k,true,true);
+        if (x.uniform_fallback()!=y.uniform_fallback() || x.kind()!=y.kind() ||
+            !std::equal(x.units().begin(),x.units().end(),y.units().begin(),y.units().end()) ||
+            !receipts_equal(eager.receipt(),lazy.receipt())) ok=false;
+    }
+    std::cout<<"PACKED_END "<<rows<<' '<<(ok?"PASS":"FAIL")<<'\n';
+    std::cout<<"PACKED_DEFERRED_END "<<rows<<' '<<(ok?"PASS":"FAIL")<<'\n'; return ok;
 }
 
 int main() {
