@@ -182,6 +182,25 @@ def bounded_stage_width_baseline(record):
     return first_regret_bound_baseline(normalized)
 
 
+def packed_policy_baseline(record):
+    """Remove only the separately admitted fixed-stride row scans."""
+    rows, slots = 119_196, 281_066
+    extra=32*rows+4*(2_962_722+2*slots)
+    cohort.require(record.get("packed_policy") is True and
+                   record.get("packed_policy_scan_work")==extra and
+                   record.get("page_image_words")==2_962_722 and
+                   record.get("component_work",{}).get("quantizer")==317_853_256+extra,
+                   "packed policy scan admission differs")
+    normalized=dict(record,component_work=dict(record["component_work"],
+        quantizer=record["component_work"]["quantizer"]-extra),
+        parent_allowance=record["parent_allowance"]+extra)
+    normalized.pop("packed_policy")
+    normalized.pop("packed_policy_scan_work")
+    for field in ("planned_total_work","compact_composed_work","factored_composed_work"):
+        normalized[field]-=extra
+    return normalized
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
     cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record and "zero_policy_bootstrap" not in record and "first_regret_bound" not in record and "initial_packed_stage" not in record,
@@ -256,7 +275,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False,bounded_division=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False,bounded_division=False,packed_policy=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -279,7 +298,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "two-positive complement requires bounded factored staging")
     cohort.require(type(bounded_division) is bool and (not bounded_division or pair_complement),
                    "bounded policy division requires pair complement")
-    suffix=("TEN_BOUNDED_DIVISION" if bounded_division else "TEN_PAIR_COMPLEMENT" if pair_complement else "TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(packed_policy) is bool and (not packed_policy or bounded_division),
+                   "packed policy requires the bounded division profile")
+    suffix=("TEN_PACKED_POLICY" if packed_policy else "TEN_BOUNDED_DIVISION" if bounded_division else "TEN_PAIR_COMPLEMENT" if pair_complement else "TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -329,9 +350,11 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
         if bounded_stage_width:
+            cohort.require(admission.get("packed_policy",False) is packed_policy,
+                           "packed policy selection differs")
+            normalized=packed_policy_baseline(admission) if packed_policy else dict(admission)
             cohort.require(admission.get("pair_complement",False) is pair_complement,
                            "two-positive complement selection differs")
-            normalized=dict(admission)
             normalized.pop("pair_complement",None)
             cohort.require(admission.get("bounded_division",False) is bounded_division,
                            "bounded policy division selection differs")
@@ -406,6 +429,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
             if zero_policy_bootstrap: args.append("--zero-policy-bootstrap")
             if first_regret_bound: args.append("--first-regret-bound")
             if pair_complement: args.append("--pair-complement")
+            if packed_policy: args.append("--packed-policy")
             command=cohort.source_only_command(bootstrap,
                 source["files"]["scripts/run_virtual_frozen_source_only.py"]["raw_sha256"],
                 "scripts.verify_virtual_dyadic_training",receipt_path,args)
@@ -437,6 +461,16 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                                replay["work_plan"]["quantizer"]==admission["component_work"]["quantizer"],
                                "independent equal quantizer receipt differs")
                 result["equal_quantizer"]=equal_receipt
+            if packed_policy:
+                packed_receipt=cohort.exact_json((output/"packed-policy.json").read_bytes())
+                cohort.require(type(packed_receipt) is dict and
+                               packed_receipt==replay.get("packed_policy") and
+                               all(type(v) is int and v>=0 for v in packed_receipt.values()) and
+                               packed_receipt.get("rows")==2*admission["rows"] and
+                               packed_receipt.get("scan_work")==admission["packed_policy_scan_work"] and
+                               packed_receipt.get("words_scanned")==admission["page_image_words"],
+                               "independent packed policy classification or scan differs")
+                result["packed_policy"]=packed_receipt
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
                 checked_history_work=history_work if checked_history else None,
                 equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None,

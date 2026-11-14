@@ -142,6 +142,7 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
                                           119_196+1_024+88+256*11*8))
         self.assertEqual(int(new_bits),6_398_880)
         self.assertIn('PHASE_PAYLOAD_GUARDS PASS',self.lines)
+        self.assertIn('PACKED_POLICY_GUARDS PASS',self.lines)
 
     def test_two_sweeps_exact_mix_committed_masses_and_tagged_export(self):
         reference = build_reference_template(_template_case())

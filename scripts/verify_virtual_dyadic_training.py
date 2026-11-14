@@ -252,6 +252,52 @@ def equal_quantizer_schedule(values_by_row, ordered, row_scales, field):
     return result
 
 
+def packed_policy_schedule(values_by_row, ordered, row_scales, field):
+    """Classify exact packed inputs independently of the native shortcut/receipt."""
+    require(type(field) is int and field in (0, 1), 'saved packed policy field')
+    result = dict(rows=0, zero_rows=0, pure_rows=0, equal_rows=0, mixed_rows=0,
+                  words_scanned=0, imported_slots=0, scan_work=0)
+    for (key, menu), scales in zip(ordered, row_scales, strict=True):
+        require(type(menu) is int and 2 <= menu <= 4, 'saved packed policy menu')
+        shift = scales[field]
+        require(type(shift) is int and 0 <= shift < TEN_CARD_VALUE_BITS,
+                'saved packed policy shift')
+        values = values_by_row[key]
+        require(len(values) == menu, 'saved packed policy menu extent')
+        require(all(type(value) is int and value >= 0
+                    and value.bit_length() <= TEN_CARD_VALUE_BITS
+                    and value % (1 << shift) == 0 for value in values),
+                'saved packed policy value outside certified scale')
+        # Fixed retained width, including leading zero limbs, is the native scan
+        # extent. Input-dependent bit lengths would undercount this work.
+        stride = (TEN_CARD_VALUE_BITS-shift+63)//64
+        positive = [value >> shift for value in values if value > 0]
+        if not positive:
+            kind = 'zero_rows'
+        elif len(positive) == 1:
+            kind = 'pure_rows'
+        elif min(positive) == max(positive):
+            kind = 'equal_rows'
+        else:
+            kind = 'mixed_rows'
+            result['imported_slots'] += menu
+        result['rows'] += 1
+        result[kind] += 1
+        result['words_scanned'] += menu*stride
+        result['scan_work'] += 16+4*menu*(stride+1)
+    return result
+
+
+def check_packed_policy_ledger(receipt, rows, slots, image_bytes, quantizer_plan):
+    """Check the full two-field geometry and unchanged named prior plan."""
+    expected_scan_work=32*rows+4*(image_bytes//8+2*slots)
+    require(receipt['rows']==2*rows and receipt['words_scanned']==image_bytes//8
+            and receipt['scan_work']==expected_scan_work,
+            'saved packed policy scan geometry differs')
+    require(quantizer_plan==317_853_256+expected_scan_work,
+            'saved packed policy quantizer forecast differs')
+
+
 def rank_index_costs(planes):
     require(type(planes) is int and 1<=planes<=64,'invalid rank index capacity')
     bits=planes.bit_length()
@@ -270,7 +316,7 @@ def phase_payload_bits(rows,value_bits,*,row_batched=False):
 
 
 def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packed_images=None,checkpoint_digests=None,ten_card=False,proof9_t3=False,proof9_t4=False,
-           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False,equal_quantizer=False,zero_policy_bootstrap=False,first_regret_bound=False,pair_complement=False):
+           count_policy_divisions=False,phase_payload=False,row_batched=False,indexed_cache=False,proof9_quality32=False,proof9_linear32=False,complement=False,equal_quantizer=False,zero_policy_bootstrap=False,first_regret_bound=False,pair_complement=False,packed_policy=False):
     """Verify the exact retained grid/updates/BR; no native solver is invoked."""
     started=time.perf_counter()
     require(type(proof9_t3) is bool and type(proof9_t4) is bool and type(proof9_quality32) is bool and type(proof9_linear32) is bool and sum((proof9_t3,proof9_t4,proof9_quality32,proof9_linear32))<=1,
@@ -303,6 +349,9 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             'first regret support bound requires initial policy bootstrap')
     require(type(pair_complement) is bool and (not pair_complement or first_regret_bound),
             'pair complement requires the first-regret profile')
+    require(type(packed_policy) is bool and
+            (not packed_policy or pair_complement and first_regret_bound and ten_card is True and not extended),
+            'packed policy requires the named two-sweep ten-card pair-complement profile')
     sweep_count=32 if quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 2
     require(sum(x is not None for x in (images,packed_images,checkpoint_digests))<=1,
             'choose one checkpoint transport')
@@ -387,6 +436,8 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
         equal_receipt=dict(work=initial_policy_work,
                            equal_rows=0,equal_divisions_avoided=0)
         pair_rows={}
+        packed_receipt = dict(rows=0, zero_rows=0, pure_rows=0, equal_rows=0, mixed_rows=0,
+                              words_scanned=0, imported_slots=0, scan_work=0)
         sweeps=[]
         for t in range(1,sweep_count+1):
             if count_policy_divisions and regrets is not None:
@@ -400,6 +451,9 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
                 require(all(len(regrets[key])==menu and all(value>=0 for value in regrets[key]) and
                             any(value==0 for value in regrets[key]) for key,menu in ordered),
                         'independent first-sweep regret support exceeds its bound')
+            if packed_policy and t==2:
+                for field,value in packed_policy_schedule(regrets,ordered,row_scales,1).items():
+                    packed_receipt[field]+=value
             expected=fixture.grid(regrets)
             policy={}
             for key,menu in ordered:
@@ -442,6 +496,10 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
             divisions-=equal_receipt['equal_divisions_avoided']
         if pair_complement:
             pair_rows['average_export']=count_unequal_pairs(average)
+        if packed_policy:
+            for field,value in packed_policy_schedule(average,ordered,row_scales,0).items():
+                packed_receipt[field]+=value
+            equal_receipt['work']+=packed_receipt['scan_work']
         expected=fixture.grid(average,average=True)
         saved={}
         for key,menu in ordered:
@@ -525,6 +583,11 @@ def replay(path,expected_sha256,*,paired=False,rank_sets=False,images=None,packe
     if equal_quantizer:
         require(equal_receipt['work']==actual['quantizer'],'saved equal quantizer work differs')
         result['equal_quantizer']=equal_receipt
+    if packed_policy:
+        # The prior named first-regret plan is unchanged. Add the full retained
+        # scan of both fields, independently reconstructed from their row scales.
+        check_packed_policy_ledger(packed_receipt,rows,slots,image_bytes,plan['quantizer'])
+        result['packed_policy']=packed_receipt
     if pair_complement:
         result['unequal_two_positive_rows']=pair_rows
     if count_policy_divisions:
@@ -553,6 +616,7 @@ def main():
     parser.add_argument('--zero-policy-bootstrap',action='store_true')
     parser.add_argument('--first-regret-bound',action='store_true')
     parser.add_argument('--pair-complement',action='store_true')
+    parser.add_argument('--packed-policy',action='store_true')
     lifecycle=parser.add_mutually_exclusive_group()
     lifecycle.add_argument('--proof9-t3',action='store_true')
     lifecycle.add_argument('--proof9-t4',action='store_true')
@@ -580,7 +644,7 @@ def main():
                             row_batched=args.row_batched,indexed_cache=args.indexed_cache,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32,
                             complement=args.complement_divisions,equal_quantizer=args.equal_quantizer,
                             zero_policy_bootstrap=args.zero_policy_bootstrap,first_regret_bound=args.first_regret_bound,
-                            pair_complement=args.pair_complement),sort_keys=True))
+                            pair_complement=args.pair_complement,packed_policy=args.packed_policy),sort_keys=True))
 
 
 if __name__=='__main__':main()

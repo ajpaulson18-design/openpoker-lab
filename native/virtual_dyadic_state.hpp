@@ -88,6 +88,7 @@ struct PagedStrategy {
     bool first_regret_bound=false;
     bool initial_packed_stage=false;
     bool bounded_stage_width=false;
+    bool packed_policy=false;
 };
 inline constexpr std::uint64_t initial_uniform_policy_work=32;
 // Child action values share the regret scale plus one grid factor.
@@ -525,6 +526,12 @@ class State final {
              paged->division_kernel!=dyadic_policy::DivisionKernel::pair_complement &&
                       paged->division_kernel!=dyadic_policy::DivisionKernel::bounded_complement)))
             fail(ErrorCode::invalid_forecast,"first regret bound requires the virtual-zero equal quantizer");
+        if (paged && paged->packed_policy && (!expanded || !paged->row_batched ||
+            paged->division_kernel!=dyadic_policy::DivisionKernel::bounded_complement ||
+            paged->lifecycle!=Lifecycle::fixed_two_sweep ||
+            paged->payload_model!=PayloadModel::paged_phases ||
+            !paged->first_regret_bound || !paged->zero_policy_bootstrap || f.sweeps!=2))
+            fail(ErrorCode::invalid_forecast,"packed policy shortcuts require the exact two-sweep proof10 row-batched lifecycle");
         if (paged && paged->bounded_stage_width && !paged->first_regret_bound)
             fail(ErrorCode::invalid_forecast,"bounded staging width requires the owned two-sweep zero image");
         if (paged && paged->initial_packed_stage && !paged->first_regret_bound)
@@ -619,6 +626,8 @@ class State final {
     static StorageForecast admit_storage(const Forecast& f,const Limits& limits,
                                          ActionCatalogCapacity catalog,PackedAverageCapacity packed,
                                          const std::optional<PagedStrategy>& paged) {
+        if (paged && paged->packed_policy && (!packed.limb_count || !packed.regret_limbs))
+            fail(ErrorCode::invalid_forecast,"packed policy shortcuts require dual packed state images");
         if (paged && paged->scratch.empty())
             fail(ErrorCode::invalid_forecast,"paged state requires a scratch path");
         if (paged && paged->payload_model==PayloadModel::paged_phases &&
@@ -688,12 +697,31 @@ class State final {
         std::array<std::uint64_t,row_batch_codec_words> scratch;
         const auto words=values.size()*stride;
         auto live=std::span(scratch).first(words);
-        paged_image_->read(page_base(field)+offset,live,
-            field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u);
+        read_compact_row_words(field,offset,shift,values.size(),live);
         for (std::size_t action=0;action<values.size();++action) {
             const auto* first=scratch.data()+action*stride;
             boost::multiprecision::import_bits(values[action],first,first+stride,64,false);
         }
+    }
+    void read_compact_row_words(PackedField field,std::size_t offset,std::size_t shift,
+                                std::size_t actions,std::span<std::uint64_t> output) const {
+        if (!paged_ || !paged_image_ || !paged_->row_batched || !actions ||
+            actions>row_batch_max_actions)
+            fail(ErrorCode::invalid_row,"invalid packed policy row read");
+        const auto stride=packed_stride(shift);
+        if (actions>row_batch_codec_words/stride || output.size()<actions*stride)
+            fail(ErrorCode::invalid_row,"packed policy row exceeds its codec bound");
+        paged_image_->read(page_base(field)+offset,output.first(actions*stride),
+            field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u);
+    }
+    [[nodiscard]] dyadic_policy::Policy packed_row_policy(PackedField field,std::size_t offset,
+            std::size_t shift,std::size_t actions,dyadic_policy::ImageKind kind,bool first_sweep=false) {
+        const auto stride=packed_stride(shift);
+        std::array<std::uint64_t,row_batch_codec_words> scratch{};
+        const auto count=actions*stride;
+        read_compact_row_words(field,offset,shift,actions,std::span(scratch).first(count));
+        return quantizer_.packed_policy(std::span(scratch).first(count),actions,
+            forecast_.value_bits-shift,kind,first_sweep);
     }
     enum class BatchUpdate { regret_delta, average_increment, average_scaled_increment };
     void stage_compact_row(PackedField field,std::size_t offset,std::size_t shift,
@@ -1095,6 +1123,9 @@ public:
         answer.work=answer.state_work+answer.quantizer_work;
         return answer;
     }
+    [[nodiscard]] const dyadic_policy::PackedReceipt& packed_policy_receipt() const noexcept {
+        return quantizer_.receipt().packed;
+    }
     [[nodiscard]] packed_signed_update::Counts packed_update_counts() const noexcept {
         return packed_update_counts_;
     }
@@ -1473,8 +1504,9 @@ public:
             // State owns the virtual-zero image and has never committed a sweep here.
             const bool initial_uniform=paged_ && paged_->zero_policy_bootstrap && !receipt_.completed_sweeps;
             const bool bound_first_regrets=paged_ && paged_->first_regret_bound && receipt_.completed_sweeps==1;
+            const bool packed_shortcut=paged_ && paged_->packed_policy && receipt_.completed_sweeps==1;
             std::optional<std::array<Integer,20>> decoded;
-            if (packed_regrets() && !initial_uniform) decoded.emplace();
+            if (packed_regrets() && !initial_uniform && !packed_shortcut) decoded.emplace();
             for (std::size_t row_index=0;row_index<row_count();++row_index) {
                 const auto descriptor=describe_row(row_index);
                 const auto row=descriptor.row;
@@ -1484,6 +1516,19 @@ public:
                     if (row.actions.size()>row_batch_max_actions)
                         fail(ErrorCode::invalid_row,"policy row exceeds batched menu cap");
                     seen_[row_index]=policy_spill_->append_initial_uniform(row.offset-row_index,row.actions.size());
+                    continue;
+                }
+                if (packed_shortcut) {
+                    if (row.actions.size()>row_batch_max_actions)
+                        fail(ErrorCode::invalid_row,"policy row exceeds batched menu cap");
+                    const auto& packed_row=descriptor;
+                    const auto policy=packed_row_policy(PackedField::regret,packed_row.regret_offset,
+                        packed_row.regret_shift,row.actions.size(),dyadic_policy::ImageKind::current_regret,true);
+                    if (policy_spill_) {
+                        const auto tag=policy_spill_->append(row.offset-row_index,policy.units());
+                        if (row_directory_) seen_[row_index]=tag;
+                        else compact_rows_[row_index].policy_tag=tag;
+                    } else std::copy(policy.units().begin(),policy.units().end(),units_.get()+row.offset);
                     continue;
                 }
                 std::span<const Integer> values;
@@ -1779,10 +1824,20 @@ private:
     template<class Emit>
     void average_rows(Emit&& emit) {
         std::optional<std::array<Integer,20>> decoded;
-        if (packed()) decoded.emplace();
+        const bool packed_shortcut=paged_ && paged_->packed_policy;
+        if (packed() && !packed_shortcut) decoded.emplace();
         for (std::size_t i=0;i<forecast_.rows;++i) {
             const auto descriptor=describe_row(i);
             const auto row=descriptor.row;charge(16+4*row.actions.size());
+            if (packed_shortcut) {
+                if (row.actions.size()>row_batch_max_actions)
+                    fail(ErrorCode::invalid_row,"average row exceeds batched menu cap");
+                const auto policy=packed_row_policy(PackedField::average,descriptor.average_offset,
+                    descriptor.average_shift,row.actions.size(),dyadic_policy::ImageKind::exported_average);
+                emit(i,row.offset,policy.units(),static_cast<unsigned char>(policy.uniform_fallback()));
+                healthy();
+                continue;
+            }
             const Integer* masses;
             if (decoded) {
                 const PackedRow average_row{descriptor.average_offset,descriptor.average_shift};

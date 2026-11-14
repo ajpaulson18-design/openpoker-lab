@@ -1604,6 +1604,33 @@ void phase_payload_controls(h::History& history,const b::Template& source,const 
     require(batched_short_rejected && !std::filesystem::exists(batched_path) &&
         !std::filesystem::exists(batched_path.string()+"-rows"),
         "one-bit-short batched payload allocated scratch");
+    for (int variant=0;variant<4;++variant) {
+        const auto guard_path=scratch/("packed-policy-guard-"+std::to_string(variant));
+        auto guard_limits=pages_limits;
+        auto guard_plan=plan;
+        auto strategy=s::PagedStrategy{guard_path,guard_limits,true,true,true,true,true,7656,
+            s::Lifecycle::fixed_two_sweep,p::DivisionKernel::bounded_complement,s::PayloadModel::paged_phases,true};
+        strategy.packed_policy=true;
+        if (variant==0) strategy.division_kernel=p::DivisionKernel::separate;
+        if (variant==1) strategy.row_batched=false;
+        if (variant==2) strategy.zero_policy_bootstrap=false;
+        if (variant==3) guard_plan.sweeps=1;
+        bool rejected=false;
+        try {s::State state(history,{2,2},1,guard_plan,limits,catalog,packed,strategy);}
+        catch (const s::Error&) {rejected=true;}
+        require(rejected && !std::filesystem::exists(guard_path) &&
+            !std::filesystem::exists(guard_path.string()+"-rows"),
+            "incompatible packed policy shortcut allocated scratch");
+    }
+    bool unpacked_rejected=false;
+    try {
+        auto strategy=s::PagedStrategy{scratch/"packed-policy-unpacked",pages_limits,true,true,true,true,true,7656,
+            s::Lifecycle::fixed_two_sweep,p::DivisionKernel::bounded_complement,s::PayloadModel::paged_phases,true};
+        strategy.packed_policy=true;
+        s::State state(history,{2,2},1,plan,limits,catalog,{packed.limb_count,0},strategy);
+    } catch (const s::Error&) {unpacked_rejected=true;}
+    require(unpacked_rejected,"packed policy shortcut accepted average-only storage");
+    std::cout<<"PACKED_POLICY_GUARDS PASS\n";
     bool mode_mismatch_rejected=false;
     try {(void)s::State::storage_forecast(plan,catalog,packed,pages_limits,true,true,true,true,true,
         s::Lifecycle::fixed_two_sweep,s::PayloadModel::legacy,true);}
