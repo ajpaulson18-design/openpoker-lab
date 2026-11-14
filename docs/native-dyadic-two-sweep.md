@@ -1184,3 +1184,50 @@ the shortcut. Median native call time was 4.711 versus 4.505 seconds,
 a 4.1 percent median paired slowdown. The broader local suite was active
 on that host during timing.
 [Two-positive policy evidence](../benchmarks/results/native-dyadic-pair-complement-v1/manifest.json)
+
+
+## Bounded exact policy-grid division
+
+The opt-in ten-card profile replaces the bundled wide quotient/remainder
+call with a portable base-2^32 division helper. Its inputs satisfy
+0 <= weight <= sum, a positive sum, and at most 704 bits per input.
+The helper computes divmod(weight * 2^52, sum) using fixed arrays.
+The normalized divisor has at most 22 digits and the numerator at most
+24 digits. At most three quotient positions are visited. Each estimate
+permits at most two corrections and one subtraction add-back.
+The helper checks the final quotient and remainder bounds.
+
+The quantizer uses this helper after cancelling the common power of
+two. Equal weights retain their existing shortcut. Two unequal positive
+weights retain complementary-remainder allocation and legal-action tie
+order. The native admission and host request both select this explicitly
+through the ten-card bounded-division profile.
+
+The frozen source at e8a22cf reproduced the previous two-positive
+profile's complete compact and expanded streams, all policy spill and
+directory artifacts, both checkpoints, and visible-information best
+responses. Saved-only replay reconstructed the result without calling
+the native producer. There were 72,928 quotient/remainder invocations.
+The inherited work ledger counts weighted helper invocations, as defined
+above. This study preserves that ledger and establishes no new count
+of backend limb operations or processor instructions.
+
+All 75 focused controls passed in both normal and optimized Python,
+without skips. The native controls compare 10,000 deterministic vectors
+against the bundled integer backend. An independent Python divmod check
+also verifies 96 saved input/output vectors. Crafted fixtures exercise
+two estimate corrections, a subtraction add-back, normalization shifts
+zero and 31, and input-width and sign guards. The evidence archive
+includes the native build identities, source closure, raw vectors,
+process outcomes, and unchanged-source receipts.
+
+Four alternating same-executable pairs were faster with the helper in
+every pair. Median native-call times were 4.509 seconds with bounded
+division and 5.217 seconds with the previous division path. The median
+paired ratio was 0.91386, an 8.6 percent improvement. These complete
+native calls include streamed transport. They cover one Windows host
+and the named ten-card T2 fixture. A broader local suite finished during
+the second pair, and other host load was uncontrolled. The helper remains
+opt-in. Eleven-card training, wider-game quality and primitive-operation
+accounting remain open.
+[Bounded division evidence](../benchmarks/results/native-dyadic-bounded-policy-division-v1/manifest.json)

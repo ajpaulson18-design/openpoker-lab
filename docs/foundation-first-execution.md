@@ -1369,3 +1369,14 @@ composed work units and 165,201,774 wire bytes. State, quantizer and
 whole-request limits remain exceeded under the ten-card comparison
 ceilings. The request reports zero training and rank calls.
 [Native forecast contract](native-dyadic-storage-census.md#compiled-eleven-card-forecast)
+
+
+## Portable policy-grid division
+
+The opt-in ten-card trainer uses fixed base-2^32 arrays for an exact
+52-bit-grid quotient and remainder. Independent vectors and saved-only
+whole-game replay reproduce the previous division path. Four alternating
+pairs on one Windows host measured an 8.6 percent median paired
+improvement, with background-load limits preserved in the packet.
+The existing weighted-invocation work model is unchanged.
+[Bounded division contract](native-dyadic-two-sweep.md#bounded-exact-policy-grid-division)
