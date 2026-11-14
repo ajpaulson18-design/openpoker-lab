@@ -631,7 +631,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         reconstructed=project(11,
             stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True),
             directory_trace(ten_card=False,eleven_card=True),prior['component_work']['chance'])
-        self.assertEqual(reconstructed,prior)
+        self.assertEqual(json.loads(json.dumps(reconstructed)),prior)
         pages=stage_schedule(eleven_card=True,virtual_zero=True,batch_rows=True,zero_policy_bootstrap=True)
         rows,slots=pages['rows'],pages['slots']
         self.assertEqual((receipt['status'],receipt['training_invocations'],receipt['rank_calls']),
