@@ -1,4 +1,5 @@
 #include "virtual_dyadic_training.hpp"
+#include "training_phase_profile.hpp"
 #include <array>
 #include <cstdio>
 #include <filesystem>
@@ -12,6 +13,8 @@
 #endif
 
 namespace training=openpoker::virtual_dyadic_training;
+namespace phase_trace=openpoker::training_phase_trace;
+namespace phase_profile=openpoker::training_phase_profile;
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
@@ -357,6 +360,69 @@ void save_divisions(const std::filesystem::path& scratch,std::uint64_t count) {
     stream.close();
     training::require(bool(stream),"quantizer receipt write failed");
 }
+struct ProfileOuter {
+    std::uint64_t driver_begin_ns=0,driver_end_ns=0,train_begin_ns=0,train_end_ns=0,
+                  receipts_begin_ns=0,receipts_end_ns=0;
+};
+struct ProfileBudgets {
+    std::uint64_t solver_work=0,with_profile_work=0,solver_entries=0,with_profile_entries=0,
+                  solver_payload_bits=0,with_profile_payload_bits=0;
+};
+ProfileBudgets phase_budgets(const training::Plan& plan) {
+    training::require(plan.ten_card() && plan.bounded_division && plan.factored &&
+        plan.compact_wire && plan.reuse_snapshot && plan.requested_sweeps==2,
+        "phase profiling requires the fixed ten-card bounded divider");
+    ProfileBudgets result;
+    result.solver_work=plan.total_work+training::sweep_stream_copy_work+
+        training::compact_encoding_work(plan.shape)+training::factored_metadata_work(plan);
+    result.solver_entries=plan.entries+training::sweep_stream_entries+32+8192+2048;
+    result.solver_payload_bits=plan.payload_bits+training::sweep_stream_payload_bits+2048+524288+131072;
+    training::require(result.solver_work<=2150000000ULL-phase_profile::work_allowance &&
+        result.solver_entries<=2000000-phase_profile::metadata_entries_reserved &&
+        result.solver_payload_bits<=1200000000-phase_profile::metadata_bytes_reserved*8,
+        "phase diagnostics exceed composed resource admission");
+    result.with_profile_work=result.solver_work+phase_profile::work_allowance;
+    result.with_profile_entries=result.solver_entries+phase_profile::metadata_entries_reserved;
+    result.with_profile_payload_bits=result.solver_payload_bits+phase_profile::metadata_bytes_reserved*8;
+    return result;
+}
+void save_phase_profile(const std::filesystem::path& scratch,const phase_profile::Recorder& recorder,
+                        const ProfileOuter& outer,const ProfileBudgets& budgets) {
+    training::require(recorder.healthy() && recorder.events().size()==36 &&
+        recorder.clock_reads()==43,"incomplete or failed phase recording");
+    const auto path=scratch.parent_path()/"phase-profile.json";
+    training::require(!std::filesystem::exists(path),"phase profile output already exists");
+    std::ofstream out(path,std::ios::binary);
+    training::require(bool(out),"phase profile receipt open failed");
+    out<<"{\"version\":1,\"clock\":\"steady_clock\",\"units\":\"nanoseconds\","
+        <<"\"scope\":\"ten-card-bounded-division-T2\",\"profile_status\":\"complete\","
+        <<"\"diagnostics\":{\"capacity\":"<<phase_profile::capacity
+        <<",\"event_count\":"<<recorder.events().size()<<",\"clock_reads\":"<<recorder.clock_reads()
+        <<",\"max_clock_reads\":"<<phase_profile::clock_limit
+        <<",\"metadata_bytes\":"<<sizeof(phase_profile::Recorder)
+        <<",\"metadata_bytes_reserved\":"<<phase_profile::metadata_bytes_reserved
+        <<",\"metadata_entries_reserved\":"<<phase_profile::metadata_entries_reserved
+        <<",\"work_allowance\":"<<phase_profile::work_allowance<<",\"failed\":false},"
+        <<"\"budgets\":{\"solver_work\":"<<budgets.solver_work<<",\"with_profile_work\":"<<budgets.with_profile_work
+        <<",\"solver_entries\":"<<budgets.solver_entries<<",\"with_profile_entries\":"<<budgets.with_profile_entries
+        <<",\"solver_payload_bits\":"<<budgets.solver_payload_bits
+        <<",\"with_profile_payload_bits\":"<<budgets.with_profile_payload_bits<<"},"
+        <<"\"outer\":{\"driver_begin_ns\":"<<outer.driver_begin_ns<<",\"driver_end_ns\":"<<outer.driver_end_ns
+        <<",\"train_begin_ns\":"<<outer.train_begin_ns<<",\"train_end_ns\":"<<outer.train_end_ns
+        <<",\"receipts_begin_ns\":"<<outer.receipts_begin_ns
+        <<",\"receipts_end_ns\":"<<outer.receipts_end_ns<<"},\"events\":[";
+    bool first=true;
+    for (const auto& event:recorder.events()) {
+        if (!first) out<<',';
+        first=false;
+        out<<"{\"phase\":\""<<phase_trace::name(event.phase)<<"\",\"edge\":\""
+            <<(event.edge==phase_trace::Edge::begin?"begin":"end")<<"\",\"sweep\":"
+            <<event.sweep<<",\"ns\":"<<event.ns<<'}';
+    }
+    out<<"]}\n";
+    out.close();
+    training::require(bool(out),"phase profile receipt write failed");
+}
 } // namespace
 
 int main(int argc,char* argv[]) {
@@ -377,7 +443,9 @@ int main(int argc,char* argv[]) {
             mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
             mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
             mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32;
-        training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
+        const bool profile_phases=argc==3 && std::string_view(argv[2])=="--profile-phases";
+        training::require(profile_phases?(paged_train && mode==Mode::train_ten_bounded_division):
+            argc==(paged_train?2:1),"fixed request scratch argument count");
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
@@ -454,7 +522,23 @@ int main(int argc,char* argv[]) {
         else if (mode==Mode::admit_compact || mode==Mode::train_compact) profile=training::StrategyProfile::compact;
         else if (mode==Mode::admit_packed || mode==Mode::train_packed) profile=training::StrategyProfile::packed_averages;
         const bool paired=profile!=training::StrategyProfile::dense || mode==Mode::admit_paired || mode==Mode::train_paired;
-        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
+        std::optional<phase_profile::Recorder> recorder;
+        std::optional<phase_trace::Sink> sink;
+        ProfileOuter phase_outer;
+        ProfileBudgets phase_budget;
+        if (profile_phases) {
+            training::require(!std::filesystem::exists(scratch.parent_path()/"phase-profile.json"),
+                "phase profile output already exists");
+            recorder.emplace();
+            sink=recorder->sink();
+            phase_outer.driver_begin_ns=recorder->now_ns();
+        }
+        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile,
+                                sink?&*sink:nullptr);
+        if (recorder) {
+            phase_outer.driver_end_ns=recorder->now_ns();
+            phase_budget=phase_budgets(driver.plan());
+        }
         if (complement_admit || mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
@@ -471,10 +555,16 @@ int main(int argc,char* argv[]) {
                   mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32,
                 mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4,mode==Mode::admit_proof9_linear32);
         else {
+            if (recorder) phase_outer.train_begin_ns=recorder->now_ns();
             const auto io=driver.train(std::cout,scratch,complement_train || mode==Mode::train_ten_sweep_stream ||
                 mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
                 mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
-                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32);
+                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32,
+                sink?&*sink:nullptr);
+            if (recorder) {
+                phase_outer.train_end_ns=recorder->now_ns();
+                phase_outer.receipts_begin_ns=recorder->now_ns();
+            }
             if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
             if (io.policy) save_policy(scratch,*io.policy);
             if (io.bounded_policy) save_policy(scratch,{io.bounded_policy.get(),io.bounded_policy_count});
@@ -512,6 +602,10 @@ int main(int argc,char* argv[]) {
                 receipt<<"{\"compact_encoding_work\":"<<io.compact_encoding_work<<"}\n";
                 receipt.close();
                 training::require(bool(receipt),"compact work receipt write failed");
+            }
+            if (recorder) {
+                phase_outer.receipts_end_ns=recorder->now_ns();
+                save_phase_profile(scratch,*recorder,phase_outer,phase_budget);
             }
         }
         return 0;

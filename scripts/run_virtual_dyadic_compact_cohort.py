@@ -256,7 +256,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False,bounded_division=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,bounded_stage_width=False,pair_complement=False,bounded_division=False,profile_phases=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -279,6 +279,8 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "two-positive complement requires bounded factored staging")
     cohort.require(type(bounded_division) is bool and (not bounded_division or pair_complement),
                    "bounded policy division requires pair complement")
+    cohort.require(type(profile_phases) is bool and (not profile_phases or bounded_division and train),
+                   "phase profiling requires bounded-division training")
     suffix=("TEN_BOUNDED_DIVISION" if bounded_division else "TEN_PAIR_COMPLEMENT" if pair_complement else "TEN_BOUNDED_STAGE_WIDTH" if bounded_stage_width else "TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
@@ -317,6 +319,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 cohort.require(not scratch.exists() and str(scratch).isascii(),
                                "compact fresh native scratch required")
                 command.append(str(scratch))
+                if profile_phases: command.append("--profile-phases")
             process=cohort.run_bounded_dyadic_probe(command,mode,folder)
             cohort.save(folder/"binary-identity.json",{
                 "before_sha256":build["executable_sha256"],"after_sha256":cohort.sha(executable),
@@ -437,6 +440,11 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                                replay["work_plan"]["quantizer"]==admission["component_work"]["quantizer"],
                                "independent equal quantizer receipt differs")
                 result["equal_quantizer"]=equal_receipt
+            if profile_phases:
+                from scripts.verify_training_phase_profile import load_profile, verify_profile
+                phase_record=load_profile(output/"phase-profile.json")
+                result["phase_profile"]=phase_record
+                result["phase_profile_summary"]=verify_profile(phase_record,admission)
             result["comparison"]=cohort.compare_ten_card_complement(source,result,expanded,replay,
                 checked_history_work=history_work if checked_history else None,
                 equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None,

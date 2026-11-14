@@ -2,6 +2,7 @@
 // Fixed PROOF9 and PROOF10, q=1, bounded simultaneous CFR+ sweeps. No board, world, reach,
 // or payoff table is retained. This front door has no general solver dispatch.
 #include "prepared_public_chance.hpp"
+#include "training_phase_trace.hpp"
 #include "virtual_dyadic_state.hpp"
 #include <algorithm>
 #include <array>
@@ -25,6 +26,7 @@ namespace prepared=prepared_public_chance;
 namespace history=virtual_dyadic_history;
 namespace state=virtual_dyadic_state;
 namespace paging=virtual_dyadic_paged_image;
+namespace phase_trace=training_phase_trace;
 using chance::Integer;
 using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
@@ -1634,8 +1636,14 @@ class Driver final {
         require(bool(stream),"sweep checkpoint frame flush failed");
     }
 public:
-    explicit Driver(Traversal mode=Traversal::by_seat,StrategyProfile profile=StrategyProfile::dense)
-        :plan_(Forecast(source_,meter_,mode,profile).make()) {}
+    explicit Driver(Traversal mode=Traversal::by_seat,StrategyProfile profile=StrategyProfile::dense,
+                    const phase_trace::Sink* trace=nullptr)
+        :plan_([&] {
+            phase_trace::mark(trace,phase_trace::Phase::plan_preflight,phase_trace::Edge::begin);
+            auto plan=Forecast(source_,meter_,mode,profile).make();
+            phase_trace::mark(trace,phase_trace::Phase::plan_preflight,phase_trace::Edge::end);
+            return plan;
+        }()) {}
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;
@@ -1732,7 +1740,7 @@ public:
     }
 
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
-                     bool streamed_checkpoints=false) {
+                     bool streamed_checkpoints=false,const phase_trace::Sink* trace=nullptr) {
         require(!plan_.eleven_card_forecast(),"eleven-card forecast has no training entry");
         require(!entered_,"fixed training owner already entered");
         entered_=true;
@@ -1745,6 +1753,7 @@ public:
             "sparse chance profile requires explicit sweep checkpoint streaming");
         if (streamed_checkpoints) validate_sweep_stream();
         require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
+        phase_trace::mark(trace,phase_trace::Phase::chance_setup,phase_trace::Edge::begin);
         const auto deck=chance::DeckDefinition::reduced(game.deck);
         chance::Limits chance_limits;
         chance_limits.max_hands_per_side=2;
@@ -1760,6 +1769,8 @@ public:
         require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=
             chance_setup_bound+(p.indexed_cache?prepared::PreparedPublicChance::index_setup_work(p.rank_planes):0),
             "prepared prior differs from admitted source prior");
+        phase_trace::mark(trace,phase_trace::Phase::chance_setup,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::owners_setup,phase_trace::Edge::begin);
         history::Limits history_limits;
         history_limits.work=p.history_work;
         history_limits.nodes=literal_count;
@@ -1795,22 +1806,35 @@ public:
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
                     p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width}}:std::nullopt);
+        phase_trace::mark(trace,phase_trace::Phase::owners_setup,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::row_registration,phase_trace::Edge::begin);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
+        phase_trace::mark(trace,phase_trace::Phase::row_registration,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::freeze,phase_trace::Edge::begin);
         state.freeze();
         if (p.sealed_menus) {
             const auto actions=state.action_storage();
             require(actions.stored_menus==p.sealed_menu_count && actions.stored_tokens==p.sealed_token_count,
                 "sealed action catalog realization differs from admission");
         }
+        phase_trace::mark(trace,phase_trace::Phase::freeze,phase_trace::Edge::end);
 
+        phase_trace::mark(trace,phase_trace::Phase::prelude,phase_trace::Edge::begin);
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
         Binary out(stream,p.output_bytes,value_bits,p.compact_wire?compact_encoding_work(p.shape):0);
         prelude(out,state,denominator);
+        phase_trace::mark(trace,phase_trace::Phase::prelude,phase_trace::Edge::end);
         std::uint64_t feedback=0;
         for (std::size_t sweep=0;sweep<p.requested_sweeps;++sweep) {
+            const auto sweep_number=static_cast<std::uint32_t>(sweep+1);
+            phase_trace::mark(trace,phase_trace::Phase::policy_build,phase_trace::Edge::begin,sweep_number);
             state.begin_sweep();
+            phase_trace::mark(trace,phase_trace::Phase::policy_build,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::policy_emit,phase_trace::Edge::begin,sweep_number);
             feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory,p.compact_wire);
+            phase_trace::mark(trace,phase_trace::Phase::policy_emit,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::walk,phase_trace::Edge::begin,sweep_number);
             std::array<Values,targets> roots{};
             if (p.factored) {
                 auto values=Walk<true,true>(source_,p,meter_,history,chance,state,0,sweep+1,&*factored_execution).run(root);
@@ -1824,7 +1848,11 @@ public:
                 roots={std::move(sb[0]),std::move(bb[0])};
             }
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
+            phase_trace::mark(trace,phase_trace::Phase::walk,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::commit,phase_trace::Edge::begin,sweep_number);
             state.commit_sweep();
+            phase_trace::mark(trace,phase_trace::Phase::commit,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::checkpoint,phase_trace::Edge::begin,sweep_number);
             if (!p.split_checkpoint) wide_checkpoint(out,state);
             for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
             if (streamed_checkpoints) {
@@ -1835,7 +1863,9 @@ public:
             emit_sweep_checkpoint(stream,state,scratch,sweep+1,
                 p.bounded_proof9()?proof9_t3_sweep_stream_image_bytes:sweep_stream_image_bytes);
             }
+            phase_trace::mark(trace,phase_trace::Phase::checkpoint,phase_trace::Edge::end,sweep_number);
         }
+        phase_trace::mark(trace,phase_trace::Phase::average_export,phase_trace::Edge::begin);
         if (p.shared_policy) {
             const auto flags=state.stream_average([&](std::span<const std::uint64_t> units) {
                 out.policy(units,p.compact_wire);
@@ -1850,6 +1880,8 @@ public:
             for (std::size_t i=0;i<image.slots;++i) out.u64(image.units[i]);
             out.bytes(image.uniform_fallback.get(),image.rows);
         }
+        phase_trace::mark(trace,phase_trace::Phase::average_export,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::footer,phase_trace::Edge::begin);
         const auto& state_receipt=state.receipt();
         require((state_receipt.combined_divisions>0)==p.single_division,"combined division execution receipt differs");
         footer(out,chance.receipt(),history.receipt(),state_receipt,feedback);
@@ -1879,6 +1911,7 @@ public:
         result.equal_rows=state_receipt.equal_rows;
         result.equal_divisions_avoided=state_receipt.equal_divisions_avoided;
         if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();
+        phase_trace::mark(trace,phase_trace::Phase::footer,phase_trace::Edge::end);
         return result;
     }
 };
