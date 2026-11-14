@@ -1162,3 +1162,25 @@ to 208,451,944 units. The independent byte comparison changes only the
 two State work words. The eleven-card projection falls by 179,604,504
 units to 662,607,040, above the 300,000,000 cap.
 [Factored width evidence](../benchmarks/results/native-dyadic-bounded-stage-width-v1/manifest.json)
+
+
+## Exact two-positive policy allocation
+
+For two positive weights, the complement kernel computes the first
+weight's quotient and remainder on the policy grid. A nonzero remainder
+leaves one grid unit to assign. The earlier action gets it if its
+remainder is at least the complementary remainder. The opt-in kernel
+implements this directly, preserving tie order, sparse rows, equal rows
+and the generic path for wider positive support.
+
+The ten-card comparison uses the row-specific State work profile as its
+baseline. Both versions perform the same number of divisions and carry
+the same work reservations. The complete native output and both
+checkpoints match.
+Independent replay counted 15,794 eligible second-policy rows and
+2,820 eligible average-export rows. Four alternating same-binary pairs
+on one Windows host produced three slower runs and one faster run for
+the shortcut. Median native call time was 4.711 versus 4.505 seconds,
+a 4.1 percent median paired slowdown. The broader local suite was active
+on that host during timing.
+[Two-positive policy evidence](../benchmarks/results/native-dyadic-pair-complement-v1/manifest.json)

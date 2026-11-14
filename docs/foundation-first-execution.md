@@ -1350,3 +1350,12 @@ using each row's certified scale. This saves 56,387,712 State work units
 in the ten-card receipt. The eleven-card rank-free forecast still
 exceeds the State cap by 362,607,040 units.
 [Factored width contract](native-dyadic-two-sweep.md#factored-staging-width-by-row)
+
+
+## Exact allocation for two positive weights
+
+The ten-card quantizer can allocate two unequal positive weights with
+one quotient/remainder and one complementary-remainder comparison.
+This removes remainder sorting for those rows while preserving the
+policy grid and legal-action tie order.
+[Two-positive policy contract](native-dyadic-two-sweep.md#exact-two-positive-policy-allocation)
