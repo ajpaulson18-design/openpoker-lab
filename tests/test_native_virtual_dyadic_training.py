@@ -591,6 +591,22 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
         bad=dict(receipt,quantizer_terms=[0,91_070_735,226_782_521])
         with self.assertRaises(ValueError):first_regret_bound_baseline(bad)
 
+    def test_initial_packed_stage_needs_no_virtual_reads(self):
+        from scripts.run_virtual_dyadic_compact_cohort import initial_packed_stage_baseline
+        from tests.virtual_dyadic_stage_schedule import stage_schedule
+        directory,process=self.observe('admit_ten_initial_packed_stage',
+            lambda p:run_bounded_dyadic_probe([str(self.exe)],'ADMIT_TEN_INITIAL_PACKED_STAGE',p))
+        self.assertEqual(process['returncode'],0,(directory/'stderr.bin').read_text())
+        receipt=exact_json((directory/'stdout.bin').read_bytes())
+        initial_packed_stage_baseline(receipt)
+        schedule=stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True,
+                                zero_policy_bootstrap=True,initial_packed_stage=True)
+        self.assertEqual(receipt['factored_composed_work'],1_954_834_338)
+        self.assertEqual(receipt['page_request_limit'],
+                         schedule['logical_read_calls']+schedule['direct_write_calls'])
+        self.assertEqual(schedule['virtual_read_calls'],0)
+        self.assertEqual(schedule['physical_read_words'],receipt['page_read_word_limit'])
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

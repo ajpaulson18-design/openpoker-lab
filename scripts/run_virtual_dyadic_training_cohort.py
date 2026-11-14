@@ -1024,7 +1024,7 @@ def compare_ten_card_index(source,result,path,replay):
             'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
 
 
-def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False):
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False):
     directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
     manifest=f'{directory}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -1057,18 +1057,19 @@ def compare_ten_card_complement(source,result,path,replay,*,checked_history_work
         expected=dict(expected,
             work_plan=dict(expected['work_plan'],quantizer=equal_quantizer_plan),
             work_actual=dict(expected['work_actual'],quantizer=equal_receipt['work']))
+    route_removed=(16*rows if zero_policy_bootstrap else 0)+(32*rows if initial_packed_stage else 0)
     expected_paging=prior['paging']
     if zero_policy_bootstrap:
         for phase in ('plan','actual'):
             work, parent = 'work_'+phase, 'parent_work_'+phase
             expected[work]=dict(expected[work],state=before[work]['state']+32*rows,
-                                parent=before[work]['parent']-16*rows)
-            expected[parent]=dict(before[parent],route=before[parent]['route']-16*rows)
+                                parent=before[work]['parent']-route_removed)
+            expected[parent]=dict(before[parent],route=before[parent]['route']-route_removed)
         counts=dict(expected_paging['counts'])
         for key in ('read_calls','synthetic_read_calls'):
-            counts[key]-=rows
+            counts[key]-=rows*(3 if initial_packed_stage else 1)
         for key in ('logical_read_words','synthetic_read_words'):
-            counts[key]-=1_666_910
+            counts[key]-=1_666_910+(2_962_722 if initial_packed_stage else 0)
         expected_paging=dict(expected_paging,counts=counts)
     io_fields=('sweep_capture',) if reuse_snapshot else ('row_directory','policy_spill','sweep_capture')
     if reuse_snapshot:
@@ -1547,12 +1548,14 @@ def main():
     modes.add_argument('--ten-reuse-snapshot',action='store_true')
     modes.add_argument('--ten-zero-policy-bootstrap',action='store_true')
     modes.add_argument('--ten-first-regret-bound',action='store_true')
+    modes.add_argument('--ten-initial-packed-stage',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
     modes.add_argument('--proof9-quality32',action='store_true')
     modes.add_argument('--proof9-linear32',action='store_true')
     args=parser.parse_args()
-    zero_policy_bootstrap=args.ten_zero_policy_bootstrap or args.ten_first_regret_bound
+    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage
+    zero_policy_bootstrap=args.ten_zero_policy_bootstrap or first_regret_bound
     reuse_snapshot=args.ten_reuse_snapshot or zero_policy_bootstrap
     equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
     history_visit=args.ten_history_visit or equal_quantizer
@@ -1562,7 +1565,8 @@ def main():
         print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,
             factored=args.ten_factored or checked_history,checked_history=checked_history,
             history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
-            zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=args.ten_first_regret_bound),sort_keys=True))
+            zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=first_regret_bound,
+            initial_packed_stage=args.ten_initial_packed_stage),sort_keys=True))
         return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,

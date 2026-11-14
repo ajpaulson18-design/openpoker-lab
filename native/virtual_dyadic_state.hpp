@@ -86,6 +86,7 @@ struct PagedStrategy {
     bool reuse_snapshot=false;
     bool zero_policy_bootstrap=false;
     bool first_regret_bound=false;
+    bool initial_packed_stage=false;
 };
 inline constexpr std::uint64_t initial_uniform_policy_work=32;
 struct StorageForecast { std::size_t entries = 0, payload_bits = 0; };
@@ -507,6 +508,8 @@ class State final {
         if (paged && paged->first_regret_bound && (!paged->zero_policy_bootstrap ||
             paged->division_kernel!=dyadic_policy::DivisionKernel::equal_complement))
             fail(ErrorCode::invalid_forecast,"first regret bound requires the virtual-zero equal quantizer");
+        if (paged && paged->initial_packed_stage && !paged->first_regret_bound)
+            fail(ErrorCode::invalid_forecast,"initial packed stages require the owned two-sweep zero image");
         if (paged && paged->factored &&
             (!expanded || !paged->row_batched || paged->lifecycle!=Lifecycle::fixed_two_sweep ||
              paged->payload_model!=PayloadModel::paged_phases))
@@ -1552,7 +1555,8 @@ private:
             fail(ErrorCode::invalid_row,"direct packed row exceeds codec scratch");
         std::array<std::uint64_t,row_batch_codec_words> scratch;
         auto live=std::span(scratch).first(increments.size()*stride);
-        paged_image_->read(page_base(field)+offset,live,
+        const bool initial=paged_->initial_packed_stage && !receipt_.completed_sweeps;
+        if (!initial) paged_image_->read(page_base(field)+offset,live,
             field==PackedField::regret && paged_->limits.cache_banks>1?1u:0u);
         for (std::size_t action=0;action<increments.size();++action) {
             auto destination=live.subspan(action*stride,stride);
@@ -1578,12 +1582,16 @@ private:
                     quotient=*coefficient>>right;
                     coefficient=&quotient;
                 } else if (!delta.is_zero()) left=delta.shift()-shift;
-                packed_signed_update::apply(destination,*coefficient,left,true,
+                if (initial) packed_signed_update::initialize_from_zero(destination,*coefficient,left,true,
+                    forecast_.value_bits-shift,packed_update_counts_);
+                else packed_signed_update::apply(destination,*coefficient,left,true,
                     forecast_.value_bits-shift,packed_update_counts_);
             } else {
                 if (field!=PackedField::average || mixed || increments[action]<0)
                     fail(ErrorCode::invalid_row,"direct average update needs nonnegative reduced units");
-                packed_signed_update::apply(destination,increments[action],0,false,
+                if (initial) packed_signed_update::initialize_from_zero(destination,increments[action],0,false,
+                    forecast_.value_bits-shift,packed_update_counts_);
+                else packed_signed_update::apply(destination,increments[action],0,false,
                     forecast_.value_bits-shift,packed_update_counts_);
             }
         }

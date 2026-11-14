@@ -36,7 +36,7 @@ enum class StrategyProfile {
     ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
     ten_card_phase_payload,
     ten_card_row_batched,
-    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -333,6 +333,7 @@ struct Plan {
     bool reuse_snapshot=false;
     bool zero_policy_bootstrap=false;
     bool first_regret_bound=false;
+    bool initial_packed_stage=false;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
@@ -658,7 +659,8 @@ public:
             plan_.seat_passes=targets*plan_.requested_sweeps;
             meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound;
+        plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
+        plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound || plan_.initial_packed_stage;
         plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap || plan_.first_regret_bound;
         plan_.reuse_snapshot=profile==StrategyProfile::ten_card_reuse_snapshot || plan_.zero_policy_bootstrap;
         plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer || plan_.reuse_snapshot;
@@ -836,7 +838,8 @@ public:
             // The two page files retain sweep 1 and sweep 2. The split
             // stream skips both fields of both checkpoint scans.
             const auto request_units=plan_.row_batched?R:S;
-            const auto requests=(plan_.split_checkpoint?11:15)*request_units-(plan_.zero_policy_bootstrap?R:0);
+            const auto requests=(plan_.split_checkpoint?11:15)*request_units-(plan_.zero_policy_bootstrap?R:0)
+                -(plan_.initial_packed_stage?2*R:0);
             const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
             const auto read_words=q32?paging::n9_q32_read_words:t4?paging::n9_t4_read_words:t3?2223164u:virtual_zero?6130244u:
                 plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
@@ -1744,7 +1747,7 @@ public:
                     p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage}}:std::nullopt);
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
         state.freeze();

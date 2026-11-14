@@ -27,9 +27,12 @@ def verify_factored_execution(record,admission):
                    set(FACTORED_COUNTS)|packed_fields|metrics|{"work"} and
                    all(type(value) is int and value>=0 for value in record.values()),
                    "factored execution receipt schema differs")
+    image_words=admission["page_image_words"]
+    sweeps_read=1 if admission.get("initial_packed_stage") else 2
     cohort.require(all(record[key]==value for key,value in FACTORED_COUNTS.items()) and
                    record["work"]==admission["factored_metadata_work"]==FACTORED_WORK and
-                   record["packed_target_words_read"]==record["packed_target_words_written"]==5_925_444 and
+                   record["packed_target_words_read"]==sweeps_read*image_words and
+                   record["packed_target_words_written"]==2*image_words and
                    0<record["packed_additions"]+record["packed_subtractions"]<=4*281_066 and
                    record["packed_clipped"]<=record["packed_subtractions"] and
                    0<record["implicit_zero_bits"]<=sum(FACTORED_COUNTS.values())*704 and
@@ -145,9 +148,26 @@ def first_regret_bound_baseline(record):
     return zero_policy_bootstrap_baseline(normalized)
 
 
+def initial_packed_stage_baseline(record):
+    rows=119_196
+    route_work=32*rows
+    cohort.require(record.get("initial_packed_stage") is True and record.get("page_request_limit")==8*rows,
+                   "initial packed stage request census differs")
+    components=record["component_work"]
+    parent=record["parent_work"]
+    normalized=dict(record,page_request_limit=10*rows,paging_work=record["paging_work"]+route_work,
+                    component_work=dict(components,parent=components["parent"]+route_work),
+                    parent_work=dict(parent,route=parent["route"]+route_work))
+    normalized.pop("initial_packed_stage")
+    for field in ("planned_total_work","compact_composed_work","factored_composed_work"):
+        normalized[field]+=route_work
+    legacy=first_regret_bound_baseline(normalized)
+    return dict(legacy,page_request_limit=record["page_request_limit"])
+
+
 def legacy_admission(record,*,factored=False):
     cohort.require(type(factored) is bool and type(record) is dict,"invalid factored admission selector")
-    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record and "zero_policy_bootstrap" not in record and "first_regret_bound" not in record,
+    cohort.require("checked_history" not in record and "history_visit" not in record and "equal_quantizer" not in record and "reuse_snapshot" not in record and "zero_policy_bootstrap" not in record and "first_regret_bound" not in record and "initial_packed_stage" not in record,
                    "unexpected extended training profile")
     if factored:
         cohort.require(record.get("factored_execution") is True and
@@ -219,7 +239,7 @@ def reconstruct_wire(compact,pages,images,capture):
     return {"bytes":size,"sha256":digest.hexdigest(),"status":"independent_exact_reconstruction"}
 
 
-def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False):
+def run_compact(output,expected_head,*,train=False,factored=False,checked_history=False,history_visit=False,equal_quantizer=False,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False):
     cohort.require(type(train) is bool and type(factored) is bool,"compact training selectors must be boolean")
     cohort.require(type(checked_history) is bool and (not checked_history or factored),
                    "checked History requires factored training")
@@ -233,7 +253,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                    "initial policy bootstrap requires the owned row snapshot")
     cohort.require(type(first_regret_bound) is bool and (not first_regret_bound or zero_policy_bootstrap),
                    "first regret support bound requires the zero bootstrap profile")
-    suffix=("TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
+    cohort.require(type(initial_packed_stage) is bool and (not initial_packed_stage or first_regret_bound),
+                   "initial packed staging requires the owned two-sweep zero image")
+    suffix=("TEN_INITIAL_PACKED_STAGE" if initial_packed_stage else "TEN_FIRST_REGRET_BOUND" if first_regret_bound else "TEN_ZERO_POLICY_BOOTSTRAP" if zero_policy_bootstrap else "TEN_REUSE_SNAPSHOT" if reuse_snapshot else "TEN_EQUAL_QUANTIZER" if equal_quantizer else "TEN_HISTORY_VISIT" if history_visit
             else "TEN_CHECKED_HISTORY" if checked_history
             else "TEN_FACTORED" if factored else "TEN_COMPACT_WIRE")
     history_work=VISIT_HISTORY_ACTUAL if history_visit else CHECKED_HISTORY_ACTUAL
@@ -282,7 +304,9 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
 
         folder,_=observed("ADMIT_"+suffix)
         admission=cohort.exact_json((folder/"stdout.bin").read_bytes())
-        if first_regret_bound:
+        if initial_packed_stage:
+            legacy=initial_packed_stage_baseline(admission)
+        elif first_regret_bound:
             legacy=first_regret_bound_baseline(admission)
         elif zero_policy_bootstrap:
             legacy=zero_policy_bootstrap_baseline(admission)
@@ -300,7 +324,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 "scope":"fixed indexed complement ten-card T2 with "+("factored execution" if factored else "compact transport")}
         if train:
             stage=cohort.stage_schedule(ten_card=True,virtual_zero=True,batch_rows=True,
-                                        zero_policy_bootstrap=zero_policy_bootstrap)
+                                        zero_policy_bootstrap=zero_policy_bootstrap,initial_packed_stage=initial_packed_stage)
             trace=cohort.rank_trace()
             cohort.require((stage["logical_read_calls"]+stage["direct_write_calls"],
                             stage["physical_read_words"],stage["written_words"])==
@@ -383,7 +407,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 checked_history_work=history_work if checked_history else None,
                 equal_quantizer_plan=admission["component_work"]["quantizer"] if equal_quantizer else None,
                 reuse_snapshot=reuse_snapshot,zero_policy_bootstrap=zero_policy_bootstrap,
-                first_regret_bound=first_regret_bound)
+                first_regret_bound=first_regret_bound,initial_packed_stage=initial_packed_stage)
             cohort.require(quantizer==cohort.verify_division_receipt(output/"page-images",legacy) and
                            paging==cohort.verify_paging(output/"page-images",legacy,stage) and
                            policy==cohort.verify_policy_spill(output/"page-images",expanded,legacy,reuse_snapshot=reuse_snapshot) and
