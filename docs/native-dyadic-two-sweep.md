@@ -1288,3 +1288,42 @@ The shortcut remains opt-in. Avoided imports alone establish no wall-time
 or admission improvement. Eleven-card training and wider-game quality
 remain open.
 [Packed policy evidence](../benchmarks/results/native-dyadic-packed-policy-v1/manifest.json)
+
+
+## Deferred widths in packed policy classification
+
+The second opt-in packed-policy profile checks every action's top padding,
+detects positive slots, and compares their full retained word sequences.
+A zero row needs no width. For a pure or equal-positive row, only the first
+positive representative needs a width calculation. Unequal rows delegate
+width discovery to the unchanged integer allocator.
+
+Padding checks precede return even when support or equality searches stop
+early. All slots still participate in the first-regret support guard.
+Counting both operands of equality comparisons, the classifier touches at
+most actions + (3 * actions - 1) * stride words, within the unchanged scan
+allowance. The words_scanned counter names retained input extents, rather
+than scalar memory loads; equality could already reread words in version 1.
+
+Native training and independent saved-only replay reproduce version 1's
+entire compact and expanded output, both checkpoints, policy spill, row
+directory, best responses, work receipts and classification counters.
+All 85 focused controls pass in normal and optimized Python without skips.
+The native controls compare both classifiers on 560 rows, including
+leading zeros and corrupt padding in later actions. Source, controls and
+both timing comparisons are frozen at 82ed76a.
+
+Two predeclared four-pair comparisons used one executable and one Windows
+host. Against the integer-input baseline, median native calls were 3.293
+versus 3.223 seconds. Two pairs were slower and two faster; the median
+paired ratio was 1.00437, a 0.4 percent slowdown. Against eager packed
+classification, calls were 3.273 versus 3.219 seconds. Three pairs were
+slower and one faster; the median paired ratio was 1.02310, a 2.3 percent
+slowdown. Calls include streamed transport, and other host load was
+uncontrolled.
+
+The refinement establishes no speed gain. It remains opt-in, and classifier
+tuning stops here. The next computational step is coarse profiling of the
+faster integer-input baseline's complete training phases. Eleven-card
+training and wider-game quality remain open.
+[Deferred width evidence](../benchmarks/results/native-dyadic-packed-policy-v2/manifest.json)

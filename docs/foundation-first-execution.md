@@ -1393,3 +1393,13 @@ the inherited modeled work envelope. Four alternating pairs measured
 a 2.1 percent median paired slowdown on one Windows host, so the path
 remains opt-in.
 [Packed policy contract](native-dyadic-two-sweep.md#policy-shortcuts-from-packed-state-rows)
+
+
+## Packed classifier refinement and stopping result
+
+Deferring width discovery preserves all packed-policy output and receipts.
+It did not improve either predeclared timing comparison: the median paired
+slowdowns were 0.4 percent against integer inputs and 2.3 percent against
+eager packed classification. Classifier tuning stops; the next optimization
+must follow coarse profiling of the complete baseline trainer.
+[Deferred width contract](native-dyadic-two-sweep.md#deferred-widths-in-packed-policy-classification)
