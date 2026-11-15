@@ -29,7 +29,7 @@ jobs:
       - name: Build authenticated arithmetic controls
         shell: bash
         run: |
-          for target in factored-dyadic-controls packed-signed-update-controls dyadic-policy-division-controls; do
+          for target in factored-dyadic-controls packed-signed-update-controls dyadic-policy-division-controls training-phase-profile-controls virtual-dyadic-training virtual-dyadic-training-profile; do
             if ! python -m scripts.build_native_exact_four_street --target "$target" --output-dir "$RUNNER_TEMP/factored/$target" ${{ matrix.sanitize }}; then
               cat "$RUNNER_TEMP/factored/$target/build.log"
               exit 1
@@ -37,6 +37,9 @@ jobs:
           done
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_FACTORED_DYADIC_EXE=$RUNNER_TEMP/factored/factored-dyadic-controls/native-factored-dyadic-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_EXE=$RUNNER_TEMP/factored/virtual-dyadic-training/native-virtual-dyadic-training-probe$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_PROFILE_EXE=$RUNNER_TEMP/factored/virtual-dyadic-training-profile/native-virtual-dyadic-training-profile-probe$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_TRAINING_PHASE_PROFILE_EXE=$RUNNER_TEMP/factored/training-phase-profile-controls/native-training-phase-profile-controls$suffix" >> "$GITHUB_ENV"
           echo "OPENPOKER_NATIVE_DYADIC_POLICY_DIVISION_EXE=$RUNNER_TEMP/factored/dyadic-policy-division-controls/native-dyadic-policy-division-controls$suffix" >> "$GITHUB_ENV"
           echo "OPENPOKER_NATIVE_PACKED_SIGNED_UPDATE_EXE=$RUNNER_TEMP/factored/packed-signed-update-controls/native-packed-signed-update-controls$suffix" >> "$GITHUB_ENV"
       - name: Check independent arithmetic and coupled resource receipts
@@ -45,7 +48,7 @@ jobs:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
         run: |
-          python -O -m unittest tests.test_native_factored_dyadic tests.test_native_packed_signed_update tests.test_native_dyadic_policy_division tests.test_virtual_dyadic_factored_receipt -v > "$RUNNER_TEMP/factored/tests.stdout.log" 2> "$RUNNER_TEMP/factored/tests.stderr.log"
+          python -O -m unittest tests.test_native_factored_dyadic tests.test_native_packed_signed_update tests.test_native_dyadic_policy_division tests.test_native_training_phase_profile tests.test_training_phase_profile tests.test_virtual_dyadic_factored_receipt -v > "$RUNNER_TEMP/factored/tests.stdout.log" 2> "$RUNNER_TEMP/factored/tests.stderr.log"
       - name: Preserve source identities and first failures
         if: always()
         uses: actions/upload-artifact@v4

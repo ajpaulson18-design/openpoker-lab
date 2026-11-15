@@ -680,6 +680,27 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
                 self.assertIn(message,(directory/'stderr.bin').read_bytes())
         self.assertFalse((self.output/'page-images').exists())
 
+    def test_phase_diagnostics_reject_unscoped_requests_before_scratch(self):
+        cases=(
+            ('ADMIT_TEN_BOUNDED_DIVISION','--profile-phases'),
+            ('TRAIN_TEN_PAIR_COMPLEMENT','--profile-phases'),
+            ('FORECAST_ELEVEN','--profile-phases'),
+            ('TRAIN_TEN_BOUNDED_DIVISION','--profile-phases-extra'),
+            ('TRAIN_TEN_BOUNDED_DIVISION','--profile-phases'),
+        )
+        for index,(mode,flag) in enumerate(cases):
+            with self.subTest(mode=mode,flag=flag):
+                scratch=(self.output/('phase-private-'+str(index))/'page-images').absolute()
+                request=('DYADIC_T2_V1 '+mode+'\n').encode('ascii')
+                directory,process=self.observe('phase_reject_'+str(index),
+                    lambda out:run_bounded_child([str(self.exe),str(scratch),flag],request,out,
+                                                stdout_limit=4096,timeout=10))
+                self.assertEqual(process['returncode'],2)
+                self.assertEqual((directory/'stdout.bin').read_bytes(),b'')
+                self.assertIn(b'fixed request scratch argument count',(directory/'stderr.bin').read_bytes())
+                self.assertFalse(scratch.exists())
+                self.assertFalse((scratch.parent/'phase-profile.json').exists())
+
     def check_bounded_proof9_admission(self,sweeps):
         from tests.virtual_dyadic_directory_trace import directory_trace
         from tests.virtual_dyadic_stage_schedule import stage_schedule

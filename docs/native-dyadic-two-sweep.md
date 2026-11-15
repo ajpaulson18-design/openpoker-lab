@@ -1231,3 +1231,12 @@ the second pair, and other host load was uncontrolled. The helper remains
 opt-in. Eleven-card training, wider-game quality and primitive-operation
 accounting remain open.
 [Bounded division evidence](../benchmarks/results/native-dyadic-bounded-policy-division-v1/manifest.json)
+
+
+## Bounded native phase diagnostics
+
+The bounded-division T2 fixture supports coarse phase measurements through
+a separate diagnostic target. The standard trainer rejects the diagnostic
+switch and compiles without the hooks. The verifier checks event order,
+resource reservations, nested intervals and residuals independently.
+[Build, measurement scope and frozen evidence](native-training-phase-profile.md)
