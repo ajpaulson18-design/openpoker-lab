@@ -304,14 +304,15 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
         cohort.save(output/"source.json",source)
         cohort.save(output/"fixed-proof-gate.json",cohort.require_frozen_gate(source))
         build_dir=output/"build"
-        build=cohort.build(build_dir,target=cohort.TARGET)
+        native_target=cohort.TARGET+"-profile" if profile_phases else cohort.TARGET
+        build=cohort.build(build_dir,target=native_target)
         build_path=build_dir/"native-exact-build-manifest.json"
         build_hash=cohort.sha(build_path)
         executable=Path(build["executable"])
 
         def observed(mode):
             cohort.require(cohort.sha(build_path)==build_hash,"compact native build manifest drift")
-            cohort.bind_build(build,source,cohort.TARGET,output/"source",build_dir)
+            cohort.bind_build(build,source,native_target,output/"source",build_dir)
             folder=output/mode.lower()
             command=[str(executable)]
             if mode.startswith("TRAIN"):
@@ -326,7 +327,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
                 "build_manifest_sha256":cohort.sha(build_path)})
             cohort.require_exit(process,folder)
             cohort.require(cohort.sha(build_path)==build_hash,"compact native build manifest changed")
-            cohort.bind_build(build,source,cohort.TARGET,output/"source",build_dir)
+            cohort.bind_build(build,source,native_target,output/"source",build_dir)
             return folder,process
 
         folder,_=observed("ADMIT_"+suffix)
@@ -470,7 +471,7 @@ def run_compact(output,expected_head,*,train=False,factored=False,checked_histor
         result["source_final"]=cohort.verify_source(ROOT,source)
         cohort.scan_project_caches(ROOT)
         cohort.require_source_bootstrap(ROOT,source)
-        cohort.bind_build(build,source,cohort.TARGET,output/"source",build_dir)
+        cohort.bind_build(build,source,native_target,output/"source",build_dir)
         cohort.require(sum(p.stat().st_size for p in output.rglob("*") if p.is_file())<=
                        cohort.ARTIFACT_ALLOWANCE-(1<<20),"compact actual artifact allowance exceeded")
         result["duration_seconds"]=time.perf_counter()-started

@@ -34,5 +34,31 @@ class NativeTrainingPhaseProfileTests(unittest.TestCase):
         self.assertTrue(observed['actual_exit_observed'])
         self.assertEqual(observed['automatic_retries'], 0)
 
+@unittest.skipUnless(os.environ.get('OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_PROFILE_EXE'),
+                     'explicit diagnostic trainer build required')
+class DiagnosticTrainingPhaseGuardTests(unittest.TestCase):
+    def test_diagnostic_switch_rejects_other_requests_before_scratch(self):
+        exe=Path(os.environ['OPENPOKER_NATIVE_VIRTUAL_DYADIC_TRAINING_PROFILE_EXE']).resolve()
+        before=authenticate(exe,ROOT,'virtual-dyadic-training-profile')
+        cases=(('ADMIT_TEN_BOUNDED_DIVISION','--profile-phases'),
+               ('TRAIN_TEN_PAIR_COMPLEMENT','--profile-phases'),
+               ('FORECAST_ELEVEN','--profile-phases'),
+               ('TRAIN_TEN_BOUNDED_DIVISION','--profile-phases-extra'))
+        with TemporaryDirectory(dir=ROOT.parent) as directory:
+            folder=Path(directory)
+            for index,(mode,flag) in enumerate(cases):
+                with self.subTest(mode=mode,flag=flag):
+                    scratch=folder/str(index)/'page-images'
+                    output=folder/('probe-'+str(index))
+                    observed=run_bounded_child([str(exe),str(scratch),flag],
+                        ('DYADIC_T2_V1 '+mode+'\n').encode('ascii'),output,stdout_limit=4096,timeout=10)
+                    self.assertEqual((observed['actual_exit_observed'],observed['returncode'],
+                                      observed['automatic_retries']),(True,2,0))
+                    self.assertEqual((output/'stdout.bin').read_bytes(),b'')
+                    self.assertIn(b'fixed request scratch argument count',(output/'stderr.bin').read_bytes())
+                    self.assertFalse(scratch.exists())
+                    self.assertFalse((scratch.parent/'phase-profile.json').exists())
+        self.assertEqual(authenticate(exe,ROOT,'virtual-dyadic-training-profile'),before)
+
 if __name__ == '__main__':
     unittest.main()

@@ -686,6 +686,7 @@ class NativeDyadicAdmissionControls(unittest.TestCase):
             ('TRAIN_TEN_PAIR_COMPLEMENT','--profile-phases'),
             ('FORECAST_ELEVEN','--profile-phases'),
             ('TRAIN_TEN_BOUNDED_DIVISION','--profile-phases-extra'),
+            ('TRAIN_TEN_BOUNDED_DIVISION','--profile-phases'),
         )
         for index,(mode,flag) in enumerate(cases):
             with self.subTest(mode=mode,flag=flag):

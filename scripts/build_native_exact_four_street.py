@@ -116,6 +116,10 @@ TARGETS = {
         "scripts/build_native_full_deck_public_chance.py"))}
 
 
+TARGETS["virtual-dyadic-training-profile"] = (
+    "native-virtual-dyadic-training-profile-probe", TARGETS["virtual-dyadic-training"][1])
+
+
 def _hash(raw):
     return hashlib.sha256(raw).hexdigest()
 
@@ -223,6 +227,8 @@ def build(output_directory, *, target="converter", sanitize=False):
     if os.name == "nt":
         flags = ["/nologo", "/std:c++20", "/O2", "/W4", "/WX", "/EHsc", "/MT", "/fp:strict",
                  "/DBOOST_MP_STANDALONE", "/I" + str(include)]
+        if target == "virtual-dyadic-training-profile":
+            flags.append("/DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
         command = [compiler, *flags, str(ROOT / sources[0]),
                    "/Fo" + str(directory / (helper + ".obj")), "/Fe" + str(executable)]
         version_command = [compiler]
@@ -231,6 +237,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                  "-ffp-contract=off", "-fno-fast-math", "-DBOOST_MP_STANDALONE", "-I" + str(include)]
         if sanitize:
             flags.extend(("-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"))
+        if target == "virtual-dyadic-training-profile":
+            flags.append("-DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
         command = [compiler, *flags, str(ROOT / sources[0]), "-o", str(executable)]
         version_command = [compiler, "--version"]
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)
@@ -252,7 +260,8 @@ def build(output_directory, *, target="converter", sanitize=False):
     _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
           "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
-        "scope": ("Bounded coarse training phase recorder controls; no solver quality claim."
+        "scope": ("Dedicated diagnostic trainer build; profiling hooks are absent from the standard trainer."
+                  if target == "virtual-dyadic-training-profile" else "Bounded coarse training phase recorder controls; no solver quality claim."
                   if target == "training-phase-profile-controls" else "Bounded exact policy-grid division controls."
                   if target == "dyadic-policy-division-controls" else "Bounded exact factored value arithmetic controls."
                   if target == "factored-dyadic-controls" else "Bounded packed signed limb updates."

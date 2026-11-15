@@ -1,11 +1,14 @@
 #include "virtual_dyadic_training.hpp"
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
 #include "training_phase_profile.hpp"
+#endif
 #include <array>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string_view>
+#include <type_traits>
 
 #ifdef _WIN32
 #include <fcntl.h>
@@ -13,8 +16,19 @@
 #endif
 
 namespace training=openpoker::virtual_dyadic_training;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
 namespace phase_trace=openpoker::training_phase_trace;
 namespace phase_profile=openpoker::training_phase_profile;
+#endif
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+using TrainMethod=training::TrainingIO (training::Driver::*)(
+    std::ostream&,const std::filesystem::path&,bool,const phase_trace::Sink*);
+#else
+using TrainMethod=training::TrainingIO (training::Driver::*)(
+    std::ostream&,const std::filesystem::path&,bool);
+#endif
+static_assert(std::is_same_v<decltype(&training::Driver::train),TrainMethod>,
+    "trainer diagnostic interface differs from its build target");
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
@@ -360,6 +374,7 @@ void save_divisions(const std::filesystem::path& scratch,std::uint64_t count) {
     stream.close();
     training::require(bool(stream),"quantizer receipt write failed");
 }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
 struct ProfileOuter {
     std::uint64_t driver_begin_ns=0,driver_end_ns=0,train_begin_ns=0,train_end_ns=0,
                   receipts_begin_ns=0,receipts_end_ns=0;
@@ -423,6 +438,7 @@ void save_phase_profile(const std::filesystem::path& scratch,const phase_profile
     out.close();
     training::require(bool(out),"phase profile receipt write failed");
 }
+#endif
 } // namespace
 
 int main(int argc,char* argv[]) {
@@ -443,9 +459,13 @@ int main(int argc,char* argv[]) {
             mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
             mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
             mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
         const bool profile_phases=argc==3 && std::string_view(argv[2])=="--profile-phases";
         training::require(profile_phases?(paged_train && mode==Mode::train_ten_bounded_division):
             argc==(paged_train?2:1),"fixed request scratch argument count");
+#else
+        training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
+#endif
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
@@ -522,6 +542,7 @@ int main(int argc,char* argv[]) {
         else if (mode==Mode::admit_compact || mode==Mode::train_compact) profile=training::StrategyProfile::compact;
         else if (mode==Mode::admit_packed || mode==Mode::train_packed) profile=training::StrategyProfile::packed_averages;
         const bool paired=profile!=training::StrategyProfile::dense || mode==Mode::admit_paired || mode==Mode::train_paired;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
         std::optional<phase_profile::Recorder> recorder;
         std::optional<phase_trace::Sink> sink;
         ProfileOuter phase_outer;
@@ -539,6 +560,9 @@ int main(int argc,char* argv[]) {
             phase_outer.driver_end_ns=recorder->now_ns();
             phase_budget=phase_budgets(driver.plan());
         }
+#else
+        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
+#endif
         if (complement_admit || mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
@@ -555,16 +579,23 @@ int main(int argc,char* argv[]) {
                   mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32,
                 mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4,mode==Mode::admit_proof9_linear32);
         else {
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
             if (recorder) phase_outer.train_begin_ns=recorder->now_ns();
+#endif
             const auto io=driver.train(std::cout,scratch,complement_train || mode==Mode::train_ten_sweep_stream ||
                 mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
                 mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
-                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32,
-                sink?&*sink:nullptr);
+                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+                ,sink?&*sink:nullptr
+#endif
+            );
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
             if (recorder) {
                 phase_outer.train_end_ns=recorder->now_ns();
                 phase_outer.receipts_begin_ns=recorder->now_ns();
             }
+#endif
             if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
             if (io.policy) save_policy(scratch,*io.policy);
             if (io.bounded_policy) save_policy(scratch,{io.bounded_policy.get(),io.bounded_policy_count});
@@ -603,10 +634,12 @@ int main(int argc,char* argv[]) {
                 receipt.close();
                 training::require(bool(receipt),"compact work receipt write failed");
             }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
             if (recorder) {
                 phase_outer.receipts_end_ns=recorder->now_ns();
                 save_phase_profile(scratch,*recorder,phase_outer,phase_budget);
             }
+#endif
         }
         return 0;
     } catch (const std::exception& error) {
