@@ -1380,3 +1380,13 @@ pairs on one Windows host measured an 8.6 percent median paired
 improvement, with background-load limits preserved in the packet.
 The existing weighted-invocation work model is unchanged.
 [Bounded division contract](native-dyadic-two-sweep.md#bounded-exact-policy-grid-division)
+
+
+## Coarse native phase diagnostics
+
+The ten-card T2 trainer now has a bounded phase recorder and an independent
+sidecar verifier. Diagnostics use a dedicated native build; the standard
+trainer compiles without hooks. The source-frozen evidence retains the first
+code-layout timing miss and the revised split-build study, complete output
+parity, saved-only replay, and 89 focused controls in each Python mode.
+[Measurement contract and limits](native-training-phase-profile.md)
