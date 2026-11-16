@@ -1,0 +1,104 @@
+{
+  "median_baseline_seconds": 0.6532932499999333,
+  "median_candidate_over_baseline": 0.9046957928510843,
+  "median_candidate_seconds": 0.5652211999999963,
+  "pairs": [
+    {
+      "candidate_over_baseline": 1.0659517038506978,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.6415998000002219,
+        "candidate": 0.6839144000005035
+      }
+    },
+    {
+      "candidate_over_baseline": 0.9909138565384272,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.5211561999994956,
+        "candidate": 0.5164209000004121
+      }
+    },
+    {
+      "candidate_over_baseline": 1.0488541259431297,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.5581678000007742,
+        "candidate": 0.5854365999994116
+      }
+    },
+    {
+      "candidate_over_baseline": 0.7959659085082091,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.8186675999995714,
+        "candidate": 0.651631499999894
+      }
+    },
+    {
+      "candidate_over_baseline": 0.7599096380271525,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.7477038999995784,
+        "candidate": 0.5681874000001699
+      }
+    },
+    {
+      "candidate_over_baseline": 0.8184777291637413,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.6821768999998312,
+        "candidate": 0.5583465999998225
+      }
+    },
+    {
+      "candidate_over_baseline": 1.0115441847010682,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.555838300000687,
+        "candidate": 0.5622549999998228
+      }
+    },
+    {
+      "candidate_over_baseline": 0.7776373572587246,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.6649866999996448,
+        "candidate": 0.5171184999999241
+      }
+    }
+  ],
+  "parity": {
+    "baseline_history_work": 1576708608,
+    "candidate_history_work": 789128448
+  },
+  "protocol": "eight paired complete child calls with alternating order after focused control warmup",
+  "stdout_sha256": {
+    "baseline": "0c0c44e6c1cab7d71f4e4c6b530af06cd02af1f189250a605c688758e6ab412e",
+    "candidate": "345d8091b06ce3e028274de608d06d8f904036552a7f82f9aa28c04c93b6aea5"
+  }
+}

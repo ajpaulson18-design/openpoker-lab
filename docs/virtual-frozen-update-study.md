@@ -391,3 +391,19 @@ recorded units across the five draw ledgers. These counts locate the active
 history bottleneck without attributing elapsed time to an individual operation.
 The sample experiment provides an admitted route on this fixture while the
 archived exhaustive eleven-card training request remains unadmitted.
+
+### Reusing history transitions across responder passes
+
+The first responder pass records admitted parent and edge identities with the
+resulting history cursor. The second pass uses that cursor after comparing
+the transition identity and checking complete trace coverage. The trace lives
+for one draw and preserves visible-history keys and legal action order.
+
+The [paired eleven-card result](../benchmarks/results/native-sampled-proof11-history-replay-v1/manifest.json)
+preserved every draw, all 12,942 policy rows, and the independent quality
+result. Recorded history work fell from 1,576,708,608 to 789,128,448 units.
+The per-draw forecast fell from 281,251,943 to 256,823,399 units. Across
+eight alternating pairs of complete native calls, the median candidate to
+baseline elapsed ratio was 0.9047 on the Windows test host. The packet retains
+every timing observation and the exact output identities. History reuse is
+an opt-in control on this fixture.
