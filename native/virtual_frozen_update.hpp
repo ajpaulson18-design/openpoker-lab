@@ -53,10 +53,10 @@ public:
   // paired with this exact ledger; this function performs no terminal callback.
   static FrozenUpdateStage run(FrozenGame &game,
                                const std::array<std::uint8_t, 5> &board,
-                               ProposalKind proposal);
+                               ProposalKind proposal, bool prefix_fold=false);
   static FrozenUpdateForecast forecast(FrozenGame &game,
                                        const std::array<std::uint8_t, 5> &board,
-                                       ProposalKind proposal) {
+                                       ProposalKind proposal, bool prefix_fold=false) {
     if (game.update_used_)
       throw FrozenUpdateError("frozen game already consumed");
     game.update_used_ = true; // failure does not permit resetting child meters
@@ -67,6 +67,8 @@ public:
     const auto scan = add(4096, add(mul(512, nodes), mul(256, edges)));
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
+    if (prefix_fold && proposal!=ProposalKind::uniform_public)
+      throw FrozenUpdateError("prefix fold requires uniform proposal");
     const auto law = proposal_for(game.deck_, board, proposal);
     std::uint64_t rows = 0, slots = 0, rowtokens = 0, edgeocc = 0,
                   tokenbytes = 0, terms = 0, maxmenu = 0, maxpayneg = 0,
@@ -189,9 +191,11 @@ public:
                  add(prior_width, add(add(logceil(game.hands_[0].size()),
                                           logceil(game.hands_[1].size())),
                                       8)));
-    const auto bits =
-        std::max({value_width, average_den_width, average_num_width, native_num,
-                  native_den, prefix_width, denominator_width});
+    // Uniform prefix q numerator is at most the full physical divisor;
+    // its unreduced q denominator is at most the uniform full-board count.
+    const auto prefix_native_den=prefix_fold ? add(native_den,std::bit_width(divisor)) : native_den;
+    const auto bits = std::max({value_width, average_den_width, average_num_width, native_num,
+                  native_den, prefix_native_den, prefix_width, denominator_width});
     if (bits > game.limits_.integer_bits)
       throw FrozenUpdateError("update integer width admission exceeded");
     const auto history_nodes = add(rec.logical_occurrences, 1);
@@ -207,6 +211,8 @@ public:
         add(128,
             mul(32, std::max(game.hands_[0].size(), game.hands_[1].size()))),
         add(4096, add(mul(512, h), mul(mul(64, h), add(1, logceil(h))))));
+    // Both full-board and visible-prefix dyadic queries execute the same
+    // bounded validation, sorting reservation and terminal kernel operations.
     const auto chancework =
         add(mul(mul(2, terms), perterminal), mul(4, add(576, mul(128, h))));
     const auto terminalhands = mul(

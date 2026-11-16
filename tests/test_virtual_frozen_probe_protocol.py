@@ -23,6 +23,19 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(parse(fixture('ADMIT'))['status'],'ADMITTED')
         self.assertEqual(parse(b'FROZEN_UPDATE_ERROR_V1\nreason rejected\nend\n')['error'],'rejected')
         self.assertTrue(request('EVAL','UNIFORM',BOARD).endswith(b'\n'))
+    def test_prefix_fold_mode_binds_scope_and_terminal_census(self):
+        raw=fixture().replace(b"scope PROOF9_FULL_V1",b"scope PROOF9_PREFIX_FOLD_V1")
+        raw=raw.replace(b"proposal UNIFORM",b"proposal UNIFORM_PREFIX_FOLD")
+        raw=raw.replace(b"calls 0 0 0 0",b"calls 4 2 0 0\nprefix_fold_calls 1 1")
+        self.assertEqual(parse(raw,proposal="UNIFORM_PREFIX_FOLD")["prefix_fold_calls"],(1,1))
+        for changed in (raw.replace(b"PROOF9_PREFIX_FOLD_V1",b"PROOF9_FULL_V1"),
+                        raw.replace(b"prefix_fold_calls 1 1",b"prefix_fold_calls 1 2"),
+                        raw.replace(b"prefix_fold_calls 1 1\n",b"")):
+            with self.assertRaises(ProtocolError):
+                parse(changed,proposal="UNIFORM_PREFIX_FOLD")
+        with self.assertRaises(ProtocolError):
+            parse(raw,proposal="UNIFORM")
+
     def test_malformed_inputs_rejected(self):
         raw=fixture()
         variants=[raw+b'end\n',raw.replace(b'average a 4',b'average '+b'f'*97+b' 4'),

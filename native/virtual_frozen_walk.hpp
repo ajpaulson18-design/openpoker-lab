@@ -19,13 +19,14 @@ struct FrozenUpdateStage {
   FrozenUpdateForecast forecast;
   CommonInteger regret_denominator = 1;
   std::vector<FrozenUpdateRow> rows;
+  std::uint64_t prefix_fold_queries = 0, full_board_queries = 0;
   std::uint64_t chance_work = 0, history_work = 0, common_regret_work = 0,
                 average_work = 0;
 };
 inline FrozenUpdateStage
 FrozenUpdate::run(FrozenGame &game, const std::array<std::uint8_t, 5> &board,
-                  ProposalKind proposal) {
-  const auto f = forecast(game, board, proposal);
+                  ProposalKind proposal, bool prefix_fold) {
+  const auto f = forecast(game, board, proposal, prefix_fold);
   if (!f.admitted)
     throw FrozenUpdateError("whole frozen-update admission rejected");
   const auto &t = *game.template_;
@@ -58,6 +59,7 @@ FrozenUpdate::run(FrozenGame &game, const std::array<std::uint8_t, 5> &board,
                          math_limits);
   (void)norm_bits;
   const auto chance_before = game.chance_->receipt().modeled_work;
+  const auto terminal_before = game.chance_->receipt().terminal_queries;
   const std::array<std::size_t, 4> lengths{0, 3, 4, 5};
   std::array<chance::PrefixResult, 4> prefixes;
   for (std::size_t k = 0; k < 4; ++k)
@@ -117,10 +119,29 @@ FrozenUpdate::run(FrozenGame &game, const std::array<std::uint8_t, 5> &board,
             kind == chance::TerminalKind::fold && node.state.winner != target
                 ? -matched
                 : matched;
-        const auto vector =
-            game.chance_->terminal(target, board, kind, payoff, reach,
-                                   CommonInteger(law.board.numerator),
-                                   CommonInteger(law.board.denominator));
+        chance::ExactVector vector;
+        if (prefix_fold && kind==chance::TerminalKind::fold) {
+          const auto length=static_cast<std::size_t>(node.state.street);
+          const auto p=prefix_index(node.state.street);
+          const std::uint64_t a=game.deck_.count-4;
+          const std::uint64_t flop=a*(a-1)*(a-2)/6;
+          const std::uint64_t prefix_divisor=length==0?1:length==3?flop:
+              length==4?flop*(game.deck_.count-7):divisor;
+          if (!prefix_divisor || divisor%prefix_divisor || law.prefix[p].numerator!=1)
+            throw FrozenUpdateError("invalid prefix fold factor");
+          const auto factor=divisor/prefix_divisor;
+          const auto qden=mul(law.prefix[p].denominator,factor);
+          if (qden>law.board.denominator)
+            throw FrozenUpdateError("prefix proposal exceeds forecast width");
+          vector=game.chance_->sampled_fold_prefix_dyadic_reach(target,
+              std::span<const std::uint8_t>(board.data(),length),payoff,reach,
+              CommonInteger(factor),CommonInteger(qden));
+          ++stage.prefix_fold_queries;
+        } else {
+          vector=game.chance_->terminal(target,board,kind,payoff,reach,
+              CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
+          ++stage.full_board_queries;
+        }
         Vector result;
         result.reserve(vector.numerators.size());
         for (const auto &x : vector.numerators)
@@ -249,6 +270,9 @@ FrozenUpdate::run(FrozenGame &game, const std::array<std::uint8_t, 5> &board,
     };
     (void)walk(t.root(), history.root(), initial);
   }
+  if (prefix_fold && (stage.prefix_fold_queries+stage.full_board_queries!=2*f.terminal_occurrences ||
+      game.chance_->receipt().terminal_queries-terminal_before!=stage.prefix_fold_queries+stage.full_board_queries))
+    throw FrozenUpdateError("prefix/full terminal query census differs");
   stage.chance_work = game.chance_->receipt().modeled_work - chance_before;
   stage.history_work = history.receipt().work;
   stage.common_regret_work = math.receipt().work;

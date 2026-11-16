@@ -395,16 +395,17 @@ public:
         for (const auto& x : out.hand_masses[0].numerators) out.total_numerator+=x;
         ++receipt_.prefix_queries; return out;
     }
-    [[nodiscard]] ExactVector terminal(std::size_t player, std::span<const std::uint8_t> board,
+private:
+    [[nodiscard]] ExactVector terminal_dyadic_reach_impl(std::size_t player, std::span<const std::uint8_t> board,
             TerminalKind kind, double payoff, std::span<const double> opponent_reach,
-            const Integer& proposal_num, const Integer& proposal_den) {
+            const Integer& proposal_num, const Integer& proposal_den, bool full_board) {
         if (player > 1 || (kind != TerminalKind::fold && kind != TerminalKind::showdown))
             fail(ErrorCode::invalid_query, "invalid terminal player or kind");
         const auto opp=1-player;
         if (opponent_reach.size()!=hands_[opp].size())
             fail(ErrorCode::invalid_query, "opponent reach length mismatch");
         charge(128 + 32 * hands_[opp].size()); // validate board, proposal and reach before scanning
-        const auto blocked=board_mask(board,true);
+        const auto blocked=board_mask(board,full_board);
         const auto qn=width(proposal_num), qd=width(proposal_den);
         if (!qn || !qd || proposal_num <= 0 || proposal_den <= 0 || proposal_num > proposal_den)
             fail(ErrorCode::invalid_query, "proposal must be an exact positive probability at most one");
@@ -432,7 +433,7 @@ public:
         const auto opp_sum=weight_bits_[opp]+max_reach_bits+log2ceil(hands_[opp].size())+6;
         const auto num_bits=weight_bits_[player]+opp_sum+pay_width+qd+
             static_cast<std::size_t>(std::max(0,factor))+12;
-        const auto den_bits=normalizer_bits_+log2ceil(divisor(5)+1)+qn+
+        const auto den_bits=normalizer_bits_+log2ceil(divisor(board.size())+1)+qn+
             static_cast<std::size_t>(std::max(0,-factor))+8;
         const auto bits=std::max({num_bits,den_bits,qn,qd,std::size_t{53}});
         const auto sorting=static_cast<std::uint64_t>(64*h*(1+log2ceil(h)));
@@ -440,10 +441,25 @@ public:
         Integer pay_sig=pay.significand;
         if ((paybits>>63) && pay_sig != 0) pay_sig=-pay_sig;
         return terminal_integer_values(player,board,kind,blocked,any,pay_sig,factor,
-            Integer(1),proposal_num,proposal_den,divisor(5),[&](std::size_t j) -> Integer {
+            Integer(1),proposal_num,proposal_den,divisor(board.size()),[&](std::size_t j) -> Integer {
                 const auto parts=prior::decode_parts(std::bit_cast<std::uint64_t>(opponent_reach[j]),false,true,"invalid opponent reach");
                 return Integer(parts.significand) << static_cast<unsigned>(parts.exponent-common);
             });
+    }
+public:
+    [[nodiscard]] ExactVector terminal(std::size_t player, std::span<const std::uint8_t> board,
+            TerminalKind kind, double payoff, std::span<const double> opponent_reach,
+            const Integer& proposal_num, const Integer& proposal_den) {
+        return terminal_dyadic_reach_impl(player,board,kind,payoff,opponent_reach,
+                                          proposal_num,proposal_den,true);
+    }
+    // Prefix-only fold with exact binary64 dyadic reaches and proposal inclusion.
+    [[nodiscard]] ExactVector sampled_fold_prefix_dyadic_reach(std::size_t player,
+            std::span<const std::uint8_t> prefix, double payoff,
+            std::span<const double> opponent_reach, const Integer& proposal_num,
+            const Integer& proposal_den) {
+        return terminal_dyadic_reach_impl(player,prefix,TerminalKind::fold,payoff,
+                                          opponent_reach,proposal_num,proposal_den,false);
     }
     // Exact input-order opponent sequence reaches n_j/D, including off-path
     // zeros. The caller owns/admit its immutable input storage and common-D

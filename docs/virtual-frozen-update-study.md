@@ -125,3 +125,40 @@ This experiment proves a single fixed-profile update identity for PROOF9/v1. It
 does not supply an actual sampler, evolving-policy reach representation, bounded
 persistent learning storage, convergence, complete policy exports or independent
 whole-game best responses. Those remain part of the unchanged overall goal.
+
+
+## Uniform sampled folds at the visible prefix
+
+The opt-in probe selector UNIFORM_PREFIX_FOLD evaluates a fold using the board
+cards visible at that decision. Showdowns use the complete sampled board.
+The proposal draws an unordered flop followed by an ordered turn and river
+uniformly from the public deck. The inclusion probability for a prefix of
+length 0, 3, 4, or 5 is respectively 1, 1/84, 1/504, or 1/2520 on PROOF9.
+
+The fold value uses global player identities, the signed whole-hand payoff,
+the opponent's action reach, and the exact prior mass of compatible pairs at
+the visible prefix. Dividing by its inclusion probability makes the
+expectation over all proposal boards equal to the corresponding exhaustive
+fold term. The inverse probability uses the visible prefix even when the
+sampled future board conflicts with either holding. The average increment
+continues to use the actor's own reach times its prefix mass and policy.
+
+The native path uses the existing exact terminal kernel with an explicitly
+shorter card input and an unreduced, equivalent proposal ratio. This fits
+the same regret denominator without changing the probability. Its power-of-two
+reach inputs are exactly representable. The bounded probe reports separate
+visible-fold and full-board query counts. The independent reference uses
+literal compatible private pairs with physical suffix multiplicity.
+
+Run the complete source-authenticated controller and its saved-only reviewer
+with the prefix-folds option. The controller requires all 2,520 proposal draws
+and compares each saved row with the independent sample. It then compares
+their weighted sum with the q-free expected update. The reviewer authenticates
+the source and raw responses, reruns the saved comparisons, and runs corruption
+witnesses without invoking either numerical producer.
+
+This establishes the estimator boundary for an eventual public-chance training
+mode. An evolving learner still needs signed cumulative regret, bounded lazy row
+storage and generation checks, and independent policy and best-response replay.
+The uniform estimator must be evaluated on larger supported games under their
+actual request budgets.

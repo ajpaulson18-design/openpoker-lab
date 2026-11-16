@@ -40,9 +40,12 @@ class ExactExpectation:
     This persistent meter covers aggregation and final expected-value comparison.
     No partial numeric result is exposed through the public API.
     """
-    def __init__(self, law, *, limits=None):
+    def __init__(self, law, *, limits=None, prefix_folds=False):
         if law not in ('uniform', 'river_weighted'):
             raise ValueError('unsupported expectation law')
+        if type(prefix_folds) is not bool or (prefix_folds and law!='uniform'):
+            raise ValueError('prefix folds require the uniform expectation law')
+        self._prefix_folds = prefix_folds
         self._budget = Budget(limits)
         for name, value in FORECAST.items():
             if value > self._budget.limits[name]:
@@ -88,7 +91,7 @@ class ExactExpectation:
             board = reference.admission.board
             if board in self._boards or len(self._boards) >= BOARDS:
                 raise ValueError('duplicate or excessive expectation board')
-            candidate, comparison = compare_saved_update(raw, reference)
+            candidate, comparison = compare_saved_update(raw, reference, prefix_folds=self._prefix_folds)
             qnum, qden = proposal_shape(board, self._law, DECK)[-1]
             quotient = self._budget.div(self._int(candidate['regret_denominator']),
                                         self._int(qnum), 'cancel board proposal numerator')

@@ -10,7 +10,7 @@ from tests.virtual_frozen_run_control import RunClaim
 from tests.virtual_frozen_saved_mutations import native_witnesses
 
 
-def review(study, operator, frozen_repo, head, output):
+def review(study, operator, frozen_repo, head, output, *, prefix_folds=False):
     repo = Path(__file__).resolve().parents[1]
     require_source_bootstrap(repo)
     study, operator, frozen_repo = map(unlinked_path, (study, operator, frozen_repo))
@@ -28,11 +28,11 @@ def review(study, operator, frozen_repo, head, output):
         with (output / name).open('xb') as destination:
             destination.write(raw)
     try:
-        save('resource-plan.json', replay_plan())
+        save('resource-plan.json', replay_plan(prefix_folds=prefix_folds))
         save('verifier-source.json', verifier_source, 16 << 20)
-        provenance = authenticate_saved_study(study, operator, frozen_repo, head)
+        provenance = authenticate_saved_study(study, operator, frozen_repo, head, prefix_folds=prefix_folds)
         save('provenance.json', provenance)
-        witnesses = native_witnesses(study, output / 'mutations')
+        witnesses = native_witnesses(study, output / 'mutations',prefix_folds=prefix_folds)
         save('native-mutation-witnesses.json', witnesses)
         if not witnesses['all_detected']:
             raise ValueError('real native corruption witness missing or undetected; see saved receipt')
@@ -41,13 +41,13 @@ def review(study, operator, frozen_repo, head, output):
             def progress(record):
                 nonlocal count
                 raw = (json.dumps(record, sort_keys=True) + '\n').encode()
-                if len(raw) > 512 or count >= 5040:
+                if len(raw) > 512 or count >= (2520 if prefix_folds else 5040):
                     raise ValueError('saved review progress bound')
                 destination.write(raw)
                 destination.flush()
                 count += 1
             result = replay_saved_numeric(study, provenance, progress=progress,
-                                         witness_directory=output / 'mutations')
+                                         witness_directory=output / 'mutations',prefix_folds=prefix_folds)
         result['duration_seconds'] = time.perf_counter() - started
         result['verifier_head'] = verifier_source['head']
         result['outer_verifier_exit_and_final_bootstrap'] = 'required separately'
@@ -71,9 +71,10 @@ def main():
     for name in ('study', 'operator', 'frozen-repo', 'output'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--expected-head', required=True)
+    parser.add_argument('--prefix-folds',action='store_true')
     args = parser.parse_args()
     print(json.dumps(review(args.study, args.operator, args.frozen_repo,
-                            args.expected_head, args.output), sort_keys=True))
+                            args.expected_head, args.output, prefix_folds=args.prefix_folds), sort_keys=True))
 
 
 if __name__ == '__main__':

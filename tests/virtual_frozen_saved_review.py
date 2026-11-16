@@ -115,12 +115,21 @@ def bounded_inventory(root, byte_cap):
     return {'nodes': nodes, 'files': files, 'bytes': total}
 
 
-def check_plan(plan, result):
-    if (plan.get('version') != 'virtual-frozen-whole-study-admission-v1' or
-            plan.get('native_eval_requests') != 5040 or plan.get('native_admit_requests') != 2 or
+def check_plan(plan, result, *, prefix_folds=False):
+    eval_count, admit_count = (2520, 1) if prefix_folds else (5040, 2)
+    version = ('virtual-frozen-prefix-fold-whole-study-v1' if prefix_folds else
+               'virtual-frozen-whole-study-admission-v1')
+    if (plan.get('version') != version or plan.get('native_eval_requests') != eval_count or
+            plan.get('native_admit_requests') != admit_count or
             set(plan.get('uses', {})) != set(LIMITS) or plan.get('limits') != LIMITS):
         raise ValueError('complete unchanged saved resource plan required')
-    families = {**FILE_FAMILIES, 'reference_artifacts': reference_study_allowance()['all_reference_artifact_bytes_upper']}
+    exports = reference_study_allowance()
+    families = {**FILE_FAMILIES, 'reference_artifacts': exports['all_reference_artifact_bytes_upper']}
+    if prefix_folds:
+        calls=eval_count+admit_count
+        families.update(native_stdout=calls*MAX_BYTES,native_stderr=calls*65536,
+                        requests=calls*1025,call_receipts=calls*65536,
+                        reference_artifacts=exports['sampled_law_bytes_upper']+exports['q_free_bytes_upper'])
     families['archive_with_headers_upper'] = sum(families.values()) + (128 << 20)
     require_equal(plan.get('file_families'), families, 'unchanged whole-study file allowances')
     require_equal(plan['uses']['artifact_bytes'], sum(families.values()), 'composed artifact allowance')
@@ -173,18 +182,20 @@ def read_call(directory, mode, wire, board):
     return raw, result
 
 
-def replay_plan():
+def replay_plan(*,prefix_folds=False):
     exports = reference_study_allowance()
+    laws=1 if prefix_folds else 2
+    calls=laws*2520
     return {'native_producer_calls': 0, 'reference_producer_calls': 0,
-            'calls': 5040, 'comparison_work': 5040 * COMPARE['work'],
-            'comparison_created_bits': 5040 * COMPARE['created_bits'],
-            'aggregation_work': 2 * AGGREGATE['work'],
-            'aggregation_created_bits': 2 * AGGREGATE['created_bits'],
+            'calls': calls, 'comparison_work': calls * COMPARE['work'],
+            'comparison_created_bits': calls * COMPARE['created_bits'],
+            'aggregation_work': laws * AGGREGATE['work'],
+            'aggregation_created_bits': laws * AGGREGATE['created_bits'],
             'codec_work': exports['one_export_or_read_named_work_upper'],
             'reference_bytes': exports['all_reference_artifact_bytes_upper'],
             'source_snapshot_bytes': SOURCE['total_bytes'],
             'output_receipt_bytes': 1 << 20,
-            'progress_bytes': 5040 * 512,
+            'progress_bytes': calls * 512,
             'verifier_source_receipt_bytes': 16 << 20,
             'mutation_artifact_bytes': 128 << 20,
             'mutation_comparison_work': 6 * COMPARE['work'],
@@ -224,7 +235,7 @@ def _bootstrap(boot, source, root, stage, identity, entry, interpreter=None):
     return runtime
 
 
-def authenticate_saved_study(study, operator, frozen_repo, head):
+def authenticate_saved_study(study, operator, frozen_repo, head, *, prefix_folds=False):
     """Read-only source/build/operator admission, never executes saved source."""
     study, operator, frozen_repo = map(unlinked_path, (study, operator, frozen_repo))
     claim = metadata(study / 'claim.json')
@@ -247,13 +258,15 @@ def authenticate_saved_study(study, operator, frozen_repo, head):
     terminal = metadata(study / 'terminal.json')
     result = metadata(study / 'result.json', 1 << 20)
     plan = metadata(study / 'resource-plan.json', 1 << 20)
-    check_plan(plan, result)
+    check_plan(plan, result, prefix_folds=prefix_folds)
     inventory = bounded_inventory(study, plan['uses']['artifact_bytes'])
-    if (terminal.get('status') != 'complete' or result.get('status') != 'exact_update_identity_pass'
+    required_result='prefix_fold_exact_update_identity_pass' if prefix_folds else 'exact_update_identity_pass'
+    required_calls=2520 if prefix_folds else 5040
+    if (terminal.get('status') != 'complete' or result.get('status') != required_result
             or result.get('source_head') != head):
         raise ValueError('study not complete for saved review')
     for receipt in (terminal.get('receipt', {}), result):
-        if receipt.get('native_eval_attempts') != 5040 or receipt.get('native_eval_completions') != 5040:
+        if receipt.get('native_eval_attempts') != required_calls or receipt.get('native_eval_completions') != required_calls:
             raise ValueError('complete exact native attempt/exit coverage required')
     require_equal(result.get('source_final'), current_source, 'final source receipt')
     exit_receipt = metadata(operator / 'study/exit.json')
@@ -287,7 +300,7 @@ def authenticate_saved_study(study, operator, frozen_repo, head):
                            str(frozen_repo / 'scripts/run_virtual_frozen_source_only.py'), identity,
                            '--module', 'scripts.run_virtual_frozen_update_study', '--receipt',
                            str(operator / 'study-bootstrap.json'), '--', '--output', str(study),
-                           '--expected-head', head], 'actual outer command')
+                           '--expected-head', head, *(['--prefix-folds'] if prefix_folds else [])], 'actual outer command')
     closure = metadata(study / 'execution-closure.json', 1 << 20)
     require_equal(closure.get('head'), head, 'execution closure HEAD')
     require_equal(closure.get('compiled_python_sha256'), boot['compiled'], 'final compiled closure')
@@ -307,7 +320,9 @@ def authenticate_saved_study(study, operator, frozen_repo, head):
     build = authenticate_build(frozen_repo, study / 'build', source)
     require_equal(metadata(study / 'build-identity.json'), build, 'saved build identity')
     admissions = metadata(study / 'native-admissions.json')
-    for wire in ('UNIFORM', 'RIVER_WEIGHTED'):
+    wire_laws=('UNIFORM_PREFIX_FOLD',) if prefix_folds else ('UNIFORM', 'RIVER_WEIGHTED')
+    require_equal(set(admissions),set(wire_laws),'native admission law inventory')
+    for wire in wire_laws:
         _, admitted = read_call(study / ('admit-' + wire), 'ADMIT', wire, WORST_BOARD)
         if any(admitted['calls']) or admitted['forecast'][1] + admitted['probe'][2] > 500_000_000:
             raise ValueError('native admission exceeded unchanged work cap')
@@ -335,7 +350,7 @@ def saved_reference(path, kind):
     return saved
 
 
-def replay_saved_numeric(study, provenance, *, progress=None, witness_directory=None):
+def replay_saved_numeric(study, provenance, *, progress=None, witness_directory=None, prefix_folds=False):
     """Complete saved comparison/expectation, with one law owner at a time."""
     study = unlinked_path(study)
     expected = saved_reference(study / 'expected.jsonl', 'expected')
@@ -345,7 +360,9 @@ def replay_saved_numeric(study, provenance, *, progress=None, witness_directory=
     laws = {}
     q_free_witness = None
     total_calls = 0
-    for law, wire in (('uniform', 'UNIFORM'), ('river_weighted', 'RIVER_WEIGHTED')):
+    law_specs=(('uniform','UNIFORM_PREFIX_FOLD'),) if prefix_folds else (
+        ('uniform','UNIFORM'),('river_weighted','RIVER_WEIGHTED'))
+    for law,wire in law_specs:
         law_dir = unlinked_path(study / law)
         names = set()
         for entry in law_dir.iterdir():
@@ -354,7 +371,7 @@ def replay_saved_numeric(study, provenance, *, progress=None, witness_directory=
                 raise ValueError('saved law directory shape')
             names.add(entry.name)
         require_equal(names, {f'{i:04d}' for i in range(2520)}, 'complete canonical call inventory')
-        owner = ExactExpectation(law)
+        owner = ExactExpectation(law,prefix_folds=prefix_folds)
         for index, board in enumerate(canonical_boards()):
             call = law_dir / f'{index:04d}'
             # ExactExpectation.add performs the one admitted full parse and
@@ -366,6 +383,9 @@ def replay_saved_numeric(study, provenance, *, progress=None, witness_directory=
             check_export(sample, saved_comparison['reference_export'])
             reference_receipt = metadata(call / 'reference-receipt.json')
             require_equal(reference_receipt.get('version'), 'n9-sampled-board-update-reference-v1', 'sampled reference version')
+            if prefix_folds:
+                require_equal(reference_receipt.get('q_corrected_prefix_fold_regret'),True,'prefix-fold reference mode')
+                require_equal(reference_receipt.get('admission', {}).get('prefix_fold_admitted'),True,'prefix-fold reference admission')
             require_equal(reference_receipt.get('rows'), len(sample.rows), 'reference row receipt')
             require_equal(reference_receipt.get('action_slots'), sum(len(row.actions) for row in sample.rows.values()), 'reference slot receipt')
             require_equal(reference_receipt.get('admission', {}).get('board'), list(board), 'reference admitted board')
@@ -389,7 +409,7 @@ def replay_saved_numeric(study, provenance, *, progress=None, witness_directory=
         del owner
     return {'status': 'complete_saved_numeric_replay_pass', 'source_head': provenance['source_head'],
             'native_producer_calls': 0, 'reference_producer_calls': 0, 'calls': total_calls,
-            'laws': laws, 'resource_plan': replay_plan(),
+            'laws': laws, 'resource_plan': replay_plan(prefix_folds=prefix_folds),
             'q_free_mutation_witness': q_free_witness,
             'mutation_witnesses': 'separate required gate' if witness_directory is None else 'see witness receipts',
             'scope': 'fixed-profile exact update identity only; no training/quality/scalability acceptance'}

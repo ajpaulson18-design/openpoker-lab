@@ -46,7 +46,7 @@ def validate_build_bootstrap(child,source,parent):
             raise ValueError('build child executed Python differs from committed source')
 
 
-def run_complete_study(directory,expected_head):
+def run_complete_study(directory,expected_head,*,prefix_folds=False):
     repo=Path(__file__).resolve().parents[1]
     if Path.cwd().resolve()!=repo:raise ValueError('controller must run in its source checkout')
     directory=Path(directory).resolve()
@@ -103,7 +103,7 @@ def run_complete_study(directory,expected_head):
         save(directory/'build-identity.json',build,family='controller_and_failure_logs')
         emit('build_authenticated')
         context=build_sampled_reference_context()
-        census=census_study_admission(context)
+        census=census_study_admission(context,prefix_folds=prefix_folds)
         expected_admission=prepare_expected_update_reference()
         plan=compose_study_admission(census,expected_admission)
         # Keep file-family limits identical to the admitted complete plan.
@@ -147,8 +147,10 @@ def run_complete_study(directory,expected_head):
                 evals+=1
             emit('native_exit',mode=mode,law=law,eval_completions=evals)
             return raw,before,after
+        law_specs=(('uniform','UNIFORM_PREFIX_FOLD'),) if prefix_folds else (
+            ('uniform','UNIFORM'),('river_weighted','RIVER_WEIGHTED'))
         admissions={}
-        for law in ('UNIFORM','RIVER_WEIGHTED'):
+        for _,law in law_specs:
             raw,_,_=native('ADMIT',law,WORST_BOARD,directory/('admit-'+law))
             result=parse(raw,mode='ADMIT',proposal=law,board=WORST_BOARD)
             if result.get('status')!='ADMITTED' or any(result['calls']):raise ValueError('frozen worst-law native admission failed')
@@ -171,18 +173,21 @@ def run_complete_study(directory,expected_head):
         del expected
         emit('q_free_reference_saved')
         law_results={}
-        for law,wire in [('uniform','UNIFORM'),('river_weighted','RIVER_WEIGHTED')]:
+        for law,wire in law_specs:
             numeric.reserve('aggregation_work',AGGREGATE['work'])
             numeric.reserve('aggregation_created_bits',AGGREGATE['created_bits'])
-            owner=ExactExpectation(law)
+            owner=ExactExpectation(law,prefix_folds=prefix_folds)
             law_dir=directory/law;law_dir.mkdir()
             for index,board in enumerate(context.physical.proposals):
                 call=law_dir/('%04d'%index)
                 raw,before,after=native('EVAL',wire,board,call)
-                admission=admit_sampled_board(context,board,law)
-                numeric.reserve('reference_work',admission.work_upper)
-                numeric.reserve('reference_created_bits',admission.created_bits_upper)
-                sample=compute_sampled_update_reference(admission)
+                admission=(admit_sampled_board(context,board,law,prefix_folds=True)
+                           if prefix_folds else admit_sampled_board(context,board,law))
+                extra_work=admission.prefix_fold_work_upper if prefix_folds else 0
+                extra_bits=admission.prefix_fold_created_bits_upper if prefix_folds else 0
+                numeric.reserve('reference_work',admission.work_upper+extra_work)
+                numeric.reserve('reference_created_bits',admission.created_bits_upper+extra_bits)
+                sample=compute_sampled_update_reference(admission,prefix_folds=prefix_folds)
                 loaded,export=export_reference(call/'reference.jsonl',sample,'sampled')
                 save(call/'reference-receipt.json',sample.receipt)
                 del sample
@@ -200,7 +205,7 @@ def run_complete_study(directory,expected_head):
         scan_project_caches(repo)
         final_source=verify_source(repo,source)
         if authenticate_build(repo,build_dir,source)!=build:raise ValueError('final build identity changed')
-        receipt={'status':'exact_update_identity_pass','native_eval_completions':evals,'native_eval_attempts':eval_attempts,
+        receipt={'status':('prefix_fold_exact_update_identity_pass' if prefix_folds else 'exact_update_identity_pass'),'native_eval_completions':evals,'native_eval_attempts':eval_attempts,
                  'laws':law_results,'source_final':final_source,'source_head':head,
                  'numeric_reserved':numeric.used,'files_reserved':files.used,
                  'expected_export':expected_export,'duration_seconds':time.perf_counter()-started,
@@ -224,7 +229,8 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--expected-head',required=True)
+    parser.add_argument('--prefix-folds',action='store_true',help='prove the complete uniform visible-prefix fold mode')
     args=parser.parse_args()
-    print(json.dumps(_safe(run_complete_study(args.output,args.expected_head)),sort_keys=True))
+    print(json.dumps(_safe(run_complete_study(args.output,args.expected_head,prefix_folds=args.prefix_folds)),sort_keys=True))
 
 if __name__=='__main__':main()

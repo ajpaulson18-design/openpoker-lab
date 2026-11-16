@@ -26,7 +26,7 @@ def _bounded_fraction(value):
         raise ValueError('reference scalar outside comparison input bounds')
 
 
-def compare_saved_update(raw, reference, *, limits=None):
+def compare_saved_update(raw, reference, *, limits=None, prefix_folds=False):
     """Check all keys, ordered menus, policies and exact values, including zeros.
 
     `reference` is the separately produced SampledUpdateResult. This function
@@ -66,9 +66,11 @@ def compare_saved_update(raw, reference, *, limits=None):
     law = reference.admission.proposal_law
     if law not in ('uniform', 'river_weighted'):
         raise ValueError('unknown reference proposal law')
-    candidate = parse(raw, mode='EVAL', proposal={
-        'uniform': 'UNIFORM', 'river_weighted': 'RIVER_WEIGHTED'}[law],
-        board=reference.admission.board)
+    if type(prefix_folds) is not bool or (prefix_folds and law!='uniform'):
+        raise ValueError('prefix folds require the uniform reference law')
+    wire_law = 'UNIFORM_PREFIX_FOLD' if prefix_folds else {
+        'uniform': 'UNIFORM', 'river_weighted': 'RIVER_WEIGHTED'}[law]
+    candidate = parse(raw, mode='EVAL', proposal=wire_law, board=reference.admission.board)
     if 'error' in candidate:
         raise ValueError('native update returned an error frame')
     if len(candidate['rows']) != len(reference.rows):

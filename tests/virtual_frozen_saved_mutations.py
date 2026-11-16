@@ -68,7 +68,7 @@ def mutate_native(raw, kind):
     return changed, selected
 
 
-def native_witnesses(study, output):
+def native_witnesses(study, output, *, prefix_folds=False):
     """Three parser-valid real-frame controls, saved separately from originals."""
     study, output = Path(study), Path(output)
     output.mkdir(exist_ok=False)
@@ -87,7 +87,7 @@ def native_witnesses(study, output):
             break
     for index, board in selections:
         call = study / 'uniform' / f'{index:04d}'
-        raw, _ = read_call(call, 'EVAL', 'UNIFORM', board)
+        raw, _ = read_call(call, 'EVAL', 'UNIFORM_PREFIX_FOLD' if prefix_folds else 'UNIFORM', board)
         reference = None
         for kind in sorted(tuple(pending)):
             mutated = mutate_native(raw, kind)
@@ -96,14 +96,14 @@ def native_witnesses(study, output):
             changed, detail = mutated
             if reference is None:
                 reference = saved_reference(call / 'reference.jsonl', 'sampled')
-                compare_saved_update(raw, reference)
+                compare_saved_update(raw, reference, prefix_folds=prefix_folds)
             destination = output / (kind + '.bin')
             with destination.open('xb') as saved:
                 saved.write(changed)
             detected = False
             error = None
             try:
-                compare_saved_update(changed, reference)
+                compare_saved_update(changed, reference, prefix_folds=prefix_folds)
             except ValueError as failure:
                 error = str(failure)
                 detected = error in ('exact regret mismatch', 'exact average mass mismatch',

@@ -116,6 +116,23 @@ class SampledBoardAdmission:
     max_integer_bits_upper: int
     limits: object
     _seal: object
+    prefix_fold_admitted: bool = False
+    prefix_fold_node_visits_upper: int = 0
+    prefix_fold_action_edges_upper: int = 0
+    prefix_fold_terminal_queries_upper: int = 0
+    prefix_fold_opponent_pair_scans_upper: int = 0
+    prefix_fold_scalar_operations_upper: int = 0
+    prefix_fold_frame_entries_upper: int = 0
+    prefix_fold_return_vector_entries_upper: int = 0
+    prefix_fold_reach_copy_entries_upper: int = 0
+    prefix_fold_policy_entries_upper: int = 0
+    prefix_fold_history_token_entries_upper: int = 0
+    prefix_fold_pair_temporary_entries_upper: int = 0
+    prefix_fold_counter_metadata_entries_upper: int = 0
+    prefix_fold_work_upper: int = 0
+    prefix_fold_entries_upper: int = 0
+    prefix_fold_created_bits_upper: int = 0
+    prefix_fold_max_integer_bits_upper: int = 0
 
     def receipt(self):
         return {
@@ -142,6 +159,28 @@ class SampledBoardAdmission:
             "entries_upper": self.entries_upper,
             "created_bits_upper": self.created_bits_upper,
             "max_integer_bits_upper": self.max_integer_bits_upper,
+            "prefix_fold_admitted": self.prefix_fold_admitted,
+            "prefix_fold_node_visits_upper": self.prefix_fold_node_visits_upper,
+            "prefix_fold_action_edges_upper": self.prefix_fold_action_edges_upper,
+            "prefix_fold_terminal_queries_upper": self.prefix_fold_terminal_queries_upper,
+            "prefix_fold_opponent_pair_scans_upper": self.prefix_fold_opponent_pair_scans_upper,
+            "prefix_fold_scalar_operations_upper": self.prefix_fold_scalar_operations_upper,
+            "prefix_fold_frame_entries_upper": self.prefix_fold_frame_entries_upper,
+            "prefix_fold_return_vector_entries_upper": self.prefix_fold_return_vector_entries_upper,
+            "prefix_fold_reach_copy_entries_upper": self.prefix_fold_reach_copy_entries_upper,
+            "prefix_fold_policy_entries_upper": self.prefix_fold_policy_entries_upper,
+            "prefix_fold_history_token_entries_upper": self.prefix_fold_history_token_entries_upper,
+            "prefix_fold_pair_temporary_entries_upper": self.prefix_fold_pair_temporary_entries_upper,
+            "prefix_fold_counter_metadata_entries_upper": self.prefix_fold_counter_metadata_entries_upper,
+            "prefix_fold_work_upper": self.prefix_fold_work_upper,
+            "prefix_fold_entries_upper": self.prefix_fold_entries_upper,
+            "prefix_fold_created_bits_upper": self.prefix_fold_created_bits_upper,
+            "prefix_fold_max_integer_bits_upper": self.prefix_fold_max_integer_bits_upper,
+            "combined_work_upper": self.work_upper + self.prefix_fold_work_upper,
+            "combined_entries_upper": self.entries_upper + self.prefix_fold_entries_upper,
+            "combined_created_bits_upper": self.created_bits_upper + self.prefix_fold_created_bits_upper,
+            "combined_max_integer_bits_upper": max(self.max_integer_bits_upper,
+                self.prefix_fold_max_integer_bits_upper),
             "limits": dict(self.limits),
             "context_setup_is_counted_once": True,
             "scope": "one sampled board call; not an aggregate 5,040-call study admission",
@@ -160,6 +199,7 @@ class SampledUpdateRow:
     average_action_masses: tuple[Fraction, ...]
     regret_world_visits: int
     average_prefix_visits: int
+    prefix_fold_regret_masses: tuple[Fraction, ...] = ()
 
     @property
     def key(self):
@@ -180,6 +220,7 @@ class _MutableRow:
     regrets: list[Fraction]
     average_mass: Fraction
     average_actions: list[Fraction]
+    prefix_fold_regrets: list[Fraction]
     regret_world_visits: int = 0
     average_prefix_visits: int = 0
 
@@ -356,8 +397,13 @@ def _validate_board(context, board, proposal_law):
     return q_board if proposal_law == "uniform" else q_board[board]
 
 
-def admit_sampled_board(context, board, proposal_law="uniform", limits=None):
+def admit_sampled_board(context, board, proposal_law="uniform", limits=None, *,
+                        prefix_folds=False):
     """Preflight a single proposal board without allocating update rows."""
+    if type(prefix_folds) is not bool:
+        raise ValueError("prefix_folds must be an explicit boolean")
+    if prefix_folds and proposal_law != "uniform":
+        raise ValueError("prefix folds require the uniform proposal law")
     ceilings = _limits_snapshot(limits)
     q_board = _validate_board(context, board, proposal_law)
     if q_board <= 0:
@@ -437,14 +483,66 @@ def admit_sampled_board(context, board, proposal_law="uniform", limits=None):
                      2 * history_tokens + 8192 + 12)
     created_bits_upper = 4096 * fraction_ops + 2200 * rank_calls
     max_bits_upper = 4096
+
+    fold_node_visits = fold_action_edges = fold_terminal_queries = 0
+    fold_pair_scans = fold_scalar_ops = fold_frame_entries = 0
+    fold_return_vector_entries = fold_reach_copy_entries = 0
+    fold_policy_entries = fold_history_token_entries = fold_pair_temp_entries = 0
+    fold_counter_metadata_entries = 0
+    fold_work_upper = fold_entries_upper = fold_created_bits_upper = fold_max_bits_upper = 0
+    if prefix_folds:
+        full_walk = context.prefix_walk_stats[5]
+        fold_node_visits = 2 * full_walk["node_visits"]
+        fold_action_edges = 2 * full_walk["action_edge_visits"]
+        fold_terminal_queries = 2 * sum(
+            node.path_count for node in context.nodes if node.phase == "fold")
+        fold_pair_scans = (fold_terminal_queries * len(context.ranges[0]) *
+                           len(context.ranges[1]))
+        decision_occurrences = 2 * sum(
+            node.path_count for node in context.nodes if node.phase == "decision")
+        max_hands = max(map(len, context.ranges))
+        max_actions = max(len(node.edges) for node in context.nodes
+                          if node.phase == "decision")
+        fold_return_vector_entries = fold_node_visits * max_hands
+        fold_reach_copy_entries = fold_action_edges * sum(map(len, context.ranges))
+        fold_policy_entries = decision_occurrences * max_hands * max_actions
+        fold_history_token_entries = 2 * sum(node.history_tokens for node in context.nodes)
+        fold_pair_temp_entries = 8 * fold_pair_scans
+        fold_scalar_ops = (
+            4 * fold_node_visits + 8 * fold_action_edges +
+            fold_terminal_queries * (16 + 16 * len(context.ranges[0]) *
+                                     len(context.ranges[1])) +
+            decision_occurrences * max_hands * max_actions * 16 +
+            2 * (len(context.nodes) + sum(map(len, context.ranges))))
+        # Count all simultaneously live fold traversal structures: one return
+        # vector per visited node, copied global reaches per action edge,
+        # bounded policy tuples, full-history token references, and rational
+        # marginal temporaries for every candidate hand pair.
+        fold_frame_entries = (fold_return_vector_entries + fold_reach_copy_entries +
+                              fold_policy_entries + fold_history_token_entries +
+                              fold_pair_temp_entries)
+        fold_work_upper = (4 * fold_node_visits + 8 * fold_action_edges +
+                           16 * fold_pair_scans +
+                           decision_occurrences * max_hands * max_actions * 8 +
+                           fold_scalar_ops)
+        # Budget.charge creates two logical entries for each new counter
+        # family. Fold mode adds exactly these two families.
+        fold_counter_metadata_entries = 2 * 2
+        fold_entries_upper = fold_frame_entries + fold_counter_metadata_entries
+        fold_created_bits_upper = 4096 * fold_scalar_ops
+        fold_max_bits_upper = MAX_CONTEXT_INTEGER_BITS
     setup = context.setup_receipt
-    if setup["work"] + work_upper > ceilings["work"]:
+    combined_work = work_upper + fold_work_upper
+    combined_entries = entries_upper + fold_entries_upper
+    combined_created_bits = created_bits_upper + fold_created_bits_upper
+    combined_max_bits = max(max_bits_upper, fold_max_bits_upper)
+    if setup["work"] + combined_work > ceilings["work"]:
         raise ValueError("sampled-board certificate work limit exceeded")
-    if setup["entries"] + entries_upper > ceilings["entries"]:
+    if setup["entries"] + combined_entries > ceilings["entries"]:
         raise ValueError("sampled-board certificate entry limit exceeded")
-    if setup["created_bits"] + created_bits_upper > ceilings["created_bits"]:
+    if setup["created_bits"] + combined_created_bits > ceilings["created_bits"]:
         raise ValueError("sampled-board cumulative integer bit limit exceeded")
-    if max_bits_upper > ceilings["integer_bits"]:
+    if combined_max_bits > ceilings["integer_bits"]:
         raise ValueError("sampled-board integer bit limit exceeded")
 
     return SampledBoardAdmission(
@@ -453,7 +551,12 @@ def admit_sampled_board(context, board, proposal_law="uniform", limits=None):
         history_bytes, action_bytes, output_text_bytes, regret_visits,
         regret_edges, average_visits, average_edges, rank_calls, fraction_ops,
         work_upper, entries_upper, created_bits_upper, max_bits_upper,
-        ceilings, context._seal)
+        ceilings, context._seal, prefix_folds, fold_node_visits,
+        fold_action_edges, fold_terminal_queries, fold_pair_scans,
+        fold_scalar_ops, fold_frame_entries, fold_return_vector_entries,
+        fold_reach_copy_entries, fold_policy_entries, fold_history_token_entries,
+        fold_pair_temp_entries, fold_counter_metadata_entries, fold_work_upper,
+        fold_entries_upper, fold_created_bits_upper, fold_max_bits_upper)
 
 
 def _reveal_token(board, length):
@@ -466,10 +569,66 @@ def _reveal_token(board, length):
     raise ArithmeticError("invalid symbolic reveal length")
 
 
-def compute_sampled_update_reference(admission):
-    """Compute one exact per-board proposal estimator and prefix average."""
+def _prefix_fold_terminal_values(context, target, node, prefix, opponent_reaches,
+                                 budget, powers):
+    """Exact target-hand utility vector for one fixed-payoff visible fold.
+
+    This is intentionally independent of native chance helpers. The fixed N9
+    suffix census is over the five cards left after both private hands.
+    """
+    suffix_counts = {0: 20, 3: 2, 4: 1, 5: 1}
+    if (node.phase != "fold" or type(target) is not int or target not in (0, 1) or
+            type(prefix) is not tuple or len(prefix) != node.street or
+            node.street not in suffix_counts or prefix not in context.physical.masses or
+            type(opponent_reaches) is not tuple or
+            len(opponent_reaches) != len(context.ranges[1-target])):
+        raise ValueError("invalid visible folded-terminal query")
+    q_prefix = context.physical.proposal_laws["uniform"]["prefix"][prefix]
+    payoff = budget.input(node.matched, "folded whole-hand payoff")
+    if node.winner != target:
+        payoff = budget.neg(payoff, "folded target-seat payoff orientation")
+    result = []
+    for own_hand, own_weight in context.ranges[target]:
+        if set(own_hand).intersection(prefix):
+            result.append(Fraction(0))
+            continue
+        mass = Fraction(0)
+        for (opponent_hand, opponent_weight), exponent in zip(
+                context.ranges[1-target], opponent_reaches):
+            if (set(opponent_hand).intersection(prefix) or
+                    not set(own_hand).isdisjoint(opponent_hand) or exponent < 0):
+                continue
+            pair_mass = budget.div(
+                budget.div(budget.mul(own_weight, opponent_weight,
+                                     "folded compatible private prior"),
+                           context.normalizer,
+                           "folded global prior normalization"),
+                Fraction(20), "folded complete-board target mass")
+            pair_mass = budget.mul(pair_mass, Fraction(suffix_counts[node.street]),
+                                   "folded legal suffix multiplicity")
+            pair_mass = budget.mul(pair_mass, powers[exponent], "folded opponent reach")
+            mass = budget.add(mass, pair_mass, "folded opponent marginal")
+        mass = budget.div(mass, q_prefix, "folded prefix inverse proposal")
+        result.append(budget.mul(mass, payoff, "folded signed whole-hand payoff"))
+    return result
+
+
+def compute_sampled_update_reference(admission, *, prefix_folds=False):
+    """Compute one exact per-board proposal estimator and prefix average.
+
+    ``prefix_folds`` is an explicit uniform-proposal reference mode. It folds
+    fixed-payoff fold terminals over all private-compatible unseen suffixes at
+    their visible prefix; showdown terminals and the average walk retain the
+    ordinary sampled-board calculation.
+    """
     if type(admission) is not SampledBoardAdmission or admission._seal is not admission.context._seal:
         raise ValueError("sampled-board admission/context seal mismatch")
+    if type(prefix_folds) is not bool:
+        raise ValueError("prefix_folds must be an explicit boolean")
+    if prefix_folds and admission.proposal_law != "uniform":
+        raise ValueError("prefix folds require the uniform proposal law")
+    if prefix_folds and not admission.prefix_fold_admitted:
+        raise ValueError("sampled-board admission does not match prefix-fold mode")
     context = admission.context
     budget = Budget({name: admission.limits[name] for name in DEFAULT_LIMITS})
     budget.entries(admission.entries_upper - 12,
@@ -479,6 +638,7 @@ def compute_sampled_update_reference(admission):
     rows = {}
     regret_worlds = rank_calls = regret_node_visits = regret_edge_visits = 0
     average_node_visits = average_edge_visits = 0
+    prefix_fold_node_visits = prefix_fold_edge_visits = 0
     rank_outcomes = {"sb_win": 0, "tie": 0, "sb_loss": 0}
 
     def ensure_row(actor, hand, history, actions, exponents):
@@ -486,7 +646,7 @@ def compute_sampled_update_reference(admission):
         row = rows.get(key)
         if row is None:
             row = _MutableRow(actions, exponents, [zero] * len(actions), zero,
-                              [zero] * len(actions))
+                              [zero] * len(actions), [zero] * len(actions))
             rows[key] = row
         elif row.actions != actions or row.exponents != exponents:
             raise ArithmeticError("same full-history row has inconsistent menu/profile")
@@ -500,6 +660,8 @@ def compute_sampled_update_reference(admission):
         if node.phase in ("fold", "showdown"):
             amount = budget.input(node.matched, "sampled terminal matched contribution")
             if node.phase == "fold":
+                if prefix_folds:
+                    return zero
                 return amount if node.winner == 0 else budget.neg(amount, "global SB fold sign")
             return budget.mul(amount, Fraction(rank_sign), "global SB showdown utility")
         if node.phase == "reveal":
@@ -562,6 +724,83 @@ def compute_sampled_update_reference(admission):
         sign = (rank0 > rank1) - (rank0 < rank1)
         rank_outcomes[{1: "sb_win", 0: "tie", -1: "sb_loss"}[sign]] += 1
         regret_walk(context.root, (), (0, 0), chance, sign, (hand0, hand1))
+
+    if prefix_folds:
+        # Fold utility is fixed before any hidden suffix is revealed. For each
+        # acting seat, integrate literal opponent holdings and all legal N9
+        # completions at that fold's visible prefix, then correct by q(prefix).
+        def folded_walk(target, node_id, history, reaches):
+            nonlocal prefix_fold_node_visits, prefix_fold_edge_visits
+            node = context.nodes[node_id]
+            prefix_fold_node_visits += 1
+            budget.charge("sample_prefix_fold_node", 1)
+            if node.phase == "showdown":
+                return [zero] * len(context.ranges[target])
+            if node.phase == "fold":
+                length = node.street
+                prefix = admission.board[:length]
+                return _prefix_fold_terminal_values(
+                    context, target, node, prefix, reaches[1-target], budget, powers)
+            if node.phase == "reveal":
+                if node.reveal_length > admission.board.__len__():
+                    return [zero] * len(context.ranges[target])
+                edge = node.edges[0]
+                return folded_walk(target, edge.child,
+                    (*history, _reveal_token(admission.board, node.reveal_length)), reaches)
+
+            actor = node.actor
+            actions = tuple(edge.token for edge in node.edges)
+            side = context.ranges[actor]
+            policies = tuple(_profile_exponents(actor, hand, history, actions)
+                             for hand, _weight in side)
+            children = []
+            for action_index, edge in enumerate(node.edges):
+                updated = [list(reaches[0]), list(reaches[1])]
+                for hand_index, policy in enumerate(policies):
+                    current = updated[actor][hand_index]
+                    exponent = policy[action_index]
+                    updated[actor][hand_index] = (
+                        -1 if current < 0 or exponent < 0 else current + exponent)
+                prefix_fold_edge_visits += 1
+                budget.charge("sample_prefix_fold_action_edge", 1)
+                children.append(folded_walk(target, edge.child, (*history, edge.token),
+                                            tuple(tuple(x) for x in updated)))
+            result = [zero] * len(context.ranges[target])
+            if actor == target:
+                length = node.street
+                for hand_index, (hand, _weight) in enumerate(context.ranges[target]):
+                    exponents = policies[hand_index]
+                    mixed = zero
+                    for action_index, exponent in enumerate(exponents):
+                        if exponent >= 0:
+                            mixed = budget.add(mixed,
+                                budget.mul(powers[exponent], children[action_index][hand_index],
+                                           "folded own-policy value"),
+                                "folded own-policy mix")
+                    if context.physical.mass(admission.board[:length], target, hand_index) > 0:
+                        row = ensure_row(target, hand, history, actions, exponents)
+                        for action_index, child_values in enumerate(children):
+                            delta = budget.sub(child_values[hand_index], mixed,
+                                               "folded action regret difference")
+                            row.regrets[action_index] = budget.add(
+                                row.regrets[action_index],
+                                delta,
+                                "folded regret accumulation")
+                            row.prefix_fold_regrets[action_index] = budget.add(
+                                row.prefix_fold_regrets[action_index], delta,
+                                "folded component accumulation")
+                    result[hand_index] = mixed
+            else:
+                for child_values in children:
+                    for hand_index, value in enumerate(child_values):
+                        result[hand_index] = budget.add(result[hand_index], value,
+                                                        "folded opponent action sum")
+            return result
+
+        for target in (0, 1):
+            initial_reaches = (tuple(0 for _ in context.ranges[0]),
+                               tuple(0 for _ in context.ranges[1]))
+            folded_walk(target, context.root, (), initial_reaches)
 
     def average_walk(node_id, target_player, target_hand, target_length,
                      average_scale, own_exp, history):
@@ -634,12 +873,34 @@ def compute_sampled_update_reference(admission):
             f"regret_edges={regret_edge_visits}/{admission.regret_edges_upper}, "
             f"average_nodes={average_node_visits}/{admission.average_visits_upper}, "
             f"average_edges={average_edge_visits}/{admission.average_edges_upper}")
-    if len(rows) != admission.row_count_upper or sum(len(row.actions) for row in rows.values()) != admission.action_slots_upper:
+    if (not prefix_folds and
+            (len(rows) != admission.row_count_upper or
+             sum(len(row.actions) for row in rows.values()) != admission.action_slots_upper)):
         raise ArithmeticError("sampled reference rows disagree with the preflight census")
-    if budget.work > admission.work_upper or budget.logical_entries > admission.entries_upper:
+    if prefix_folds and (len(rows) > MAX_PER_BOARD_ROWS or
+                         sum(len(row.actions) for row in rows.values()) > MAX_PER_BOARD_ACTION_SLOTS):
+        raise ArithmeticError("prefix-fold reference exceeded fixed row/action bounds")
+    if (not prefix_folds and
+            (budget.work > admission.work_upper or
+             budget.logical_entries > admission.entries_upper)):
         raise ArithmeticError("sampled reference actual work/entries exceeded admission")
-    if budget.created_bits > admission.created_bits_upper or budget.max_forecast_bits > admission.max_integer_bits_upper:
+    if prefix_folds and (budget.work > admission.work_upper + admission.prefix_fold_work_upper or
+                         budget.logical_entries > admission.entries_upper +
+                         admission.prefix_fold_entries_upper):
+        raise ArithmeticError(
+            "prefix-fold reference exceeded combined work/entries: "
+            f"{budget.work}/{admission.work_upper + admission.prefix_fold_work_upper}, "
+            f"{budget.logical_entries}/{admission.entries_upper + admission.prefix_fold_entries_upper}")
+    if (not prefix_folds and
+            (budget.created_bits > admission.created_bits_upper or
+             budget.max_forecast_bits > admission.max_integer_bits_upper)):
         raise ArithmeticError("sampled reference actual integer forecast exceeded admission")
+    if prefix_folds and (
+            budget.created_bits > admission.created_bits_upper +
+            admission.prefix_fold_created_bits_upper or
+            budget.max_forecast_bits > max(admission.max_integer_bits_upper,
+                                           admission.prefix_fold_max_integer_bits_upper)):
+        raise ArithmeticError("prefix-fold reference exceeded its combined integer forecast")
 
     frozen = {}
     for key, row in rows.items():
@@ -648,7 +909,8 @@ def compute_sampled_update_reference(admission):
         frozen[key] = SampledUpdateRow(
             key[0], key[1], key[2], row.actions, row.exponents,
             tuple(row.regrets), row.average_mass, tuple(row.average_actions),
-            row.regret_world_visits, row.average_prefix_visits)
+            row.regret_world_visits, row.average_prefix_visits,
+            tuple(row.prefix_fold_regrets) if prefix_folds else ())
     receipt = MappingProxyType({
         "version": "n9-sampled-board-update-reference-v1",
         "board": admission.board,
@@ -669,6 +931,39 @@ def compute_sampled_update_reference(admission):
             row.regret_world_visits == 0 and row.average_prefix_visits > 0
             for row in frozen.values()),
         "q_corrected_regret": True,
+        "q_corrected_prefix_fold_regret": prefix_folds,
+        "prefix_fold_node_visits": prefix_fold_node_visits,
+        "prefix_fold_action_edge_visits": prefix_fold_edge_visits,
+        "prefix_fold_projection": MappingProxyType({
+            "admitted": admission.prefix_fold_admitted,
+            "node_visits_upper": admission.prefix_fold_node_visits_upper,
+            "action_edges_upper": admission.prefix_fold_action_edges_upper,
+            "terminal_queries_upper": admission.prefix_fold_terminal_queries_upper,
+            "opponent_pair_scans_upper": admission.prefix_fold_opponent_pair_scans_upper,
+            "scalar_operations_upper": admission.prefix_fold_scalar_operations_upper,
+            "frame_entries_upper": admission.prefix_fold_frame_entries_upper,
+            "return_vector_entries_upper": admission.prefix_fold_return_vector_entries_upper,
+            "reach_copy_entries_upper": admission.prefix_fold_reach_copy_entries_upper,
+            "policy_entries_upper": admission.prefix_fold_policy_entries_upper,
+            "history_token_entries_upper": admission.prefix_fold_history_token_entries_upper,
+            "pair_temporary_entries_upper": admission.prefix_fold_pair_temporary_entries_upper,
+            "counter_metadata_entries_upper": admission.prefix_fold_counter_metadata_entries_upper,
+            "work_upper": admission.prefix_fold_work_upper,
+            "entries_upper": admission.prefix_fold_entries_upper,
+            "created_bits_upper": admission.prefix_fold_created_bits_upper,
+            "max_integer_bits_upper": admission.prefix_fold_max_integer_bits_upper,
+            "combined_work_upper": admission.work_upper + admission.prefix_fold_work_upper,
+            "combined_entries_upper": admission.entries_upper + admission.prefix_fold_entries_upper,
+            "combined_created_bits_upper": admission.created_bits_upper + admission.prefix_fold_created_bits_upper,
+            "combined_max_integer_bits_upper": max(admission.max_integer_bits_upper,
+                admission.prefix_fold_max_integer_bits_upper),
+            "actual_node_visits": prefix_fold_node_visits,
+            "actual_action_edge_visits": prefix_fold_edge_visits,
+            "actual_runtime_work": budget.work,
+            "actual_runtime_entries": budget.logical_entries,
+            "actual_created_bits": budget.created_bits,
+            "actual_max_integer_bits": budget.max_forecast_bits,
+        }) if prefix_folds else None,
         "q_corrected_prefix_average": True,
         "average_uses_future_board_blockers": False,
         "runtime_budget": budget.receipt(),

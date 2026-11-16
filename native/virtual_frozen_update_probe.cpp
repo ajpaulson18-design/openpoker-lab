@@ -168,9 +168,10 @@ std::string process(std::string_view line) {
     if (mode != "ADMIT" && mode != "EVAL")
       throw Failure("unsupported proof mode");
     const auto proposal = input.next();
-    if (proposal != "UNIFORM" && proposal != "RIVER_WEIGHTED")
+    if (proposal != "UNIFORM" && proposal != "RIVER_WEIGHTED" && proposal != "UNIFORM_PREFIX_FOLD")
       throw Failure("unsupported proof proposal");
-    const auto kind = proposal == "UNIFORM"
+    const bool prefix_fold=proposal=="UNIFORM_PREFIX_FOLD";
+    const auto kind = (proposal == "UNIFORM" || prefix_fold)
                           ? v::ProposalKind::uniform_public
                           : v::ProposalKind::weighted_river_proof9;
     std::array<std::uint8_t, 5> board{};
@@ -216,10 +217,10 @@ std::string process(std::string_view line) {
     v::FrozenUpdateForecast f;
     v::FrozenUpdateStage stage;
     if (mode == "EVAL") {
-      stage = v::FrozenUpdate::run(game, board, kind);
+      stage = v::FrozenUpdate::run(game, board, kind, prefix_fold);
       f = stage.forecast;
     } else
-      f = v::FrozenUpdate::forecast(game, board, kind);
+      f = v::FrozenUpdate::forecast(game, board, kind, prefix_fold);
     if (f.rows_upper > kRows || f.slots_upper > kSlots ||
         f.integer_bits_upper > kIntegerBits)
       throw Failure("pinned proof response geometry changed");
@@ -229,7 +230,7 @@ std::string process(std::string_view line) {
     out.text("\nstatus ");
     out.text(mode == "EVAL" ? "COMPLETE"
                             : (f.admitted ? "ADMITTED" : "REJECTED"));
-    out.text("\nscope PROOF9_FULL_V1\nproposal ");
+    out.text(prefix_fold ? "\nscope PROOF9_PREFIX_FOLD_V1\nproposal " : "\nscope PROOF9_FULL_V1\nproposal ");
     out.text(proposal);
     out.text("\nboard");
     for (auto card : board)
@@ -258,6 +259,10 @@ std::string process(std::string_view line) {
     out.field(calls.conversion_calls);
     out.text("\n");
     if (mode == "EVAL") {
+      if (prefix_fold) {
+        out.text("prefix_fold_calls"); out.field(stage.prefix_fold_queries);
+        out.field(stage.full_board_queries); out.text("\n");
+      }
       out.text("actual");
       out.field(stage.chance_work);
       out.field(stage.history_work);

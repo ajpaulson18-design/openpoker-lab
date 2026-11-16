@@ -30,7 +30,7 @@ def _integer(s):
     return -int(s[1:],16) if s.startswith('-') else int(s,16)
 
 def request(mode, proposal, board, limits=DEFAULT_LIMITS):
-    if mode not in ('ADMIT','EVAL') or proposal not in ('UNIFORM','RIVER_WEIGHTED'):
+    if mode not in ('ADMIT','EVAL') or proposal not in ('UNIFORM','RIVER_WEIGHTED','UNIFORM_PREFIX_FOLD'):
         raise ProtocolError('invalid request selector')
     if type(board) not in (tuple,list) or len(board)!=5 or any(type(x) is not int or x not in DECK for x in board) or len(set(board))!=5 or not board[0]<board[1]<board[2]:
         raise ProtocolError('invalid board')
@@ -64,9 +64,12 @@ def parse(raw, *, mode=None, proposal=None, board=None):
     if first!=['FROZEN_UPDATE_RESULT_V1']: raise ProtocolError('invalid version')
     gotmode=tagged('mode',1)[0]; status=tagged('status',1)[0]
     if gotmode not in ('ADMIT','EVAL') or status not in (('ADMITTED','REJECTED') if gotmode=='ADMIT' else ('COMPLETE',)) or (mode is not None and gotmode!=mode): raise ProtocolError('invalid mode/status')
-    if tagged('scope',1)!=['PROOF9_FULL_V1']: raise ProtocolError('invalid scope')
+    scope=tagged('scope',1)[0]
     gotproposal=tagged('proposal',1)[0]
-    if gotproposal not in ('UNIFORM','RIVER_WEIGHTED') or (proposal is not None and proposal!=gotproposal): raise ProtocolError('invalid proposal')
+    if gotproposal not in ('UNIFORM','RIVER_WEIGHTED','UNIFORM_PREFIX_FOLD') or (proposal is not None and proposal!=gotproposal): raise ProtocolError('invalid proposal')
+    prefix_folds=gotproposal=='UNIFORM_PREFIX_FOLD'
+    if scope!=('PROOF9_PREFIX_FOLD_V1' if prefix_folds else 'PROOF9_FULL_V1'):
+        raise ProtocolError('invalid scope')
     gotboard=tuple(_uint(x,51) for x in tagged('board',5))
     request(gotmode,gotproposal,gotboard)
     if board is not None and tuple(board)!=gotboard: raise ProtocolError('board mismatch')
@@ -78,8 +81,12 @@ def parse(raw, *, mode=None, proposal=None, board=None):
     setup=tuple(_uint(x) for x in tagged('setup',5)); calls=tuple(_uint(x) for x in tagged('calls',4))
     if forecast[1]>500000000 or forecast[12]>(1<<30) or forecast[13]>2000000 or setup[0]>500000000 or setup[1]>2000000 or setup[2]>2000000 or setup[3]>384 or setup[4]>(1<<30): raise ProtocolError('resource limit')
     if gotmode=='ADMIT' and any(calls): raise ProtocolError('admit performed callbacks')
-    actual=(); den=None
+    actual=(); den=None; prefix_fold_calls=None
     if gotmode=='EVAL':
+        if prefix_folds:
+            prefix_fold_calls=tuple(_uint(x) for x in tagged('prefix_fold_calls',2))
+            if not all(prefix_fold_calls) or sum(prefix_fold_calls)!=calls[1] or calls[1]!=2*forecast[10]:
+                raise ProtocolError('terminal query census differs')
         actual=tuple(_uint(x) for x in tagged('actual',4));den=_integer(tagged('regret_denominator',1)[0])
         if actual[0]>forecast[2] or actual[1]>forecast[3] or actual[2]>forecast[4]-forecast[5] or actual[3]>forecast[5]: raise ProtocolError('actual work exceeds forecast')
         if den<=0: raise ProtocolError('nonpositive regret denominator')
@@ -117,4 +124,8 @@ def parse(raw, *, mode=None, proposal=None, board=None):
         if slots>forecast[7]: raise ProtocolError('action slots exceed forecast')
         rows.append({'key':key,'average_denominator':avgden,'average_mass':mass,'actions':actions})
     if line()!=['end'] or pos!=len(lines): raise ProtocolError('trailing response')
-    return {'mode':gotmode,'status':status,'proposal':gotproposal,'board':gotboard,'probe':probe,'forecast':forecast,'setup':setup,'calls':calls,'actual':actual,'regret_denominator':den,'rows':rows}
+    result={'mode':gotmode,'status':status,'proposal':gotproposal,'board':gotboard,'probe':probe,'forecast':forecast,'setup':setup,'calls':calls,'actual':actual,'regret_denominator':den,'rows':rows}
+    if prefix_folds:
+        result['scope']=scope
+        result['prefix_fold_calls']=prefix_fold_calls
+    return result
