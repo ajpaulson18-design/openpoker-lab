@@ -60,6 +60,7 @@ TARGETS = {
         "native/exact_public_graph.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-frozen-update-controls": ("native-virtual-frozen-update-controls", (
         "native/virtual_frozen_update_controls.cpp", "native/virtual_frozen_update.hpp",
+        "native/sampled_row_state.hpp",
         "native/virtual_frozen_walk.hpp", "native/virtual_frozen_game.hpp",
         "native/virtual_frozen_history.hpp", "native/virtual_frozen_policy.hpp",
         "native/virtual_frozen_proposal.hpp", "native/virtual_frozen_common_denominator.hpp",

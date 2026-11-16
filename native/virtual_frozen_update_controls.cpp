@@ -1,6 +1,7 @@
 // Focused controls for the experimental frozen-update component.
 // These controls do not constitute a full-game proof or a quality certificate.
 #include "virtual_frozen_update.hpp"
+#include "sampled_row_state.hpp"
 #include <array>
 #include <bit>
 #include <cstddef>
@@ -187,6 +188,121 @@ void history_and_profile_controls() {
   current->~HistoryArena();
   require(rejected, "reused address accepted stale cursor");
 }
+void sampled_row_publication_controls() {
+  namespace sparse=openpoker::sampled_row_state;
+  const sparse::Key root{0,1,2,{}};
+  const sparse::Key distinct{0,1,2,{"board:3,4,5","check"}};
+  const std::array<std::string,2> actions{"fold","call"};
+  sparse::Limits limits;
+  limits.retained={2,4,128};
+  limits.pending={2,4,128};
+  limits.integer_bits=32;
+  limits.average_shift=8;
+  sparse::State owner(64,limits);
+  rejects<std::logic_error>([&] {owner.begin(0,32);},"changed regret scale admitted");
+  owner.begin(0,64);
+  owner.stage(0,root,actions,std::array<CommonInteger,2>{-7,3},
+              std::array<CommonInteger,2>{3,5},8);
+  require(!owner.committed_row(root) && owner.usage().pending.rows==1,
+          "pending row leaked before publication");
+  owner.commit(0);
+  auto row=owner.committed_row(root);
+  require(row && row->regrets[0]==-7 && row->regrets[1]==3 &&
+              row->average[0]==96 && row->average[1]==160 &&
+              row->average_odd_base==1 && row->average_shift==8,
+          "first sparse update lost signs or scale");
+
+  owner.begin(1,64);
+  owner.stage(1,root,actions,std::array<CommonInteger,2>{9,-5},
+              std::array<CommonInteger,2>{2,7},4);
+  owner.stage(1,distinct,actions,std::array<CommonInteger,2>{1,-1},
+              std::array<CommonInteger,2>{1,1},12);
+  require(owner.committed_row(root)->regrets[0]==-7 && !owner.committed_row(distinct),
+          "sparse generation read its own unpublished updates");
+  owner.commit(1);
+  const auto updated=owner.committed_row(root);
+  require(updated && updated->regrets[0]==2 && updated->regrets[1]==-2 &&
+              updated->average[0]==224 && updated->average[1]==608 &&
+              owner.committed_row(distinct)->average_odd_base==3 &&
+              owner.usage().committed.rows==2 && !owner.usage().pending.rows,
+          "sparse publication changed values or aliased the public history");
+
+  owner.begin(2,64);
+  rejects<std::logic_error>([&] {owner.commit(1);},"stale sparse publication accepted");
+  owner.stage(2,root,actions,std::array<CommonInteger,2>{1,1},
+              std::array<CommonInteger,2>{1,1},4);
+  const std::array<std::string,2> wrong_order{"call","fold"};
+  rejects<std::invalid_argument>([&] {
+      owner.stage(2,distinct,wrong_order,std::array<CommonInteger,2>{1,1},
+                  std::array<CommonInteger,2>{1,1},12);
+  },"reordered sparse action menu admitted");
+  require(owner.failed() && owner.usage().iterations==2 &&
+              !owner.usage().pending.rows && owner.committed_row(root)->regrets[0]==2 &&
+              owner.committed_row(distinct)->regrets[0]==1,
+          "failed sparse draw changed committed generation");
+}
+
+void sampled_row_precision_controls() {
+  namespace sparse=openpoker::sampled_row_state;
+  sparse::Limits limits;
+  limits.integer_bits=32;
+  limits.average_shift=8;
+  const sparse::Key key{1,2,3,{}};
+  const std::array<std::string,2> menu{"check","bet"};
+  const std::array<CommonInteger,2> regret{-9,9};
+  sparse::State owner(64,limits);
+  owner.begin(0,64);
+  owner.stage(0,key,menu,regret,std::array<CommonInteger,2>{256,512},65536);
+  owner.commit(0);
+  const auto row=owner.committed_row(key);
+  require(row && row->average[0]==1 && row->average[1]==2,
+          "exact cancellation lost average units");
+  owner.begin(1,64);
+  rejects<std::length_error>([&] {
+      owner.stage(1,key,menu,regret,std::array<CommonInteger,2>{257,512},65536);
+  },"inexact cancellation entered sampled row state");
+  require(owner.failed() && owner.usage().iterations==1 && owner.committed_row(key)->average[0]==1,
+          "precision rejection changed committed average units");
+}
+
+void publish_frozen_sample_controls() {
+  namespace sparse=openpoker::sampled_row_state;
+  Fixture f;
+  f.config.stacks={4,4};
+  FrozenGame game(f.config,f.deck,f.sb,f.bb);
+  const std::array<std::uint8_t,5> board{4,5,6,7,0};
+  const auto stage=FrozenUpdate::run(game,board,ProposalKind::uniform_public,true);
+  sparse::Limits limits;
+  limits.average_shift=96;
+  sparse::State owner(stage.regret_denominator,limits);
+  owner.begin(0,stage.regret_denominator);
+  for (const auto& row : stage.rows) {
+    const sparse::Key key{row.actor,row.first,row.second,row.history};
+    owner.stage(0,key,row.actions,row.regret_numerators,row.average_numerators,
+                row.average_denominator);
+  }
+  require(owner.usage().pending.rows==stage.rows.size() &&
+              !owner.usage().committed.rows,"sample publication created unvisited rows");
+  owner.commit(0);
+  require(owner.usage().committed.rows==stage.rows.size() && owner.usage().iterations==1,
+          "sample publication row census differs");
+  bool saw_negative=false;
+  for (const auto& row : stage.rows) {
+    const sparse::Key key{row.actor,row.first,row.second,row.history};
+    const auto stored=owner.committed_row(key);
+    require(stored && std::ranges::equal(stored->actions,row.actions) &&
+        std::ranges::equal(stored->regrets,row.regret_numerators),
+        "published sampled policy key, menu or regret differs");
+    const CommonInteger denominator=stored->average_odd_base<<stored->average_shift;
+    for (std::size_t i=0;i<row.actions.size();++i) {
+      require(stored->average[i]*row.average_denominator==row.average_numerators[i]*denominator,
+              "published sampled average mass differs");
+      saw_negative=saw_negative || stored->regrets[i]<0;
+    }
+  }
+  require(saw_negative,"sample fixture lost negative cumulative regret coverage");
+}
+
 void implicit_public_board_controls() {
   constexpr std::array<std::uint8_t,11> cards{0,2,3,7,8,9,16,21,29,39,51};
   for (const std::size_t n : {9U,11U}) {
@@ -291,6 +407,9 @@ int main() {
     history_and_profile_controls();
     zero_target_and_action_controls();
     implicit_public_board_controls();
+    sampled_row_publication_controls();
+    sampled_row_precision_controls();
+    publish_frozen_sample_controls();
     std::cout
         << "PASS frozen-update primitive, admission, identity and zero-target controls"
         << std::endl;
