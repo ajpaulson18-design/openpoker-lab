@@ -471,6 +471,15 @@ public:
         return exact_reach_values(player,board,kind,payoff,reach_numerators,
             reach_denominator,proposal_num,proposal_den,true);
     }
+    // Sampled fold with exact sequence reaches; proposal probability is the
+    // inclusion probability of this visible prefix, not of its hidden suffix.
+    [[nodiscard]] ExactVector sampled_fold_prefix_exact_reach(std::size_t player,
+            std::span<const std::uint8_t> visible_prefix, double signed_payoff,
+            std::span<const Integer> opponent_numerators, const Integer& common_D,
+            const Integer& proposal_num, const Integer& proposal_den) {
+        return exact_reach_values(player,visible_prefix,TerminalKind::fold,signed_payoff,
+            opponent_numerators,common_D,proposal_num,proposal_den,false);
+    }
     // Exhaustive-reveal (q=1) fold contribution at the visible prefix only.
     // The caller supplies signed whole-hand payoff. Own prior appears once;
     // own preceding action reach is absent. No future cards are enumerated.

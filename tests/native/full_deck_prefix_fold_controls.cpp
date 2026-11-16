@@ -112,6 +112,25 @@ int guards() {
     ok=guard("query_work",ordinary,limits,chance::ErrorCode::modeled_work_limit,flop)&&ok;
     return ok ? 0 : 1;
 }
+int sampled_proposal_guards() {
+    const auto reach=reach_case(1);
+    const std::array<std::uint8_t,3> flop{16,17,24};
+    for (const auto& [numerator,denominator] :
+            std::array<std::array<int,2>,3>{{{0,1},{1,0},{2,1}}}) {
+        chance::PublicChanceKernel kernel(sb,bb,chance::DeckDefinition::reduced(deck));
+        try {
+            (void)kernel.sampled_fold_prefix_exact_reach(0,flop,-0.75,reach.numerator,
+                reach.denominator,Integer(numerator),Integer(denominator));
+        } catch (const chance::KernelError& error) {
+            const auto& receipt=kernel.receipt();
+            if (error.code()==chance::ErrorCode::invalid_query &&
+                receipt.terminal_queries==0 && receipt.rank_calls==0) continue;
+        }
+        throw std::runtime_error("invalid prefix inclusion probability was not rejected");
+    }
+    std::cout<<"SAMPLED_PREFIX_PROPOSAL_GUARDS PASS\n";
+    return 0;
+}
 int support() {
     chance::PublicChanceKernel kernel(sb,bb,chance::DeckDefinition::reduced(deck));
     const std::array<std::uint8_t,0> empty{};
@@ -131,19 +150,31 @@ int main(int argc,char** argv) {
     try {
         if (argc==2 && std::string(argv[1])=="guards") return guards();
         if (argc==2 && std::string(argv[1])=="support") return support();
-        if (argc!=4) throw std::runtime_error("three fixed fixture selectors required");
+        if (argc==2 && std::string(argv[1])=="sampled-guards") return sampled_proposal_guards();
+        const bool sampled=argc==5 && std::string(argv[4])=="sampled";
+        if (argc!=4 && !sampled) throw std::runtime_error("three fixed fixture selectors required");
         const int profile=digit(argv[1],5), player=digit(argv[2],1), mode=digit(argv[3],3);
         const auto reach=reach_case(profile);
         const double payoff=mode==0 ? -0.75 : mode==1 ? 2.5 : mode==2 ? 0.0 : 0x1p200;
         std::size_t index=0,bytes=0;
         std::uint64_t total_work=0;
-        std::cout<<"PREFIX_FOLD_CASES_V1 "<<profile<<' '<<player<<' '<<mode<<'\n';
+        std::cout<<(sampled ? "SAMPLED_PREFIX_FOLD_CASES_V1 " : "PREFIX_FOLD_CASES_V1 ")
+                 <<profile<<' '<<player<<' '<<mode<<'\n';
         auto emit=[&](std::span<const std::uint8_t> board) {
             // Each record has an independent bounded component owner. This is
             // neither a reset cumulative learning owner nor training admission.
             chance::PublicChanceKernel kernel(sb,bb,chance::DeckDefinition::reduced(deck));
-            const auto value=kernel.fold_prefix_exact_reach(static_cast<std::size_t>(player),board,
-                payoff,reach.numerator,reach.denominator);
+            // Use an unreduced ratio with the full-board chance divisor of
+            // 20 in the output base. The independent replay uses literal pairs.
+            constexpr std::array<unsigned,6> factor{20,0,0,2,1,1};
+            constexpr std::array<unsigned,6> prefixes{1,0,0,84,504,2520};
+            const auto k=board.size();
+            const auto value=sampled
+                ? kernel.sampled_fold_prefix_exact_reach(static_cast<std::size_t>(player),board,
+                      payoff,reach.numerator,reach.denominator,Integer(factor[k]),
+                      Integer(prefixes[k]*factor[k]))
+                : kernel.fold_prefix_exact_reach(static_cast<std::size_t>(player),board,
+                      payoff,reach.numerator,reach.denominator);
             const auto& receipt=kernel.receipt();
             if (receipt.rank_calls!=0 || receipt.terminal_queries!=1 || receipt.prefix_queries!=0)
                 throw std::runtime_error("prefix fold unexpectedly ranked or queried physical support");

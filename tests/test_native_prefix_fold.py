@@ -203,6 +203,32 @@ class NativePrefixFoldTests(unittest.TestCase):
                     self.assertEqual(lines[-1],f'END 3109 {total_work}')
         self.assertEqual(count,149232)
 
+    def test_sampled_fold_with_multiword_sequence_reaches(self):
+        reach = reaches(1)
+        inverse_probability = {0: 1, 3: 84, 4: 504, 5: 2520}
+        for player, mode in ((0, 0), (1, 1)):
+            lines = self.invoke(f'sampled-seat{player}', ['1',str(player),str(mode),'sampled'])
+            self.assertEqual(lines[0], f'SAMPLED_PREFIX_FOLD_CASES_V1 1 {player} {mode}')
+            self.assertEqual(len(lines), 3111)
+            total_work = 0
+            for index,(prefix,line) in enumerate(zip(prefixes(),lines[1:-1])):
+                row, denominator, first, second, work, bits, payload, ranks = line.split()
+                self.assertEqual(int(row), index)
+                d = int(denominator, 16)
+                self.assertGreater(d, 0)
+                expected = [value * inverse_probability[len(prefix)]
+                            for value in literal(player,prefix,mode,reach)]
+                self.assertEqual([Fraction(int(first,16),d), Fraction(int(second,16),d)],
+                                 expected, (player,prefix))
+                self.assertLessEqual(int(work), 500_000_000)
+                self.assertLessEqual(int(bits), 65536)
+                self.assertLessEqual(int(payload), 1<<30)
+                self.assertEqual(ranks, '0')
+                total_work += int(work)
+            self.assertEqual(lines[-1], f'END 3109 {total_work}')
+        self.assertEqual(self.invoke('sampled-guards',['sampled-guards'],cap=65536),
+                         ['SAMPLED_PREFIX_PROPOSAL_GUARDS PASS'])
+
     def test_invalid_prefixes_blocked_reaches_and_resources_reject_before_completion(self):
         lines = self.invoke('guards',['guards'],cap=65536)
         self.assertEqual(len(lines),22)

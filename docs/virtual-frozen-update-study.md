@@ -175,3 +175,20 @@ random source and draw sequence for replay.
 Native controls compare the index with literal enumeration across all 2,520
 nine-card and 9,240 eleven-card public boards, then check the full-deck count,
 endpoint boards, and the word rejection boundary.
+
+The sampled-fold component also accepts exact multiword opponent reaches with
+a common denominator and an explicit visible-prefix inclusion probability.
+This gives a changing-policy walk an exact reference for products that exceed
+binary64 precision. The native prefix-fold controls compare both seats across
+all 3,109 PROOF9 prefixes using literal compatible pairs and rational arithmetic.
+They also reject zero and greater-than-one proposal probabilities. The sampled
+walk still needs to compose these reaches with legal-action policies and admit
+the resulting traversal work.
+
+The sampled row store retains signed cumulative regret and average action mass
+only for visited rows. The key contains global actor, own holding and complete
+visible history, and each row retains the ordered legal menu. A draw stages
+updates privately and can publish those rows together after the caller verifies
+the draw. A failed stage discards the pending image. Average accumulators accept
+exact power-of-two rescaling up to the admitted precision. Native controls
+exercise publication, rollback, scale checks and actual frozen-walk rows.
