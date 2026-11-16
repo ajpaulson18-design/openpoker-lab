@@ -508,7 +508,7 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
           "changing draw did not exercise signed, changing and zero-action policies");
 }
 void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_replay=false,
-                         bool full_deck=false) {
+                         bool full_deck=false, bool tree_history=false) {
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
   SampledFrontierFixture f;
@@ -556,7 +556,8 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
+  header<<(tree_history ? "SAMPLED_FULL52_DEALT_TREE_V1 " :
+             full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
              history_replay ? "SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1 " :
              eleven ? "SAMPLED_PROOF11_DEALT_V1 " :
              dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
@@ -617,7 +618,8 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     const auto bb_range=dealt ? std::span<const chance::WeightedHand>(bb) :
                                 std::span<const chance::WeightedHand>(f.bb);
     FrozenGame game(f.config,f.deck,sb_range,bb_range);
-    const auto contraction=history_replay ? SampledContraction::dealt_history_replay :
+    const auto contraction=tree_history ? SampledContraction::dealt_tree_history :
+        history_replay ? SampledContraction::dealt_history_replay :
         dealt ? SampledContraction::dealt : SampledContraction::prepared;
     const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,contraction);
     if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
@@ -702,8 +704,8 @@ int main(int argc,char **argv) {
         sampled_grid_seeded(true,true,argument=="sampled-grid-eleven-history-replay");
         return 0;
       }
-      if (argument=="sampled-grid-full52-dealt-seeded") {
-        sampled_grid_seeded(true,false,true,true);
+      if (argument=="sampled-grid-full52-dealt-seeded" || argument=="sampled-grid-full52-tree-history") {
+        sampled_grid_seeded(true,false,true,true,argument=="sampled-grid-full52-tree-history");
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {

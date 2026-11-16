@@ -65,7 +65,8 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   CommonDenominatorLimits math_limits;
   math_limits.work = f.arithmetic_work_upper - f.average_work_upper;
   math_limits.integer_bits = f.integer_bits_upper;
-  const bool history_replay=contraction==SampledContraction::dealt_history_replay;
+  const bool tree_history=contraction==SampledContraction::dealt_tree_history;
+  const bool history_replay=tree_history || contraction==SampledContraction::dealt_history_replay;
   const bool dealt=history_replay || contraction==SampledContraction::dealt;
   math_limits.word_work = contraction!=SampledContraction::direct;
   math_limits.temporary_payload_bits =
@@ -118,6 +119,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
       game.limits_.entries - game.receipt_.retained_entries_upper;
   history_limits.work = f.history_work_upper;
   history_limits.depth = std::max<std::size_t>(1, t.receipt().max_depth);
+  history_limits.tree_paths=tree_history;
   HistoryArena history(history_limits);
   struct Step {
     std::size_t parent, edge;

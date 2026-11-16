@@ -33,7 +33,7 @@ struct FrozenUpdateForecast {
   bool admitted = false;
   std::uint64_t policy_work_upper = 0;
 };
-enum class SampledContraction { direct, prepared, dealt, dealt_history_replay };
+enum class SampledContraction { direct, prepared, dealt, dealt_history_replay, dealt_tree_history };
 struct FrozenUpdateStage;
 class FrozenUpdate final {
   static std::uint64_t add(std::uint64_t a, std::uint64_t b) {
@@ -98,7 +98,8 @@ public:
     const auto scan = add(4096, add(mul(512, nodes), mul(256, edges)));
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
-    const bool history_replay=contraction==SampledContraction::dealt_history_replay;
+    const bool tree_history=contraction==SampledContraction::dealt_tree_history;
+    const bool history_replay=tree_history || contraction==SampledContraction::dealt_history_replay;
     const bool dealt=history_replay || contraction==SampledContraction::dealt;
     const bool prepared=dealt || contraction==SampledContraction::prepared;
     if (dealt &&
@@ -248,7 +249,7 @@ public:
       throw FrozenUpdateError("update history node admission exceeded");
     auto history = add(
         4096, add(mul(history_replay ? 1 : 2, mul(add(mul(512, edgeocc), mul(256, tokenbytes)),
-                             add(1, std::bit_width(history_nodes + 1)))),
+                             tree_history ? 1 : add(1, std::bit_width(history_nodes + 1)))),
                   add(mul(2, mul(edgeocc, 640)),
                       add(mul(mul(2, rows), add(512, mul(256, rec.max_depth))),
                           mul(rows, add(256, mul(256, rec.max_depth)))))));

@@ -21,6 +21,9 @@ struct HistoryLimits {
   std::size_t nodes = 250000, entries = 2000000, owned_bytes = 32 * 1024 * 1024,
               depth = 64;
   std::uint64_t work = 500000000;
+  // A caller with one visit per tree edge can use the parent-linked nodes
+  // directly and must reuse its own cursors for any subsequent traversal.
+  bool tree_paths = false;
 };
 struct HistoryReceipt {
   std::size_t nodes = 0, entries = 0, owned_bytes = 0, max_depth = 0,
@@ -249,35 +252,37 @@ private:
     const auto depth = nodes_[parent.index_].depth + 1;
     if (depth > limits_.depth)
       throw HistoryError("history depth limit exceeded");
-    charge((512ULL + 256ULL * token.size()) *
-           (1 + std::bit_width(nodes_.size() + 1)));
-    // Heterogeneous lookup needs no temporary string allocation, including hits.
-    reserve_scratch(8, 0);
-    const auto lookup =
-        std::pair<std::size_t, std::string_view>{parent.index_, token};
-    auto found = index_.find(lookup);
-    if (found != index_.end())
-      return Cursor(this, found->second, generation_);
+    const auto copies=limits_.tree_paths ? 1U : 2U;
+    const auto lookup_factor=limits_.tree_paths ? 1U : 1U+std::bit_width(nodes_.size()+1);
+    charge((512ULL+256ULL*token.size())*lookup_factor);
+    if (!limits_.tree_paths) {
+      // Heterogeneous lookup needs no temporary string, including on hits.
+      reserve_scratch(8,0);
+      const auto found=index_.find(std::pair<std::size_t,std::string_view>{parent.index_,token});
+      if (found!=index_.end()) return Cursor(this,found->second,generation_);
+    }
     if (nodes_.size() >= limits_.nodes)
       throw HistoryError("history node limit exceeded");
     if (64 > limits_.entries - receipt_.entries)
       throw HistoryError("history entry limit exceeded");
-    if (2 * token.size() > limits_.owned_bytes - receipt_.owned_bytes)
+    if (copies*token.size() > limits_.owned_bytes - receipt_.owned_bytes)
       throw HistoryError("history byte limit exceeded");
     const auto id = nodes_.size();
-    auto inserted = index_.emplace(
-        std::pair<std::size_t, std::string>{parent.index_, std::string(token)},
-        id);
-    try {
-      nodes_.push_back(
-          Node{parent.index_, depth, std::string(token), board, board_size});
-    } catch (...) {
-      index_.erase(inserted.first);
-      throw;
+    Node next{parent.index_,depth,std::string(token),board,board_size};
+    if (limits_.tree_paths) {
+      nodes_.push_back(std::move(next));
+    } else {
+      const auto inserted=index_.emplace(std::pair{parent.index_,next.token},id);
+      try {
+        nodes_.push_back(std::move(next));
+      } catch (...) {
+        index_.erase(inserted.first);
+        throw;
+      }
     }
     receipt_.nodes = nodes_.size();
     receipt_.entries += 64;
-    receipt_.owned_bytes += 2 * token.size();
+    receipt_.owned_bytes += copies*token.size();
     receipt_.max_depth = std::max(receipt_.max_depth, depth);
     receipt_.peak_total_bytes =
         std::max(receipt_.peak_total_bytes, receipt_.owned_bytes);
