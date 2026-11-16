@@ -1,0 +1,44 @@
+name: Bounded owned-child stack observation
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  windows-controls:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Build bounded observer and owned-child controls
+        shell: pwsh
+        run: |
+          foreach ($target in @('owned-child-stack-sample', 'owned-child-stack-sample-controls')) {
+            python -B scripts/build_native_exact_four_street.py --target $target --output-dir "$env:RUNNER_TEMP/walk/$target"
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Validate native controls and independent parsers in both Python modes
+        shell: pwsh
+        env:
+          OPENPOKER_NATIVE_OWNED_CHILD_SAMPLE_CONTROLS_EXE: ${{ runner.temp }}/walk/owned-child-stack-sample-controls/native-owned-child-stack-sample-controls.exe
+        run: |
+          foreach ($mode in @('normal', 'optimized')) {
+            $env:OPENPOKER_NATIVE_OWNED_CHILD_SAMPLE_CONTROL_DIR = "$env:RUNNER_TEMP/walk/controls-$mode"
+            if ($mode -eq 'optimized') {
+              python -B -O -m unittest tests.test_native_owned_child_stack_sample tests.test_owned_child_stack_sample tests.test_native_public_map -v
+            } else {
+              python -B -m unittest tests.test_native_owned_child_stack_sample tests.test_owned_child_stack_sample tests.test_native_public_map -v
+            }
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Preserve raw observations and first failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owned-child-stack-observation-windows
+          path: |
+            ${{ runner.temp }}/walk/**/*.json
+            ${{ runner.temp }}/walk/**/*.log
+            ${{ runner.temp }}/walk/**/*.bin
+
