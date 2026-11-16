@@ -507,7 +507,7 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
-void sampled_grid_seeded(bool dealt=false, bool eleven=false) {
+void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_replay=false) {
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
   SampledFrontierFixture f;
@@ -539,7 +539,8 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false) {
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(eleven ? "SAMPLED_PROOF11_DEALT_V1 " :
+  header<<(history_replay ? "SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1 " :
+             eleven ? "SAMPLED_PROOF11_DEALT_V1 " :
              dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
         <<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
   emit(header);
@@ -595,8 +596,9 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false) {
     const auto bb_range=dealt ? std::span<const chance::WeightedHand>(bb) :
                                 std::span<const chance::WeightedHand>(f.bb);
     FrozenGame game(f.config,f.deck,sb_range,bb_range);
-    const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,
-                       dealt ? SampledContraction::dealt : SampledContraction::prepared);
+    const auto contraction=history_replay ? SampledContraction::dealt_history_replay :
+        dealt ? SampledContraction::dealt : SampledContraction::prepared;
+    const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,contraction);
     if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
       throw std::length_error("seeded draw exceeds pinned envelope");
     reserved+=stage.forecast.work_upper;
@@ -669,8 +671,8 @@ int main(int argc,char **argv) {
         sampled_grid_seeded(argument=="sampled-grid-dealt-seeded");
         return 0;
       }
-      if (argument=="sampled-grid-dealt-eleven-seeded") {
-        sampled_grid_seeded(true,true);
+      if (argument=="sampled-grid-dealt-eleven-seeded" || argument=="sampled-grid-eleven-history-replay") {
+        sampled_grid_seeded(true,true,argument=="sampled-grid-eleven-history-replay");
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {
