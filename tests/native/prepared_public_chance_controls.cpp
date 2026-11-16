@@ -301,18 +301,73 @@ int family_guards() {
     return 0;
 }
 
-int full_deck_buffered(bool family=false) {
+struct FullWidthFixture {
     std::array<std::vector<chance::WeightedHand>,2> ranges;
     std::array<std::vector<Integer>,2> reaches;
-    for (std::uint8_t a=0;a<52;++a) for (std::uint8_t b=a+1;b<52;++b) {
-        const auto row=ranges[0].size();
-        const std::array<double,2> weights{static_cast<double>(1+row%5),
-                                         static_cast<double>(1+(3*row+1)%7)};
-        for (std::size_t player=0;player<2;++player) {
-            ranges[player].push_back({{a,b},std::bit_cast<std::uint64_t>(weights[player])});
-            reaches[player].emplace_back((row+2*player)%9);
+    FullWidthFixture() {
+        for (std::uint8_t a=0;a<52;++a) for (std::uint8_t b=a+1;b<52;++b) {
+            const auto row=ranges[0].size();
+            const std::array<double,2> weights{static_cast<double>(1+row%5),
+                                             static_cast<double>(1+(3*row+1)%7)};
+            for (std::size_t player=0;player<2;++player) {
+                ranges[player].push_back({{a,b},std::bit_cast<std::uint64_t>(weights[player])});
+                reaches[player].emplace_back((row+2*player)%9);
+            }
         }
     }
+};
+
+int wide_reach_study(bool reuse) {
+    FullWidthFixture fixture;
+    constexpr std::size_t groups=16, rivers=12;
+    constexpr std::size_t exponent=212;
+    for (auto& side:fixture.reaches)
+        for (auto& n:side) n<<=exponent-3;
+    prepared::PreparedPublicChance owner(fixture.ranges[0],fixture.ranges[1],
+        chance::DeckDefinition::full52(),{},rivers,prepared::RankCacheKey::board_set);
+    std::cout<<"WIDE_REACH_STUDY_V1 "<<groups<<' '<<rivers<<' '<<exponent<<' '
+             <<hex(owner.normalizer_integer())<<'\n';
+    std::size_t bytes=0;
+    for (std::size_t group=0;group<groups;++group) {
+        const auto visit=[&] {
+            for (std::uint8_t river=0;river<rivers;++river) {
+                const std::array<std::uint8_t,5> board{17,24,33,35,river};
+                for (std::size_t player=0;player<2;++player) {
+                    const auto values=reuse?owner.family_showdown(player,board):
+                        owner.contraction(player,board,chance::TerminalKind::showdown,
+                                          fixture.reaches[1-player],exponent);
+                    if (values.reach_exponent!=exponent || values.numerators.size()!=1326)
+                        throw std::runtime_error("wide reach study result identity differs");
+                    if (group!=0) continue;
+                    std::ostringstream line;
+                    line<<"RIVER "<<static_cast<unsigned>(river)<<' '<<player<<' '<<values.prefix_divisor;
+                    for (const auto& value:values.numerators) line<<' '<<hex(value);
+                    line<<'\n';
+                    const auto raw=line.str();
+                    bytes+=raw.size();
+                    if (bytes>2'000'000) throw std::runtime_error("wide reach study output bound");
+                    std::cout<<raw;
+                }
+            }
+        };
+        if (reuse) {
+            owner.with_showdown_reaches({prepared::ReachInput{fixture.reaches[0],exponent},
+                                         prepared::ReachInput{fixture.reaches[1],exponent}},visit);
+        } else visit();
+    }
+    const auto& r=owner.receipt();
+    std::cout<<"WORK "<<r.modeled_work<<' '<<r.input_work<<' '<<r.contraction_work<<' '
+             <<r.peak_live_entries<<' '<<r.peak_integer_payload_bits<<' '<<r.rank_calls<<' '
+             <<r.completed_contractions<<' '<<r.weighted_families<<' '<<r.weighted_showdowns<<'\n';
+    return ledger(r) && r.rank_calls==2162*rivers && r.completed_contractions==2*groups*rivers &&
+           r.weighted_families==(reuse?groups:0) && r.weighted_showdowns==(reuse?2*groups*rivers:0)
+           ? 0 : 1;
+}
+
+int full_deck_buffered(bool family=false) {
+    const FullWidthFixture fixture;
+    const auto& ranges=fixture.ranges;
+    const auto& reaches=fixture.reaches;
     prepared::PreparedPublicChance owner(ranges[0],ranges[1],chance::DeckDefinition::full52(),
                                          {},1,prepared::RankCacheKey::board_set);
     if (family) {
@@ -596,6 +651,8 @@ int main(int argc,char** argv) {
             if (mode=="full-deck-buffered") return full_deck_buffered();
             if (mode=="full-deck-reach-family") return full_deck_buffered(true);
             if (mode=="reach-families") return reach_families();
+            if (mode=="wide-reach-baseline") return wide_reach_study(false);
+            if (mode=="wide-reach-reuse") return wide_reach_study(true);
             if (mode=="family-guards") return family_guards();
             if (mode=="snapshot") return snapshot();
             if (mode=="board-sets") return board_set_controls();
