@@ -231,3 +231,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the source-frozen sampled policy, failed quality gate, and receipts.
 /benchmarks/results/native-sampled-proof9-uniform-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/native-sampled-proof9-uniform-v1/policy.bin binary
+
+# Preserve the dealt sampling policy and independent quality failure.
+/benchmarks/results/native-sampled-proof9-dealt-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-sampled-proof9-dealt-v1/policy.bin.gz binary

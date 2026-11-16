@@ -345,3 +345,18 @@ sums both signed regret and average updates across all 60 physical worlds
 and compares every row with the independent exhaustive evaluator. Policy
 selection and publication retain the global seat, own holding and visible
 history keys.
+
+The [source-frozen dealt packet](../benchmarks/results/native-sampled-proof9-dealt-v1/manifest.json)
+uses the same seed and 32 accepted draws as the uniform-public control. The
+exact draw grammars consume different random words. All 32 dealt draws had
+full-board support. The dealt route exported 8,840 visited rows, of which
+4,240 accumulated positive average mass. The uniform-public control
+accumulated positive average mass for 120 rows.
+
+The dealt policy's independently verified exploitability was 2.360084094
+big blinds, compared with 3.084660607 for the uniform-public run and
+3.055348769 for the uniform grid policy. The 0.1 big-blind target missed.
+The dealt walk forecast 281,251,943 modeled work units per accepted draw
+under the existing 500,000,000 cap. The seeded study measures one schedule
+on the same bounded nine-card game. It leaves convergence, larger-game
+quality, and comparative runtime open.
