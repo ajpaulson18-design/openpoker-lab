@@ -1,0 +1,102 @@
+[
+  {
+    "by_street": {
+      "0": {
+        "board_calls_per_seat_pass": 680,
+        "groups_per_seat_pass": 2,
+        "preparation_work": 442,
+        "removed_per_board_work": 48080
+      },
+      "3": {
+        "board_calls_per_seat_pass": 4760,
+        "groups_per_seat_pass": 644,
+        "preparation_work": 163484,
+        "removed_per_board_work": 454200
+      },
+      "4": {
+        "board_calls_per_seat_pass": 18360,
+        "groups_per_seat_pass": 8424,
+        "preparation_work": 2376504,
+        "removed_per_board_work": 2144040
+      }
+    },
+    "chance_forecast_work_saved": 105890,
+    "deck": 10,
+    "minimum_completions": 1
+  },
+  {
+    "by_street": {
+      "0": {
+        "board_calls_per_seat_pass": 680,
+        "groups_per_seat_pass": 2,
+        "preparation_work": 442,
+        "removed_per_board_work": 48080
+      },
+      "3": {
+        "board_calls_per_seat_pass": 4760,
+        "groups_per_seat_pass": 644,
+        "preparation_work": 163484,
+        "removed_per_board_work": 454200
+      },
+      "4": {
+        "board_calls_per_seat_pass": 0,
+        "groups_per_seat_pass": 0,
+        "preparation_work": 0,
+        "removed_per_board_work": 0
+      }
+    },
+    "chance_forecast_work_saved": 338354,
+    "deck": 10,
+    "minimum_completions": 4
+  },
+  {
+    "by_street": {
+      "0": {
+        "board_calls_per_seat_pass": 2240,
+        "groups_per_seat_pass": 2,
+        "preparation_work": 442,
+        "removed_per_board_work": 161720
+      },
+      "3": {
+        "board_calls_per_seat_pass": 15680,
+        "groups_per_seat_pass": 1050,
+        "preparation_work": 266550,
+        "removed_per_board_work": 1527240
+      },
+      "4": {
+        "board_calls_per_seat_pass": 60480,
+        "groups_per_seat_pass": 18360,
+        "preparation_work": 5179560,
+        "removed_per_board_work": 7208040
+      }
+    },
+    "chance_forecast_work_saved": 3450448,
+    "deck": 11,
+    "minimum_completions": 1
+  },
+  {
+    "by_street": {
+      "0": {
+        "board_calls_per_seat_pass": 2240,
+        "groups_per_seat_pass": 2,
+        "preparation_work": 442,
+        "removed_per_board_work": 161720
+      },
+      "3": {
+        "board_calls_per_seat_pass": 15680,
+        "groups_per_seat_pass": 1050,
+        "preparation_work": 266550,
+        "removed_per_board_work": 1527240
+      },
+      "4": {
+        "board_calls_per_seat_pass": 0,
+        "groups_per_seat_pass": 0,
+        "preparation_work": 0,
+        "removed_per_board_work": 0
+      }
+    },
+    "chance_forecast_work_saved": 1421968,
+    "deck": 11,
+    "minimum_completions": 4
+  }
+]

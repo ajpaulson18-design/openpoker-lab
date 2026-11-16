@@ -1,0 +1,32 @@
+{
+  "candidate_faster_pairs_min": 6,
+  "contractions": 384,
+  "fixed_turn": [
+    17,
+    24,
+    33,
+    35
+  ],
+  "groups": 16,
+  "holdings_per_seat": 1326,
+  "median_ratio_max": 0.96,
+  "reach_exponent": 212,
+  "rivers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "scope": "exact component calls on one host, with one full 24-vector capture per child",
+  "source_head": "8987e610b1ea6c90addb73f51ad53fd645fd55d8",
+  "timed_pairs": 8,
+  "warmup_pairs": 1
+}
