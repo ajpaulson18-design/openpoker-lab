@@ -289,3 +289,21 @@ Run the source-built frozen-update controls with the independent
 `sampled-grid-prepared-frontier-draws` selector produces the raw replay rows.
 The comparison covers a fixed three-draw schedule. Long-horizon sampling,
 saved average-policy export, and whole-game best-response quality remain open.
+
+### Seeded sampled policy replay protocol
+
+The PROOF9 seeded control makes 32 draws with SplitMix64 seed 0x4F504C2026111601,
+at most 64 random word attempts and the existing 500,000,000-unit cap per draw.
+Each accepted word maps to a uniform public-board ordinal by rejection before
+modulo. The walk publishes a generation only after the full draw returns. The
+final export quantizes each observed row's cumulative own-reach average onto
+the 52-bit policy grid.
+
+The saved-only evaluator reproduces the random schedule, replays signed regret
+and average updates independently over compatible private deals, and compares
+every serialized action unit. Zero average rows and absent rows use the
+deterministic grid-uniform convention. For exact best responses, it completes
+the independent 24,420-row fixture and groups physical worlds by visible
+history and own holding. The report includes the uniform baseline, both
+response gains and the existing 0.1 big-blind exploitability comparison.
+A miss remains in the result even when the exact replay passes.

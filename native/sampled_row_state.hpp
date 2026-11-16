@@ -195,6 +195,15 @@ public:
         return RowView{row.actions,row.regrets,row.average,row.average_odd_base,limits_.average_shift};
     }
 
+    // A complete immutable generation can be exported in stable key order.
+    template<class Visitor>
+    void visit_committed(Visitor&& visit) const {
+        if (active_ || failed_)
+            throw std::logic_error("sampled row export requires a completed generation");
+        for (const auto& [key,row] : committed_)
+            visit(key,RowView{row.actions,row.regrets,row.average,row.average_odd_base,limits_.average_shift});
+    }
+
     void begin(std::uint64_t generation, const Integer& regret_denominator) {
         if (active_ || failed_ || generation!=usage_.iterations ||
             generation>=limits_.iterations || width(regret_denominator)>limits_.integer_bits ||

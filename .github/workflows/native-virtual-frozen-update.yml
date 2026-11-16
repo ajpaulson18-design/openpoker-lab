@@ -63,7 +63,8 @@ jobs:
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           export OPENPOKER_NATIVE_SAMPLED_GRID_EXECUTABLE="$RUNNER_TEMP/frozen-update/controls/native-virtual-frozen-update-controls$suffix"
           export OPENPOKER_NATIVE_SAMPLED_GRID_CONTROL_DIR="$RUNNER_TEMP/frozen-update/sampled-grid"
-          python -m unittest tests.test_native_sampled_grid -v
+          export OPENPOKER_NATIVE_SAMPLED_SEEDED_DIR="$RUNNER_TEMP/frozen-update/sampled-grid/seeded"
+          python -m unittest tests.test_native_sampled_grid tests.test_native_sampled_seeded -v
       - name: Preserve first failure and build identities
         if: always()
         uses: actions/upload-artifact@v4

@@ -10,6 +10,7 @@
 #include <limits>
 #include <new>
 #include <stdexcept>
+#include <sstream>
 #include <string>
 
 using namespace openpoker::virtual_frozen_update;
@@ -484,6 +485,90 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
+void sampled_grid_seeded() {
+  namespace sparse=openpoker::sampled_row_state;
+  namespace grid=openpoker::dyadic_policy;
+  const SampledFrontierFixture f;
+  const UniformPublicBoards boards(f.deck);
+  constexpr std::uint64_t seed=0x4f504c2026111601ULL;
+  constexpr std::uint64_t draws=32, attempt_cap=64, draw_work_cap=500000000;
+  constexpr std::size_t output_cap=2U<<20;
+  // Each word is reproducible from the retained seed, including rejections.
+  std::uint64_t random_state=seed;
+  const auto next_word=[&] {
+    auto z=(random_state+=0x9e3779b97f4a7c15ULL);
+    z=(z^(z>>30))*0xbf58476d1ce4e5b9ULL;
+    z=(z^(z>>27))*0x94d049bb133111ebULL;
+    return z^(z>>31);
+  };
+  std::size_t bytes=0;
+  const auto emit=[&](const std::ostringstream& line) {
+    const auto text=line.str();
+    if (text.size()+1>output_cap-bytes)
+      throw std::length_error("seeded policy output bound exceeded");
+    bytes+=text.size()+1;
+    std::cout<<text<<'\n';
+    if (!std::cout) throw std::runtime_error("seeded policy output failed");
+  };
+  std::ostringstream header;
+  header<<"SAMPLED_PROOF9_V1 "<<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
+  emit(header);
+  std::optional<sparse::State> state;
+  std::uint64_t attempts=0, reserved=0, rank_calls=0;
+  sparse::Limits state_limits;
+  state_limits.iterations=draws;
+  state_limits.stage_calls=draws*868;
+  for (std::uint64_t draw=0;draw<draws;++draw) {
+    std::optional<std::uint64_t> ordinal;
+    std::uint64_t word=0;
+    do {
+      if (attempts==attempt_cap) throw std::length_error("sampled word attempts exceeded");
+      ++attempts;
+      word=next_word();
+      ordinal=boards.ordinal_from_word(word);
+    } while (!ordinal);
+    const auto board=boards.at(*ordinal);
+    FrozenGame game(f.config,f.deck,f.sb,f.bb);
+    const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,
+                                               SampledContraction::prepared);
+    if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
+      throw std::length_error("seeded draw exceeds pinned envelope");
+    reserved+=stage.forecast.work_upper;
+    rank_calls+=stage.prepared_rank_calls;
+    if (!state) state.emplace(stage.regret_denominator,state_limits);
+    state->begin(draw,stage.regret_denominator);
+    for (const auto& row:stage.rows)
+      state->stage(draw,{row.actor,row.first,row.second,row.history},row.actions,
+                   row.regret_numerators,row.average_numerators,row.average_denominator);
+    state->commit(draw);
+    std::ostringstream line;
+    line<<"DRAW "<<draw<<' '<<attempts<<' '<<word<<' '<<*ordinal;
+    for (const auto card:board) line<<' '<<static_cast<unsigned>(card);
+    line<<' '<<stage.rows.size()<<' '<<stage.forecast.work_upper<<' '<<stage.prepared_rank_calls;
+    emit(line);
+  }
+  grid::Quantizer quantizer;
+  const auto usage=state->usage();
+  std::ostringstream summary;
+  summary<<"POLICY "<<usage.iterations<<' '<<usage.committed.rows<<' '<<usage.committed.slots<<' '
+         <<usage.stage_calls<<' '<<reserved<<' '<<rank_calls<<' '<<attempts;
+  emit(summary);
+  state->visit_committed([&](const sparse::Key& key,const sparse::RowView& row) {
+    const auto policy=quantizer.average_export(row.average);
+    std::ostringstream line;
+    line<<"ROW "<<static_cast<unsigned>(key.actor)<<' '<<static_cast<unsigned>(key.first_card)
+        <<' '<<static_cast<unsigned>(key.second_card)<<' '<<key.history.size();
+    for (const auto& token:key.history) line<<' '<<token;
+    line<<' '<<row.actions.size();
+    for (std::size_t a=0;a<row.actions.size();++a)
+      line<<' '<<row.actions[a]<<' '<<policy.units()[a];
+    emit(line);
+  });
+  std::ostringstream footer;
+  footer<<"END "<<quantizer.receipt().rows<<' '<<quantizer.receipt().work;
+  emit(footer);
+}
+
 void sampled_grid_frontier(SampledContraction route) {
   SampledFrontierFixture f;
   FrozenGame game(f.config,f.deck,f.sb,f.bb);
@@ -505,6 +590,10 @@ int main(int argc,char **argv) {
       const std::string_view argument(argv[1]);
       if (argument=="sampled-grid" || argument=="sampled-grid-prepared") {
         sampled_grid_controls(argument=="sampled-grid" ? SampledContraction::direct : SampledContraction::prepared);
+        return 0;
+      }
+      if (argument=="sampled-grid-seeded") {
+        sampled_grid_seeded();
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {
