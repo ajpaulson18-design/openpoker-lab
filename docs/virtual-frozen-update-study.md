@@ -162,3 +162,16 @@ mode. An evolving learner still needs signed cumulative regret, bounded lazy row
 storage and generation checks, and independent policy and best-response replay.
 The uniform estimator must be evaluated on larger supported games under their
 actual request budgets.
+
+The bounded native board index uses that same proposal law to map an integer
+ordinal to the canonical flop and ordered turn and river. It retains the deck
+and a card mask, so indexing the 51,979,200 full-deck boards requires no board
+collection. For a uniform 64-bit input word, it rejects the leading remainder
+of the 64-bit range before reducing modulo the board count. Each board then
+has exactly the same number of accepted words. A rejected word emits no board.
+A future training controller will need to meter input attempts and preserve the
+random source and draw sequence for replay.
+
+Native controls compare the index with literal enumeration across all 2,520
+nine-card and 9,240 eleven-card public boards, then check the full-deck count,
+endpoint boards, and the word rejection boundary.

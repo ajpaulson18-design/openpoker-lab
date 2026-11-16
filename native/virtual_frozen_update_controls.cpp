@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <new>
 #include <stdexcept>
 #include <string>
@@ -186,6 +187,51 @@ void history_and_profile_controls() {
   current->~HistoryArena();
   require(rejected, "reused address accepted stale cursor");
 }
+void implicit_public_board_controls() {
+  constexpr std::array<std::uint8_t,11> cards{0,2,3,7,8,9,16,21,29,39,51};
+  for (const std::size_t n : {9U,11U}) {
+    const auto deck=chance::DeckDefinition::reduced(std::span(cards).first(n));
+    const UniformPublicBoards boards(deck);
+    std::uint64_t ordinal=0;
+    for (std::size_t a=0; a+2<n; ++a)
+      for (std::size_t b=a+1; b+1<n; ++b)
+        for (std::size_t c=b+1; c<n; ++c)
+          for (std::size_t t=0; t<n; ++t) {
+            if (t==a || t==b || t==c) continue;
+            for (std::size_t r=0; r<n; ++r) {
+              if (r==a || r==b || r==c || r==t) continue;
+              require(boards.at(ordinal++)==std::array{cards[a],cards[b],cards[c],cards[t],cards[r]},
+                      "public board ordinal differs from physical enumeration");
+            }
+          }
+    require(ordinal==boards.size() && ordinal==(n==9?2520U:9240U),
+            "reduced public board census differs");
+    const auto ratio=proposal_for(deck,boards.at(ordinal-1),ProposalKind::uniform_public);
+    require(ratio.board.numerator==1 && ratio.board.denominator==ordinal &&
+                ratio.prefix[1].denominator==(n==9?84U:165U) &&
+                ratio.prefix[2].denominator==(n==9?504U:1320U),
+            "public board ordinal and independent prefix census differ");
+    rejects<std::out_of_range>([&] { (void)boards.at(ordinal); },
+                              "out-of-range public board ordinal accepted");
+  }
+  const UniformPublicBoards complete(chance::DeckDefinition::full52());
+  require(complete.size()==51979200 &&
+              complete.at(0)==std::array<std::uint8_t,5>{0,1,2,3,4} &&
+              complete.at(complete.size()-1)==std::array<std::uint8_t,5>{49,50,51,48,47},
+          "complete deck endpoint census differs");
+  const auto cut=complete.rejection_prefix();
+  const auto high=std::numeric_limits<std::uint64_t>::max();
+  require(cut>0 && cut<complete.size() && (high-cut+1)%complete.size()==0 &&
+              !complete.ordinal_from_word(cut-1) &&
+              complete.ordinal_from_word(cut)==cut%complete.size() &&
+              complete.ordinal_from_word(high)==high%complete.size(),
+          "uniform word-to-ordinal rejection bound differs");
+  auto bad=chance::DeckDefinition::full52();
+  bad.cards[17]=bad.cards[16];
+  rejects<std::invalid_argument>([&] { (void)UniformPublicBoards(bad); },
+                                "duplicated deck card accepted");
+}
+
 void zero_target_and_action_controls() {
   Fixture f;
   f.config.stacks = {4, 4};
@@ -244,6 +290,7 @@ int main() {
     parent_and_reuse_controls();
     history_and_profile_controls();
     zero_target_and_action_controls();
+    implicit_public_board_controls();
     std::cout
         << "PASS frozen-update primitive, admission, identity and zero-target controls"
         << std::endl;
