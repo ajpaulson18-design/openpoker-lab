@@ -94,9 +94,56 @@ failure and its test-only correction, the first auxiliary vector-operator
 failure and correction, and a timing-operator syntax failure before any
 timed calls. These are distinct from the completed timing studies.
 
-Walk timing includes Chance, State, History and parent computation.
-It cannot attribute costs among those owners. The next step is bounded
-external sampling on the standard trainer, followed by one measured
-owner-level change. Eleven-card training, broader-deck quality,
-convergence, and commercial-scale performance remain unproven.
+## CPU samples inside the walk
 
+The [CPU evidence packet](../benchmarks/results/native-dyadic-walk-cpu-v1/manifest.json)
+captures three complete calls of the standard bounded-division trainer at
+`53a4072`, using the same Windows executable as the earlier code-layout
+control. Each call reproduced the 50,507,464-byte training stream, both
+checkpoint files, the policy spill, and the row directory byte for byte.
+The collector requested 4,000 CPU samples per second and reported no lost
+events or buffers.
+
+The replay counts samples whose native stack contains `Walk::visit`.
+Each row below counts a function entry anywhere in that stack. Nested
+functions share samples, so the percentages cannot be added.
+
+| Function on the walk stack | Capture 1 | Capture 2 | Capture 3 |
+| --- | ---: | ---: | ---: |
+| Walk samples | 16,327 | 16,407 | 14,054 |
+| Terminal evaluation | 31.2% | 31.2% | 31.3% |
+| State row staging | 30.7% | 28.7% | 28.9% |
+| Prepared Chance contraction | 15.3% | 15.4% | 14.6% |
+| Pager dirty-page flush | 13.4% | 12.6% | 12.3% |
+| History visit action | 0.3% | 0.5% | 0.5% |
+| History visit reveal | 0.1% | 0.1% | 0.1% |
+
+Terminal evaluation or State row staging appears in 59.9–62.0% of the
+walk samples. Dirty-page flushing belongs to the staging path and
+prepared contraction belongs to the Chance path. These observations
+prioritize reducing packed State staging and pager work, then separating
+terminal contraction from the remaining payoff and parent arithmetic.
+An owner-level change must reproduce the exact output and checkpoint
+images and improve complete-call elapsed time in a matched comparison.
+The eleven-card resource forecast still projects work above the current
+State, quantizer, and composed ceilings.
+
+To reproduce the capture, authenticate the source-built standard target
+at the packet's source revision and attach the Visual Studio command-line
+collector to the trainer before supplying the manifest's request, with
+a fresh absolute `page-images` path. Use `CpuUsageHigh.json` and stop
+the collector after the trainer exits. Extract the auxiliary ETL from
+the diagnostic session and use `xperf -a dumper` on that ETL. Relink the
+same object with MSVC `/MAP`, and compare the native `.text` bytes and
+section address with the sampled executable before using the map. The
+packet's `normalize.py` takes the xperf CSV, linker map, and a fresh output
+path. `replay.py` recounts the three archived captures without running or
+compiling the trainer.
+
+The archive keeps only the trainer's relative instruction addresses,
+relative timestamps, sample counts, and matched linker names. Symbol
+attribution uses the preceding function entry and retains aliases at the
+same address. Inlined work may belong to the surrounding named function.
+CPU samples describe one host and one finite ten-card fixture. The
+earlier elapsed measurements use different intervals, including time
+waiting for I/O.

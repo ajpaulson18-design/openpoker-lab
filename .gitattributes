@@ -227,3 +227,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/update-proof-census-failures-v1/** -text
 /benchmarks/results/virtual-betting-template-development-v1/** -text
 /benchmarks/results/virtual-betting-template-v1/** -text
+
+# Preserve the native walk CPU samples and independent count replay.
+/benchmarks/results/native-dyadic-walk-cpu-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-dyadic-walk-cpu-v1/*.json.gz binary
