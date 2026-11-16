@@ -507,7 +507,8 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
-void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_replay=false) {
+void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_replay=false,
+                         bool full_deck=false) {
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
   SampledFrontierFixture f;
@@ -515,6 +516,22 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     require(dealt,"eleven-card seeded route requires physical deals");
     const std::array<std::uint8_t,11> cards{0,1,16,17,24,32,33,35,37,43,48};
     f.deck=chance::DeckDefinition::reduced(cards);
+  }
+  std::array<std::vector<chance::WeightedHand>,2> full_ranges;
+  if (full_deck) {
+    require(dealt && history_replay,"full-deck control requires dealt history replay");
+    f.deck=chance::DeckDefinition::full52();
+    for (std::size_t seat=0;seat<2;++seat) {
+      auto& range=full_ranges[seat];
+      range.reserve(1326);
+      for (std::uint8_t first=0;first<52;++first)
+        for (std::uint8_t second=first+1;second<52;++second) {
+          const auto index=range.size();
+          const auto weight=1+(index*(seat==0 ? 17 : 29)+3*seat)%31;
+          range.push_back({{first,second},std::bit_cast<std::uint64_t>(static_cast<double>(weight))});
+        }
+      require(range.size()==1326,"full-deck range census");
+    }
   }
   const UniformPublicBoards boards(f.deck);
   constexpr std::uint64_t seed=0x4f504c2026111601ULL;
@@ -539,7 +556,8 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(history_replay ? "SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1 " :
+  header<<(full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
+             history_replay ? "SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1 " :
              eleven ? "SAMPLED_PROOF11_DEALT_V1 " :
              dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
         <<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
@@ -547,7 +565,10 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
   std::optional<sparse::State> state;
   std::uint64_t attempts=0, reserved=0, rank_calls=0;
   std::optional<chance::PublicChanceKernel> prior;
-  if (dealt) prior.emplace(f.sb,f.bb,f.deck);
+  if (dealt) {
+    if (full_deck) prior.emplace(full_ranges[0],full_ranges[1],f.deck);
+    else prior.emplace(f.sb,f.bb,f.deck);
+  }
   const auto word_attempt=[&] {
     if (attempts==attempt_cap) throw std::length_error("sampled word attempts exceeded");
     ++attempts;
@@ -618,7 +639,7 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     }
     for (const auto card:board) line<<' '<<static_cast<unsigned>(card);
     line<<' '<<stage.rows.size()<<' '<<stage.forecast.work_upper<<' '<<stage.prepared_rank_calls;
-    if (eleven) line<<' '<<stage.chance_work<<' '<<stage.history_work<<' '<<stage.common_regret_work
+    if (eleven || full_deck) line<<' '<<stage.chance_work<<' '<<stage.history_work<<' '<<stage.common_regret_work
                      <<' '<<stage.average_work<<' '<<stage.policy_work;
     emit(line);
   }
@@ -641,6 +662,12 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
   });
   std::ostringstream footer;
   footer<<"END "<<quantizer.receipt().rows<<' '<<quantizer.receipt().work;
+  if (full_deck) {
+    const auto& receipt=prior->receipt();
+    footer<<' '<<receipt.modeled_work<<' '<<receipt.retained_entries
+          <<' '<<receipt.peak_scratch_entries<<' '<<receipt.peak_integer_payload_bits
+          <<' '<<receipt.prefix_queries<<' '<<receipt.terminal_queries<<' '<<receipt.rank_calls;
+  }
   emit(footer);
 }
 
@@ -673,6 +700,10 @@ int main(int argc,char **argv) {
       }
       if (argument=="sampled-grid-dealt-eleven-seeded" || argument=="sampled-grid-eleven-history-replay") {
         sampled_grid_seeded(true,true,argument=="sampled-grid-eleven-history-replay");
+        return 0;
+      }
+      if (argument=="sampled-grid-full52-dealt-seeded") {
+        sampled_grid_seeded(true,false,true,true);
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {

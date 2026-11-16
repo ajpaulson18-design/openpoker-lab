@@ -1,9 +1,11 @@
 """Capture and saved-only validation of the bounded seeded PROOF9 experiment."""
 import argparse
+from bisect import bisect_right
+from itertools import accumulate, combinations, islice
 import hashlib
 import gzip
 import json
-from math import frexp
+from math import comb, frexp
 import os
 from fractions import Fraction
 from pathlib import Path
@@ -77,6 +79,45 @@ def _dealt_lottery():
     return tuple(pairs)
 
 
+def _full_deck_lottery():
+    # A separate verifier may scan the compatible pairs once. It stores
+    # only per-first cumulative sums and independently decodes each ticket.
+    hands = tuple(combinations(range(52),2))
+    masks = tuple((1 << a) | (1 << b) for a,b in hands)
+    weights = tuple(tuple(1 + (i*step+offset)%31 for i in range(len(hands)))
+                    for step,offset in ((17,0),(29,3)))
+    grouped = tuple(accumulate(first*sum(second for other,second in zip(masks,weights[1],strict=True)
+                                  if not mask & other)
+                               for mask,first in zip(masks,weights[0],strict=True)))
+
+    def locate(raw_ticket):
+        ticket = raw_ticket >> 104
+        i = bisect_right(grouped,ticket)
+        residual = ticket - (grouped[i-1] if i else 0)
+        for j,(mask,weight) in enumerate(zip(masks,weights[1],strict=True)):
+            if masks[i] & mask:
+                continue
+            interval = weights[0][i]*weight
+            if residual < interval:
+                return hands[i],hands[j]
+            residual -= interval
+        raise ValueError('full-deck compatible ticket escaped its intervals')
+
+    # The smallest decoded input exponent on either side is -52 (weight one).
+    return grouped[-1] << 104,locate
+
+
+def _full_deck_board(remaining, ordinal):
+    # Only the flop is enumerated for indexing. Turn and river are
+    # independent ordered selections among the remaining cards.
+    after_flop = len(remaining)-3
+    flop_index,suffix = divmod(ordinal,after_flop*(after_flop-1))
+    flop = next(islice(combinations(remaining,3),flop_index,None))
+    legal = [card for card in remaining if card not in flop]
+    turn,river = divmod(suffix,after_flop-1)
+    return (*flop,legal.pop(turn),legal[river])
+
+
 def _dealt_ticket(limit, word):
     bits = (limit-1).bit_length()
     while True:
@@ -105,10 +146,11 @@ def replay_saved_policy(path, expected_sha256):
     require(observed == expected_sha256, 'seeded artifact digest mismatch')
     records = _records(raw)
     tag, seed, draws, cap, work = next(records)
+    full_deck = tag == 'SAMPLED_FULL52_DEALT_REPLAY_V1'
     history_replay = tag == 'SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1'
     eleven = history_replay or tag == 'SAMPLED_PROOF11_DEALT_V1'
-    dealt = eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
-    deck = ELEVEN_DECK if eleven else FRONTIER_DECK
+    dealt = full_deck or eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
+    deck = tuple(range(52)) if full_deck else ELEVEN_DECK if eleven else FRONTIER_DECK
     attempt_cap = DEALT_ATTEMPT_CAP if dealt else ATTEMPT_CAP
     require((dealt or tag == 'SAMPLED_PROOF9_V1') and
             (int(seed), int(draws), int(cap), int(work)) ==
@@ -116,8 +158,11 @@ def replay_saved_policy(path, expected_sha256):
     boards = () if dealt else tuple(_uniform_boards(deck))
     work_sums = dict.fromkeys(('chance','history','common_regret','average','quantization'),0)
     words = _splitmix(SEED)
-    lottery = _dealt_lottery() if dealt else ()
+    lottery = _dealt_lottery() if dealt and not full_deck else ()
     private_limit = sum(size for _,size in lottery)
+    if full_deck:
+        private_limit,locate = _full_deck_lottery()
+    has_ledgers = eleven or full_deck
     root, nodes = _model(True)
     committed, average, menus = {}, {}, {}
     attempts = staged = reserved = rank_calls = 0
@@ -132,34 +177,45 @@ def replay_saved_policy(path, expected_sha256):
         ordinal_index, saved_attempt, word, ordinal, *tail = map(int, fields)
         private = None
         proposal = boards
+        remaining = ()
         if dealt:
             saved_ticket, a, b, c, d, *tail = tail
             ticket = _dealt_ticket(private_limit,word_attempt)
             require(saved_ticket == ticket, 'seeded private ticket drift')
-            residual = ticket
-            for pair,size in lottery:
-                if residual < size:
-                    private = pair
-                    break
-                residual -= size
+            if full_deck:
+                private = locate(ticket)
+            else:
+                residual = ticket
+                for pair,size in lottery:
+                    if residual < size:
+                        private = pair
+                        break
+                    residual -= size
             require(private == ((a,b),(c,d)), 'seeded compatible private deal drift')
             remaining = tuple(card for card in deck if card not in (a,b,c,d))
-            proposal = tuple(_uniform_boards(remaining))
+            if not full_deck:
+                proposal = tuple(_uniform_boards(remaining))
         board = tuple(tail[:5])
         rows, forecast, ranks, *ledgers = tail[5:]
-        require(len(ledgers) == (len(work_sums) if eleven else 0), 'seeded draw ledger shape')
-        if eleven:
+        require(len(ledgers) == (len(work_sums) if has_ledgers else 0), 'seeded draw ledger shape')
+        if has_ledgers:
             require(min(ledgers) >= 0 and sum(ledgers) <= forecast, 'seeded draw ledger exceeds admission')
             for key, value in zip(work_sums,ledgers,strict=True):
                 work_sums[key] += value
         require(tag == 'DRAW' and ordinal_index == draw, 'seeded draw index')
-        rejection = (1 << 64) % len(proposal)
+        if full_deck:
+            size = comb(len(remaining),3)*(len(remaining)-3)*(len(remaining)-4)
+        else:
+            size = len(proposal)
+        rejection = (1 << 64) % size
         expected_word = word_attempt()
         while expected_word < rejection:
             expected_word = word_attempt()
-        expected_ordinal = expected_word % len(proposal)
+        expected_ordinal = expected_word % size
+        expected_board = (_full_deck_board(remaining,expected_ordinal) if full_deck else
+                          proposal[expected_ordinal])
         require((saved_attempt, word, ordinal, board) ==
-                (attempts, expected_word, expected_ordinal, proposal[expected_ordinal]), 'seeded proposal drift')
+                (attempts, expected_word, expected_ordinal, expected_board), 'seeded proposal drift')
         require(0 < forecast <= DRAW_WORK_CAP and 0 <= rows <= 868, 'seeded draw resource bound')
         live = 2 if dealt else sum(set(hand).isdisjoint(board) for side in FRONTIER_RANGES for hand,_ in side)
         require(ranks == live, 'seeded rank-plane census')
@@ -197,9 +253,29 @@ def replay_saved_policy(path, expected_sha256):
                 'seeded policy legal menu')
         require(units == _grid(average[key]), 'seeded policy differs from independent exact average')
         sparse[key] = units
-    tag, rows, export_work = next(records)
+    tag, rows, export_work, *dealer = next(records)
     require(tag == 'END' and int(rows) == row_count and 0 < int(export_work) <= DRAW_WORK_CAP
             and next(records,None) is None, 'seeded complete export')
+    if full_deck:
+        work, retained, scratch, payload, queries, terminals, ranking = map(int,dealer)
+        require(0 < work <= DRAW_WORK_CAP and retained+scratch <= 2_000_000 and
+                0 < payload <= 1 << 30 and queries == DRAW_COUNT and terminals == ranking == 0,
+                'full-deck private dealer resource receipt')
+        return {'status':'seeded_full52_sparse_policy_exact_replay_pass',
+                'raw_sha256':observed,'native_producer_calls':0,'seed':SEED,
+                'draws':DRAW_COUNT,'attempts':attempts,'staged_rows':staged,
+                'saved_rows':row_count,'saved_slots':slot_count,
+                'zero_average_mass_rows':sum(not any(values) for values in average.values()),
+                'rank_calls':rank_calls,'measured_draw_ledgers':work_sums,
+                'draw_work_reserved':reserved,'maximum_draw_work':DRAW_WORK_CAP,
+                'export_work':int(export_work),
+                'holdings_per_seat':comb(52,2),'compatible_private_deals':comb(52,2)*comb(50,2),
+                'possible_boards_per_deal':comb(48,3)*45*44,
+                'dealer':{'modeled_work':work,'retained_entries':retained,
+                          'peak_scratch_entries':scratch,'peak_integer_payload_bits':payload,
+                          'root_queries':queries,'terminal_queries':terminals,'rank_calls':ranking},
+                'quality_gate':None}
+    require(not dealer, 'unexpected private dealer receipt')
     fixture = Fixture(eleven_card=eleven)
     holding_rank = [{hand:i for i,(hand,_) in enumerate(side)} for side in FRONTIER_RANGES]
     supplied = {(p,holding_rank[p][hand],h): units for (p,hand,h),units in sparse.items()}
@@ -323,6 +399,9 @@ class NativeSampledSeededTests(unittest.TestCase):
         with (directory/'comparison.json').open('x',encoding='utf-8') as receipt:
             json.dump(comparison,receipt,sort_keys=True,indent=2)
             receipt.write('\n')
+
+    def test_full52_broad_range_saved_policy_replay(self):
+        self._capture('sampled-grid-full52-dealt-seeded','full52')
 
     def test_saved_policy_and_independent_best_response(self):
         self._capture('sampled-grid-seeded','uniform')

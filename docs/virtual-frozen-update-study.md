@@ -407,3 +407,18 @@ eight alternating pairs of complete native calls, the median candidate to
 baseline elapsed ratio was 0.9047 on the Windows test host. The packet retains
 every timing observation and the exact output identities. History reuse is
 an opt-in control on this fixture.
+
+### Full-deck broad-range sampled protocol
+
+The full-deck control uses all 1,326 physical holdings per seat with
+asymmetric positive integer weights. It keeps the same four-street betting
+template, seed, 32 accepted draws and 500,000,000-unit per-draw cap as the
+smaller dealt studies. The dealer samples an exact compatible ticket and a
+legal board ordinal. The trainer never builds a catalogue of the 1,624,350
+compatible private deals or the 34,246,080 boards available to each deal.
+
+The independent sparse replay reconstructs the first holding's ticket
+intervals from literal compatibility and decodes ordered turn and river
+after selecting the flop. It replays all recorded deals and verifies each
+exported average-policy action unit. The recorded result leaves full-deck
+best-response quality unknown.
