@@ -1,4 +1,4 @@
-"""Independent literal single-deal oracle for three changing-policy draws."""
+"""Independent literal compatible-deal oracle for changing-policy draws."""
 import os
 from fractions import Fraction
 from itertools import combinations, permutations
@@ -16,7 +16,11 @@ from tests.virtual_frozen_update_reference import _template_case
 
 
 GRID = 1 << 52
-HANDS = ((0, 1), (2, 3))
+DECK = tuple(range(9))
+RANGES = ((((0, 1), 1),), (((2, 3), 1),))
+FRONTIER_DECK = (16, 17, 24, 32, 33, 35, 37, 43, 48)
+FRONTIER_RANGES = ((((43, 48), 1), ((32, 43), 6)), (((24, 37), 3), ((16, 32), 8)))
+FRONTIER_DRAWS = ((16, 17, 32, 33, 35), (16, 17, 32, 33, 35), (16, 17, 32, 33, 48))
 DRAWS = ((4, 5, 6, 7, 8), (4, 5, 6, 7, 8), (4, 5, 6, 7, 0))
 EXECUTABLE = os.environ.get('OPENPOKER_NATIVE_SAMPLED_GRID_EXECUTABLE')
 
@@ -39,30 +43,44 @@ def _grid(regrets):
     return tuple(units)
 
 
-def _model():
+def _model(frontier):
     case = _template_case()
-    case['config']['starting_stack'] = 2.0
-    later = {'bet_sizes': [0.5], 'raise_sizes': [], 'max_raises': 0, 'include_all_in': True}
-    for street in ('flop', 'turn', 'river'):
-        case[f'{street}_config'] = dict(later)
+    if not frontier:
+        case['config']['starting_stack'] = 2.0
+        later = {'bet_sizes': [0.5], 'raise_sizes': [], 'max_raises': 0, 'include_all_in': True}
+        for street in ('flop', 'turn', 'river'):
+            case[f'{street}_config'] = dict(later)
     template = build_reference_template(case)
     return template.root, _snapshot_template(template)
 
 
-def _literal_draw(root, nodes, board, committed):
+def _literal_draw(root, nodes, board, committed, deck, ranges):
     rows = {}
-    deal = tuple(_uniform_boards(range(4, 9)))
-    proposal = tuple(_uniform_boards(range(9)))
-    prefix_scale = {}
-    for n in (0, 3, 4, 5):
-        physical = sum(candidate[:n] == board[:n] for candidate in deal)
-        sampled = sum(candidate[:n] == board[:n] for candidate in proposal)
-        prefix_scale[n] = Fraction(physical * len(proposal), len(deal) * sampled)
+    proposal = tuple(_uniform_boards(deck))
+    lengths = (0, 3, 4, 5)
+    inclusion = {n: sum(candidate[:n] == board[:n] for candidate in proposal)
+                 for n in lengths}
+    pairs = [(first, second, a*b) for first, a in ranges[0] for second, b in ranges[1]
+             if set(first).isdisjoint(second)]
+    normalizer = sum(weight for _, _, weight in pairs)
+    for first, second, weight in pairs:
+        private = (first, second)
+        deal = tuple(_uniform_boards(tuple(card for card in deck if card not in (*first, *second))))
+        prefix_scale = {}
+        for n in lengths:
+            compatible = sum(candidate[:n] == board[:n] for candidate in deal)
+            prefix_scale[n] = Fraction(compatible * len(proposal) * weight,
+                                       len(deal) * inclusion[n] * normalizer)
+        sign = 0
+        if prefix_scale[5]:
+            one, two = (independent_rank(tuple(map(card_name, (*hand, *board)))) for hand in private)
+            sign = (one > two) - (one < two)
+        _walk_deal(root,nodes,board,committed,private,prefix_scale,sign,rows)
+    return rows
 
-    sign = 0
-    if prefix_scale[5]:
-        one, two = (independent_rank(tuple(map(card_name, (*hand, *board)))) for hand in HANDS)
-        sign = (one > two) - (one < two)
+
+def _walk_deal(root,nodes,board,committed,private,prefix_scale,sign,rows):
+    seen = set()
 
     def visit(index, history, reaches):
         node = nodes[index]
@@ -74,7 +92,7 @@ def _literal_draw(root, nodes, board, committed):
             return visit(node.edges[0].child, (*history, _reveal_token(board, node.reveal_length)),
                          reaches)
         actor = node.actor
-        key = (actor, HANDS[actor], history)
+        key = (actor, private[actor], history)
         actions = tuple(edge.token for edge in node.edges)
         units = _grid(committed.get(key, (0,) * len(actions)))
         probabilities = tuple(Fraction(unit, GRID) for unit in units)
@@ -86,16 +104,26 @@ def _literal_draw(root, nodes, board, committed):
         mixed = sum(child * probability for child, probability in zip(children, probabilities, strict=True))
         scale = prefix_scale[node.street]
         if scale:
-            if key in rows:
-                raise ValueError('independent model replaced a full-history row')
+            if key in seen:
+                raise ValueError('independent deal repeated a full-history row')
+            seen.add(key)
             average = scale * reaches[actor]
             orientation = 1 if actor == 0 else -1
             regrets = tuple((child - mixed) * reaches[1 - actor] * orientation for child in children)
-            rows[key] = (actions, units, regrets, average, tuple(average * p for p in probabilities))
+            # Each deal's continuation already includes its chance prior at
+            # each terminal. The average uses its prefix prior separately.
+            masses = tuple(average * p for p in probabilities)
+            if key in rows:
+                old_actions, old_units, old_regrets, old_average, old_masses = rows[key]
+                if (old_actions, old_units) != (actions, units):
+                    raise ValueError('the hidden holding changed visible policy')
+                regrets = tuple(a+b for a,b in zip(regrets,old_regrets,strict=True))
+                masses = tuple(a+b for a,b in zip(masses,old_masses,strict=True))
+                average += old_average
+            rows[key] = (actions, units, regrets, average, masses)
         return mixed
 
     visit(root, (), (Fraction(1), Fraction(1)))
-    return rows
 
 
 def _read_rows(lines, count, regret_d):
@@ -127,7 +155,10 @@ class NativeSampledGridTests(unittest.TestCase):
     def test_prepared_draws_against_signed_literal_reference(self):
         self._check_draws('sampled-grid-prepared', 'prepared')
 
-    def _check_draws(self, mode, suffix):
+    def test_prepared_frontier_against_weighted_literal_deals(self):
+        self._check_draws('sampled-grid-prepared-frontier-draws', 'frontier', frontier=True)
+
+    def _check_draws(self, mode, suffix, *, frontier=False):
         executable = Path(EXECUTABLE).resolve()
         identity = authenticate(executable, ROOT, 'virtual-frozen-update-controls')
         destination = os.environ.get('OPENPOKER_NATIVE_SAMPLED_GRID_CONTROL_DIR')
@@ -139,22 +170,26 @@ class NativeSampledGridTests(unittest.TestCase):
         directory = Path(destination).resolve() / suffix
         directory.parent.mkdir(parents=True, exist_ok=True)
         receipt = run_bounded_child([str(executable), mode], b'', directory,
-                                    stdout_limit=1 << 20, timeout=45)
+                                    stdout_limit=(2 if frontier else 1) << 20, timeout=45)
         self.assertTrue(receipt['actual_exit_observed'])
         self.assertFalse(receipt['failures'])
         self.assertEqual(receipt['returncode'], 0, (directory / 'stderr.bin').read_bytes())
         self.assertEqual((directory / 'stderr.bin').read_bytes(), b'')
         self.assertEqual(authenticate(executable, ROOT, 'virtual-frozen-update-controls'), identity)
         lines = iter((directory / 'stdout.bin').read_text(encoding='ascii').splitlines())
-        root, nodes = _model()
+        root, nodes = _model(frontier)
+        deck, ranges, draws = (FRONTIER_DECK, FRONTIER_RANGES, FRONTIER_DRAWS) if frontier else (DECK, RANGES, DRAWS)
         committed = {}
         first_policy = None
         saw_changed = saw_zero_with_regret = saw_negative = False
-        for draw, board in enumerate(DRAWS):
+        for draw, board in enumerate(draws):
             fields = next(lines).split()
             self.assertEqual(fields[0], 'DRAW')
             index, rows, regret_d, bound, chance, history, arithmetic, average, quantizer, ranks = map(int, fields[1:])
-            if mode == 'sampled-grid-prepared':
+            if frontier:
+                live = sum(set(hand).isdisjoint(board) for side in ranges for hand,_ in side)
+                self.assertEqual(ranks, live)
+            elif mode == 'sampled-grid-prepared':
                 self.assertEqual(ranks, 1 if draw == 2 else 2)
             else:
                 self.assertEqual(ranks, 0)
@@ -162,7 +197,7 @@ class NativeSampledGridTests(unittest.TestCase):
             self.assertLessEqual(chance + history + arithmetic + average + quantizer, bound)
             self.assertLessEqual(bound, 500_000_000)
             actual = _read_rows(lines, rows, regret_d)
-            expected = _literal_draw(root, nodes, board, committed)
+            expected = _literal_draw(root, nodes, board, committed, deck, ranges)
             self.assertEqual(actual, expected, f'draw {draw}')
             if draw == 0:
                 first_policy = {key: row[1] for key, row in expected.items()}

@@ -21,6 +21,9 @@ struct CommonDenominatorLimits {
   std::uint64_t work = 500000000;
   std::size_t integer_bits = 65536;
   std::size_t temporary_payload_bits = std::size_t{1} << 30;
+  // Prepared arithmetic works on 64-bit word counts, matching the prepared
+  // chance ledger. Historical probes keep their bit-based reservation.
+  bool word_work = false;
 };
 struct CommonDenominatorReceipt {
   std::uint64_t work = 0;
@@ -50,7 +53,7 @@ class CommonDenominator final {
           "common denominator temporary payload exceeded");
     const auto payload = width * temporaries;
     // This is an explicitly bounded logical bit-operation model, not a CPU or RSS bound.
-    const auto w = static_cast<std::uint64_t>(width);
+    const auto w = static_cast<std::uint64_t>(limits_.word_work ? (width+63)/64 : width);
     const auto cost = per_bit * w + 1024ULL;
     if (cost > limits_.work - receipt_.work)
       throw CommonDenominatorError("common denominator work exceeded");
@@ -133,9 +136,22 @@ public:
     if (units == 0 || value == 0) return 0;
     if (units == dyadic_policy::grid_units) return value;
     const auto common=static_cast<unsigned>(std::countr_zero(units));
-    auto quotient=divide_power_two(value,dyadic_policy::grid_bits-common);
-    reserve(plus(bits(quotient),std::bit_width(units>>common)),3,64);
-    return quotient*(units>>common);
+    const auto exponent=dyadic_policy::grid_bits-common;
+    if (!limits_.word_work) {
+      auto quotient=divide_power_two(value,exponent);
+      reserve(plus(bits(quotient),std::bit_width(units>>common)),3,64);
+      return quotient*(units>>common);
+    }
+    // Strip the required power of two using one limb scan. A single shift
+    // and one word multiplication then recover the signed exact product.
+    const auto width=bits(value);
+    reserve(plus(width,1),5,128);
+    CommonInteger magnitude=value<0 ? -value : value;
+    if (boost::multiprecision::lsb(magnitude)<exponent)
+      throw CommonDenominatorError("grid weighting would lose exactness");
+    magnitude>>=exponent;
+    magnitude*=units>>common;
+    return value<0 ? -magnitude : magnitude;
   }
   [[nodiscard]] CommonInteger add(const CommonInteger &a,
                                   const CommonInteger &b) {

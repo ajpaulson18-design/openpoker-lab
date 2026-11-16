@@ -65,6 +65,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   CommonDenominatorLimits math_limits;
   math_limits.work = f.arithmetic_work_upper - f.average_work_upper;
   math_limits.integer_bits = f.integer_bits_upper;
+  math_limits.word_work = contraction==SampledContraction::prepared;
   math_limits.temporary_payload_bits =
       game.limits_.integer_payload_bits -
       game.chance_->receipt().setup_integer_payload_bits;
@@ -77,7 +78,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
     if (committed && (committed->failed() || committed->regret_denominator()!=math.denominator()))
       throw FrozenUpdateError("committed regret image cannot be used with this draw");
     dyadic_policy::Limits limits;
-    limits.work=f.policy_work_upper;
+    limits.work=std::max<std::uint64_t>(1,f.policy_work_upper);
     limits.integer_bits=std::min<std::size_t>(65536,f.integer_bits_upper+dyadic_policy::grid_bits);
     quantizer.emplace(limits);
   }
@@ -177,8 +178,9 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
                 : matched;
         chance::ExactVector vector;
         const auto via_prepared=[&]([[maybe_unused]] std::span<const std::uint8_t> prefix,
-                                    [[maybe_unused]] std::uint64_t qden) {
-          chance::ExactVector result;
+                                    [[maybe_unused]] std::uint64_t qden,
+                                    [[maybe_unused]] std::uint64_t prefix_divisor) {
+          Vector result;
           if constexpr (Changing) {
             const auto words=[](std::uint64_t bits) {return std::max<std::uint64_t>(1,(bits+63)/64);};
             const auto w=words(f.integer_bits_upper), copy=1+2*w, product=2+2*(w+1)+w;
@@ -190,15 +192,20 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
                                                 reaches[opponent].exponent);
             const auto p=chance::prior::decode_parts(std::bit_cast<std::uint64_t>(payoff),true,true,
                                                       "invalid prepared matched payoff");
-            if (!values.prefix_divisor || divisor%values.prefix_divisor ||
-                values.reach_exponent!=reaches[opponent].exponent)
-              throw FrozenUpdateError("prepared terminal scale differs");
-            result.denominator=math.base() << (values.reach_exponent+std::max(0,-p.exponent));
-            result.numerators=std::move(values.numerators);
-            for (auto &value:result.numerators) {
+            if (values.prefix_divisor!=prefix_divisor ||
+                values.reach_exponent!=reaches[opponent].exponent ||
+                transport_work>f.chance_work_upper-prepared->receipt().modeled_work)
+              throw FrozenUpdateError("prepared terminal scale or transport allowance differs");
+            // Prior identity was authenticated once. Align the prepared
+            // numerator straight to the walk's fixed denominator.
+            const auto shift=static_cast<int>(math.shift())+static_cast<int>(prior_shift)
+                +p.exponent-static_cast<int>(values.reach_exponent);
+            if (shift<0) throw FrozenUpdateError("prepared terminal lacks exact scale");
+            result=std::move(values.numerators);
+            for (auto &value:result) {
               value*=p.significand;
               value*=qden;
-              value<<=(prior_shift+std::max(0,p.exponent));
+              value<<=static_cast<unsigned>(shift);
               if (payoff<0) value=-value;
             }
           }
@@ -218,24 +225,24 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
           if (qden>law.board.denominator)
             throw FrozenUpdateError("prefix proposal exceeds forecast width");
           const auto prefix=std::span<const std::uint8_t>(board.data(),length);
-          if constexpr (Changing)
-            vector=prepared ? via_prepared(prefix,qden) :
-                game.chance_->sampled_fold_prefix_exact_reach(target,prefix,payoff,
+          ++stage.prefix_fold_queries;
+          if constexpr (Changing) {
+            if (prepared) return via_prepared(prefix,qden,prefix_divisor);
+            vector=game.chance_->sampled_fold_prefix_exact_reach(target,prefix,payoff,
                     reaches[opponent].numerators,reach_denominator,CommonInteger(factor),CommonInteger(qden));
-          else
+          } else
             vector=game.chance_->sampled_fold_prefix_dyadic_reach(target,prefix,payoff,reach,
                 CommonInteger(factor),CommonInteger(qden));
-          ++stage.prefix_fold_queries;
         } else {
-          if constexpr (Changing)
-            vector=prepared ? via_prepared(board,law.board.denominator) :
-                game.chance_->terminal_exact_reach(target,board,kind,payoff,
+          ++stage.full_board_queries;
+          if constexpr (Changing) {
+            if (prepared) return via_prepared(board,law.board.denominator,divisor);
+            vector=game.chance_->terminal_exact_reach(target,board,kind,payoff,
                     reaches[opponent].numerators,reach_denominator,
                     CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
-          else
+          } else
             vector=game.chance_->terminal(target,board,kind,payoff,reach,
                 CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
-          ++stage.full_board_queries;
         }
         Vector result;
         result.reserve(vector.numerators.size());
@@ -295,9 +302,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
             throw FrozenUpdateError("staged retained text exceeds preflight");
           staged_slots += node.edges.size();
           staged_text_upper += text_upper;
-          const auto avg_cost = add(
-              add(mul(128, f.integer_bits_upper), 4096),
-              mul(node.edges.size(), add(mul(32, f.integer_bits_upper), 1024)));
+          const auto avg_cost=average_row_work(f.integer_bits_upper,node.edges.size(),bool(prepared));
           if (avg_cost > f.average_work_upper - average_work)
             throw FrozenUpdateError("average arithmetic exceeds preflight");
           average_work += avg_cost;

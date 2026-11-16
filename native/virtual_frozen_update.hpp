@@ -56,6 +56,16 @@ class FrozenUpdate final {
   template<bool Changing>
   static FrozenUpdateStage walk(FrozenGame &, const std::array<std::uint8_t, 5> &,
                                 ProposalKind, bool, const sampled_row_state::State *, SampledContraction);
+  static std::uint64_t work_width(std::uint64_t bits, bool prepared) {
+    return prepared ? (bits+63)/64 : bits;
+  }
+  static std::uint64_t average_row_work(std::uint64_t bits,std::uint64_t actions,bool prepared) {
+    const auto width=work_width(bits,prepared);
+    // Prepared averages can multiply two wide inputs once (prior by reach).
+    // All later products are by single-word proposal and policy factors.
+    const auto product=prepared ? 2*width*width : 0;
+    return add(4096+128*width+product,mul(actions,1024+32*width));
+  }
   static std::uint64_t denominator_shift(bool changing, std::uint64_t reach, std::uint64_t maxneg) {
     // Opponent actions before a terminal and own actions summed back from it
     // occupy disjoint edges of the same legal path.
@@ -290,17 +300,19 @@ public:
                                       mul(showdowns,add(showdown,transport))));
       }
     }
-    const auto terminalhands = mul(
+    const auto terminalhands = prepared ? 0 : mul(
         mul(2, terms), std::max(game.hands_[0].size(), game.hands_[1].size()));
+    const auto arith_width=work_width(bits,prepared);
     const auto units = add(add(mul(64, terminalhands), mul(160, slots)),
                            add(mul(mul(64, edgeocc), h), mul(128, rows)));
     auto arith =
-        add(add(mul(bits, units),
+        add(add(mul(arith_width, units),
                 mul(1024, add(add(terminalhands, mul(5, slots)),
                               add(mul(4, rows), mul(edgeocc, h))))),
-            add(mul(512, bits), 1024));
-    const auto avgwork = add(mul(bits, add(mul(128, rows), mul(32, slots))),
-                             add(mul(4096, rows), mul(1024, slots)));
+            add(mul(512, arith_width), 1024));
+    const auto avgwork = add(mul(rows,average_row_work(bits,0,prepared)),
+                             mul(slots,1024+32*arith_width));
+    if (prepared) arith=add(arith,mul(rows,2*arith_width*arith_width));
     std::uint64_t policy_work=0;
     if (changing) {
       const auto words=add(bits,115)/64;
@@ -312,7 +324,7 @@ public:
           mul(mul(8,mul(maxmenu,maxmenu)),add(words,8))));
       policy_work=mul(mul(2,rows),add(lookup,quantization));
       // One-word action multiplications on copied reaches and child values.
-      arith=add(arith,mul(add(mul(2,mul(edgeocc,h)),slots),add(mul(64,bits),1024)));
+      arith=add(arith,mul(add(mul(2,mul(edgeocc,h)),slots),add(mul(64,arith_width),1024)));
     }
     // Fixed owner startup, common-denominator setup, frame and row bookkeeping.
     const auto other =

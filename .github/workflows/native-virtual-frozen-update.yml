@@ -54,7 +54,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then suffix=.exe; else suffix=; fi
           "$RUNNER_TEMP/frozen-update/controls/native-virtual-frozen-update-controls$suffix" > "$RUNNER_TEMP/frozen-update/controls.stdout.log" 2> "$RUNNER_TEMP/frozen-update/controls.stderr.log"
-      - name: Independently replay three exact changing-policy draws
+      - name: Independently replay exact changing-policy draws
         shell: bash
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1

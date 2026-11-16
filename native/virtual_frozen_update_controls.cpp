@@ -399,15 +399,43 @@ void zero_target_and_action_controls() {
               stage.average_work <= stage.forecast.average_work_upper,
           "counter exceeded forecast");
 }
-void sampled_grid_controls(SampledContraction route) {
+struct SampledFrontierFixture {
+  betting::Config config=Fixture().config;
+  chance::DeckDefinition deck;
+  std::array<chance::WeightedHand,2> sb{{
+      {{43,48},std::bit_cast<std::uint64_t>(.125)},
+      {{32,43},std::bit_cast<std::uint64_t>(.75)}}};
+  std::array<chance::WeightedHand,2> bb{{
+      {{24,37},std::bit_cast<std::uint64_t>(.375)},
+      {{16,32},std::bit_cast<std::uint64_t>(1.)}}};
+  SampledFrontierFixture() {
+    config.stacks={8,8};
+    config.stages[0].bets={.5};
+    for (std::size_t street=1;street<4;++street) {
+      config.stages[street].bets={.5,1.};
+      config.stages[street].raises={.25};
+      config.stages[street].max_raises=1;
+    }
+    const std::array<std::uint8_t,9> cards{16,17,24,32,33,35,37,43,48};
+    deck=chance::DeckDefinition::reduced(cards);
+  }
+};
+
+void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   namespace sparse=openpoker::sampled_row_state;
   Fixture f;
-  const std::array<std::array<std::uint8_t,5>,3> boards{{
-      {4,5,6,7,8},{4,5,6,7,8},{4,5,6,7,0}}};
+  SampledFrontierFixture large;
+  const std::array<std::array<std::uint8_t,5>,3> boards=frontier ?
+      std::array<std::array<std::uint8_t,5>,3>{{{16,17,32,33,35},{16,17,32,33,35},{16,17,32,33,48}}} :
+      std::array<std::array<std::uint8_t,5>,3>{{{4,5,6,7,8},{4,5,6,7,8},{4,5,6,7,0}}};
+  const auto sb=frontier ? std::span<const chance::WeightedHand>(large.sb) :
+                           std::span<const chance::WeightedHand>(f.sb);
+  const auto bb=frontier ? std::span<const chance::WeightedHand>(large.bb) :
+                           std::span<const chance::WeightedHand>(f.bb);
   std::optional<sparse::State> state;
   bool saw_zero=false, saw_negative=false, saw_changed=false;
   for (std::size_t draw=0;draw<boards.size();++draw) {
-    FrozenGame game(f.config,f.deck,f.sb,f.bb);
+    FrozenGame game(frontier ? large.config : f.config,frontier ? large.deck : f.deck,sb,bb);
     const auto stage=FrozenUpdate::run_sampled(game,boards[draw],state ? &*state : nullptr,route);
     require(!stage.rows.empty() && stage.prefix_fold_queries && stage.full_board_queries,
             "changing draw did not exercise fold and showdown");
@@ -416,7 +444,7 @@ void sampled_grid_controls(SampledContraction route) {
             "evaluating the changing draw mutated the row store");
     state->begin(draw,stage.regret_denominator);
     {
-      require(stage.rows.size()<=512,"sampled control output row limit");
+      require(stage.rows.size()<=868,"sampled control output row limit");
       std::cout<<"DRAW "<<draw<<' '<<stage.rows.size()<<' '<<stage.regret_denominator
                <<' '<<stage.forecast.work_upper<<' '<<stage.chance_work<<' '
                <<stage.history_work<<' '<<stage.common_regret_work<<' '
@@ -457,23 +485,8 @@ void sampled_grid_controls(SampledContraction route) {
           "changing draw did not exercise signed, changing and zero-action policies");
 }
 void sampled_grid_frontier(SampledContraction route) {
-  Fixture f;
-  f.config.stacks={8,8};
-  f.config.stages[0].bets={.5};
-  for (std::size_t street=1;street<4;++street) {
-    f.config.stages[street].bets={.5,1.};
-    f.config.stages[street].raises={.25};
-    f.config.stages[street].max_raises=1;
-  }
-  const std::array<std::uint8_t,9> cards{16,17,24,32,33,35,37,43,48};
-  const auto deck=chance::DeckDefinition::reduced(cards);
-  const std::array<chance::WeightedHand,2> sb{{
-      {{43,48},std::bit_cast<std::uint64_t>(.125)},
-      {{32,43},std::bit_cast<std::uint64_t>(.75)}}};
-  const std::array<chance::WeightedHand,2> bb{{
-      {{24,37},std::bit_cast<std::uint64_t>(.375)},
-      {{16,32},std::bit_cast<std::uint64_t>(1.)}}};
-  FrozenGame game(f.config,deck,sb,bb);
+  SampledFrontierFixture f;
+  FrozenGame game(f.config,f.deck,f.sb,f.bb);
   const auto &geometry=game.template_receipt();
   require(geometry.nodes==388 && geometry.logical_occurrences==1105 && geometry.max_depth==15,
           "sampled frontier fixture geometry changed");
@@ -492,6 +505,10 @@ int main(int argc,char **argv) {
       const std::string_view argument(argv[1]);
       if (argument=="sampled-grid" || argument=="sampled-grid-prepared") {
         sampled_grid_controls(argument=="sampled-grid" ? SampledContraction::direct : SampledContraction::prepared);
+        return 0;
+      }
+      if (argument=="sampled-grid-prepared-frontier-draws") {
+        sampled_grid_controls(SampledContraction::prepared,true);
         return 0;
       }
       if (argument=="sampled-grid-frontier" || argument=="sampled-grid-prepared-frontier") {

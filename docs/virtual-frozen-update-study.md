@@ -258,3 +258,34 @@ against 1,674,057,536 for direct chance. Total prepared work still forecast
 2,070,645,807 against the existing 500,000,000 cap. Both admissions stopped
 before a terminal. These are distinct logical operation ledgers and do not
 establish an elapsed-time improvement.
+
+### Admitted changing-policy draws on the pinned nine-card game
+
+The prepared walk authenticates the prior alignment once and scales each
+terminal numerator directly into the fixed regret denominator. Grid weighting
+then checks for the required trailing zero bits and uses one exact shift and a
+one-word multiplication. Its admission ledger counts 64-bit arithmetic words,
+including a wide own-reach product for each average row. The historical direct
+route retains its original ledger and exact arithmetic.
+
+The prepared forecast for the 388-node fixture is 470,131,063 modeled work
+units under the same 500,000,000 cap. The three-draw replay admits the original
+two-by-two ranges with three nonzero compatible private deals. An independent
+literal model applies prior normalization per deal, uses the physically
+compatible public completions and sums the exact row increments. All 1,040
+rows matched. Two draws share a full board and the third retains the turn while
+blocking the remaining deal. The saved Windows stdout SHA-256 is
+779bae8617302a376db86e885ddd4bd64f2a0bdff1c4e377be904edd63d07ede.
+
+| Draw | Rows | Rank calls | Chance | History | Common regret | Average | Quantization |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 440 | 2 | 1,780,956 | 49,275,472 | 9,076,416 | 4,666,672 | 755,008 |
+| 1 | 440 | 2 | 1,362,283 | 49,275,472 | 5,528,640 | 4,666,672 | 942,888 |
+| 2 | 160 | 1 | 1,354,642 | 48,393,296 | 4,833,856 | 1,726,336 | 874,080 |
+
+Run the source-built frozen-update controls with the independent
+`tests.test_native_sampled_grid` suite using
+`OPENPOKER_NATIVE_SAMPLED_GRID_EXECUTABLE`. The
+`sampled-grid-prepared-frontier-draws` selector produces the raw replay rows.
+The comparison covers a fixed three-draw schedule. Long-horizon sampling,
+saved average-policy export, and whole-game best-response quality remain open.
