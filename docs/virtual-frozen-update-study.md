@@ -192,3 +192,29 @@ updates privately and can publish those rows together after the caller verifies
 the draw. A failed stage discards the pending image. Average accumulators accept
 exact power-of-two rescaling up to the admitted precision. Native controls
 exercise publication, rollback, scale checks and actual frozen-walk rows.
+
+### Stopped visible-prefix study
+
+The Windows source-authenticated producer at
+[ffe05e9](https://github.com/ajpaulson18-design/openpoker-lab/commit/ffe05e923ed833d700d848ecf0c173b5f1a3d296)
+stopped during the 630th proposal with no controller or outer completion
+receipt. The 630 saved child observations reported exit zero and had matching
+stdout and stderr hashes. Ordinal 629, the 630th proposal, has unreadable
+reference and comparison receipts. The original attempt remains unchanged.
+
+A saved-only diagnostic replayed the first 629 proposals in canonical order
+using the existing native observation, semantic export and exact expectation
+readers. It reproduced 191,978 exact scalar comparisons and executed zero
+producer calls. The SHA-256 of the concatenated binary native stdout and
+reference body digests, interleaved by proposal, was
+0c639f87b69fa1df894e93b494b6ee22bc9dcf4396786770a8509d25bee03c86.
+The whole expectation, full-run source attestation, and mutation review remain
+incomplete.
+
+From the first draw launch to the 627th, 2,334.48 seconds elapsed. Across
+the 626 intervening draws, recorded native child lifetimes totaled 26.79
+seconds. The proof harness and independent verification dominated this host's
+elapsed time. These observations measure the proof workload only, and the
+individual sources of overhead remain unmeasured.
+The next complete proof needs bounded, independently authenticated outputs
+that survive interruption without overwriting this attempt.
