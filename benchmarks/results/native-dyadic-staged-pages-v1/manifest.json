@@ -1,0 +1,21 @@
+{
+  "artifact_sha256": {
+    "admissions.json": "16ff21f7a8c8691016dc81e5498e82cf818de9bb9fa1ec5271991ee3aaa5b5c3",
+    "geometry.json": "7c995a8787154189dd367ef7b2112da5ab06c36a00f826b590468780199de46a",
+    "protocol.json": "00b4971b28f09f5fac37e0c3d453221b141c8bc82cee4f67e5b8381099b60824",
+    "timing.json": "9a5f4c823d49b4feb54a166e1b942d04dbc9908cd3e12ad24f7e7cb653158773"
+  },
+  "baseline_head": "53a4072c3bd055e1fca9b787556da170af3c3c6d",
+  "contract": "native-dyadic-staged-pages-v1",
+  "geometry_scope": "ten cards verified in native training; eleven cards rank-free projection only",
+  "reference_profile": "../native-dyadic-walk-cpu-v1/manifest.json",
+  "source_head": "35c216bee267406a854fc87b350ec5821fe949fd",
+  "timing": {
+    "candidate_faster_pairs": 8,
+    "complete_call_median_elapsed_ratio": 0.8572097282354101,
+    "gate_passed": true,
+    "numeric_and_checkpoint_parity": true,
+    "pairs": 8,
+    "warmup_calls": 2
+  }
+}

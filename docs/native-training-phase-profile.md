@@ -147,3 +147,43 @@ same address. Inlined work may belong to the surrounding named function.
 CPU samples describe one host and one finite ten-card fixture. The
 earlier elapsed measurements use different intervals, including time
 waiting for I/O.
+
+## Staged-page reuse
+
+The [staged-page study](../benchmarks/results/native-dyadic-staged-pages-v1/manifest.json)
+tested a read cache of seven pages per field and a two-page dirty buffer
+per field, evicting the least recently used dirty page. The baseline has
+eight read pages and one dirty page per field. Both layouts retain 18 pages
+in total across the two fields. The candidate uses 1,022 additional bytes
+for dirty coverage metadata. The measured executable enables the layout
+only for the bounded-division ten-card fixture through the explicit
+`virtual-dyadic-training-staged-pages` build target.
+
+| Ten-card T2 pager measure | Baseline | Candidate |
+| --- | ---: | ---: |
+| Physical write requests | 18,836 | 2,390 |
+| Physical read requests | 1,498 | 1,495 |
+| Physical read words | 6,130,244 | 6,115,174 |
+| Physical write words | 5,925,444 | 5,925,444 |
+| Pager resident bytes | 591,008 | 592,030 |
+
+An independent rank-free model predicts the same counts from row extents
+and traversal order. The native pager kept the existing request and word
+ceilings and added a bookkeeping allowance for the extra buffer lookup
+within the existing composed work ceiling. Every complete call reproduced
+the numerical stream, checkpoint images, policy spill, and row directory.
+The eight changed stream footer fields match the predeclared differences
+in resource bookkeeping exactly.
+
+The candidate was faster in every one of the eight alternating pairs.
+Its median paired elapsed ratio was 0.85721 on the measured Windows host.
+Both executables used the same fixed request and file capture procedure.
+The published protocol keeps both warmups and all paired observations.
+
+For the eleven-card fixture the rank-free model projects 8,040 writes
+instead of 59,328, and 20,578,900 physical read words instead of 20,750,932.
+The projection preserves all stage coverage. Eleven-card exhaustive
+training still exceeds the composed, State, and quantizer ceilings.
+The next measured work is to separate Chance contraction from the other
+terminal costs and check which operations can be reused without changing
+signed values, blocker conditioning, or full-history row identity.
