@@ -8,6 +8,7 @@
 #include <memory>
 #include <span>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace openpoker::virtual_frozen_update {
@@ -32,21 +33,34 @@ struct FrozenGameSetupReceipt {
               peak_setup_integer_payload_bits_upper = 0;
 };
 class FrozenUpdate;
+class FrozenGame;
+
+class FrozenBettingPlan final {
+  friend class FrozenGame;
+  std::shared_ptr<const betting::Template> betting_;
+  chance::DeckDefinition deck_;
+  FrozenGameLimits limits_;
+  std::size_t menu_sizes_;
+  FrozenBettingPlan(std::shared_ptr<const betting::Template> betting,
+                    chance::DeckDefinition deck,FrozenGameLimits limits,std::size_t menu_sizes)
+      : betting_(std::move(betting)), deck_(deck), limits_(limits), menu_sizes_(menu_sizes) {}
+};
+
 class FrozenGame final {
   friend class FrozenUpdate;
   FrozenGameLimits limits_;
   chance::DeckDefinition deck_;
   std::array<std::vector<chance::WeightedHand>, 2> hands_;
-  std::unique_ptr<betting::Template> template_;
+  std::shared_ptr<const betting::Template> template_;
+  std::size_t menu_sizes_ = 0;
   std::unique_ptr<chance::PublicChanceKernel> chance_;
   FrozenGameSetupReceipt receipt_{};
   bool update_used_ = false;
 
-public:
-  FrozenGame(const betting::Config &config, const chance::DeckDefinition &deck,
+  FrozenGame(const betting::Config* config,const chance::DeckDefinition &deck,
              std::span<const chance::WeightedHand> sb,
              std::span<const chance::WeightedHand> bb,
-             FrozenGameLimits limits = {})
+             FrozenGameLimits limits,const FrozenBettingPlan* reuse)
       : limits_(limits), deck_(deck) {
     if (!limits.work || limits.work > 500000000 || !limits.entries ||
         limits.entries > 2000000 || !limits.integer_bits ||
@@ -61,21 +75,25 @@ public:
     if (limits.integer_bits < 181 || limits.integer_payload_bits < 32U * 181U)
       throw FrozenGameError(
           "frozen-game money setup exceeds integer admission");
-    if (!config.initial_history_empty)
-      throw FrozenGameError(
-          "frozen game requires the original empty-history root");
+    if (config && !config->initial_history_empty)
+      throw FrozenGameError("frozen game requires the original empty-history root");
+    if (reuse && !reuse->betting_)
+      throw FrozenGameError("empty frozen betting plan");
     if (sb.empty() || bb.empty() || sb.size() > limits.max_hands_per_side ||
         bb.size() > limits.max_hands_per_side)
       throw FrozenGameError("invalid frozen-game range dimensions");
-    std::size_t sizes = 0;
-    for (const auto &stage : config.stages) {
-      if (stage.bets.size() > 8 || stage.raises.size() > 8)
-        throw FrozenGameError("invalid frozen-game stage dimensions");
-      sizes += stage.bets.size() + stage.raises.size();
+    if (reuse) {
+      menu_sizes_ = reuse->menu_sizes_;
+    } else {
+      for (const auto &stage : config->stages) {
+        if (stage.bets.size() > 8 || stage.raises.size() > 8)
+          throw FrozenGameError("invalid frozen-game stage dimensions");
+        menu_sizes_ += stage.bets.size() + stage.raises.size();
+      }
     }
     const auto h = sb.size() + bb.size();
-    const auto owner_entries = 512 + 4 * h + 4 * sizes;
-    const std::uint64_t owner_work = 16384 + 512 * h + 64 * sizes;
+    const auto owner_entries = 512 + 4 * h + 4 * menu_sizes_;
+    const std::uint64_t owner_work = 16384 + 512 * h + 64 * menu_sizes_;
     if (owner_entries >= limits.entries || owner_work >= limits.work)
       throw FrozenGameError("frozen-game owner setup exceeds admission");
     // Fixed scratch: two 1,326-bit hand sets, card incidence counts and deck mask;
@@ -138,7 +156,7 @@ public:
     betting::Limits template_limits;
     template_limits.work = limits.work - owner_work;
     template_limits.entries = limits.entries - owner_entries;
-    template_ = std::make_unique<betting::Template>(config, template_limits);
+    template_ = reuse ? reuse->betting_ : std::make_shared<const betting::Template>(*config,template_limits);
     const auto &tr = template_->receipt();
     if (tr.history_suffix_only ||
         tr.entries >= limits.entries - owner_entries ||
@@ -172,6 +190,18 @@ public:
         receipt_.peak_setup_entries_upper > limits.entries)
       throw FrozenGameError("frozen-game combined setup exceeds admission");
   }
+public:
+  FrozenGame(const betting::Config &config,const chance::DeckDefinition &deck,
+             std::span<const chance::WeightedHand> sb,std::span<const chance::WeightedHand> bb,
+             FrozenGameLimits limits={})
+      : FrozenGame(&config,deck,sb,bb,limits,nullptr) {}
+  FrozenGame(const FrozenBettingPlan &plan,std::span<const chance::WeightedHand> sb,
+             std::span<const chance::WeightedHand> bb)
+      : FrozenGame(nullptr,plan.deck_,sb,bb,plan.limits_,&plan) {}
+  [[nodiscard]] FrozenBettingPlan betting_plan() const {
+    return FrozenBettingPlan(template_,deck_,limits_,menu_sizes_);
+  }
+
   FrozenGame(const FrozenGame &) = delete;
   FrozenGame &operator=(const FrozenGame &) = delete;
   FrozenGame(FrozenGame &&) = delete;

@@ -513,7 +513,7 @@ void widen_sampled_bets(betting::Config& config,unsigned streets) {
     config.stages[street].bets={.5,.75,1.};
 }
 
-enum class SeededGame { uniform9, dealt9, dealt11, history11, full52, full52_policy, wide52 };
+enum class SeededGame { uniform9, dealt9, dealt11, history11, full52, full52_policy, wide52, wide52_reuse };
 
 struct QualityRun {
   std::uint64_t seed, draws;
@@ -524,7 +524,8 @@ void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=st
   const bool curve=bool(quality);
   const bool dealt=profile!=SeededGame::uniform9;
   const bool eleven=profile==SeededGame::dealt11 || profile==SeededGame::history11;
-  const bool wide=profile==SeededGame::wide52;
+  const bool reuse_template=profile==SeededGame::wide52_reuse;
+  const bool wide=reuse_template || profile==SeededGame::wide52;
   const bool packed=wide || curve;
   const bool policy_replay=curve || wide || profile==SeededGame::full52_policy;
   const bool full_deck=wide || profile==SeededGame::full52_policy || profile==SeededGame::full52;
@@ -589,6 +590,7 @@ void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=st
         <<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
   emit(header);
   std::optional<sparse::State> state;
+  std::optional<FrozenBettingPlan> plan;
   std::uint64_t attempts=0, reserved=0, rank_calls=0;
   std::optional<chance::PublicChanceKernel> prior;
   if (dealt) {
@@ -642,11 +644,14 @@ void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=st
                                 std::span<const chance::WeightedHand>(f.sb);
     const auto bb_range=dealt ? std::span<const chance::WeightedHand>(bb) :
                                 std::span<const chance::WeightedHand>(f.bb);
-    FrozenGame game(f.config,f.deck,sb_range,bb_range);
+    std::optional<FrozenGame> game;
+    if (plan) game.emplace(*plan,sb_range,bb_range);
+    else game.emplace(f.config,f.deck,sb_range,bb_range);
+    if (reuse_template && !plan) plan.emplace(game->betting_plan());
     const auto contraction=policy_replay ? SampledContraction::dealt_policy_replay :
         history_replay ? SampledContraction::dealt_history_replay :
         dealt ? SampledContraction::dealt : SampledContraction::prepared;
-    const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,
+    const auto stage=FrozenUpdate::run_sampled(*game,board,state ? &*state : nullptr,
                                                contraction,linear ? draw+1 : 1);
     if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
       throw std::length_error("seeded draw exceeds pinned envelope");
@@ -735,6 +740,22 @@ void sampled_menu_frontier() {
   }
 }
 
+void betting_plan_reuse_controls() {
+  const Fixture f;
+  const auto plan=[&] {
+    const FrozenGame initial(f.config,f.deck,f.sb,f.bb);
+    auto admitted=initial.betting_plan();
+    const FrozenGame reused(admitted,f.sb,f.bb);
+    require(&initial.template_receipt()==&reused.template_receipt() &&
+            &initial.chance_receipt()!=&reused.chance_receipt() &&
+            initial.setup_receipt().work==reused.setup_receipt().work,
+            "reused betting template or independent chance owner differs");
+    return admitted;
+  }();
+  FrozenGame another(plan,f.sb,f.bb);
+  require(another.template_receipt().nodes>0,"reused betting plan did not outlive genesis");
+}
+
 void sampled_average_weight_controls() {
   const Fixture f;
   const std::array<std::uint8_t,5> board{4,5,6,7,8};
@@ -817,6 +838,10 @@ int main(int argc,char **argv) {
                             SeededGame::wide52 : SeededGame::full52_policy);
         return 0;
       }
+      if (argument=="sampled-grid-full52-wide-template-reuse") {
+        sampled_grid_seeded(SeededGame::wide52_reuse);
+        return 0;
+      }
       if (argument=="sampled-grid-full52-menu-frontier") {
         sampled_menu_frontier();
         return 0;
@@ -841,6 +866,7 @@ int main(int argc,char **argv) {
     sampled_row_publication_controls();
     sampled_row_precision_controls();
     sampled_average_weight_controls();
+    betting_plan_reuse_controls();
     publish_frozen_sample_controls();
     std::cout
         << "PASS frozen-update primitive, admission, identity and zero-target controls"
