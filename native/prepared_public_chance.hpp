@@ -31,6 +31,10 @@ struct ContractionScale {
     std::uint64_t prefix_divisor;
     std::size_t reach_exponent;
 };
+struct ReachInput {
+    std::span<const Integer> numerators;
+    std::size_t exponent;
+};
 struct Receipt {
     std::uint64_t modeled_work = 0, prior_work = 0, setup_work = 0,
         input_work = 0, cache_lookup_work = 0, rank_work = 0,
@@ -39,7 +43,8 @@ struct Receipt {
         peak_live_entries = 0, retained_integer_payload_bits = 0,
         peak_integer_payload_bits = 0, peak_integer_bits = 0,
         rank_calls = 0, cache_hits = 0, cache_misses = 0, cache_evictions = 0,
-        completed_contractions = 0, query_array_admissions = 0, sparse_pair_visits = 0;
+        completed_contractions = 0, query_array_admissions = 0, sparse_pair_visits = 0,
+        weighted_families = 0, weighted_showdowns = 0;
 };
 
 struct RankIndexReceipt {
@@ -49,7 +54,17 @@ struct RankIndexReceipt {
 
 class PreparedPublicChance final {
     struct Bucket { Integer total = 0; std::array<Integer,52> cards{}; };
-    struct WeightedReach { std::size_t row=0; Integer mass=0; };
+    struct WeightedMass { Integer value=0; std::size_t bits=0; };
+    struct WeightedLane {
+        std::array<WeightedMass,2> inline_masses{};
+        std::vector<WeightedMass> wide_masses;
+        std::span<WeightedMass> masses;
+        std::size_t exponent=0;
+    };
+    struct WeightedFamily {
+        std::array<WeightedLane,2> lanes;
+        std::size_t entries=0, payload=0, max_bits=0;
+    };
     struct SparsePairCost {
         std::size_t scratch_entries=0;
         std::uint64_t scratch_payload_bits=0;
@@ -253,6 +268,58 @@ class PreparedPublicChance final {
         }
         ++receipt_.cache_misses;
     }
+    std::size_t inspect_reach(const Integer& reach,std::size_t exponent) {
+        charge(4,receipt_.input_work);
+        const auto bits=width(reach);
+        if (bits>limits_.max_integer_bits)
+            fail(ErrorCode::integer_bit_limit,"prepared reach numerator width exceeded");
+        charge(2*words(bits),receipt_.input_work);
+        if (reach<0 || bits>exponent+1 ||
+            (bits==exponent+1 && reach!=0 &&
+             static_cast<std::size_t>(boost::multiprecision::lsb(reach))!=exponent))
+            fail(ErrorCode::invalid_query,"prepared reach must be in [0,2^e]");
+        return bits;
+    }
+    void prepare_family(std::array<ReachInput,2> input,WeightedFamily& family) {
+        family.entries=24+2*total_hands();
+        std::uint64_t products=0;
+        for (std::size_t seat=0;seat<2;++seat) {
+            const auto [reach,exponent]=input[seat];
+            if (reach.size()!=source_[seat].size())
+                fail(ErrorCode::invalid_query,"prepared family reach length mismatch");
+            if (exponent>=limits_.max_integer_bits)
+                fail(ErrorCode::integer_bit_limit,"prepared family exponent exceeded");
+            charge(12+8*reach.size(),receipt_.input_work);
+            family.max_bits=std::max(family.max_bits,exponent+1);
+            for (std::size_t row=0;row<reach.size();++row) {
+                const auto bits=inspect_reach(reach[row],exponent);
+                if (!bits) continue;
+                const auto weighted_bits=weight_bits_[seat][row]+bits;
+                family.max_bits=std::max(family.max_bits,weighted_bits);
+                family.payload=static_cast<std::size_t>(add(family.payload,weighted_bits));
+                products=add(products,multiply_cost(weight_bits_[seat][row],bits));
+            }
+        }
+        charge(products,receipt_.contraction_work);
+        admit(0,0,family.entries,family.payload,family.max_bits);
+        for (std::size_t seat=0;seat<2;++seat) {
+            const auto [reach,exponent]=input[seat];
+            auto& lane=family.lanes[seat];
+            lane.exponent=exponent;
+            if (reach.size()<=lane.inline_masses.size()) {
+                lane.masses=std::span(lane.inline_masses).first(reach.size());
+            } else {
+                lane.wide_masses.resize(reach.size());
+                lane.masses=lane.wide_masses;
+            }
+            for (std::size_t row=0;row<reach.size();++row) {
+                const auto bits=width(reach[row]);
+                if (bits) lane.masses[row]={weights_[seat][row]*reach[row],weight_bits_[seat][row]+bits};
+            }
+        }
+    }
+
+    template<bool Reuse=false>
     ContractionScale contract(std::size_t player,std::span<const std::uint8_t> prefix,TerminalKind kind,
                               std::span<const Integer> reach,std::size_t exponent,
                               std::span<Integer> output,std::vector<Integer>* owning_output) {
@@ -260,7 +327,14 @@ class PreparedPublicChance final {
         if (player>1 || (kind!=TerminalKind::fold && kind!=TerminalKind::showdown))
             fail(ErrorCode::invalid_query,"invalid prepared player or terminal kind");
         const auto opp=1-player;
-        if (reach.size()!=source_[opp].size()) fail(ErrorCode::invalid_query,"prepared reach length mismatch");
+        std::span<const WeightedMass> prepared;
+        if constexpr (Reuse) {
+            const auto& lane=active_family_->lanes[opp];
+            prepared=lane.masses;
+            exponent=lane.exponent;
+        } else if (reach.size()!=source_[opp].size()) {
+            fail(ErrorCode::invalid_query,"prepared reach length mismatch");
+        }
         if (!owning_output) {
             if (output.size()!=source_[player].size())
                 fail(ErrorCode::invalid_query,"prepared output length mismatch");
@@ -276,20 +350,21 @@ class PreparedPublicChance final {
         const auto blocked=board_mask(prefix,kind);
         std::size_t active=0,own_live=0,max_weighted_bits=0;
         std::uint64_t products=0;
-        for (std::size_t j=0;j<reach.size();++j) {
-            charge(4,receipt_.input_work); // sign/top-limb width inspection
-            const auto bits=width(reach[j]);
-            if (bits>limits_.max_integer_bits)
-                fail(ErrorCode::integer_bit_limit,"prepared reach numerator width exceeded");
-            charge(2*words(bits),receipt_.input_work); // scans incl. exact power-of-two check
-            if (reach[j]<0 || bits>exponent+1 ||
-                (bits==exponent+1 && reach[j]!=0 &&
-                 static_cast<std::size_t>(boost::multiprecision::lsb(reach[j]))!=exponent))
-                fail(ErrorCode::invalid_query,"prepared reach must be in [0,2^e]");
-            if (bits && !(masks_[opp][j]&blocked)) {
-                ++active;
-                max_weighted_bits=std::max(max_weighted_bits,weight_bits_[opp][j]+bits);
-                products=add(products,multiply_cost(weight_bits_[opp][j],bits));
+        if constexpr (Reuse) {
+            charge(2*prepared.size(),receipt_.input_work);
+            for (std::size_t j=0;j<prepared.size();++j)
+                if (prepared[j].bits && !(masks_[opp][j]&blocked)) {
+                    ++active;
+                    max_weighted_bits=std::max(max_weighted_bits,prepared[j].bits);
+                }
+        } else {
+            for (std::size_t j=0;j<reach.size();++j) {
+                const auto bits=inspect_reach(reach[j],exponent);
+                if (bits && !(masks_[opp][j]&blocked)) {
+                    ++active;
+                    max_weighted_bits=std::max(max_weighted_bits,weight_bits_[opp][j]+bits);
+                    products=add(products,multiply_cost(weight_bits_[opp][j],bits));
+                }
             }
         }
         for (const auto mask:masks_[player]) if (!(mask&blocked)) ++own_live;
@@ -361,6 +436,10 @@ class PreparedPublicChance final {
         const auto work=add(dynamic,add(cache_work,add(rank_work,sort_work)));
         if (work>limits_.max_modeled_work-receipt_.modeled_work)
             fail(ErrorCode::modeled_work_limit,"prepared query work admission exceeded");
+        if constexpr (Reuse) {
+            scratch+=active_family_->entries;
+            scratch_payload=add(scratch_payload,active_family_->payload);
+        }
         admit(cache_add,0,scratch,static_cast<std::size_t>(scratch_payload),peak_bits);
         charge(dynamic,receipt_.contraction_work);
         charge(cache_work,receipt_.cache_lookup_work);
@@ -381,19 +460,30 @@ class PreparedPublicChance final {
         }
         if (zero) { ++receipt_.completed_contractions; return scale; }
         if (sparse) {
-            std::array<WeightedReach,2> weighted{};
+            std::array<std::size_t,2> rows{};
+            std::conditional_t<Reuse,std::array<const Integer*,2>,std::array<Integer,2>> masses{};
             std::size_t used=0;
-            for (std::size_t j=0;j<reach.size();++j) if (!(masks_[opp][j]&blocked) && reach[j]!=0) {
-                weighted[used].row=j;
-                weighted[used].mass=weights_[opp][j]*reach[j];
-                ++used;
+            for (std::size_t j=0;j<source_[opp].size();++j) {
+                if (masks_[opp][j]&blocked) continue;
+                if constexpr (Reuse) {
+                    if (!prepared[j].bits) continue;
+                    masses[used]=&prepared[j].value;
+                } else {
+                    if (reach[j]==0) continue;
+                    masses[used]=weights_[opp][j]*reach[j];
+                }
+                rows[used++]=j;
             }
-            const auto live=std::span(weighted).first(used);
+            const auto mass_at=[&](std::size_t index)->const Integer& {
+                if constexpr (Reuse) return *masses[index];
+                else return masses[index];
+            };
+            const auto live=std::span(rows).first(used);
             if (kind==TerminalKind::fold) {
                 for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked)) {
                     Integer mass=0;
-                    for (const auto& row:live)
-                        if (!(masks_[player][i]&masks_[opp][row.row])) mass+=row.mass;
+                    for (std::size_t j=0;j<live.size();++j)
+                        if (!(masks_[player][i]&masks_[opp][live[j]])) mass+=mass_at(j);
                     output[i]=weights_[player][i]*mass;
                 }
             } else {
@@ -401,11 +491,11 @@ class PreparedPublicChance final {
                 for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked)) {
                     Integer signed_mass=0;
                     const auto own_rank=plane.ranks[player][i];
-                    for (const auto& row:live) {
-                        if (masks_[player][i]&masks_[opp][row.row]) continue;
-                        const auto other_rank=plane.ranks[opp][row.row];
-                        if (other_rank<own_rank) signed_mass+=row.mass;
-                        else if (own_rank<other_rank) signed_mass-=row.mass;
+                    for (std::size_t j=0;j<live.size();++j) {
+                        if (masks_[player][i]&masks_[opp][live[j]]) continue;
+                        const auto other_rank=plane.ranks[opp][live[j]];
+                        if (other_rank<own_rank) signed_mass+=mass_at(j);
+                        else if (own_rank<other_rank) signed_mass-=mass_at(j);
                     }
                     output[i]=weights_[player][i]*signed_mass;
                 }
@@ -414,15 +504,27 @@ class PreparedPublicChance final {
             ++receipt_.completed_contractions;
             return scale;
         }
-        std::vector<Integer> weighted(source_[opp].size());
+        std::vector<Integer> weighted;
+        if constexpr (!Reuse) weighted.resize(source_[opp].size());
+        const auto mass_at=[&](std::size_t j)->const Integer& {
+            if constexpr (Reuse) return prepared[j].value;
+            else return weighted[j];
+        };
         Bucket all;
-        for (std::size_t j=0;j<reach.size();++j) if (!(masks_[opp][j]&blocked) && reach[j]!=0) {
-            weighted[j]=weights_[opp][j]*reach[j];
-            bucket_add(all,source_[opp][j].hand,weighted[j]);
+        for (std::size_t j=0;j<source_[opp].size();++j) {
+            if (masks_[opp][j]&blocked) continue;
+            if constexpr (Reuse) {
+                if (!prepared[j].bits) continue;
+            } else {
+                if (reach[j]==0) continue;
+                weighted[j]=weights_[opp][j]*reach[j];
+            }
+            bucket_add(all,source_[opp][j].hand,mass_at(j));
         }
         const Integer empty=0;
         const auto same_at=[&](std::size_t i)->const Integer& {
-            const auto j=same_[player][i]; return j==missing ? empty : weighted[j];
+            const auto j=same_[player][i];
+            return j==missing || (Reuse && (masks_[opp][j]&blocked)) ? empty : mass_at(j);
         };
         if (kind==TerminalKind::fold) {
             for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked))
@@ -434,11 +536,11 @@ class PreparedPublicChance final {
             while (i<own.size()) {
                 const auto rank=plane.ranks[player][own[i]];
                 while (pos<opposite.size() && plane.ranks[opp][opposite[pos]]<rank) {
-                    const auto j=opposite[pos++]; if (weighted[j]!=0) bucket_add(lower,source_[opp][j].hand,weighted[j]);
+                    const auto j=opposite[pos++]; if (mass_at(j)!=0) bucket_add(lower,source_[opp][j].hand,mass_at(j));
                 }
                 Bucket equal; auto end=pos;
                 while (end<opposite.size() && plane.ranks[opp][opposite[end]]==rank) {
-                    const auto j=opposite[end++]; if (weighted[j]!=0) bucket_add(equal,source_[opp][j].hand,weighted[j]);
+                    const auto j=opposite[end++]; if (mass_at(j)!=0) bucket_add(equal,source_[opp][j].hand,mass_at(j));
                 }
                 while (i<own.size() && plane.ranks[player][own[i]]==rank) {
                     const auto row=own[i++]; const auto hand=source_[player][row].hand;
@@ -452,7 +554,7 @@ class PreparedPublicChance final {
                     output[row]=weights_[player][row]*(lo-hi);
                 }
                 while (pos<end) {
-                    const auto j=opposite[pos++]; if (weighted[j]!=0) bucket_add(lower,source_[opp][j].hand,weighted[j]);
+                    const auto j=opposite[pos++]; if (mass_at(j)!=0) bucket_add(lower,source_[opp][j].hand,mass_at(j));
                 }
             }
         }
@@ -609,6 +711,7 @@ public:
             TerminalKind kind,std::span<const Integer> opposite_numerators,std::size_t reach_exponent) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
         try {
+            if (active_family_) fail(ErrorCode::invalid_query,"unscoped query inside prepared reach family");
             Contraction result;
             const auto scale=contract(player,prefix,kind,opposite_numerators,reach_exponent,{},&result.numerators);
             result.prefix_divisor=scale.prefix_divisor;
@@ -622,8 +725,43 @@ public:
             TerminalKind kind,std::span<const Integer> opposite_numerators,std::size_t reach_exponent,
             std::span<Integer> output) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
-        try { return contract(player,prefix,kind,opposite_numerators,reach_exponent,output,nullptr); }
-        catch (...) { failed_=true; throw; }
+        try {
+            if (active_family_) fail(ErrorCode::invalid_query,"unscoped query inside prepared reach family");
+            return contract(player,prefix,kind,opposite_numerators,reach_exponent,output,nullptr);
+        } catch (...) { failed_=true; throw; }
+    }
+
+    // At most one pair of weighted reaches stays live. The callback streams
+    // boards and may only use the scoped showdown entry point.
+    template<class VisitBoards>
+    void with_showdown_reaches(std::array<ReachInput,2> input,VisitBoards&& visit_boards) {
+        if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
+        if (active_family_) {
+            failed_=true;
+            fail(ErrorCode::invalid_query,"nested prepared reach family");
+        }
+        try {
+            WeightedFamily family;
+            prepare_family(input,family);
+            active_family_=&family;
+            ++receipt_.weighted_families;
+            std::invoke(visit_boards);
+            active_family_=nullptr;
+            if (failed_) fail(ErrorCode::invalid_query,"prepared reach family failed");
+        } catch (...) { active_family_=nullptr; failed_=true; throw; }
+    }
+
+    [[nodiscard]] Contraction family_showdown(std::size_t player,std::span<const std::uint8_t> board) {
+        if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
+        try {
+            if (!active_family_) fail(ErrorCode::invalid_query,"showdown requires a prepared reach family");
+            Contraction result;
+            const auto scale=contract<true>(player,board,TerminalKind::showdown,{},0,{},&result.numerators);
+            result.prefix_divisor=scale.prefix_divisor;
+            result.reach_exponent=scale.reach_exponent;
+            ++receipt_.weighted_showdowns;
+            return result;
+        } catch (...) { failed_=true; throw; }
     }
     [[nodiscard]] const Integer& normalizer_integer() const noexcept { return normalizer_; }
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
@@ -639,6 +777,7 @@ private:
     const RankCacheKey rank_cache_key_;
     const ContractionKernel contraction_kernel_;
     Receipt receipt_{}; bool failed_=false;
+    const WeightedFamily* active_family_=nullptr;
     std::uint64_t deck_mask_=0,clock_=0;
     std::array<std::vector<WeightedHand>,2> source_;
     std::unique_ptr<const chance::PublicChanceKernel> prior_;

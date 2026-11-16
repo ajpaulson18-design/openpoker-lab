@@ -248,7 +248,60 @@ int buffer_guards() {
     std::cout<<"BUFFER_GUARDS PASS\n";
     return 0;
 }
-int full_deck_buffered() {
+int reach_families() {
+    for (auto kernel:{prepared::ContractionKernel::blocker_buckets,
+                      prepared::ContractionKernel::sparse_pairs}) {
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),
+            kernel_limits(kernel),2,prepared::RankCacheKey::board_set,kernel);
+        const std::array boards{board_a,board_b,board_c};
+        for (std::size_t test=0;test<3;++test) {
+            const auto left=fixture(static_cast<int>(test)),right=fixture(static_cast<int>(5-test));
+            owner.with_showdown_reaches({prepared::ReachInput{left.n,left.exponent},
+                                         prepared::ReachInput{right.n,right.exponent}},[&] {
+                for (std::size_t index=0;index<boards.size();++index) {
+                    for (std::size_t player=0;player<2;++player) {
+                        const auto out=owner.family_showdown(player,boards[index]);
+                        std::cout<<"FAMILY "<<static_cast<int>(kernel)<<' '<<test<<' '<<index<<' '<<player
+                                 <<' '<<out.prefix_divisor<<' '<<out.reach_exponent;
+                        for (const auto& value:out.numerators) std::cout<<' '<<hex(value);
+                        std::cout<<'\n';
+                    }
+                }
+            });
+        }
+        if (!ledger(owner.receipt()) || owner.receipt().weighted_families!=3 ||
+            owner.receipt().weighted_showdowns!=18 || owner.receipt().cache_misses!=2 ||
+            owner.receipt().cache_hits!=16) return 1;
+    }
+    return 0;
+}
+
+int family_guards() {
+    for (unsigned guard=0;guard<3;++guard) {
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck));
+        auto left=fixture(0);
+        const auto right=fixture(1);
+        if (guard==1) left.n[0]=-1;
+        const std::array input{prepared::ReachInput{left.n,left.exponent},
+                               prepared::ReachInput{right.n,right.exponent}};
+        try {
+            if (guard==0) (void)owner.family_showdown(0,board_a);
+            else owner.with_showdown_reaches(input,[&] {
+                owner.with_showdown_reaches(input,[] {});
+            });
+        } catch (const chance::KernelError& error) {
+            const auto& r=owner.receipt();
+            if (error.code()!=chance::ErrorCode::invalid_query || !owner.failed() ||
+                r.query_array_admissions || r.rank_calls || r.weighted_families!=(guard==2?1u:0u)) return 1;
+            continue;
+        }
+        return 1;
+    }
+    std::cout<<"FAMILY_GUARDS PASS\n";
+    return 0;
+}
+
+int full_deck_buffered(bool family=false) {
     std::array<std::vector<chance::WeightedHand>,2> ranges;
     std::array<std::vector<Integer>,2> reaches;
     for (std::uint8_t a=0;a<52;++a) for (std::uint8_t b=a+1;b<52;++b) {
@@ -262,6 +315,24 @@ int full_deck_buffered() {
     }
     prepared::PreparedPublicChance owner(ranges[0],ranges[1],chance::DeckDefinition::full52(),
                                          {},1,prepared::RankCacheKey::board_set);
+    if (family) {
+        owner.with_showdown_reaches({prepared::ReachInput{reaches[0],3},
+                                     prepared::ReachInput{reaches[1],3}},[&] {
+            const std::array boards{board_a,board_c};
+            for (std::size_t index=0;index<boards.size();++index) {
+                for (std::size_t player=0;player<2;++player) {
+                    const auto out=owner.family_showdown(player,boards[index]);
+                    std::cout<<"WIDE_FAMILY "<<index<<' '<<player<<' '<<out.prefix_divisor<<' '
+                             <<out.reach_exponent<<' '<<hex(owner.normalizer_integer());
+                    for (const auto& value:out.numerators) std::cout<<' '<<hex(value);
+                    std::cout<<'\n';
+                }
+            }
+        });
+        const auto& r=owner.receipt();
+        return ledger(r) && r.weighted_families==1 && r.weighted_showdowns==4 &&
+               r.cache_misses==2 && r.cache_hits==2 && r.rank_calls==4324 ? 0 : 1;
+    }
     std::vector<Integer> output(ranges[0].size(),Integer(77));
     for (std::size_t player=0;player<2;++player) for (unsigned showdown=0;showdown<2;++showdown) {
         const auto kind=showdown?chance::TerminalKind::showdown:chance::TerminalKind::fold;
@@ -523,6 +594,9 @@ int main(int argc,char** argv) {
             if (mode=="same-buffered") return same_fixture(true);
             if (mode=="buffer-guards") return buffer_guards();
             if (mode=="full-deck-buffered") return full_deck_buffered();
+            if (mode=="full-deck-reach-family") return full_deck_buffered(true);
+            if (mode=="reach-families") return reach_families();
+            if (mode=="family-guards") return family_guards();
             if (mode=="snapshot") return snapshot();
             if (mode=="board-sets") return board_set_controls();
             if (mode=="sparse-board-sets") return board_set_controls(prepared::ContractionKernel::sparse_pairs);

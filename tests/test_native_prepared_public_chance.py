@@ -241,27 +241,58 @@ class NativePreparedChanceTests(unittest.TestCase):
         self.assertEqual(self.invoke('same-buffered',['same-buffered'],65536),
                          self.invoke('same-buffered-reference',['same'],65536))
 
+    def test_prepared_reach_families_match_literal_on_each_hidden_board(self):
+        lines = self.invoke('reach-families', ['reach-families'], 65536)
+        self.assertEqual(len(lines), 36)
+        boards = ((17,24,33,35,37), (17,24,33,37,35), (17,24,33,35,48))
+        for index, line in enumerate(lines):
+            kernel, item = divmod(index, 18)
+            trial, query = divmod(item, 6)
+            board_index, player = divmod(query, 2)
+            board = boards[board_index]
+            reach, exponent = fixture(trial if player else 5-trial)
+            fields = line.split()
+            self.assertEqual(fields[0], 'FAMILY')
+            self.assertEqual(tuple(map(int, fields[1:7])),
+                             (kernel, trial, board_index, player, divisor(board), exponent))
+            self.assertEqual([int(value, 16) for value in fields[7:]], literal(player, board, True, reach))
+        guards = self.invoke('family-guards', ['family-guards'], 65536)
+        self.assertEqual(guards, ['FAMILY_GUARDS PASS'])
+
     def test_full_deck_buffer_matches_literal_blocker_and_signed_values(self):
+        lines = self.invoke('full-deck-buffered', ['full-deck-buffered'], 65536)
+        self.check_full_deck_contractions(lines)
+
+    def test_full_width_prepared_reach_stays_exact_across_distinct_boards(self):
+        lines = self.invoke('full-deck-reach-family', ['full-deck-reach-family'], 65536)
+        self.check_full_deck_contractions(lines, family=True)
+
+    def check_full_deck_contractions(self, lines, *, family=False):
         hands = tuple(combinations(range(52), 2))
         hand_masks = tuple((1 << a) | (1 << b) for a, b in hands)
         weights = (tuple(1 + row % 5 for row in range(len(hands))),
                    tuple(1 + (3 * row + 1) % 7 for row in range(len(hands))))
         reaches = tuple(tuple((row + 2 * player) % 9 for row in range(len(hands)))
                         for player in (0, 1))
-        board = (17, 24, 33, 35, 37)
-        board_mask = sum(1 << card for card in board)
-        live = [row for row, mask in enumerate(hand_masks) if not mask & board_mask]
-        ranks = {row: independent_rank(tuple(map(card_name, (*hands[row], *board)))) for row in live}
+        boards = ((17,24,33,35,37), (17,24,33,35,48))
         prior = sum(weights[0][i] * weights[1][j]
                     for i, own in enumerate(hand_masks) for j, other in enumerate(hand_masks)
                     if not own & other)
-        lines = self.invoke('full-deck-buffered', ['full-deck-buffered'], 65536)
         self.assertEqual(len(lines), 4)
+        contexts = {}
         for index, line in enumerate(lines):
-            player, showdown = divmod(index, 2)
+            first, second = divmod(index, 2)
+            player, showdown = (second, 1) if family else (first, second)
+            board = boards[first if family else 0]
+            if board not in contexts:
+                board_mask = sum(1 << card for card in board)
+                live = [row for row, mask in enumerate(hand_masks) if not mask & board_mask]
+                ranks = {row: independent_rank(tuple(map(card_name, (*hands[row], *board)))) for row in live}
+                contexts[board] = (live, ranks)
+            live, ranks = contexts[board]
             fields = line.split()
-            self.assertEqual(fields[0], 'WIDE')
-            self.assertEqual(tuple(map(int, fields[1:5])), (player, showdown, comb(48, 3) * 45 * 44, 3))
+            self.assertEqual(fields[0], 'WIDE_FAMILY' if family else 'WIDE')
+            self.assertEqual(tuple(map(int, fields[1:5])), (first, second, comb(48, 3) * 45 * 44, 3))
             self.assertEqual(int(fields[5], 16), prior)
             masses = [weights[1-player][j] * reaches[1-player][j] for j in range(len(hands))]
             expected = [0] * len(hands)
