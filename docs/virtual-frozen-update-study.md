@@ -377,3 +377,17 @@ the complete positive-prior row inventory before completing untouched rows
 with the grid-uniform policy. The same 0.1 big-blind quality comparison
 applies. The exhaustive evaluator runs explicitly outside the short CI
 replay because the verification workload grows with full physical support.
+
+The [source-frozen eleven-card result](../benchmarks/results/native-sampled-proof11-dealt-v1/manifest.json)
+completed all 32 accepted draws and saved 12,942 rows. The independent
+physical evaluator checked all 380,172 positive-prior rows and 892,910
+action slots. The policy's exploitability measured 2.521654338 big blinds,
+compared with 3.048542325 for the eleven-card grid-uniform baseline. The
+0.1 big-blind target missed.
+
+Each draw forecast 281,251,943 modeled work units, the same as the nine-card
+dealt control. History contributed 1,576,708,608 of the 1,941,013,914
+recorded units across the five draw ledgers. These counts locate the active
+history bottleneck without attributing elapsed time to an individual operation.
+The sample experiment provides an admitted route on this fixture while the
+archived exhaustive eleven-card training request remains unadmitted.
