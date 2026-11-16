@@ -48,7 +48,9 @@ def _splitmix(seed):
 
 def _records(raw):
     lines = raw.decode('ascii').splitlines()
-    require(len(lines) <= 24_420 + DRAW_COUNT + 3, 'seeded record count')
+    maximum_rows = (DRAW_COUNT*868 if lines and
+                    lines[0].startswith('SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 ') else 24_420)
+    require(len(lines) <= maximum_rows + DRAW_COUNT + 3, 'seeded record count')
     for line in lines:
         require(0 < len(line) <= 4096, 'seeded line length')
         yield line.split()
@@ -146,7 +148,9 @@ def replay_saved_policy(path, expected_sha256):
     require(observed == expected_sha256, 'seeded artifact digest mismatch')
     records = _records(raw)
     tag, seed, draws, cap, work = next(records)
-    full_deck = tag == 'SAMPLED_FULL52_DEALT_REPLAY_V1'
+    wide = tag == 'SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1'
+    policy_replay = wide or tag == 'SAMPLED_FULL52_POLICY_REPLAY_V1'
+    full_deck = policy_replay or tag == 'SAMPLED_FULL52_DEALT_REPLAY_V1'
     history_replay = tag == 'SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1'
     eleven = history_replay or tag == 'SAMPLED_PROOF11_DEALT_V1'
     dealt = full_deck or eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
@@ -163,7 +167,9 @@ def replay_saved_policy(path, expected_sha256):
     if full_deck:
         private_limit,locate = _full_deck_lottery()
     has_ledgers = eleven or full_deck
-    root, nodes = _model(True)
+    root, nodes = _model(True,wide=wide)
+    if wide:
+        require(len(nodes)==661, 'wide reference betting geometry')
     committed, average, menus = {}, {}, {}
     attempts = staged = reserved = rank_calls = 0
     def word_attempt():
@@ -237,20 +243,35 @@ def replay_saved_policy(path, expected_sha256):
 
     sparse = {}
     last = None
+    last_history = ()
     for _ in range(row_count):
         tag, actor, a, b, depth, *tokens = next(records)
         player, first, second, n = map(int,(actor,a,b,depth))
-        history = tuple(tokens[:n])
+        if wide:
+            suffix_length,*tokens = tokens
+            suffix = int(suffix_length)
+            require(tag=='PACK' and 0 <= n <= len(last_history) and 0 <= suffix <= 64-n,
+                    'packed row visible history')
+            history = last_history[:n] + tuple(tokens[:suffix])
+            actions,*fields = tokens[suffix:]
+            count = int(actions)
+            require(len(fields)==count, 'packed row policy units')
+            units = tuple(int(value,16) for value in fields)
+        else:
+            require(tag=='ROW' and 0 <= n <= 15, 'seeded row visible history')
+            history = tuple(tokens[:n])
+            actions,*fields = tokens[n:]
+            count = int(actions)
+            units = tuple(map(int,fields[1::2]))
         key = player,(first,second),history
-        require(tag == 'ROW' and player in (0,1) and 0 <= first < second < 52 and 0 <= n <= 15 and
+        require(player in (0,1) and 0 <= first < second < 52 and
                 (last is None or last < key) and key in menus, 'seeded policy row identity')
         last = key
-        actions, *fields = tokens[n:]
-        count = int(actions)
-        menu = tuple(fields[::2])
-        units = tuple(map(int,fields[1::2]))
-        require(len(fields) == 2*count and menu == menus[key] and len(units) == len(menu),
-                'seeded policy legal menu')
+        last_history = history
+        menu = menus[key]
+        require(len(units)==count==len(menu), 'seeded policy action count')
+        if not wide:
+            require(len(fields)==2*count and tuple(fields[::2])==menu, 'seeded policy legal menu')
         require(units == _grid(average[key]), 'seeded policy differs from independent exact average')
         sparse[key] = units
     tag, rows, export_work, *dealer = next(records)
@@ -261,7 +282,7 @@ def replay_saved_policy(path, expected_sha256):
         require(0 < work <= DRAW_WORK_CAP and retained+scratch <= 2_000_000 and
                 0 < payload <= 1 << 30 and queries == DRAW_COUNT and terminals == ranking == 0,
                 'full-deck private dealer resource receipt')
-        return {'status':'seeded_full52_sparse_policy_exact_replay_pass',
+        result = {'status':'seeded_full52_sparse_policy_exact_replay_pass',
                 'raw_sha256':observed,'native_producer_calls':0,'seed':SEED,
                 'draws':DRAW_COUNT,'attempts':attempts,'staged_rows':staged,
                 'saved_rows':row_count,'saved_slots':slot_count,
@@ -275,6 +296,12 @@ def replay_saved_policy(path, expected_sha256):
                           'peak_scratch_entries':scratch,'peak_integer_payload_bits':payload,
                           'root_queries':queries,'terminal_queries':terminals,'rank_calls':ranking},
                 'quality_gate':None}
+        if policy_replay:
+            result['policy_replay'] = True
+        if wide:
+            result['betting_nodes'] = len(nodes)
+            result['postflop_bet_sizes'] = [0.5,0.75,1.0]
+        return result
     require(not dealer, 'unexpected private dealer receipt')
     fixture = Fixture(eleven_card=eleven)
     holding_rank = [{hand:i for i,(hand,_) in enumerate(side)} for side in FRONTIER_RANGES]
@@ -318,28 +345,37 @@ def replay_saved_policy(path, expected_sha256):
     return result
 
 
-def compare_eleven_history(baseline, candidate):
+def compare_sampled_transcripts(baseline, candidate, *, policy_replay=False):
     # The decoded strategy and draw schedule must be identical. Only history
     # and the composed forecast may differ in the native resource transcript.
     first,second = _records(baseline),_records(candidate)
     header_a,header_b = next(first),next(second)
-    require(header_a[0]=='SAMPLED_PROOF11_DEALT_V1' and
-            header_b[0]=='SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1' and
-            header_a[1:]==header_b[1:], 'history comparison seed admission')
+    tags = (('SAMPLED_FULL52_DEALT_REPLAY_V1','SAMPLED_FULL52_POLICY_REPLAY_V1') if policy_replay else
+            ('SAMPLED_PROOF11_DEALT_V1','SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1'))
+    require((header_a[0],header_b[0])==tags and header_a[1:]==header_b[1:],
+            'history comparison seed admission')
     original = current = 0
+    original_policy = current_policy = 0
     for _ in range(DRAW_COUNT):
         a,b = next(first),next(second)
         require(a[0]==b[0]=='DRAW' and a[:-7]==b[:-7] and a[-6:-4]==b[-6:-4] and
-                a[-3:]==b[-3:], 'history comparison changed a draw or its nonhistory work')
+                a[-3:-1]==b[-3:-1] and (policy_replay or a[-1]==b[-1]),
+                'history comparison changed a draw or its other work')
         require(int(b[-7])<int(a[-7]) and int(b[-4])<int(a[-4]), 'history replay work did not decline')
         original += int(a[-4])
         current += int(b[-4])
+        original_policy += int(a[-1])
+        current_policy += int(b[-1])
     a,b = next(first),next(second)
     require(a[0]==b[0]=='POLICY' and a[:5]==b[:5] and a[6:]==b[6:],
             'history comparison policy summary differs')
     for a,b in zip(first,second,strict=True):
         require(a==b, 'history replay changed the saved policy or export')
-    return {'baseline_history_work':original,'candidate_history_work':current}
+    result = {'baseline_history_work':original,'candidate_history_work':current}
+    if policy_replay:
+        require(current_policy<original_policy, 'policy replay work did not decline')
+        result.update(baseline_policy_work=original_policy,candidate_policy_work=current_policy)
+    return result
 
 
 class DealtEstimatorTests(unittest.TestCase):
@@ -375,6 +411,14 @@ class DealtEstimatorTests(unittest.TestCase):
 @unittest.skipUnless(EXECUTABLE, 'explicit source-built changing-policy controls required')
 class NativeSampledSeededTests(unittest.TestCase):
     def test_eleven_history_replay_preserves_policy_and_lowers_work(self):
+        self._compare_replay('eleven-history',('sampled-grid-dealt-eleven-seeded',
+                                              'sampled-grid-eleven-history-replay'))
+
+    def test_full52_policy_replay_preserves_policy_and_lowers_work(self):
+        self._compare_replay('full52-policy',('sampled-grid-full52-dealt-seeded',
+                                             'sampled-grid-full52-policy-replay'),policy_replay=True)
+
+    def _compare_replay(self, label, modes, *, policy_replay=False):
         exe = Path(EXECUTABLE).resolve()
         identity = authenticate(exe,ROOT,'virtual-frozen-update-controls')
         base = os.environ.get('OPENPOKER_NATIVE_SAMPLED_SEEDED_DIR')
@@ -382,11 +426,10 @@ class NativeSampledSeededTests(unittest.TestCase):
             temporary = TemporaryDirectory()
             self.addCleanup(temporary.cleanup)
             base = temporary.name
-        directory = Path(base) / 'eleven-history'
+        directory = Path(base) / label
         directory.mkdir(parents=True,exist_ok=False)
         outputs = []
-        for label,mode in (('baseline','sampled-grid-dealt-eleven-seeded'),
-                           ('candidate','sampled-grid-eleven-history-replay')):
+        for label,mode in zip(('baseline','candidate'),modes,strict=True):
             out = directory / label
             observation = run_bounded_child([str(exe),mode],b'',out,stdout_limit=CAPTURE_LIMIT,timeout=90)
             self.assertTrue(observation['actual_exit_observed'])
@@ -395,10 +438,13 @@ class NativeSampledSeededTests(unittest.TestCase):
             self.assertEqual((out/'stderr.bin').read_bytes(),b'')
             outputs.append((out/'stdout.bin').read_bytes())
         self.assertEqual(authenticate(exe,ROOT,'virtual-frozen-update-controls'),identity)
-        comparison = compare_eleven_history(*outputs)
+        comparison = compare_sampled_transcripts(*outputs,policy_replay=policy_replay)
         with (directory/'comparison.json').open('x',encoding='utf-8') as receipt:
             json.dump(comparison,receipt,sort_keys=True,indent=2)
             receipt.write('\n')
+
+    def test_full52_wide_saved_policy_replay(self):
+        self._capture('sampled-grid-full52-wide','full52-wide')
 
     def test_full52_broad_range_saved_policy_replay(self):
         self._capture('sampled-grid-full52-dealt-seeded','full52')

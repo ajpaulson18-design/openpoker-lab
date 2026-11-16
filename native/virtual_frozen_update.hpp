@@ -33,7 +33,7 @@ struct FrozenUpdateForecast {
   bool admitted = false;
   std::uint64_t policy_work_upper = 0;
 };
-enum class SampledContraction { direct, prepared, dealt, dealt_history_replay };
+enum class SampledContraction { direct, prepared, dealt, dealt_history_replay, dealt_policy_replay };
 struct FrozenUpdateStage;
 class FrozenUpdate final {
   static std::uint64_t add(std::uint64_t a, std::uint64_t b) {
@@ -98,7 +98,8 @@ public:
     const auto scan = add(4096, add(mul(512, nodes), mul(256, edges)));
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
-    const bool history_replay=contraction==SampledContraction::dealt_history_replay;
+    const bool policy_replay=contraction==SampledContraction::dealt_policy_replay;
+    const bool history_replay=policy_replay || contraction==SampledContraction::dealt_history_replay;
     const bool dealt=history_replay || contraction==SampledContraction::dealt;
     const bool prepared=dealt || contraction==SampledContraction::prepared;
     if (dealt &&
@@ -253,7 +254,7 @@ public:
                       add(mul(mul(2, rows), add(512, mul(256, rec.max_depth))),
                           mul(rows, add(256, mul(256, rec.max_depth)))))));
     if (changing)
-      history=add(history,mul(mul(2,rows),add(256,mul(256,rec.max_depth))));
+      history=add(history,mul(mul(policy_replay ? 1 : 2,rows),add(256,mul(256,rec.max_depth))));
     if (history_replay) history=add(history,mul(64,edgeocc));
     auto perterminal = add(
         add(128,
@@ -328,7 +329,8 @@ public:
       const auto lookup=mul(8192,add(rec.max_depth,1));
       const auto quantization=add(512,add(mul(mul(32,maxmenu),mul(words,words)),
           mul(mul(8,mul(maxmenu,maxmenu)),add(words,8))));
-      policy_work=mul(mul(2,rows),add(lookup,quantization));
+      policy_work=policy_replay ? mul(rows,add(128,add(lookup,quantization))) :
+                                   mul(mul(2,rows),add(lookup,quantization));
       // One-word action multiplications on copied reaches and child values.
       arith=add(arith,mul(add(mul(2,mul(edgeocc,h)),slots),add(mul(64,arith_width),1024)));
     }
@@ -348,7 +350,7 @@ public:
     const auto entries = add(
         add(add(game.receipt_.retained_entries_upper,prepared ? 8192+64*h : 0),
             history_replay ? mul(16,edgeocc) : 0),
-        add(mul(48, rows),
+        add(mul(policy_replay ? 88 : 48, rows),
             add(mul(8, slots),
                 add(mul(4, rowtokens),
                     add(mul(64, history_nodes),

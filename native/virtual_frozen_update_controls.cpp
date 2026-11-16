@@ -507,11 +507,25 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
-void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_replay=false,
-                         bool full_deck=false) {
+void widen_sampled_bets(betting::Config& config,unsigned streets) {
+  if (streets>3) throw std::invalid_argument("invalid sampled menu profile");
+  for (std::size_t street=4-streets;street<4;++street)
+    config.stages[street].bets={.5,.75,1.};
+}
+
+enum class SeededGame { uniform9, dealt9, dealt11, history11, full52, full52_policy, wide52 };
+
+void sampled_grid_seeded(SeededGame profile) {
+  const bool dealt=profile!=SeededGame::uniform9;
+  const bool eleven=profile==SeededGame::dealt11 || profile==SeededGame::history11;
+  const bool wide=profile==SeededGame::wide52;
+  const bool policy_replay=wide || profile==SeededGame::full52_policy;
+  const bool full_deck=policy_replay || profile==SeededGame::full52;
+  const bool history_replay=full_deck || profile==SeededGame::history11;
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
   SampledFrontierFixture f;
+  if (wide) widen_sampled_bets(f.config,3);
   if (eleven) {
     require(dealt,"eleven-card seeded route requires physical deals");
     const std::array<std::uint8_t,11> cards{0,1,16,17,24,32,33,35,37,43,48};
@@ -556,7 +570,9 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
+  header<<(wide ? "SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 " :
+             policy_replay ? "SAMPLED_FULL52_POLICY_REPLAY_V1 " :
+             full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
              history_replay ? "SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1 " :
              eleven ? "SAMPLED_PROOF11_DEALT_V1 " :
              dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
@@ -617,7 +633,8 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
     const auto bb_range=dealt ? std::span<const chance::WeightedHand>(bb) :
                                 std::span<const chance::WeightedHand>(f.bb);
     FrozenGame game(f.config,f.deck,sb_range,bb_range);
-    const auto contraction=history_replay ? SampledContraction::dealt_history_replay :
+    const auto contraction=policy_replay ? SampledContraction::dealt_policy_replay :
+        history_replay ? SampledContraction::dealt_history_replay :
         dealt ? SampledContraction::dealt : SampledContraction::prepared;
     const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,contraction);
     if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
@@ -649,11 +666,27 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
   summary<<"POLICY "<<usage.iterations<<' '<<usage.committed.rows<<' '<<usage.committed.slots<<' '
          <<usage.stage_calls<<' '<<reserved<<' '<<rank_calls<<' '<<attempts;
   emit(summary);
+  const std::vector<std::string>* previous_history=nullptr;
   state->visit_committed([&](const sparse::Key& key,const sparse::RowView& row) {
     const auto policy=quantizer.average_export(row.average);
     std::ostringstream line;
-    line<<"ROW "<<static_cast<unsigned>(key.actor)<<' '<<static_cast<unsigned>(key.first_card)
-        <<' '<<static_cast<unsigned>(key.second_card)<<' '<<key.history.size();
+    line<<(wide ? "PACK " : "ROW ")<<static_cast<unsigned>(key.actor)<<' '
+        <<static_cast<unsigned>(key.first_card)<<' '<<static_cast<unsigned>(key.second_card);
+    if (wide) {
+      std::size_t common=0;
+      if (previous_history) {
+        const auto different=std::ranges::mismatch(*previous_history,key.history);
+        common=static_cast<std::size_t>(different.in2-key.history.begin());
+      }
+      line<<' '<<common<<' '<<key.history.size()-common;
+      for (std::size_t k=common;k<key.history.size();++k) line<<' '<<key.history[k];
+      line<<' '<<row.actions.size()<<std::hex;
+      for (const auto unit:policy.units()) line<<' '<<unit;
+      emit(line);
+      previous_history=&key.history;
+      return;
+    }
+    line<<' '<<key.history.size();
     for (const auto& token:key.history) line<<' '<<token;
     line<<' '<<row.actions.size();
     for (std::size_t a=0;a<row.actions.size();++a)
@@ -669,6 +702,26 @@ void sampled_grid_seeded(bool dealt=false, bool eleven=false, bool history_repla
           <<' '<<receipt.prefix_queries<<' '<<receipt.terminal_queries<<' '<<receipt.rank_calls;
   }
   emit(footer);
+}
+
+void sampled_menu_frontier() {
+  for (unsigned wider=0;wider<=3;++wider) {
+    Fixture f;
+    auto config=SampledFrontierFixture().config;
+    widen_sampled_bets(config,wider);
+    FrozenGame game(config,chance::DeckDefinition::full52(),f.sb,f.bb);
+    const auto &shape=game.template_receipt();
+    FrozenGame cached_game(config,chance::DeckDefinition::full52(),f.sb,f.bb);
+    const auto forecast=FrozenUpdate::forecast(game,{4,5,6,7,8},ProposalKind::uniform_public,
+        true,true,SampledContraction::dealt_history_replay);
+    const auto cached=FrozenUpdate::forecast(cached_game,{4,5,6,7,8},ProposalKind::uniform_public,
+        true,true,SampledContraction::dealt_policy_replay);
+    require(game.chance_receipt().terminal_queries==0,"menu forecast entered terminal");
+    std::cout<<"MENUS "<<wider<<' '<<shape.nodes<<' '<<shape.logical_occurrences
+             <<' '<<forecast.rows_upper<<' '<<forecast.slots_upper<<' '
+             <<forecast.work_upper<<' '<<forecast.admitted<<' '
+             <<cached.work_upper<<' '<<cached.admitted<<'\n';
+  }
 }
 
 void sampled_grid_frontier(SampledContraction route) {
@@ -695,15 +748,25 @@ int main(int argc,char **argv) {
         return 0;
       }
       if (argument=="sampled-grid-seeded" || argument=="sampled-grid-dealt-seeded") {
-        sampled_grid_seeded(argument=="sampled-grid-dealt-seeded");
+        sampled_grid_seeded(argument=="sampled-grid-dealt-seeded" ? SeededGame::dealt9 : SeededGame::uniform9);
         return 0;
       }
       if (argument=="sampled-grid-dealt-eleven-seeded" || argument=="sampled-grid-eleven-history-replay") {
-        sampled_grid_seeded(true,true,argument=="sampled-grid-eleven-history-replay");
+        sampled_grid_seeded(argument=="sampled-grid-eleven-history-replay" ?
+                            SeededGame::history11 : SeededGame::dealt11);
         return 0;
       }
       if (argument=="sampled-grid-full52-dealt-seeded") {
-        sampled_grid_seeded(true,false,true,true);
+        sampled_grid_seeded(SeededGame::full52);
+        return 0;
+      }
+      if (argument=="sampled-grid-full52-policy-replay" || argument=="sampled-grid-full52-wide") {
+        sampled_grid_seeded(argument=="sampled-grid-full52-wide" ?
+                            SeededGame::wide52 : SeededGame::full52_policy);
+        return 0;
+      }
+      if (argument=="sampled-grid-full52-menu-frontier") {
+        sampled_menu_frontier();
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {

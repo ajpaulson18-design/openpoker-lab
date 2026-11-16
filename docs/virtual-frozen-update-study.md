@@ -447,3 +447,23 @@ from 261,600,883 to 239,143,283 units. Across eight alternating pairs of
 complete native calls, the median candidate to baseline elapsed ratio
 was 1.0478 on the Windows test host. The current sampled path remains the
 baseline for larger-game experiments.
+
+### Wider full-deck betting menus
+
+The full-deck frontier adds a 0.75 bet size alongside 0.5 and 1.0, first on
+the river, then on the turn and river, and finally on all postflop streets.
+It keeps the same stacks, raise rules, weighted ranges and sampling seed.
+Each forecast runs before any terminal evaluation and retains the
+500,000,000-unit cap.
+
+The dealt policy replay route constructs each visible decision's policy
+once from the committed generation. It checks the actor, visible-history
+cursor and legal menu width before using that policy on the second responder
+pass. The cache reserves one slot per admitted decision in the sampled
+betting tree and expires after each draw.
+
+The wider experiment encodes each saved history as a shared prefix with
+the preceding row plus its remaining tokens. Grid units are hexadecimal and
+follow the fixture's legal action order. The independent reader reconstructs
+the full keys and action menus from the wider betting rules. This keeps
+the existing 2 MiB capture limit.

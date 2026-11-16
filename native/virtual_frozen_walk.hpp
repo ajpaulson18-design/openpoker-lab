@@ -65,7 +65,8 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   CommonDenominatorLimits math_limits;
   math_limits.work = f.arithmetic_work_upper - f.average_work_upper;
   math_limits.integer_bits = f.integer_bits_upper;
-  const bool history_replay=contraction==SampledContraction::dealt_history_replay;
+  const bool policy_replay=contraction==SampledContraction::dealt_policy_replay;
+  const bool history_replay=policy_replay || contraction==SampledContraction::dealt_history_replay;
   const bool dealt=history_replay || contraction==SampledContraction::dealt;
   math_limits.word_work = contraction!=SampledContraction::direct;
   math_limits.temporary_payload_bits =
@@ -139,6 +140,14 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   };
   using Reach = std::conditional_t<Changing,GridReach,std::vector<int>>;
   using Policy = std::conditional_t<Changing,dyadic_policy::Policy,PowerPolicy>;
+  struct SavedPolicy {
+    std::size_t cursor;
+    std::uint8_t actor;
+    Policy policy;
+  };
+  std::vector<SavedPolicy> saved_policies;
+  if (policy_replay) saved_policies.reserve(static_cast<std::size_t>(f.rows_upper));
+  std::size_t replayed_policies=0;
   using Reaches = std::array<Reach,2>;
   Reaches initial;
   for (std::size_t p=0;p<2;++p) {
@@ -290,28 +299,50 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
       if (node.state.phase != betting::Phase::decision || actor > 1 ||
           node.edges.empty())
         throw FrozenUpdateError("invalid decision node");
-      std::vector<Policy> policies;
-      policies.reserve(game.hands_[actor].size());
+      std::vector<Policy> constructed;
+      std::span<const Policy> policies;
       if constexpr (Changing) {
-        sampled_row_state::Key key{actor,0,0,history.materialize(cursor)};
-        std::array<CommonInteger,dyadic_policy::maximum_actions> zero{};
-        for (const auto &row : game.hands_[actor]) {
-          key.first_card=row.hand.first;
-          key.second_card=row.hand.second;
-          const auto previous=committed ? committed->committed_row(key) : std::nullopt;
-          if (previous && !std::ranges::equal(previous->actions,node.edges,{},
-                                              std::identity{},[](const auto &edge)->const auto& {
-                                                return edge.action.token;
-                                              }))
-            throw FrozenUpdateError("committed row ordered menu differs");
-          const std::span<const CommonInteger> regrets=previous ? previous->regrets :
-              std::span<const CommonInteger>(zero.data(),node.edges.size());
-          policies.push_back(quantizer->regret_policy(regrets));
+        if (policy_replay && target==1) {
+          if (replayed_policies>=saved_policies.size())
+            throw FrozenUpdateError("policy replay exhausted its trace");
+          const auto& saved=saved_policies[replayed_policies++];
+          if (saved.cursor!=history.ordinal(cursor) || saved.actor!=actor ||
+              saved.policy.size()!=node.edges.size())
+            throw FrozenUpdateError("policy replay differs from first responder");
+          policies={&saved.policy,1};
+        } else {
+          if (!policy_replay) constructed.reserve(game.hands_[actor].size());
+          sampled_row_state::Key key{actor,0,0,history.materialize(cursor)};
+          std::array<CommonInteger,dyadic_policy::maximum_actions> zero{};
+          for (const auto &row : game.hands_[actor]) {
+            key.first_card=row.hand.first;
+            key.second_card=row.hand.second;
+            const auto previous=committed ? committed->committed_row(key) : std::nullopt;
+            if (previous && !std::ranges::equal(previous->actions,node.edges,{},
+                                                std::identity{},[](const auto &edge)->const auto& {
+                                                  return edge.action.token;
+                                                }))
+              throw FrozenUpdateError("committed row ordered menu differs");
+            const std::span<const CommonInteger> regrets=previous ? previous->regrets :
+                std::span<const CommonInteger>(zero.data(),node.edges.size());
+            auto policy=quantizer->regret_policy(regrets);
+            if (policy_replay) {
+              if (saved_policies.size()>=f.rows_upper)
+                throw FrozenUpdateError("policy trace exceeded admitted row count");
+              saved_policies.push_back({history.ordinal(cursor),actor,std::move(policy)});
+              policies={&saved_policies.back().policy,1};
+            } else {
+              constructed.push_back(std::move(policy));
+            }
+          }
+          if (!policy_replay) policies=constructed;
         }
       } else {
+        constructed.reserve(game.hands_[actor].size());
         for (const auto &row : game.hands_[actor])
-          policies.push_back(frozen_power_policy(history, cursor, actor,
-                                                 row.hand.first, row.hand.second, node.edges.size()));
+          constructed.push_back(frozen_power_policy(history,cursor,actor,
+                                                   row.hand.first,row.hand.second,node.edges.size()));
+        policies=constructed;
       }
       const auto row_begin = stage.rows.size();
       if (actor == target) {
@@ -471,14 +502,18 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   stage.history_work=add(history.receipt().work,mul(64,replayed_steps));
   stage.common_regret_work = math.receipt().work;
   stage.average_work = average_work;
+  if (policy_replay && (saved_policies.size()!=f.rows_upper ||
+                        replayed_policies!=saved_policies.size()))
+    throw FrozenUpdateError("incomplete sampled policy trace");
   if constexpr (Changing)
-    stage.policy_work=quantizer->receipt().work;
+    stage.policy_work=add(quantizer->receipt().work,mul(128,replayed_policies));
   if (stage.rows.size() > f.rows_upper ||
       stage.chance_work > f.chance_work_upper ||
       stage.history_work > f.history_work_upper ||
       stage.common_regret_work >
           f.arithmetic_work_upper - f.average_work_upper ||
-      stage.average_work > f.average_work_upper)
+      stage.average_work > f.average_work_upper ||
+      stage.policy_work > f.policy_work_upper)
     throw FrozenUpdateError("actual update counters exceeded preflight");
   return stage;
 }

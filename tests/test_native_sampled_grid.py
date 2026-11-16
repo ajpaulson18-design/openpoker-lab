@@ -43,9 +43,12 @@ def _grid(regrets):
     return tuple(units)
 
 
-def _model(frontier):
+def _model(frontier, *, wide=False):
     case = _template_case()
-    if not frontier:
+    if wide:
+        for street in ('flop','turn','river'):
+            case[f'{street}_config']['bet_sizes'] = [0.5,0.75,1.0]
+    elif not frontier:
         case['config']['starting_stack'] = 2.0
         later = {'bet_sizes': [0.5], 'raise_sizes': [], 'max_raises': 0, 'include_all_in': True}
         for street in ('flop', 'turn', 'river'):
