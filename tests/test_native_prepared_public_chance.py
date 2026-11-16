@@ -232,16 +232,28 @@ class NativePreparedChanceTests(unittest.TestCase):
     def test_sparse_pairs_match_every_literal_case(self):
         self.check_literal_cases(sparse=True)
 
-    def check_literal_cases(self, *, sparse=False):
+    def test_reused_contraction_output_matches_every_literal_case(self):
+        self.check_literal_cases(buffered=True)
+        self.check_literal_cases(sparse=True, buffered=True)
+
+    def test_buffer_contract_guards_and_asymmetric_rows(self):
+        self.assertEqual(self.invoke('buffer-guards',['buffer-guards'],65536),['BUFFER_GUARDS PASS'])
+        self.assertEqual(self.invoke('same-buffered',['same-buffered'],65536),
+                         self.invoke('same-buffered-reference',['same'],65536))
+
+    def check_literal_cases(self, *, sparse=False, buffered=False):
         count = 0
         for profile in range(6):
             reach,e = fixture(profile)
             for player in (0,1):
                 for mode in (0,1):
                     selectors=list(map(str,(profile,player,mode)))
-                    if sparse:
-                        selectors.append('sparse')
-                    lines = self.invoke(f'{"sparse-" if sparse else ""}p{profile}-seat{player}-mode{mode}',selectors)
+                    storage = '-'.join(part for part, enabled in
+                                       (('sparse',sparse),('buffered',buffered)) if enabled)
+                    if storage:
+                        selectors.append(storage)
+                    prefix = f'{storage}-' if storage else ''
+                    lines = self.invoke(f'{prefix}p{profile}-seat{player}-mode{mode}',selectors)
                     self.assertEqual(lines[0],f'PREPARED_CASES_V1 {profile} {player} {mode} 1d')
                     boards = [p for p in prefixes() if not mode or len(p)==5]
                     self.assertEqual(len(lines),len(boards)+2)

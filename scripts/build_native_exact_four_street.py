@@ -120,6 +120,8 @@ TARGETS["virtual-dyadic-training-profile"] = (
     "native-virtual-dyadic-training-profile-probe", TARGETS["virtual-dyadic-training"][1])
 TARGETS["virtual-dyadic-training-staged-pages"] = (
     "native-virtual-dyadic-training-staged-pages-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-terminal-buffer"] = (
+    "native-virtual-dyadic-training-terminal-buffer-probe", TARGETS["virtual-dyadic-training"][1])
 
 
 def _hash(raw):
@@ -231,8 +233,10 @@ def build(output_directory, *, target="converter", sanitize=False):
                  "/DBOOST_MP_STANDALONE", "/I" + str(include)]
         if target == "virtual-dyadic-training-profile":
             flags.append("/DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
-        if target == "virtual-dyadic-training-staged-pages":
+        if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer"):
             flags.append("/DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-terminal-buffer":
+            flags.append("/DOPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY")
         command = [compiler, *flags, str(ROOT / sources[0]),
                    "/Fo" + str(directory / (helper + ".obj")), "/Fe" + str(executable)]
         version_command = [compiler]
@@ -243,8 +247,10 @@ def build(output_directory, *, target="converter", sanitize=False):
             flags.extend(("-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"))
         if target == "virtual-dyadic-training-profile":
             flags.append("-DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
-        if target == "virtual-dyadic-training-staged-pages":
+        if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer"):
             flags.append("-DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-terminal-buffer":
+            flags.append("-DOPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY")
         command = [compiler, *flags, str(ROOT / sources[0]), "-o", str(executable)]
         version_command = [compiler, "--version"]
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)

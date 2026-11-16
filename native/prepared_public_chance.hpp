@@ -3,6 +3,7 @@
 // scaling, output lifetime and complete training admission. No pair/world table.
 #include "full_deck_public_chance.hpp"
 #include <bit>
+#include <functional>
 #include <memory>
 
 namespace openpoker::prepared_public_chance {
@@ -25,6 +26,10 @@ struct Contraction {
     std::vector<Integer> numerators;
     std::uint64_t prefix_divisor = 1;
     std::size_t reach_exponent = 0;
+};
+struct ContractionScale {
+    std::uint64_t prefix_divisor;
+    std::size_t reach_exponent;
 };
 struct Receipt {
     std::uint64_t modeled_work = 0, prior_work = 0, setup_work = 0,
@@ -248,13 +253,22 @@ class PreparedPublicChance final {
         }
         ++receipt_.cache_misses;
     }
-    Contraction contract(std::size_t player,std::span<const std::uint8_t> prefix,TerminalKind kind,
-                         std::span<const Integer> reach,std::size_t exponent) {
+    ContractionScale contract(std::size_t player,std::span<const std::uint8_t> prefix,TerminalKind kind,
+                              std::span<const Integer> reach,std::size_t exponent,
+                              std::span<Integer> output,std::vector<Integer>* owning_output) {
         charge(12,receipt_.input_work);
         if (player>1 || (kind!=TerminalKind::fold && kind!=TerminalKind::showdown))
             fail(ErrorCode::invalid_query,"invalid prepared player or terminal kind");
         const auto opp=1-player;
         if (reach.size()!=source_[opp].size()) fail(ErrorCode::invalid_query,"prepared reach length mismatch");
+        if (!owning_output) {
+            if (output.size()!=source_[player].size())
+                fail(ErrorCode::invalid_query,"prepared output length mismatch");
+            const std::less<const Integer*> before;
+            if (before(output.data(),reach.data()+reach.size()) &&
+                before(reach.data(),output.data()+output.size()))
+                fail(ErrorCode::invalid_query,"prepared reach and output overlap");
+        }
         // 2^e is never constructed. Its potential e+1 width is admitted first.
         if (exponent>=limits_.max_integer_bits)
             fail(ErrorCode::integer_bit_limit,"prepared reach exponent exceeded");
@@ -358,10 +372,14 @@ class PreparedPublicChance final {
             else fill_plane(slot,prefix,blocked);
             cache_[slot].stamp=++clock_; recent_=slot;
         }
-        Contraction out;
-        out.prefix_divisor=divisor(prefix.size()); out.reach_exponent=exponent;
-        out.numerators.resize(source_[player].size());
-        if (zero) { ++receipt_.completed_contractions; return out; }
+        const ContractionScale scale{divisor(prefix.size()),exponent};
+        if (owning_output) {
+            owning_output->resize(source_[player].size());
+            output=*owning_output;
+        } else {
+            for (auto& numerator:output) numerator=0;
+        }
+        if (zero) { ++receipt_.completed_contractions; return scale; }
         if (sparse) {
             std::array<WeightedReach,2> weighted{};
             std::size_t used=0;
@@ -376,7 +394,7 @@ class PreparedPublicChance final {
                     Integer mass=0;
                     for (const auto& row:live)
                         if (!(masks_[player][i]&masks_[opp][row.row])) mass+=row.mass;
-                    out.numerators[i]=weights_[player][i]*mass;
+                    output[i]=weights_[player][i]*mass;
                 }
             } else {
                 const auto& plane=cache_[slot];
@@ -389,12 +407,12 @@ class PreparedPublicChance final {
                         if (other_rank<own_rank) signed_mass+=row.mass;
                         else if (own_rank<other_rank) signed_mass-=row.mass;
                     }
-                    out.numerators[i]=weights_[player][i]*signed_mass;
+                    output[i]=weights_[player][i]*signed_mass;
                 }
             }
             receipt_.sparse_pair_visits=add(receipt_.sparse_pair_visits,mul(own_live,active));
             ++receipt_.completed_contractions;
-            return out;
+            return scale;
         }
         std::vector<Integer> weighted(source_[opp].size());
         Bucket all;
@@ -408,7 +426,7 @@ class PreparedPublicChance final {
         };
         if (kind==TerminalKind::fold) {
             for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked))
-                out.numerators[i]=weights_[player][i]*compatible(all,source_[player][i].hand,same_at(i));
+                output[i]=weights_[player][i]*compatible(all,source_[player][i].hand,same_at(i));
         } else {
             const auto& plane=cache_[slot]; const auto& own=plane.order[player];
             const auto& opposite=plane.order[opp];
@@ -431,14 +449,14 @@ class PreparedPublicChance final {
                     const Integer lo=compatible(lower,hand,lo_same);
                     const Integer hi=compatible(all,hand,same)-lo-compatible(equal,hand,eq_same);
                     if (hi<0) fail(ErrorCode::invalid_query,"negative prepared compatible mass");
-                    out.numerators[row]=weights_[player][row]*(lo-hi);
+                    output[row]=weights_[player][row]*(lo-hi);
                 }
                 while (pos<end) {
                     const auto j=opposite[pos++]; if (weighted[j]!=0) bucket_add(lower,source_[opp][j].hand,weighted[j]);
                 }
             }
         }
-        ++receipt_.completed_contractions; return out;
+        ++receipt_.completed_contractions; return scale;
     }
 public:
     static constexpr std::uint64_t board_set_probe_work=2;
@@ -590,7 +608,21 @@ public:
     [[nodiscard]] Contraction contraction(std::size_t player,std::span<const std::uint8_t> prefix,
             TerminalKind kind,std::span<const Integer> opposite_numerators,std::size_t reach_exponent) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
-        try { return contract(player,prefix,kind,opposite_numerators,reach_exponent); }
+        try {
+            Contraction result;
+            const auto scale=contract(player,prefix,kind,opposite_numerators,reach_exponent,{},&result.numerators);
+            result.prefix_divisor=scale.prefix_divisor;
+            result.reach_exponent=scale.reach_exponent;
+            return result;
+        } catch (...) { failed_=true; throw; }
+    }
+    // The output must be disjoint from the opposite reach. Consume it only
+    // after a successful query; the owner is poisoned on any failure.
+    [[nodiscard]] ContractionScale contraction_into(std::size_t player,std::span<const std::uint8_t> prefix,
+            TerminalKind kind,std::span<const Integer> opposite_numerators,std::size_t reach_exponent,
+            std::span<Integer> output) {
+        if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
+        try { return contract(player,prefix,kind,opposite_numerators,reach_exponent,output,nullptr); }
         catch (...) { failed_=true; throw; }
     }
     [[nodiscard]] const Integer& normalizer_integer() const noexcept { return normalizer_; }

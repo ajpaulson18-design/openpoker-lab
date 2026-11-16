@@ -194,7 +194,7 @@ int setup_guards() {
     }
     return ok ? 0 : 1;
 }
-int same_fixture() {
+int same_fixture(bool buffered=false) {
     const std::array<chance::WeightedHand,3> side0{{
         {{43,48},std::bit_cast<std::uint64_t>(0.5)},
         {{16,32},std::bit_cast<std::uint64_t>(0.25)},
@@ -211,12 +211,42 @@ int same_fixture() {
             k==1 ? std::span<const std::uint8_t>(flop) : std::span<const std::uint8_t>(full);
         const auto kind=k==3 ? chance::TerminalKind::showdown : chance::TerminalKind::fold;
         const auto reach=p==0 ? std::span<const Integer>(reach1) : std::span<const Integer>(reach0);
-        const auto value=owner.contraction(p,board,kind,reach,2);
-        std::cout<<"SAME "<<p<<' '<<k<<' '<<hex(owner.normalizer_integer())<<' '<<value.prefix_divisor;
-        for (const auto& n:value.numerators) std::cout<<' '<<hex(n);
+        std::array<Integer,3> storage{77,77,77};
+        prepared::Contraction owned;
+        auto numerators=std::span<Integer>(storage).first(p==0?3u:2u);
+        std::uint64_t divisor=0;
+        if (buffered) {
+            divisor=owner.contraction_into(p,board,kind,reach,2,numerators).prefix_divisor;
+            if (p==1 && storage.back()!=77) return 1;
+        } else {
+            owned=owner.contraction(p,board,kind,reach,2);
+            numerators=owned.numerators;
+            divisor=owned.prefix_divisor;
+        }
+        std::cout<<"SAME "<<p<<' '<<k<<' '<<hex(owner.normalizer_integer())<<' '<<divisor;
+        for (const auto& n:numerators) std::cout<<' '<<hex(n);
         std::cout<<'\n';
     }
     return ledger(owner.receipt()) ? 0 : 1;
+}
+int buffer_guards() {
+    for (bool alias:{false,true}) {
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck));
+        auto reach=fixture(0);
+        std::array<Integer,1> short_buffer{41};
+        const auto output=alias?std::span<Integer>(reach.n):std::span<Integer>(short_buffer);
+        bool rejected=false;
+        try {
+            (void)owner.contraction_into(0,board_a,chance::TerminalKind::showdown,
+                                         reach.n,reach.exponent,output);
+        } catch (const chance::KernelError& error) {
+            rejected=error.code()==chance::ErrorCode::invalid_query;
+        }
+        if (!rejected || !owner.failed() || owner.receipt().query_array_admissions ||
+            owner.receipt().rank_calls || reach.n!=fixture(0).n || short_buffer[0]!=41) return 1;
+    }
+    std::cout<<"BUFFER_GUARDS PASS\n";
+    return 0;
 }
 int snapshot() {
     auto own=sb,opposite=bb;
@@ -463,14 +493,19 @@ int main(int argc,char** argv) {
             if (mode=="cumulative") return cumulative();
             if (mode=="setup") return setup_guards();
             if (mode=="same") return same_fixture();
+            if (mode=="same-buffered") return same_fixture(true);
+            if (mode=="buffer-guards") return buffer_guards();
             if (mode=="snapshot") return snapshot();
             if (mode=="board-sets") return board_set_controls();
             if (mode=="sparse-board-sets") return board_set_controls(prepared::ContractionKernel::sparse_pairs);
             if (mode=="sparse-guards") return sparse_guards();
             if (mode=="sparse-cumulative") return cumulative(prepared::ContractionKernel::sparse_pairs);
         }
-        const bool sparse=argc==5 && std::string_view(argv[4])=="sparse";
-        if (argc!=4 && !sparse) throw std::runtime_error("three fixed prepared fixture selectors required");
+        const std::string_view storage_mode=argc==5?argv[4]:"";
+        const bool sparse=storage_mode=="sparse" || storage_mode=="sparse-buffered";
+        const bool buffered=storage_mode=="buffered" || storage_mode=="sparse-buffered";
+        if (argc!=4 && !sparse && !buffered)
+            throw std::runtime_error("three fixed prepared fixture selectors required");
         const int profile=digit(argv[1],5),player=digit(argv[2],1),mode=digit(argv[3],1);
         const auto reach=fixture(profile);
         const auto kernel=sparse?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets;
@@ -478,15 +513,27 @@ int main(int argc,char** argv) {
             prepared::RankCacheKey::ordered_prefix,kernel);
         std::cout<<"PREPARED_CASES_V1 "<<profile<<' '<<player<<' '<<mode<<' '<<hex(owner.normalizer_integer())<<'\n';
         std::size_t index=0,bytes=0;
+        std::array<Integer,2> storage{77,77};
         auto emit=[&](std::span<const std::uint8_t> board) {
             if (mode==1 && board.size()!=5) return;
-            const auto out=owner.contraction(static_cast<std::size_t>(player),board,
-                mode ? chance::TerminalKind::showdown : chance::TerminalKind::fold,reach.n,reach.exponent);
+            const auto kind=mode?chance::TerminalKind::showdown:chance::TerminalKind::fold;
+            const auto seat=static_cast<std::size_t>(player);
+            prepared::Contraction owned;
+            prepared::ContractionScale scale;
+            std::span<const Integer> numerators;
+            if (buffered) {
+                scale=owner.contraction_into(seat,board,kind,reach.n,reach.exponent,storage);
+                numerators=storage;
+            } else {
+                owned=owner.contraction(seat,board,kind,reach.n,reach.exponent);
+                scale={owned.prefix_divisor,owned.reach_exponent};
+                numerators=owned.numerators;
+            }
             const auto& r=owner.receipt();
             if (!ledger(r)) throw std::runtime_error("prepared cumulative ledger mismatch");
             std::ostringstream line;
-            line<<index<<' '<<out.prefix_divisor<<' '<<out.reach_exponent;
-            for (const auto& n:out.numerators) line<<' '<<hex(n);
+            line<<index<<' '<<scale.prefix_divisor<<' '<<scale.reach_exponent;
+            for (const auto& n:numerators) line<<' '<<hex(n);
             line<<' '<<r.modeled_work<<' '<<r.rank_calls<<' '<<r.cache_hits<<' '<<r.cache_misses<<' '
                 <<r.cache_evictions<<' '<<r.retained_entries<<' '<<r.peak_integer_bits<<' '
                 <<r.peak_integer_payload_bits<<'\n';

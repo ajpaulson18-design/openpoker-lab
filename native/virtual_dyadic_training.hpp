@@ -1057,12 +1057,28 @@ template<bool Paired,bool Factored=false> class Walk final {
     void add_lanes(LaneValues& total,const LaneValues& child) {
         for (std::size_t lane=0;lane<lanes;++lane) add_values(total[lane],child[lane]);
     }
+#ifdef OPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY
+    struct BufferedContraction {
+        std::array<Integer,2> numerators{};
+        std::uint64_t prefix_divisor=1;
+    };
+    BufferedContraction contraction(std::size_t target,const Prefix& prefix,chance::TerminalKind kind,const Reach& reach) {
+        BufferedContraction result;
+        const auto scale=chance_.contraction_into(target,prefix.view(),kind,reach.numerators,reach.exponent,
+                                                   result.numerators);
+        require(scale.reach_exponent==reach.exponent &&
+            scale.prefix_divisor==plan_.game().divisors[street_index(prefix.size)],"prepared contraction identity changed");
+        result.prefix_divisor=scale.prefix_divisor;
+        return result;
+    }
+#else
     prepared::Contraction contraction(std::size_t target,const Prefix& prefix,chance::TerminalKind kind,const Reach& reach) {
         auto result=chance_.contraction(target,prefix.view(),kind,reach.numerators,reach.exponent);
         require(result.numerators.size()==2 && result.reach_exponent==reach.exponent &&
             result.prefix_divisor==plan_.game().divisors[street_index(prefix.size)],"prepared contraction identity changed");
         return result;
     }
+#endif
     Marginals marginal(const Prefix& prefix,Support support) {
         Marginals masses{};
         for (std::size_t lane=0;lane<lanes;++lane) {
