@@ -882,6 +882,12 @@ public:
                 q32?paging::n9_q32_logical_requests:t4?paging::n9_t4_logical_requests:t3?930624u:requests,2,
                 q32?paging::Profile::proof9_q32:t4?paging::Profile::proof9_t4:plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
                 q32?paging::n9_q32_stage_split_words:t4?paging::n9_t4_stage_split_words:write_requests?static_cast<std::size_t>(A):0,write_requests,virtual_zero};
+#ifdef OPENPOKER_TRAINING_STAGED_PAGE_STUDY
+            if (plan_.bounded_division) {
+                plan_.page_limits.cache_pages=14;
+                plan_.page_limits.two_dirty_pages_per_field=true;
+            }
+#endif
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
@@ -900,6 +906,10 @@ public:
                 // and clear per nonempty flush, plus bookkeeping per run.
                 plan_.paging_work+=8*(2*plan_.requested_sweeps*request_units)+2*plan_.requested_sweeps*L+160*write_requests+2*(4096+64+1);
             }
+            if (plan_.page_limits.two_dirty_pages_per_field)
+                // At most two fragments per row extent. Retain baseline read and
+                // write ceilings and charge the additional buffer choice.
+                plan_.paging_work+=4*(2*plan_.requested_sweeps*request_units)+128;
             w[work_index(Work::route)]+=plan_.paging_work;
         }
         if (plan_.shared_policy) {

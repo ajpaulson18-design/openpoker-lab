@@ -56,6 +56,7 @@ struct Limits {
     std::size_t stage_split_words = 0; // nonzero enables a write buffer for each field
     std::uint64_t write_requests = 0;
     bool virtual_initial_zero = false;
+    bool two_dirty_pages_per_field = false;
 };
 
 struct Receipt {
@@ -82,7 +83,9 @@ class Image {
         std::array<std::uint64_t,default_page_words/64> marked{};
         std::size_t page = no_page;
     };
-    using WriteBuffers = std::array<DirtyPage,2>;
+    static std::size_t dirty_pages_per_field(const Limits& limits) noexcept {
+        return limits.two_dirty_pages_per_field ? 2 : 1;
+    }
 
 public:
     // This forecast performs checked arithmetic and validation only; it allocates nothing.
@@ -106,7 +109,8 @@ private:
         const auto word_bytes = checked_mul(cached_words, sizeof(std::uint64_t));
         const auto tag_bytes = checked_mul(limits.cache_pages, sizeof(std::size_t));
         auto total = checked_add(checked_add(checked_add(word_bytes, limits.cache_pages), tag_bytes), bitmap_bytes(limits,coverage));
-        if (limits.stage_split_words) total=checked_add(total,sizeof(WriteBuffers));
+        if (limits.stage_split_words)
+            total=checked_add(total,2*dirty_pages_per_field(limits)*sizeof(DirtyPage));
         if (total > maximum_resident_bytes) throw std::invalid_argument("resident image budget exceeded");
         return total;
     }
@@ -115,7 +119,8 @@ private:
         : limits_(limits), resident_bytes_(resident_bytes(limits,coverage)), cache_(limits.cache_pages * limits.page_words),
           cache_valid_(limits.cache_pages, 0), cache_tags_(limits.cache_pages, 0),
           staged_bits_(bitmap_bytes(limits,coverage), 0),
-          write_buffers_(limits.stage_split_words ? std::make_unique<WriteBuffers>() : nullptr) {
+          write_buffers_(limits.stage_split_words ?
+              std::make_unique<DirtyPage[]>(2*dirty_pages_per_field(limits)) : nullptr) {
         std::error_code ec;
         if (!std::filesystem::create_directory(fresh_directory, ec) || ec)
             throw std::runtime_error("fresh image directory could not be created exclusively");
@@ -272,8 +277,14 @@ private:
         // This count composes with either the word overlap guard or State's
         // disjoint row extents and complete successful-row check.
         try {
-            if (write_buffers_)
-                for (auto& buffer:*write_buffers_) flush_dirty(buffer);
+            if (write_buffers_) {
+                const auto pages=dirty_pages_per_field(limits_);
+                for (std::size_t field=0;field<2;++field) {
+                    const auto first=field*pages;
+                    if (pages==2) flush_dirty(write_buffers_[first+(last_dirty_[field]^1u)]);
+                    flush_dirty(write_buffers_[first+last_dirty_[field]]);
+                }
+            }
             auto& staged=files_[1-committed_];
             staged.flush();
             if (!staged) throw std::runtime_error("cannot flush staged image");
@@ -295,7 +306,8 @@ private:
     std::vector<unsigned char> cache_valid_;
     std::vector<std::size_t> cache_tags_;
     std::vector<unsigned char> staged_bits_;
-    std::unique_ptr<WriteBuffers> write_buffers_;
+    std::unique_ptr<DirtyPage[]> write_buffers_;
+    std::array<unsigned char,2> last_dirty_{};
     std::size_t staged_words_ = 0;
     bool sweep_open_ = false, failed_ = false;
     Receipt receipt_;
@@ -314,8 +326,11 @@ private:
         const bool proof10=l.profile==Profile::proof10;
         const bool proof9_t4=l.profile==Profile::proof9_t4;
         const bool proof9_q32=l.profile==Profile::proof9_q32;
+        if (l.two_dirty_pages_per_field &&
+            (!proof10 || !l.virtual_initial_zero || l.stage_split_words!=1295812))
+            throw std::invalid_argument("two dirty pages require virtual-zero ten-card staging");
         if (proof10 && (l.image_words!=n10_image_words || l.page_words!=default_page_words ||
-            l.cache_pages!=default_cache_pages || l.cache_banks!=2))
+            l.cache_pages!=(l.two_dirty_pages_per_field?14:default_cache_pages) || l.cache_banks!=2))
             throw std::invalid_argument("invalid ten-card image geometry");
         if (proof9_t4 && (l.image_words!=n9_image_words || l.page_words!=default_page_words ||
             l.cache_pages!=default_cache_pages || l.cache_banks!=2 ||
@@ -395,11 +410,16 @@ private:
         buffer.page=no_page;
     }
     void buffer_stage(std::size_t offset,std::span<const std::uint64_t> input) {
-        auto& buffer=(*write_buffers_)[offset>=limits_.stage_split_words];
+        const auto field=static_cast<std::size_t>(offset>=limits_.stage_split_words);
+        const auto pages=dirty_pages_per_field(limits_);
+        const auto first_buffer=field*pages;
         while (!input.empty()) {
             const auto page=offset/default_page_words;
             const auto first=offset%default_page_words;
             const auto count=std::min(input.size(),default_page_words-first);
+            auto& recent=last_dirty_[field];
+            if (pages==2 && write_buffers_[first_buffer+recent].page!=page) recent^=1;
+            auto& buffer=write_buffers_[first_buffer+recent];
             if (buffer.page!=page) {
                 flush_dirty(buffer);
                 buffer.page=page;
