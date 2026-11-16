@@ -521,10 +521,10 @@ class PreparedPublicChance final {
             }
             bucket_add(all,source_[opp][j].hand,mass_at(j));
         }
-        const Integer empty=0;
+        const Integer zero_mass=0;
         const auto same_at=[&](std::size_t i)->const Integer& {
             const auto j=same_[player][i];
-            return j==missing || (Reuse && (masks_[opp][j]&blocked)) ? empty : mass_at(j);
+            return j==missing || (Reuse && (masks_[opp][j]&blocked)) ? zero_mass : mass_at(j);
         };
         if (kind==TerminalKind::fold) {
             for (std::size_t i=0;i<source_[player].size();++i) if (!(masks_[player][i]&blocked))
@@ -546,8 +546,8 @@ class PreparedPublicChance final {
                     const auto row=own[i++]; const auto hand=source_[player][row].hand;
                     const auto j=same_[player][row];
                     const auto& same=same_at(row);
-                    const auto& lo_same=j!=missing && plane.ranks[opp][j]<rank ? same : empty;
-                    const auto& eq_same=j!=missing && plane.ranks[opp][j]==rank ? same : empty;
+                    const auto& lo_same=j!=missing && plane.ranks[opp][j]<rank ? same : zero_mass;
+                    const auto& eq_same=j!=missing && plane.ranks[opp][j]==rank ? same : zero_mass;
                     const Integer lo=compatible(lower,hand,lo_same);
                     const Integer hi=compatible(all,hand,same)-lo-compatible(equal,hand,eq_same);
                     if (hi<0) fail(ErrorCode::invalid_query,"negative prepared compatible mass");
