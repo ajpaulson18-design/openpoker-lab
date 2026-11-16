@@ -187,3 +187,60 @@ training still exceeds the composed, State, and quantizer ceilings.
 The next measured work is to separate Chance contraction from the other
 terminal costs and check which operations can be reused without changing
 signed values, blocker conditioning, or full-history row identity.
+
+## Caller-owned Chance output
+
+The [contraction output study](../benchmarks/results/native-dyadic-contraction-output-v1/manifest.json)
+compared the staged-page trainer with an explicit build that supplies
+output storage for each exact Chance contraction. Both paths use the same
+admission, ranking, blocker filtering and exact arithmetic. The owning
+interface remains available. Borrowed output rejects a mismatched size
+or overlap with the reach before query allocation or ranking and clears
+stale values on an admitted call.
+
+Every complete call reproduced the previous 50,507,464-byte training
+stream, both checkpoint images, policy spill, directory and pager receipt.
+The eight alternating pairs gave a median elapsed ratio of 0.94101.
+The candidate was faster in five pairs, short of the predeclared six.
+The benchmark remains opt-in. The packet preserves all timed observations
+and both warmups.
+
+The independent literal evaluator checked 135,096 reduced-deck results
+with reused output, across the sparse-pair and blocker-bucket kernels.
+It also checked 5,304 saved row values for one physical river, with all
+1,326 holdings on each side, heterogeneous prior and reach numerators,
+both player perspectives, and fold and signed showdown contractions.
+The saved-only full-deck check compares individual row values to a
+literal enumeration of compatible opposing holdings.
+
+### Repeated all-in completion work
+
+The [rank-free census](../benchmarks/results/native-dyadic-contraction-output-v1/early-terminal-census.json)
+counts the calls grouped by early terminal and visible prefix in the
+current betting tree. Each group shares an immutable opposite reach.
+No decisions occur while enumerating the group's hidden completions.
+
+| Deck and range fixture | Early groups per seat pass | Hidden board calls | Calls beyond the first per group |
+| --- | ---: | ---: | ---: |
+| Ten cards, pinned ranges | 9,070 | 23,800 | 14,730 |
+| Eleven cards, pinned ranges | 19,412 | 78,400 | 58,988 |
+| Full deck, all physical holdings | 58,786,002 | 3,638,544,000 | 3,579,757,998 |
+
+The full-deck row is projected geometry for this fixed betting tree
+before zero-reach effects. It carries no training admission or speed
+claim. The counts measure the opportunity to compute the opponent's
+integer weight times its reach once per group. Board blockers and
+hand ranks must still be evaluated for every included completion,
+and the common reach exponent must remain exact. This change would
+avoid a repeated weighting pass without retaining a pair-by-board
+payoff table. Eleven-card exhaustive admission still requires larger
+reductions in the State and policy quantization work.
+
+Recount the geometry with
+`python -m scripts.census_virtual_dyadic_terminal_reuse`.
+The matched Windows operator is
+`python -m scripts.benchmark_native_terminal_buffers --help`.
+Build `virtual-dyadic-training-staged-pages` and
+`virtual-dyadic-training-terminal-buffer` at the manifest's training
+source. Use the previous staged-page candidate's warmup directory as
+the reference to authenticate the complete stream and sidecars.
