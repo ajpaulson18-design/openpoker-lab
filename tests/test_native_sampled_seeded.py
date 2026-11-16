@@ -315,10 +315,8 @@ def replay_saved_policy(path, expected_sha256):
     require(set(supplied) <= fixture.menus.keys(), 'seeded quality has invalid visible history')
     require(all(menus[key] == fixture.menus[key[0],holding_rank[key[0]][key[1]],key[2]]
                 for key in menus), 'seeded quality legal menu drift')
-    uniform = fixture.grid(None,average=True)
-    dense = {**uniform,**supplied}
-    quality = fixture.quality(dense)
-    baseline = fixture.quality(uniform)
+    quality = fixture.quality(supplied,uniform_unseen=True)
+    baseline = fixture.quality({},uniform_unseen=True)
     limit = Fraction(1,10)
     status = ('seeded_proof9_quality_saved_policy_exact_replay_pass' if curve else
               'seeded_proof11_dealt_saved_policy_exact_replay_pass' if eleven else
@@ -335,7 +333,7 @@ def replay_saved_policy(path, expected_sha256):
         'saved_rows': row_count,
         'saved_slots': slot_count,
         'zero_average_mass_rows': sum(not any(values) for values in average.values()),
-        'completed_uniform_rows': len(dense)-len(supplied),
+        'completed_uniform_rows': fixture.row_count-len(supplied),
         'rank_calls': rank_calls,
         'draw_work_reserved': reserved,
         'maximum_draw_work': DRAW_WORK_CAP,

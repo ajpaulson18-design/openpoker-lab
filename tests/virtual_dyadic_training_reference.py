@@ -161,8 +161,9 @@ class Fixture:
         return {key:tuple(allocation((0,)*len(menu) if raw is None else raw[key],average)[0])
                 for key,menu in self.menus.items()}
 
-    def _probabilities(self, policy):
-        require(policy.keys()==self.menus.keys(),'saved grid row inventory')
+    def _probabilities(self, policy, *, uniform_unseen=False):
+        valid_keys = policy.keys() <= self.menus.keys() if uniform_unseen else policy.keys()==self.menus.keys()
+        require(valid_keys,'saved grid row inventory')
         result={}
         for key,units in policy.items():
             require(len(units)==len(self.menus[key]) and all(type(u) is int and 0<=u<=Q for u in units) and sum(units)==Q,
@@ -213,9 +214,20 @@ class Fixture:
             raw_average[k]=tuple(a+numerator(v) for a,v in zip(old_a,averages[k]))
         return regrets,raw_average,tuple(root_values) if root_holding_values else sum(root_values[:2])
 
-    def quality(self, saved_grid):
+    def quality(self, saved_grid, *, uniform_unseen=False):
         """Best response chooses once per visible history and own holding."""
-        p=self._probabilities(saved_grid)
+        p=self._probabilities(saved_grid,uniform_unseen=uniform_unseen)
+        if uniform_unseen:
+            widths = {len(menu) for menu in self.menus.values()}
+            fallback = {width:tuple(Fraction(unit,Q) for unit in allocation((0,)*width,True)[0])
+                        for width in widths}
+
+            def probabilities(key,width):
+                return p.get(key,fallback[width])
+        else:
+            def probabilities(key,_width):
+                return p[key]
+
         def profile(i,h,w):
             node=self.nodes[i]
             if node.phase in ('fold','showdown'):return self.terminal(i,w)
@@ -223,7 +235,8 @@ class Fixture:
                 return profile(node.edges[0].child,(*h,_reveal_token(w.board,node.state.board_length)),w)
             actor=node.state.player
             return sum(q*profile(edge.child,(*h,edge.token),w)
-                       for q,edge in zip(p[actor,w.holdings[actor],h],node.edges) if q)
+                       for q,edge in zip(probabilities((actor,w.holdings[actor],h),len(node.edges)),
+                                         node.edges) if q)
         sb=sum(w.mass*profile(self.template.root,(),w) for w in self.worlds)
         def response(i,h,group,target):
             if not group:return Fraction(0)
@@ -241,7 +254,8 @@ class Fixture:
                 return max(response(edge.child,(*h,edge.token),group,target) for edge in node.edges)
             result=Fraction(0)
             for a,edge in enumerate(node.edges):
-                other=[(w,m*q) for w,m in group if (q:=p[actor,w.holdings[actor],h][a])]
+                other=[(w,m*q) for w,m in group
+                       if (q:=probabilities((actor,w.holdings[actor],h),len(node.edges))[a])]
                 result+=response(edge.child,(*h,edge.token),other,target)
             return result
         br=tuple(sum(response(self.template.root,(),[(w,w.mass) for w in self.worlds if w.holdings[t]==hand],t)

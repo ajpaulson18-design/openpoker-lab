@@ -18,6 +18,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class IndependentDyadicTrainingReferenceTests(unittest.TestCase):
+    def test_sparse_quality_matches_completed_policy_and_checks_supplied_rows(self):
+        fixture = Fixture()
+        key = next(iter(fixture.menus))
+        width = len(fixture.menus[key])
+        sparse = {key:(1 << 52,) + (0,)*(width-1)}
+        completed = fixture.grid(None,average=True)
+        completed.update(sparse)
+        self.assertEqual(fixture.quality(sparse,uniform_unseen=True),fixture.quality(completed))
+        with self.assertRaisesRegex(ValueError,'row inventory'):
+            fixture.quality({(2,0,()):(1 << 52,)},uniform_unseen=True)
+        with self.assertRaisesRegex(ValueError,'row partition'):
+            fixture.quality({key:(0,)*width},uniform_unseen=True)
+
     def test_linear_averaging_uses_one_based_weights_and_own_reach(self):
         # Two distinct supplied policies, with a second decision reached only
         # through the first root action. All arithmetic is independently exact.
