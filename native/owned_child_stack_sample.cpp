@@ -206,7 +206,13 @@ struct Module {
     Module& operator=(Module&&)=delete;
 };
 
+struct CaptureApi {
+    bool suspend_called=false,context_called=false,context_succeeded=false,resume_called=false;
+    DWORD suspend_return=DWORD(-1),suspend_error=0,context_error=0,resume_return=DWORD(-1),resume_error=0;
+};
 struct Snapshot {
+    CaptureApi api;
+    bool non_api_error=false;
     DWORD64 rip=0,rsp=0,rbp=0;
     CONTEXT context{};
     std::array<unsigned char,max_target_read> stack{};
@@ -224,6 +230,7 @@ struct WalkResult {
     std::string stop_reason="not_attempted";
 };
 struct SampleRecord {
+    CaptureApi api;
     std::uint64_t elapsed_ms=0,pause_ns=0,rip=0,rsp=0;
     std::size_t target_read_bytes=0,stack_bytes=0;
     std::size_t callback_calls=0,callback_bytes=0,stack_callback_bytes=0,module_callback_bytes=0;
@@ -234,6 +241,13 @@ struct SampleRecord {
     std::string capture_error,status,stop_reason;
     std::array<Frame,max_frames> frames{};
     std::size_t frame_count=0;
+};
+struct TerminalEvent {
+    std::string capture_failure;
+    bool thread_exit_observed=false,process_exit_observed=false;
+    DWORD thread_exit_code=STILL_ACTIVE,child_exit_code=STILL_ACTIVE;
+    CaptureApi api;
+    SampleRecord sample;
 };
 struct RunReport {
     std::string status="failed",error;
@@ -254,6 +268,8 @@ struct RunReport {
     bool cleanup_exit_observed=false;
     std::vector<Module> modules;
     std::vector<SampleRecord> samples;
+    std::size_t sampling_attempts=0;
+    std::vector<TerminalEvent> exit_race_events;
 };
 
 struct WatchState {
@@ -346,6 +362,16 @@ bool admitted_image_span(const Module& module,std::uint32_t rva,std::size_t byte
     return found==module.blocked.end() || found->begin>=end;
 }
 
+bool append_denied_span(Module& module,Range span) {
+    if (!module.blocked.empty() && span.begin>=module.blocked.back().begin &&
+        span.begin<=module.blocked.back().end) {
+        module.blocked.back().end=std::max(module.blocked.back().end,span.end);
+        return true;
+    }
+    if (module.blocked.size()>=65536) return false;
+    module.blocked.push_back(span);return true;
+}
+
 void map_readonly_image(Module& module,std::uint64_t& total) {
     if (!module.size || module.size>max_image_bytes || module.size>max_total_image_bytes-total) {
         module.identity_error="module_image_capacity";return;
@@ -418,10 +444,12 @@ void map_readonly_image(Module& module,std::uint64_t& total) {
                 if (kind==IMAGE_REL_BASED_ABSOLUTE) continue;
                 const auto location=static_cast<std::uint64_t>(block->VirtualAddress)+(items[i]&0xfff);
                 const DWORD extent=kind==IMAGE_REL_BASED_DIR64?8:kind==IMAGE_REL_BASED_HIGHLOW?4:0;
-                if (!extent || location>module.size || extent>module.size-location || module.blocked.size()>=65536) {
+                if (!extent || location>module.size || extent>module.size-location) {
                     module.identity_error="unsupported_relocation_or_capacity";module.image_valid=false;return;
                 }
-                module.blocked.push_back({static_cast<std::uint32_t>(location),static_cast<std::uint32_t>(location+extent)});
+                if (!append_denied_span(module,{static_cast<std::uint32_t>(location),static_cast<std::uint32_t>(location+extent)})) {
+                    module.identity_error="relocation_span_capacity";module.image_valid=false;return;
+                }
             }
             offset+=block->SizeOfBlock;
         }
@@ -431,7 +459,9 @@ void map_readonly_image(Module& module,std::uint64_t& total) {
         if (!checked_image_range(iat.VirtualAddress,iat.Size,module.size)) {
             module.identity_error="invalid_import_address_table";module.image_valid=false;return;
         }
-        module.blocked.push_back({iat.VirtualAddress,iat.VirtualAddress+iat.Size});
+        if (!append_denied_span(module,{iat.VirtualAddress,iat.VirtualAddress+iat.Size})) {
+            module.identity_error="import_span_capacity";module.image_valid=false;return;
+        }
     }
     std::sort(module.blocked.begin(),module.blocked.end(),[](const Range& a,const Range& b){return a.begin<b.begin;});
     std::vector<Range> merged;
@@ -615,39 +645,80 @@ bool capture_stack_bytes(HANDLE process,Snapshot& sample) noexcept {
 
 bool capture_snapshot(HANDLE process,HANDLE thread,Watchdog& watchdog,Snapshot& sample,
                       const char*& failure) noexcept {
-    DWORD previous=SuspendThread(thread);
-    if (previous==DWORD(-1)) {failure="SuspendThread_failed";return false;}
+    sample.api.suspend_called=true;
+    DWORD previous=SuspendThread(thread);sample.api.suspend_return=previous;
+    if (previous==DWORD(-1)) {sample.api.suspend_error=GetLastError();failure="SuspendThread_failed";return false;}
     std::int64_t pause_begin=0;
     const bool have_counter=counter(pause_begin);
     if (have_counter) watchdog.pause_started(pause_begin);
     bool captured=true;
     if (previous!=0) {
-        const DWORD restored=ResumeThread(thread);
+        sample.api.resume_called=true;
+        const DWORD restored=ResumeThread(thread);sample.api.resume_return=restored;
+        if (restored==DWORD(-1)) sample.api.resume_error=GetLastError();
         watchdog.pause_ended();
         if (have_counter) {std::int64_t end=0;if(counter(end))sample.pause_ns=elapsed_ns(pause_begin,end,watchdog.frequency());}
         failure=restored==DWORD(-1)?"unexpected_suspend_count_restore_failed":"unexpected_prior_suspend_count";
         return false;
     }
-    if (!have_counter) {failure="QueryPerformanceCounter_failed_during_pause";captured=false;}
+    if (!have_counter) {sample.non_api_error=true;failure="QueryPerformanceCounter_failed_during_pause";captured=false;}
     else {
         sample.context={};sample.context.ContextFlags=CONTEXT_FULL;
-        if (!GetThreadContext(thread,&sample.context)) {failure="GetThreadContext_failed";captured=false;}
+        sample.api.context_called=true;
+        sample.api.context_succeeded=GetThreadContext(thread,&sample.context)!=FALSE;
+        if (!sample.api.context_succeeded) {sample.api.context_error=GetLastError();failure="GetThreadContext_failed";captured=false;}
         else {
             sample.rip=sample.context.Rip;sample.rsp=sample.context.Rsp;sample.rbp=sample.context.Rbp;
             if (!capture_stack_bytes(process,sample)) captured=true; // retain an explicit partial snapshot
         }
     }
-    const DWORD restored=ResumeThread(thread);
+    sample.api.resume_called=true;
+    const DWORD restored=ResumeThread(thread);sample.api.resume_return=restored;
+    if (restored==DWORD(-1)) sample.api.resume_error=GetLastError();
     if (have_counter) {
         std::int64_t end=0;
         if (counter(end)) sample.pause_ns=elapsed_ns(pause_begin,end,watchdog.frequency());
-        else if (captured) {failure="QueryPerformanceCounter_failed_after_resume";captured=false;}
+        else {sample.non_api_error=true;sample.capture_error="QueryPerformanceCounter_failed_after_resume";if(captured)failure="QueryPerformanceCounter_failed_after_resume";captured=false;}
     }
     watchdog.pause_ended();
     if (restored==DWORD(-1)) {failure="ResumeThread_failed";return false;}
     if (restored!=1) {failure="owned_suspend_increment_changed";return false;}
     if (watchdog.reason()==2) {failure="suspended_pause_watchdog_fired";return false;}
     return captured;
+}
+
+bool terminal_capture_allowed(const Snapshot& sample,const char* failure,std::uint32_t watchdog_reason) noexcept {
+    if (sample.non_api_error || sample.pause_ns>250000000 || watchdog_reason) return false;
+    const auto& api=sample.api;
+    const std::string_view reason(failure);
+    if (!api.suspend_called) return false;
+    if (reason=="SuspendThread_failed")
+        return api.suspend_return==DWORD(-1) && !api.context_called && !api.resume_called;
+    if (api.suspend_return!=0 || !api.context_called || !api.resume_called) return false;
+    if (reason=="GetThreadContext_failed")
+        return !api.context_succeeded && api.resume_return==1;
+    if (reason=="ResumeThread_failed")
+        return api.resume_return==DWORD(-1);
+    return reason=="owned_suspend_increment_changed" && api.resume_return==0;
+}
+
+bool collect_terminal_event(HANDLE process,HANDLE thread,Watchdog& watchdog,const Snapshot& snapshot,
+                            const char* failure,const SampleRecord& record,RunReport& report) {
+    if (!terminal_capture_allowed(snapshot,failure,watchdog.reason()) || !report.exit_race_events.empty())
+        return false;
+    if (WaitForSingleObject(thread,0)!=WAIT_OBJECT_0 || WaitForSingleObject(process,0)!=WAIT_OBJECT_0)
+        return false;
+    DWORD thread_exit=STILL_ACTIVE,process_exit=STILL_ACTIVE;
+    if (!GetExitCodeThread(thread,&thread_exit) || !GetExitCodeProcess(process,&process_exit)) return false;
+    report.child_exit_observed=true;report.child_exit_code=process_exit;
+    if (thread_exit!=0 || process_exit!=0 || watchdog.reason()) return false;
+    TerminalEvent event;
+    event.capture_failure=failure;
+    event.thread_exit_observed=true;event.process_exit_observed=true;
+    event.thread_exit_code=thread_exit;event.child_exit_code=process_exit;
+    event.api=snapshot.api;event.sample=record;event.sample.status="terminal_race_capture";
+    report.exit_race_events.push_back(std::move(event));
+    return true;
 }
 
 std::atomic<std::uint64_t> session_serial{1};
@@ -836,7 +907,7 @@ Child launch_child(const Options& options,RunReport& report,bool force_assignmen
 }
 
 
-int run_child(const Options& options,RunReport& report,bool force_assignment_failure=false) {
+int run_child(const Options& options,RunReport& report,bool force_assignment_failure=false,bool force_terminal_race=false) {
     report.disabled=options.disabled;
     Child child=launch_child(options,report,force_assignment_failure);
     Watchdog watchdog(child.job.get(),&report);
@@ -856,7 +927,9 @@ int run_child(const Options& options,RunReport& report,bool force_assignment_fai
     report.sampling_begin_elapsed_ms=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-began).count());
     bool child_exited=false;
     while (!child_exited) {
-        const DWORD wait=WaitForSingleObject(child.process.get(),options.interval_ms);
+        // Test-only injection models a timeout immediately before natural exit.
+        const DWORD wait=force_terminal_race && report.sampling_attempts==0?WAIT_TIMEOUT:
+            WaitForSingleObject(child.process.get(),options.interval_ms);
         if (wait==WAIT_OBJECT_0) {child_exited=true;break;}
         if (wait!=WAIT_TIMEOUT) throw Failure("WaitForSingleObject_child_failed");
         if (watchdog.reason()) throw Failure(watchdog.reason()==1?"child_watchdog_deadline":"pause_watchdog_deadline");
@@ -864,12 +937,16 @@ int run_child(const Options& options,RunReport& report,bool force_assignment_fai
             if (!options.disabled) report.sample_limit_reached=true;
             continue;
         }
+        if (force_terminal_race && report.sampling_attempts==0 &&
+            WaitForSingleObject(child.process.get(),5000)!=WAIT_OBJECT_0)
+            throw Failure("forced_terminal_race_child_did_not_exit");
+        ++report.sampling_attempts;
         Snapshot snapshot;
         const char* capture_failure="";
         const bool captured=capture_snapshot(child.process.get(),child.thread.get(),watchdog,snapshot,capture_failure);
         WalkResult walk;
         if (symbols && captured) walk=walk_snapshot(snapshot,report.modules,*symbols);
-        SampleRecord record;
+        SampleRecord record;record.api=snapshot.api;
         record.elapsed_ms=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now()-began).count());
         record.pause_ns=snapshot.pause_ns;record.rip=snapshot.rip;record.rsp=snapshot.rsp;
@@ -885,6 +962,10 @@ int run_child(const Options& options,RunReport& report,bool force_assignment_fai
         record.seed_echo_skipped=walk.seed_echo_skipped;record.metadata_calls=walk.metadata_calls;
         if (record.target_read_bytes>max_target_read || record.callback_bytes>max_callback_read ||
             record.frame_count>max_frames) throw Failure("sample_bound_violation");
+        if (!captured && collect_terminal_event(child.process.get(),child.thread.get(),watchdog,snapshot,
+                                                capture_failure,record,report)) {
+            child_exited=true;break;
+        }
         report.samples.push_back(std::move(record));
         if (!captured) throw Failure(!capture_failure[0]?"snapshot_capture_failed":capture_failure);
         if (snapshot.pause_ns>250000000) throw Failure("sample_pause_deadline_exceeded");
@@ -914,8 +995,18 @@ void append_module(Json& json,const Module& module) {
     json.raw(",\"identity_error\":");json.quoted(module.identity_error);json.raw("}");
 }
 
+void append_api(Json& json,const CaptureApi& api) {
+    json.raw("{\"suspend_return\":");json.raw(api.suspend_called?std::to_string(api.suspend_return):"null");
+    json.raw(",\"suspend_error\":");json.raw(std::to_string(api.suspend_error));
+    json.raw(",\"context_result\":");json.raw(api.context_called?(api.context_succeeded?"true":"false"):"null");
+    json.raw(",\"context_error\":");json.raw(std::to_string(api.context_error));
+    json.raw(",\"resume_return\":");json.raw(api.resume_called?std::to_string(api.resume_return):"null");
+    json.raw(",\"resume_error\":");json.raw(std::to_string(api.resume_error));json.raw("}");
+}
+
 void append_sample(Json& json,const SampleRecord& sample) {
     json.raw("{\"elapsed_ms\":");json.raw(std::to_string(sample.elapsed_ms));
+    json.raw(",\"api_outcomes\":");append_api(json,sample.api);
     json.raw(",\"pause_ns\":");json.raw(std::to_string(sample.pause_ns));
     json.raw(",\"seed_rip\":");json.quoted(hex64(sample.rip));
     json.raw(",\"seed_rsp\":");json.quoted(hex64(sample.rsp));
@@ -941,6 +1032,16 @@ void append_sample(Json& json,const SampleRecord& sample) {
         json.raw(",\"sp\":");json.quoted(hex64(sample.frames[i].sp));json.raw("}");
     }
     json.raw("]}");
+}
+
+void append_terminal_event(Json& json,const TerminalEvent& event) {
+    json.raw("{\"capture_failure\":");json.quoted(event.capture_failure);
+    json.raw(",\"thread_exit_observed\":");json.raw(event.thread_exit_observed?"true":"false");
+    json.raw(",\"thread_exit_code\":");json.raw(std::to_string(event.thread_exit_code));
+    json.raw(",\"process_exit_observed\":");json.raw(event.process_exit_observed?"true":"false");
+    json.raw(",\"child_exit_code\":");json.raw(std::to_string(event.child_exit_code));
+    json.raw(",\"api_outcomes\":");append_api(json,event.api);
+    json.raw(",\"sample\":");append_sample(json,event.sample);json.raw("}");
 }
 
 std::string build_report(const Options& options,const RunReport& report) {
@@ -985,6 +1086,9 @@ std::string build_report(const Options& options,const RunReport& report) {
     json.raw(",\"duration_ms\":");json.raw(std::to_string(report.duration_ms));
     json.raw(",\"modules\":[");
     for (std::size_t i=0;i<report.modules.size();++i) {if(i)json.raw(",");append_module(json,report.modules[i]);}
+    json.raw("],\"sampling_attempts\":");json.raw(std::to_string(report.sampling_attempts));
+    json.raw(",\"exit_race_events\":[");
+    for (std::size_t i=0;i<report.exit_race_events.size();++i) {if(i)json.raw(",");append_terminal_event(json,report.exit_race_events[i]);}
     json.raw("],\"samples\":[");
     for (std::size_t i=0;i<report.samples.size();++i) {if(i)json.raw(",");append_sample(json,report.samples[i]);}
     json.raw("]}");
@@ -1022,12 +1126,12 @@ std::string serialize_report(const Options& options,RunReport& report,int& resul
     return json;
 }
 
-int execute(const Options& options,bool force_assignment_failure=false) {
+int execute(const Options& options,bool force_assignment_failure=false,bool force_terminal_race=false) {
     validate_options(options);
     RunReport report;
     report.disabled=options.disabled;
     int result=2;
-    try {result=run_child(options,report,force_assignment_failure);}
+    try {result=run_child(options,report,force_assignment_failure,force_terminal_race);}
     catch (const std::exception& error) {report.status="failed";report.error=error.what();}
     const auto json=serialize_report(options,report,result);
     write_new_report(options.report,json);

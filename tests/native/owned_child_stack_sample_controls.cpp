@@ -264,6 +264,130 @@ FixtureResult run_fixture(const Options& options,std::string_view capture_name) 
     return result;
 }
 
+struct TerminalFixtureResult {std::string json;int exit_code=0;};
+
+TerminalFixtureResult run_terminal_fixture(const Options& options,std::string_view capture_name) {
+    StandardCapture capture(std::filesystem::path(options.report).parent_path(),capture_name);
+    validate_options(options);
+    TerminalFixtureResult result;
+    result.exit_code=execute(options,false,true);
+    const auto output=capture.read(1),error=capture.read(2);
+    control_require(output=="FIXTURE-OUT:controlled-input\n","terminal-race child stdout forwarding differs");
+    control_require(error=="FIXTURE-ERR\n","terminal-race child stderr forwarding differs");
+    std::ifstream report(options.report,std::ios::binary);
+    if (!report) throw Failure("terminal-race report was not preserved");
+    result.json={std::istreambuf_iterator<char>(report),std::istreambuf_iterator<char>()};
+    return result;
+}
+
+void terminal_classifier_controls() {
+    Snapshot snapshot;
+    snapshot.api.suspend_called=true;
+    snapshot.api.suspend_return=DWORD(-1);
+    control_require(terminal_capture_allowed(snapshot,"SuspendThread_failed",0),
+        "valid terminal SuspendThread failure was rejected");
+    snapshot.non_api_error=true;
+    control_require(!terminal_capture_allowed(snapshot,"SuspendThread_failed",0),
+        "non-API capture failure was accepted as a terminal race");
+    snapshot.non_api_error=false;
+    control_require(!terminal_capture_allowed(snapshot,"SuspendThread_failed",1),
+        "watchdog termination was accepted as a natural terminal race");
+
+    snapshot.api.suspend_return=1;
+    snapshot.api.context_called=true;
+    snapshot.api.resume_called=true;
+    snapshot.api.resume_return=2;
+    control_require(!terminal_capture_allowed(snapshot,"unexpected_prior_suspend_count",0),
+        "unexpected prior suspend count was accepted");
+
+    snapshot.api.suspend_return=0;
+    snapshot.api.context_succeeded=true;
+    snapshot.api.resume_return=2;
+    control_require(!terminal_capture_allowed(snapshot,"owned_suspend_increment_changed",0),
+        "ResumeThread result above one was accepted as a balanced terminal capture");
+
+    snapshot.api.suspend_return=DWORD(-1);
+    snapshot.api.context_called=false;
+    snapshot.api.context_succeeded=false;
+    snapshot.api.resume_called=false;
+    snapshot.api.resume_return=DWORD(-1);
+    snapshot.pause_ns=250000001;
+    control_require(!terminal_capture_allowed(snapshot,"SuspendThread_failed",0),
+        "overlong suspended pause was accepted as a terminal race");
+}
+
+void denied_span_union_controls() {
+    std::array<unsigned char,64> bytes{};
+    Module module;
+    module.size=static_cast<std::uint32_t>(bytes.size());
+    module.image=bytes.data();module.image_valid=true;
+    module.readonly_ranges[0]={0,48};
+    module.readonly_count=1;
+    control_require(append_denied_span(module,{8,16}) &&
+        append_denied_span(module,{16,24}) &&
+        append_denied_span(module,{12,20}) &&
+        append_denied_span(module,{32,40}),
+        "ordered relocation-span union append failed");
+    control_require(module.blocked.size()==2 && module.blocked[0].begin==8 &&
+        module.blocked[0].end==24 && module.blocked[1].begin==32 && module.blocked[1].end==40,
+        "overlapping or adjacent denied spans were not merged without joining a gap");
+    control_require(!admitted_image_span(module,8,16) && !admitted_image_span(module,16,8) &&
+        !admitted_image_span(module,12,8) && !admitted_image_span(module,32,8) &&
+        admitted_image_span(module,24,8) && !admitted_image_span(module,48,1),
+        "denied-span union widened immutable metadata reads or admitted a denied range");
+    module.image=nullptr;
+    Module capped;
+    for (std::uint32_t i=0;i<65536;++i) {
+        const auto begin=4*i;
+        control_require(append_denied_span(capped,{begin,begin+1}),"span cap rejected an in-budget span");
+    }
+    control_require(!append_denied_span(capped,{262144,262145}) &&
+        capped.blocked.size()==65536,"denied span cap accepted an extra disjoint span");
+}
+
+void terminal_collection_controls(const std::filesystem::path& root,const std::wstring& executable) {
+    const auto options=fixture_options(root,executable,L"fixture-hang","terminal-live-unused.json");
+    RunReport report;
+    Child child=launch_child(options,report);
+    Watchdog watchdog(child.job.get(),&report);
+    control_require(ResumeThread(child.thread.get())==1,"live terminal-control child did not resume once");
+    Snapshot snapshot;
+    snapshot.api.suspend_called=true;
+    snapshot.api.suspend_return=DWORD(-1);
+    SampleRecord sample;
+    control_require(!collect_terminal_event(child.process.get(),child.thread.get(),watchdog,
+        snapshot,"SuspendThread_failed",sample,report) && report.exit_race_events.empty(),
+        "live owned child was incorrectly recorded as a terminal exit race");
+    watchdog.stop();
+}
+
+void terminal_race_controls(const std::filesystem::path& root,const std::wstring& executable) {
+    auto hot=fixture_options(root,executable,L"fixture-hot","terminal-hot-report.json");
+    const auto completed=run_terminal_fixture(hot,"terminal-hot");
+    control_require(completed.exit_code==0 &&
+        completed.json.find("\"status\":\"completed_no_samples\"")!=std::string::npos &&
+        completed.json.find("\"sampling_attempts\":1")!=std::string::npos &&
+        completed.json.find("\"samples\":[]")!=std::string::npos &&
+        completed.json.find("\"exit_race_events\":[{")!=std::string::npos &&
+        completed.json.find("\"capture_failure\":\"SuspendThread_failed\"")!=std::string::npos &&
+        completed.json.find("\"thread_exit_observed\":true")!=std::string::npos &&
+        completed.json.find("\"process_exit_observed\":true")!=std::string::npos &&
+        completed.json.find("\"thread_exit_code\":0")!=std::string::npos &&
+        completed.json.find("\"child_exit_code\":0")!=std::string::npos,
+        "natural zero-exit terminal race evidence or completed status differs");
+
+    auto failed=fixture_options(root,executable,L"fixture-fail","terminal-fail-report.json");
+    const auto failure=run_terminal_fixture(failed,"terminal-fail");
+    control_require(failure.exit_code!=0 &&
+        failure.json.find("\"status\":\"failed\"")!=std::string::npos &&
+        failure.json.find("\"sampling_attempts\":1")!=std::string::npos &&
+        failure.json.find("\"exit_race_events\":[]")!=std::string::npos &&
+        failure.json.find("\"child_exit_code\":7")!=std::string::npos &&
+        failure.json.find("\"error\":\"SuspendThread_failed\"")!=std::string::npos &&
+        failure.json.find("\"cleanup_exit_code\":7")!=std::string::npos,
+        "nonzero terminal-race child was misclassified or lost its failed capture evidence");
+}
+
 void cleanup_controls(const std::filesystem::path& root,const std::wstring& executable) {
     auto options=fixture_options(root,executable,L"fixture-hang","cleanup-unused-report.json");
     RunReport report;
@@ -375,6 +499,8 @@ int wmain(int argc,wchar_t** argv) {
         const auto executable=current_executable();
         const auto root=control_root();
         parser_controls(root,executable);
+        terminal_classifier_controls();
+        denied_span_union_controls();
         callback_controls();
         image_controls(root,executable);
         serializer_overflow_controls(root,executable);
@@ -412,6 +538,8 @@ int wmain(int argc,wchar_t** argv) {
                 failed_run.json.find("\"child_exit_code\":7")!=std::string::npos,
                 "nonzero child exit was not retained as a failed run");
 
+        terminal_collection_controls(root,executable);
+        terminal_race_controls(root,executable);
         cleanup_controls(root,executable);
         assignment_failure_controls(root,executable);
         pause_watchdog_controls(root,executable);

@@ -10,9 +10,9 @@ MAX_BYTES = 4*1024*1024
 MAX_MODULES, MAX_SAMPLES, MAX_FRAMES = 64, 1024, 64
 MAX_CALLBACKS, MAX_READ = 4096, 64*1024
 MAX_IMAGE, MAX_TOTAL_IMAGE = 64*1024*1024, 256*1024*1024
-TOP = set('schema_version sampler architecture mode interval_ms child scratch symbols_directory status error child_exit_code watchdog_reason sample_limit_reached module_list_truncated module_enumeration_attempts module_enumeration_failures dbghelp_error child_launched child_process_id child_thread_id parent_process_id child_creation_time job_assigned job_assignment_error initial_thread_resumed child_exit_observed cleanup_exit_observed cleanup_exit_code cleanup_wait_result termination_attempted termination_succeeded termination_error local_image_bytes sampling_begin_elapsed_ms duration_ms report_truncated omitted_sample_records omitted_module_records modules samples'.split())
+TOP = set('schema_version sampler architecture mode interval_ms child scratch symbols_directory status error child_exit_code watchdog_reason sample_limit_reached module_list_truncated module_enumeration_attempts module_enumeration_failures dbghelp_error child_launched child_process_id child_thread_id parent_process_id child_creation_time job_assigned job_assignment_error initial_thread_resumed child_exit_observed cleanup_exit_observed cleanup_exit_code cleanup_wait_result termination_attempted termination_succeeded termination_error local_image_bytes sampling_begin_elapsed_ms duration_ms report_truncated omitted_sample_records omitted_module_records sampling_attempts exit_race_events modules samples'.split())
 MODULE = set('base size path mapped_local_image exception_directory image_usable file_bytes denied_image_spans identity_error'.split())
-SAMPLE = set('elapsed_ms pause_ns seed_rip seed_rsp target_read_bytes captured_stack_bytes stack_capture_truncated capture_error callback_calls callback_bytes stack_callback_bytes module_callback_bytes callback_failures budget_denials unmapped_reads metadata_calls seed_echo_skipped status stop_reason frames'.split())
+SAMPLE = set('elapsed_ms pause_ns seed_rip seed_rsp target_read_bytes captured_stack_bytes stack_capture_truncated capture_error callback_calls callback_bytes stack_callback_bytes module_callback_bytes callback_failures budget_denials unmapped_reads metadata_calls seed_echo_skipped status stop_reason frames api_outcomes'.split())
 
 def need(ok, reason):
     if not ok: raise ValueError(reason)
@@ -71,7 +71,10 @@ def verify_report(report, expected_child, expected_mode, expected_exit):
     for key in ('omitted_sample_records','omitted_module_records'): natural(report[key],key)
     need(not report['report_truncated'] and report['omitted_sample_records']==0 and
          report['omitted_module_records']==0,'truncated report cannot prove completed child observation')
-    modules=report['modules']; samples=report['samples']
+    modules=report['modules']; samples=report['samples']; events=report['exit_race_events']
+    need(type(events) is list and len(events)<=1,'exit race event capacity')
+    natural(report['sampling_attempts'],'sampling attempts',MAX_SAMPLES)
+    need(type(samples) is list and report['sampling_attempts']==len(samples)+len(events),'sampling attempts differ')
     need(type(modules) is list and len(modules)<=MAX_MODULES and type(samples) is list and len(samples)<=MAX_SAMPLES,'record capacity')
     need(report['local_image_bytes']<=MAX_TOTAL_IMAGE,'total image limit')
     need(report['module_enumeration_attempts']<=4 and
@@ -88,14 +91,14 @@ def verify_report(report, expected_child, expected_mode, expected_exit):
         need(not samples and not modules and not report['sample_limit_reached'] and
              report['module_enumeration_attempts']==0 and report['module_enumeration_failures']==0 and
              report['local_image_bytes']==0,'disabled has observations')
-    if report['sample_limit_reached']: need(len(samples)==MAX_SAMPLES,'sample cap flag differs')
+    if report['sample_limit_reached']: need(report['sampling_attempts']==MAX_SAMPLES,'sample cap flag differs')
     mapped_total=0
     for module in modules:
         schema(module,MODULE,'module')
         base=address(module['base'],'module base'); size=natural(module['size'],'module size',(1<<32)-1,1)
         need(base>0 and base+size<=1<<64,'module address range')
         natural(module['file_bytes'],'module file bytes',MAX_IMAGE)
-        natural(module['denied_image_spans'],'denied spans',65537)
+        natural(module['denied_image_spans'],'denied spans',65536)
         string(module['path'],'module path'); string(module['identity_error'],'identity error')
         for key in ('mapped_local_image','exception_directory','image_usable'): boolean(module[key],key)
         if module['mapped_local_image']:
@@ -103,10 +106,75 @@ def verify_report(report, expected_child, expected_mode, expected_exit):
             need(module['file_bytes']>0,'mapped image file missing'); mapped_total+=module['size']
         need(not module['image_usable'] or module['mapped_local_image'],'usable image not mapped')
     need(mapped_total==report['local_image_bytes'],'mapped image total differs')
+    if events:
+        need(expected_mode=='periodic_stack_observation' and expected_exit==0 and
+             report['status'] in ('completed_partial_unwinds','completed_no_samples') and
+             report['watchdog_reason']==0,'exit race outside successful periodic run')
+        event=events[0]
+        schema(event,{'capture_failure','thread_exit_observed','thread_exit_code','process_exit_observed',
+                      'child_exit_code','api_outcomes','sample'},'exit race')
+        for key in ('thread_exit_observed','process_exit_observed'):
+            boolean(event[key],key); need(event[key] is True,key+' missing')
+        for key in ('thread_exit_code','child_exit_code'):
+            natural(event[key],key,(1<<32)-1); need(event[key]==0,key+' nonzero')
+        api=event['api_outcomes']
+        schema(api,{'suspend_return','suspend_error','context_result','context_error','resume_return','resume_error'},'API outcomes')
+        for key in ('suspend_error','context_error','resume_error'): natural(api[key],key,(1<<32)-1)
+        for key in ('suspend_return','resume_return'):
+            if api[key] is not None: natural(api[key],key,(1<<32)-1)
+        if api['context_result'] is not None: boolean(api['context_result'],'context_result')
+        # Errors are captured only for failed calls; a success or a call
+        # that was never made must retain the initialized zero error value.
+        if api['suspend_return'] != (1<<32)-1: need(api['suspend_error']==0,'suspend error without failure')
+        if api['context_result'] is not False: need(api['context_error']==0,'context error without failure')
+        if api['resume_return'] != (1<<32)-1: need(api['resume_error']==0,'resume error without failure')
+        reason=event['capture_failure']
+        need(type(reason) is str,'capture failure type')
+        if reason=='SuspendThread_failed':
+            valid=(api['suspend_return']==(1<<32)-1 and api['context_result'] is None and
+                   api['resume_return'] is None and api['context_error']==0 and api['resume_error']==0)
+        elif reason=='GetThreadContext_failed':
+            valid=(api['suspend_return']==0 and api['context_result'] is False and
+                   api['resume_return']==1 and api['resume_error']==0)
+        elif reason=='ResumeThread_failed':
+            valid=(api['suspend_return']==0 and type(api['context_result']) is bool and api['resume_return']==(1<<32)-1)
+        elif reason=='owned_suspend_increment_changed':
+            valid=(api['suspend_return']==0 and type(api['context_result']) is bool and api['resume_return']==0)
+        else: valid=False
+        need(valid,'exit race API outcomes differ')
+        sample=event['sample']; schema(sample,SAMPLE,'exit race sample')
+        sample_api=sample['api_outcomes']
+        schema(sample_api,{'suspend_return','suspend_error','context_result','context_error','resume_return','resume_error'},'race sample API outcomes')
+        for key in ('suspend_error','context_error','resume_error'): natural(sample_api[key],key,(1<<32)-1)
+        for key in ('suspend_return','resume_return'):
+            if sample_api[key] is not None: natural(sample_api[key],key,(1<<32)-1)
+        if sample_api['context_result'] is not None: boolean(sample_api['context_result'],'context_result')
+        need(sample_api==api,'exit race API evidence differs')
+        for key in ('elapsed_ms','pause_ns','target_read_bytes','captured_stack_bytes','callback_calls','callback_bytes',
+                    'stack_callback_bytes','module_callback_bytes','callback_failures','budget_denials','unmapped_reads','metadata_calls'):
+            natural(sample[key],key)
+        need(report['sampling_begin_elapsed_ms']<=sample['elapsed_ms']<=report['duration_ms'] and
+             sample['pause_ns']<=250000000 and sample['target_read_bytes']<=MAX_READ and
+             sample['captured_stack_bytes']==sample['target_read_bytes'],'exit race capture bounds')
+        for key in ('stack_capture_truncated','seed_echo_skipped'): boolean(sample[key],key)
+        for key in ('capture_error','status','stop_reason'): string(sample[key],key,allow_empty=key=='capture_error')
+        address(sample['seed_rip'],'race seed rip'); address(sample['seed_rsp'],'race seed rsp')
+        need(sample['status']=='terminal_race_capture' and sample['stop_reason']=='not_attempted' and
+             type(sample['frames']) is list and not sample['frames'] and not sample['seed_echo_skipped'] and
+             all(sample[k]==0 for k in ('callback_calls','callback_bytes','stack_callback_bytes','module_callback_bytes',
+                                         'callback_failures','budget_denials','unmapped_reads','metadata_calls')),
+             'exit race sample includes unwind observations')
     reasons=Counter(); statuses=Counter(); depths=[]; frame_total=0
     last_elapsed=0
     for sample in samples:
         schema(sample,SAMPLE,'sample')
+        api=sample['api_outcomes']
+        schema(api,{'suspend_return','suspend_error','context_result','context_error','resume_return','resume_error'},'sample API outcomes')
+        for key in ('suspend_return','suspend_error','context_error','resume_return','resume_error'):
+            natural(api[key],key,(1<<32)-1)
+        boolean(api['context_result'],'context_result')
+        need(api=={'suspend_return':0,'suspend_error':0,'context_result':True,'context_error':0,
+                   'resume_return':1,'resume_error':0},'sample capture was not balanced')
         for key in ('elapsed_ms','pause_ns','target_read_bytes','captured_stack_bytes','callback_calls','callback_bytes',
                     'stack_callback_bytes','module_callback_bytes','callback_failures','budget_denials','unmapped_reads','metadata_calls'):
             natural(sample[key],key)
@@ -130,7 +198,9 @@ def verify_report(report, expected_child, expected_mode, expected_exit):
                  'frame progress or captured stack bounds'); previous=sp
         reasons[sample['stop_reason']]+=1; statuses[sample['status']]+=1
         depths.append(len(frames)); frame_total+=len(frames)
+    if events: need(events[0]['sample']['elapsed_ms']>=last_elapsed,'exit race chronology')
     return {'status':'validated_owned_child_report','child_status':report['status'],'mode':expected_mode,
+            'sampling_attempts':report['sampling_attempts'],'exit_race_event_count':len(events),
             'sample_count':len(samples),'frame_count':frame_total,'seed_and_frame_count':len(samples)+frame_total,'sample_depths':depths,
             'partial_reasons':dict(reasons),'sample_statuses':dict(statuses),'module_count':len(modules),
             'unmapped_reads':sum(x['unmapped_reads'] for x in samples),
