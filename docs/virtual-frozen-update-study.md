@@ -422,3 +422,14 @@ intervals from literal compatibility and decodes ordered turn and river
 after selecting the flop. It replays all recorded deals and verifies each
 exported average-policy action unit. The recorded result leaves full-deck
 best-response quality unknown.
+
+The [source-frozen full-deck result](../benchmarks/results/native-sampled-full52-broad-v1/manifest.json)
+completed and independently replayed all 32 draws. It retained 13,885 visited
+rows and 33,241 action slots. Every draw forecast 261,600,883 modeled work
+units. The compatible-deal owner retained 21,472 modeled entries and made
+zero payoff-ranking calls. The walk ranked both actual holdings per draw.
+
+History was the largest executed ledger at 789,128,448 modeled units across
+the 32 draws. The full-deck result keeps the bounded 388-node betting template
+and does not assess the strategies at unsampled rows. Its quality field
+remains unknown.

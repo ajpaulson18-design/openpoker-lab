@@ -1,0 +1,36 @@
+{
+  "attempts": 164,
+  "compatible_private_deals": 1624350,
+  "dealer": {
+    "modeled_work": 19136384,
+    "peak_integer_payload_bits": 7858944,
+    "peak_scratch_entries": 32848,
+    "rank_calls": 0,
+    "retained_entries": 21472,
+    "root_queries": 32,
+    "terminal_queries": 0
+  },
+  "draw_work_reserved": 8371228256,
+  "draws": 32,
+  "export_work": 17037684,
+  "holdings_per_seat": 1326,
+  "maximum_draw_work": 500000000,
+  "measured_draw_ledgers": {
+    "average": 147265664,
+    "chance": 41605935,
+    "common_regret": 245672256,
+    "history": 789128448,
+    "quantization": 12080128
+  },
+  "native_producer_calls": 0,
+  "possible_boards_per_deal": 34246080,
+  "quality_gate": null,
+  "rank_calls": 64,
+  "raw_sha256": "8af9b3e3890a1313fa376ba75c5c6cf5409f4a715a196b67b3a44f67ec05d81d",
+  "saved_rows": 13885,
+  "saved_slots": 33241,
+  "seed": 5715151628094477825,
+  "staged_rows": 13888,
+  "status": "seeded_full52_sparse_policy_exact_replay_pass",
+  "zero_average_mass_rows": 190
+}
