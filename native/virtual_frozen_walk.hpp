@@ -28,19 +28,20 @@ struct FrozenUpdateStage {
 inline FrozenUpdateStage
 FrozenUpdate::run(FrozenGame &game, const std::array<std::uint8_t, 5> &board,
                   ProposalKind proposal, bool prefix_fold) {
-  return walk<false>(game,board,proposal,prefix_fold,nullptr,SampledContraction::direct);
+  return walk<false>(game,board,proposal,prefix_fold,nullptr,SampledContraction::direct,1);
 }
 inline FrozenUpdateStage
 FrozenUpdate::run_sampled(FrozenGame &game, const std::array<std::uint8_t,5> &board,
-                          const sampled_row_state::State *committed, SampledContraction contraction) {
-  return walk<true>(game,board,ProposalKind::uniform_public,true,committed,contraction);
+                          const sampled_row_state::State *committed, SampledContraction contraction,
+                          std::uint64_t average_weight) {
+  return walk<true>(game,board,ProposalKind::uniform_public,true,committed,contraction,average_weight);
 }
 template<bool Changing>
 FrozenUpdateStage
 FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
                    ProposalKind proposal, bool prefix_fold, const sampled_row_state::State *committed,
-                   SampledContraction contraction) {
-  const auto f = forecast(game, board, proposal, prefix_fold, Changing, contraction);
+                   SampledContraction contraction, std::uint64_t average_weight) {
+  const auto f = forecast(game,board,proposal,prefix_fold,Changing,contraction,average_weight);
   if (!f.admitted)
     throw FrozenUpdateError("whole frozen-update admission rejected");
   const auto &t = *game.template_;
@@ -365,7 +366,8 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
             throw FrozenUpdateError("staged retained text exceeds preflight");
           staged_slots += node.edges.size();
           staged_text_upper += text_upper;
-          const auto avg_cost=average_row_work(f.integer_bits_upper,node.edges.size(),bool(prepared));
+          const auto avg_cost=average_row_work(f.integer_bits_upper,node.edges.size(),
+                                               bool(prepared),average_weight!=1);
           if (avg_cost > f.average_work_upper - average_work)
             throw FrozenUpdateError("average arithmetic exceeds preflight");
           average_work += avg_cost;
@@ -399,6 +401,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
             const auto &own=reaches[target];
             CommonInteger base=snapshot.hand_masses[target].numerators[i]*ratio.denominator;
             base*=own.numerators[i];
+            if (average_weight!=1) base*=average_weight;
             row.average_denominator=(snapshot.denominator*ratio.numerator)
                                      <<(own.exponent+dyadic_policy::grid_bits);
             row.average_mass_numerator=base<<dyadic_policy::grid_bits;

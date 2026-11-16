@@ -519,7 +519,8 @@ struct QualityRun {
   std::uint64_t seed, draws;
 };
 
-void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=std::nullopt) {
+void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=std::nullopt,
+                         bool linear=false) {
   const bool curve=bool(quality);
   const bool dealt=profile!=SeededGame::uniform9;
   const bool eleven=profile==SeededGame::dealt11 || profile==SeededGame::history11;
@@ -577,7 +578,8 @@ void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=st
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(curve ? "SAMPLED_PROOF9_QUALITY_V1 " :
+  header<<(linear ? "SAMPLED_PROOF9_LINEAR_QUALITY_V1 " :
+             curve ? "SAMPLED_PROOF9_QUALITY_V1 " :
              wide ? "SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 " :
              policy_replay ? "SAMPLED_FULL52_POLICY_REPLAY_V1 " :
              full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
@@ -644,7 +646,8 @@ void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=st
     const auto contraction=policy_replay ? SampledContraction::dealt_policy_replay :
         history_replay ? SampledContraction::dealt_history_replay :
         dealt ? SampledContraction::dealt : SampledContraction::prepared;
-    const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,contraction);
+    const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,
+                                               contraction,linear ? draw+1 : 1);
     if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
       throw std::length_error("seeded draw exceeds pinned envelope");
     reserved+=stage.forecast.work_upper;
@@ -732,6 +735,33 @@ void sampled_menu_frontier() {
   }
 }
 
+void sampled_average_weight_controls() {
+  const Fixture f;
+  const std::array<std::uint8_t,5> board{4,5,6,7,8};
+  FrozenGame equal(f.config,f.deck,f.sb,f.bb), linear(f.config,f.deck,f.sb,f.bb);
+  constexpr auto route=SampledContraction::dealt_policy_replay;
+  const auto a=FrozenUpdate::run_sampled(equal,board,nullptr,route);
+  const auto b=FrozenUpdate::run_sampled(linear,board,nullptr,route,7);
+  require(a.rows.size()==b.rows.size() && a.regret_denominator==b.regret_denominator,
+          "linear average changed admitted regret image");
+  for (std::size_t i=0;i<a.rows.size();++i) {
+    const auto& before=a.rows[i];
+    const auto& after=b.rows[i];
+    require(before.actor==after.actor && before.first==after.first && before.second==after.second &&
+            before.history==after.history && before.actions==after.actions &&
+            before.grid_policy_units==after.grid_policy_units && before.regret_numerators==after.regret_numerators &&
+            before.average_denominator==after.average_denominator &&
+            before.average_mass_numerator*7==after.average_mass_numerator,"linear average changed the unweighted draw");
+    for (std::size_t action=0;action<before.actions.size();++action)
+      require(before.average_numerators[action]*7==after.average_numerators[action],"linear own-reach average differs");
+  }
+  for (const auto weight:std::array<std::uint64_t,2>{0,513}) {
+    FrozenGame outside(f.config,f.deck,f.sb,f.bb);
+    rejects<FrozenUpdateError>([&] { (void)FrozenUpdate::run_sampled(outside,board,nullptr,route,weight); },
+                               "out-of-range average weight accepted");
+  }
+}
+
 void sampled_grid_frontier(SampledContraction route) {
   SampledFrontierFixture f;
   FrozenGame game(f.config,f.deck,f.sb,f.bb);
@@ -749,8 +779,22 @@ void sampled_grid_frontier(SampledContraction route) {
 } // namespace
 int main(int argc,char **argv) {
   try {
-    if (argc==2) {
+    if (argc==2 || (argc==3 && std::string_view(argv[2])=="--linear")) {
       const std::string_view argument(argv[1]);
+      const bool linear=argc==3;
+      constexpr std::array<std::pair<std::string_view,QualityRun>,5> quality_runs{{
+          {"sampled-grid-quality-a32",{0x4f504c2026111601ULL,32}},
+          {"sampled-grid-quality-a128",{0x4f504c2026111601ULL,128}},
+          {"sampled-grid-quality-a512",{0x4f504c2026111601ULL,512}},
+          {"sampled-grid-quality-b128",{0x243f6a8885a308d3ULL,128}},
+          {"sampled-grid-quality-c128",{0x13198a2e03707344ULL,128}}
+      }};
+      for (const auto& [name,run]:quality_runs) {
+        if (argument!=name) continue;
+        sampled_grid_seeded(SeededGame::dealt9,run,linear);
+        return 0;
+      }
+      require(!linear,"linear averaging requires a named quality case");
       if (argument=="sampled-grid" || argument=="sampled-grid-prepared") {
         sampled_grid_controls(argument=="sampled-grid" ? SampledContraction::direct : SampledContraction::prepared);
         return 0;
@@ -771,18 +815,6 @@ int main(int argc,char **argv) {
       if (argument=="sampled-grid-full52-policy-replay" || argument=="sampled-grid-full52-wide") {
         sampled_grid_seeded(argument=="sampled-grid-full52-wide" ?
                             SeededGame::wide52 : SeededGame::full52_policy);
-        return 0;
-      }
-      constexpr std::array<std::pair<std::string_view,QualityRun>,5> quality_runs{{
-          {"sampled-grid-quality-a32",{0x4f504c2026111601ULL,32}},
-          {"sampled-grid-quality-a128",{0x4f504c2026111601ULL,128}},
-          {"sampled-grid-quality-a512",{0x4f504c2026111601ULL,512}},
-          {"sampled-grid-quality-b128",{0x243f6a8885a308d3ULL,128}},
-          {"sampled-grid-quality-c128",{0x13198a2e03707344ULL,128}}
-      }};
-      for (const auto& [name,run]:quality_runs) {
-        if (argument!=name) continue;
-        sampled_grid_seeded(SeededGame::dealt9,run);
         return 0;
       }
       if (argument=="sampled-grid-full52-menu-frontier") {
@@ -808,6 +840,7 @@ int main(int argc,char **argv) {
     private_deal_controls();
     sampled_row_publication_controls();
     sampled_row_precision_controls();
+    sampled_average_weight_controls();
     publish_frozen_sample_controls();
     std::cout
         << "PASS frozen-update primitive, admission, identity and zero-target controls"

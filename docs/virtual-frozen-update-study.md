@@ -531,3 +531,18 @@ across 1,260 worlds. It normalized 12,942 supplied rows and shared defaults
 for the remaining 367,230. It also reproduced the complete 512-draw
 nine-card cohort receipt. The existing archive files and their hashes
 serve as replay inputs to both checks.
+
+### Matched linear averaging protocol
+
+The linear cohort uses the same five named seed and draw budgets as the
+equal-weight cohort. Each draw multiplies the own-reach average contribution
+by its one-based draw number. The signed regret update and legal policy
+selection keep the existing arithmetic. The extra word multiplication and
+operand width are included in admission under the existing draw, storage,
+and capture caps.
+
+The independent replay applies the same weight to the exact average only.
+It authenticates every archived equal-weight input and requires equality of
+the sampled word, private deal and board sequences in each matched case.
+It records every exact best-response result and the paired difference in
+exploitability. The 0.1 big-blind threshold still applies to each policy.

@@ -52,7 +52,8 @@ def _records(raw):
     lines = raw.decode('ascii').splitlines()
     maximum_rows = (DRAW_COUNT*868 if lines and
                     lines[0].startswith('SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 ') else 24_420)
-    maximum_draws = 512 if lines and lines[0].startswith('SAMPLED_PROOF9_QUALITY_V1 ') else DRAW_COUNT
+    curve_tags = ('SAMPLED_PROOF9_QUALITY_V1 ', 'SAMPLED_PROOF9_LINEAR_QUALITY_V1 ')
+    maximum_draws = 512 if lines and lines[0].startswith(curve_tags) else DRAW_COUNT
     require(len(lines) <= maximum_rows + maximum_draws + 3, 'seeded record count')
     for line in lines:
         require(0 < len(line) <= 4096, 'seeded line length')
@@ -151,7 +152,8 @@ def replay_saved_policy(path, expected_sha256):
     require(observed == expected_sha256, 'seeded artifact digest mismatch')
     records = _records(raw)
     tag, seed, draws, cap, work = next(records)
-    curve = tag == 'SAMPLED_PROOF9_QUALITY_V1'
+    linear = tag == 'SAMPLED_PROOF9_LINEAR_QUALITY_V1'
+    curve = linear or tag == 'SAMPLED_PROOF9_QUALITY_V1'
     wide = tag == 'SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1'
     packed = wide or curve
     policy_replay = wide or tag == 'SAMPLED_FULL52_POLICY_REPLAY_V1'
@@ -231,6 +233,7 @@ def replay_saved_policy(path, expected_sha256):
         require(0 < forecast <= DRAW_WORK_CAP and 0 <= rows <= 868, 'seeded draw resource bound')
         live = 2 if dealt else sum(set(hand).isdisjoint(board) for side in FRONTIER_RANGES for hand,_ in side)
         require(ranks == live, 'seeded rank-plane census')
+        average_weight = draw+1 if linear else 1
         increments = (_dealt_increments(root,nodes,board,committed,private) if dealt else
                       _literal_draw(root,nodes,board,committed,FRONTIER_DECK,FRONTIER_RANGES))
         require(len(increments) == rows, 'seeded independent row census')
@@ -238,7 +241,8 @@ def replay_saved_policy(path, expected_sha256):
             require(menus.setdefault(key,menu) == menu, 'seeded row legal menu drift')
             empty = (0,) * len(menu)
             committed[key] = _totals(committed.get(key,empty),regret)
-            average[key] = _totals(average.get(key,empty),masses)
+            average[key] = _totals(average.get(key,empty),
+                                   tuple(average_weight*x for x in masses) if linear else masses)
         staged += rows
         reserved += forecast
         rank_calls += ranks
@@ -347,6 +351,8 @@ def replay_saved_policy(path, expected_sha256):
                       physical_policy_slots=fixture.slot_count, measured_draw_ledgers=work_sums)
     if curve:
         result['measured_draw_ledgers'] = work_sums
+    if linear:
+        result['averaging'] = 'linear'
     if history_replay:
         result['history_replay'] = True
     return result

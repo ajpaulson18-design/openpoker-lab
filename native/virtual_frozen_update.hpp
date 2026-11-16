@@ -55,16 +55,19 @@ class FrozenUpdate final {
 
   template<bool Changing>
   static FrozenUpdateStage walk(FrozenGame &, const std::array<std::uint8_t, 5> &,
-                                ProposalKind, bool, const sampled_row_state::State *, SampledContraction);
+                                ProposalKind, bool, const sampled_row_state::State *, SampledContraction,
+                                std::uint64_t average_weight);
   static std::uint64_t work_width(std::uint64_t bits, bool prepared) {
     return prepared ? (bits+63)/64 : bits;
   }
-  static std::uint64_t average_row_work(std::uint64_t bits,std::uint64_t actions,bool prepared) {
+  static std::uint64_t average_row_work(std::uint64_t bits,std::uint64_t actions,
+                                        bool prepared,bool weighted=false) {
     const auto width=work_width(bits,prepared);
     // Prepared averages can multiply two wide inputs once (prior by reach).
     // All later products are by single-word proposal and policy factors.
     const auto product=prepared ? 2*width*width : 0;
-    return add(4096+128*width+product,mul(actions,1024+32*width));
+    const auto weight_cost=weighted ? 128+8*width : 0;
+    return add(4096+128*width+product+weight_cost,mul(actions,1024+32*width));
   }
   static std::uint64_t denominator_shift(bool changing, std::uint64_t reach, std::uint64_t maxneg) {
     // Opponent actions before a terminal and own actions summed back from it
@@ -77,7 +80,8 @@ public:
   // grid-uniform first policy. The caller owns replay and later publication.
   static FrozenUpdateStage run_sampled(FrozenGame &game,
       const std::array<std::uint8_t,5> &board, const sampled_row_state::State *committed=nullptr,
-      SampledContraction contraction=SampledContraction::direct);
+      SampledContraction contraction=SampledContraction::direct,
+      std::uint64_t average_weight=1);
   // Preliminary structural/numeric envelope only. The execution method must be
   // paired with this exact ledger; this function performs no terminal callback.
   static FrozenUpdateStage run(FrozenGame &game,
@@ -87,7 +91,8 @@ public:
                                        const std::array<std::uint8_t, 5> &board,
                                        ProposalKind proposal, bool prefix_fold=false,
                                        bool changing=false,
-                                       SampledContraction contraction=SampledContraction::direct) {
+                                       SampledContraction contraction=SampledContraction::direct,
+                                       std::uint64_t average_weight=1) {
     if (game.update_used_)
       throw FrozenUpdateError("frozen game already consumed");
     game.update_used_ = true; // failure does not permit resetting child meters
@@ -99,6 +104,8 @@ public:
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
     const bool policy_replay=contraction==SampledContraction::dealt_policy_replay;
+    if (!average_weight || average_weight>512 || (average_weight!=1 && !policy_replay))
+      throw FrozenUpdateError("average weight outside dealt policy replay bounds");
     const bool history_replay=policy_replay || contraction==SampledContraction::dealt_history_replay;
     const bool dealt=history_replay || contraction==SampledContraction::dealt;
     const bool prepared=dealt || contraction==SampledContraction::prepared;
@@ -217,7 +224,8 @@ public:
         add(reach, add(changing ? dyadic_policy::grid_bits : maxmenu, 3)));
     const auto average_num_width =
         add(add(normalizer_width, qprefix_den_bits),
-            changing ? add(add(reach, dyadic_policy::grid_bits), 5) : add(maxmenu, 3));
+            changing ? add(add(add(reach,dyadic_policy::grid_bits),5),std::bit_width(average_weight-1))
+                     : add(maxmenu,3));
     // The native query constructs unnormalized bucket products before the
     // value bound applies: admit its documented numerator and denominator
     // width formulas independently, including binary64 reach alignment.
@@ -317,9 +325,10 @@ public:
                 mul(1024, add(add(terminalhands, mul(5, slots)),
                               add(mul(4, rows), mul(edgeocc, h))))),
             add(mul(512, arith_width), 1024));
-    const auto avgwork = add(mul(rows,average_row_work(bits,0,prepared)),
+    const auto avgwork = add(mul(rows,average_row_work(bits,0,prepared,average_weight!=1)),
                              mul(slots,1024+32*arith_width));
     if (prepared) arith=add(arith,mul(rows,2*arith_width*arith_width));
+    if (average_weight!=1) arith=add(arith,mul(rows,128+8*arith_width));
     std::uint64_t policy_work=0;
     if (changing) {
       const auto words=add(bits,115)/64;
