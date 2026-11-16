@@ -248,6 +248,33 @@ int buffer_guards() {
     std::cout<<"BUFFER_GUARDS PASS\n";
     return 0;
 }
+int full_deck_buffered() {
+    std::array<std::vector<chance::WeightedHand>,2> ranges;
+    std::array<std::vector<Integer>,2> reaches;
+    for (std::uint8_t a=0;a<52;++a) for (std::uint8_t b=a+1;b<52;++b) {
+        const auto row=ranges[0].size();
+        const std::array<double,2> weights{static_cast<double>(1+row%5),
+                                         static_cast<double>(1+(3*row+1)%7)};
+        for (std::size_t player=0;player<2;++player) {
+            ranges[player].push_back({{a,b},std::bit_cast<std::uint64_t>(weights[player])});
+            reaches[player].emplace_back((row+2*player)%9);
+        }
+    }
+    prepared::PreparedPublicChance owner(ranges[0],ranges[1],chance::DeckDefinition::full52(),
+                                         {},1,prepared::RankCacheKey::board_set);
+    std::vector<Integer> output(ranges[0].size(),Integer(77));
+    for (std::size_t player=0;player<2;++player) for (unsigned showdown=0;showdown<2;++showdown) {
+        const auto kind=showdown?chance::TerminalKind::showdown:chance::TerminalKind::fold;
+        const auto scale=owner.contraction_into(player,board_a,kind,reaches[1-player],3,output);
+        std::cout<<"WIDE "<<player<<' '<<showdown<<' '<<scale.prefix_divisor<<' '
+                 <<scale.reach_exponent<<' '<<hex(owner.normalizer_integer());
+        for (const auto& value:output) std::cout<<' '<<hex(value);
+        std::cout<<'\n';
+    }
+    if (owner.receipt().rank_calls!=2162 || owner.receipt().cache_hits!=1 ||
+        owner.receipt().cache_misses!=1 || owner.receipt().completed_contractions!=4) return 1;
+    return ledger(owner.receipt()) ? 0 : 1;
+}
 int snapshot() {
     auto own=sb,opposite=bb;
     prepared::PreparedPublicChance owner(own,opposite,chance::DeckDefinition::reduced(deck));
@@ -495,6 +522,7 @@ int main(int argc,char** argv) {
             if (mode=="same") return same_fixture();
             if (mode=="same-buffered") return same_fixture(true);
             if (mode=="buffer-guards") return buffer_guards();
+            if (mode=="full-deck-buffered") return full_deck_buffered();
             if (mode=="snapshot") return snapshot();
             if (mode=="board-sets") return board_set_controls();
             if (mode=="sparse-board-sets") return board_set_controls(prepared::ContractionKernel::sparse_pairs);
