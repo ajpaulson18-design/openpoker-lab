@@ -467,3 +467,18 @@ the preceding row plus its remaining tokens. Grid units are hexadecimal and
 follow the fixture's legal action order. The independent reader reconstructs
 the full keys and action menus from the wider betting rules. This keeps
 the existing 2 MiB capture limit.
+
+The [source-frozen wider result](../benchmarks/results/native-sampled-full52-wide-v1/manifest.json)
+keeps the complete four-level admission record. For the 661-node template
+with a third bet size on all postflop streets, the original path forecast
+525,300,303 units and rejected at the existing cap. Reusing the committed
+policies forecast 363,523,023 units and completed all 32 draws. The 1,816,971
+raw bytes preserve 26,877 policy rows and 65,561 ordered action slots.
+Independent sparse replay matched the exported grid units. Full-deck
+best-response quality remains unknown.
+
+On the matched 388-node control, policy reuse preserved all 13,885 saved
+rows. Recorded policy work fell from 12,080,128 to 7,817,728 units. The
+median candidate to baseline elapsed ratio was 0.9562 across eight
+alternating complete-call pairs on the Windows test host. The paired
+timing applies to the matched control.

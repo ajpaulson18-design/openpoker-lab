@@ -1,0 +1,106 @@
+{
+  "median_baseline_seconds": 0.6422643999999309,
+  "median_candidate_over_baseline": 0.9562169022114974,
+  "median_candidate_seconds": 0.6249555499998678,
+  "pairs": [
+    {
+      "candidate_over_baseline": 1.1010188433551613,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.6957890000003317,
+        "candidate": 0.7660767999996096
+      }
+    },
+    {
+      "candidate_over_baseline": 1.139269042891604,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.633741700000428,
+        "candidate": 0.7220022999999856
+      }
+    },
+    {
+      "candidate_over_baseline": 1.26271937894484,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.6016586999994615,
+        "candidate": 0.7597261000000799
+      }
+    },
+    {
+      "candidate_over_baseline": 0.8291117174697398,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.646225699999377,
+        "candidate": 0.5357932999995683
+      }
+    },
+    {
+      "candidate_over_baseline": 0.906261971637865,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.5818439000004219,
+        "candidate": 0.5273029999998471
+      }
+    },
+    {
+      "candidate_over_baseline": 0.8987890641120663,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.6760968999997203,
+        "candidate": 0.6076684999998179
+      }
+    },
+    {
+      "candidate_over_baseline": 1.0061718327851297,
+      "order": [
+        "baseline",
+        "candidate"
+      ],
+      "seconds": {
+        "baseline": 0.6383031000004848,
+        "candidate": 0.6422425999999177
+      }
+    },
+    {
+      "candidate_over_baseline": 0.8187939768880704,
+      "order": [
+        "candidate",
+        "baseline"
+      ],
+      "seconds": {
+        "baseline": 0.6954078999997364,
+        "candidate": 0.5693958000001658
+      }
+    }
+  ],
+  "parity": {
+    "baseline_history_work": 789128448,
+    "baseline_policy_work": 12080128,
+    "candidate_history_work": 750470400,
+    "candidate_policy_work": 7817728
+  },
+  "protocol": "eight alternating pairs of complete native calls on the matched 388-node fixture",
+  "stdout_sha256": {
+    "baseline": "8af9b3e3890a1313fa376ba75c5c6cf5409f4a715a196b67b3a44f67ec05d81d",
+    "candidate": "c62c8526bb77b3940a5f38b7c1fdc6cfd0dd0f31e3b159deb782800143d6ad79"
+  }
+}

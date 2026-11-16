@@ -1,0 +1,50 @@
+{
+  "artifact_sha256": {
+    "frontier.txt": "2a7f52441a09c6bed3235804216e96200103244160a0a365f709fb8dd3f09127",
+    "matched-policy.bin.gz": "204c18700d70449c8ec8c8fdc0c518888373782f0a6ad4c3325127efd0198628",
+    "policy.bin.gz": "1166db28d760f87a1087e40d43ca96757b4235d058052e9772ff9502d800f5c6",
+    "process.json": "82b59e12f15df400ec2c1d2fcd16dfd08d69e4b51b1e853ea4b364f14e87eafb",
+    "replay.json": "50ec15ac1d11d6916b36104626b680d8823ec61a57b6210f3dd2a89cc8d43d89",
+    "timing.json": "d687605d5c39c656cda61024865824cbd8e66be2e039178897995dba6dc2bb24"
+  },
+  "baseline_forecast_wide": 525300303,
+  "clean_source_before_and_after": true,
+  "development_bytes_reproduced": true,
+  "draw_work_cap": 500000000,
+  "draws": 32,
+  "matched_baseline_manifest": "benchmarks/results/native-sampled-full52-broad-v1/manifest.json",
+  "native_build": {
+    "compiler_sha256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+    "executable_sha256": "b9d17ea3441bc9daaa01b58879a923215488b190e037af8de6c4144171a39641",
+    "source_sha256": {
+      "native/dyadic_policy.hpp": "2a1c0a485f5e1d3645740cfe5db9543ee0c0cadcd6e8aca2e54cf9249fca0d96",
+      "native/dyadic_policy_division.hpp": "94ecadef05d3edf254cf0187cf46e4806e45697eb0b5fccaafce7a062f1c8944",
+      "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+      "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+      "native/full_deck_public_chance.hpp": "29c8ef53603d5c8a1fa0bc072eb127bea181d37e3df992d05c3f9dfa67a5de1a",
+      "native/prepared_public_chance.hpp": "af304f29f55fe3a7b6aff8f787648cbece8dc58b1d9a0e83d8de21062633aec7",
+      "native/sampled_row_state.hpp": "dfacffe1075eb6d5bf4f12ad7e4e8cc520096f406591825ef12d8be70d6d298e",
+      "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+      "native/virtual_frozen_common_denominator.hpp": "2740ccfcf167196d2b091d95d2e7532a51e36e33d059a5413aec8780c20c19c2",
+      "native/virtual_frozen_game.hpp": "698cf61304234e00e42bc3aa20e469930d26b1ffbacd050e280c405a0e76e07c",
+      "native/virtual_frozen_history.hpp": "5c2c1a5d7085852acd19a37073c8f90e681b5ed323aef8978ce3b39f4a03c17f",
+      "native/virtual_frozen_policy.hpp": "9eb53e8e2f2a8df9e292fa524570b5d766e01cf24720edf8fb83324952931fee",
+      "native/virtual_frozen_proposal.hpp": "beae790ea1619cd29e3e81b176d0578cafb3831df70bc3c16b4234845d5318eb",
+      "native/virtual_frozen_update.hpp": "28ca3c91fb51c5a59cb393603dac928f742841597b15a5d8f6b97a4eb894878f",
+      "native/virtual_frozen_update_controls.cpp": "0411bca7efb0f490496b238cf2a283ca63f64a14b1909afd54de626ac0736a4c",
+      "native/virtual_frozen_walk.hpp": "dd3b39aab0f97faf786600708cf258c532becab7434bb4b5470351134b4e7319",
+      "scripts/build_native_exact_four_street.py": "b4fb5cf3adc04679654df920bc6c680b94baf37b44e29d331a4af5e933e0e450",
+      "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+      "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+      "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+    },
+    "target": "virtual-frozen-update-controls"
+  },
+  "policy_replay_forecast_wide": 363523023,
+  "quality_gate": null,
+  "raw_policy_bytes": 1816971,
+  "raw_policy_sha256": "7955079e32727fa1ce864e19d417a8b887e54a4bf5f3283aea5a378d09d71f24",
+  "seed": 5715151628094477825,
+  "source_head": "b01280af491bdd8099e0bb69604fa1df9942a9df",
+  "status": "seeded_full52_sparse_policy_exact_replay_pass"
+}

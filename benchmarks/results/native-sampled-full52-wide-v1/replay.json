@@ -1,0 +1,43 @@
+{
+  "attempts": 164,
+  "betting_nodes": 661,
+  "compatible_private_deals": 1624350,
+  "dealer": {
+    "modeled_work": 19136384,
+    "peak_integer_payload_bits": 7858944,
+    "peak_scratch_entries": 32848,
+    "rank_calls": 0,
+    "retained_entries": 21472,
+    "root_queries": 32,
+    "terminal_queries": 0
+  },
+  "draw_work_reserved": 11632736736,
+  "draws": 32,
+  "export_work": 39123000,
+  "holdings_per_seat": 1326,
+  "maximum_draw_work": 500000000,
+  "measured_draw_ledgers": {
+    "average": 286938624,
+    "chance": 84590231,
+    "common_regret": 483221088,
+    "history": 1604969728,
+    "quantization": 15189504
+  },
+  "native_producer_calls": 0,
+  "policy_replay": true,
+  "possible_boards_per_deal": 34246080,
+  "postflop_bet_sizes": [
+    0.5,
+    0.75,
+    1.0
+  ],
+  "quality_gate": null,
+  "rank_calls": 64,
+  "raw_sha256": "7955079e32727fa1ce864e19d417a8b887e54a4bf5f3283aea5a378d09d71f24",
+  "saved_rows": 26877,
+  "saved_slots": 65561,
+  "seed": 5715151628094477825,
+  "staged_rows": 26880,
+  "status": "seeded_full52_sparse_policy_exact_replay_pass",
+  "zero_average_mass_rows": 375
+}
