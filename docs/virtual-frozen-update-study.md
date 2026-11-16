@@ -517,3 +517,17 @@ All five policies missed the 0.1 big-blind target. The fixed-seed curve
 shows improvement with additional draws, and the 128-draw checkpoints
 show the observed variation across seeds. The cohort covers the bounded
 nine-card game. Full-deck quality remains unknown.
+
+### Sparse policy input for exact sampled replay
+
+The physical evaluator verifies the complete legal-information inventory and
+normalizes only the rows supplied by the saved policy. It shares a uniform
+grid default for each legal menu width. All explicit rows retain their menu
+width and exact partition checks. The independent evaluation still groups
+full physical worlds by visible history and own holding.
+
+The saved-only check reproduced the complete eleven-card quality receipt
+across 1,260 worlds. It normalized 12,942 supplied rows and shared defaults
+for the remaining 367,230. It also reproduced the complete 512-draw
+nine-card cohort receipt. The existing archive files and their hashes
+serve as replay inputs to both checks.
