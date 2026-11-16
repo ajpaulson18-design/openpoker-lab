@@ -515,13 +515,19 @@ void widen_sampled_bets(betting::Config& config,unsigned streets) {
 
 enum class SeededGame { uniform9, dealt9, dealt11, history11, full52, full52_policy, wide52 };
 
-void sampled_grid_seeded(SeededGame profile) {
+struct QualityRun {
+  std::uint64_t seed, draws;
+};
+
+void sampled_grid_seeded(SeededGame profile,std::optional<QualityRun> quality=std::nullopt) {
+  const bool curve=bool(quality);
   const bool dealt=profile!=SeededGame::uniform9;
   const bool eleven=profile==SeededGame::dealt11 || profile==SeededGame::history11;
   const bool wide=profile==SeededGame::wide52;
-  const bool policy_replay=wide || profile==SeededGame::full52_policy;
-  const bool full_deck=policy_replay || profile==SeededGame::full52;
-  const bool history_replay=full_deck || profile==SeededGame::history11;
+  const bool packed=wide || curve;
+  const bool policy_replay=curve || wide || profile==SeededGame::full52_policy;
+  const bool full_deck=wide || profile==SeededGame::full52_policy || profile==SeededGame::full52;
+  const bool history_replay=policy_replay || full_deck || profile==SeededGame::history11;
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
   SampledFrontierFixture f;
@@ -548,9 +554,10 @@ void sampled_grid_seeded(SeededGame profile) {
     }
   }
   const UniformPublicBoards boards(f.deck);
-  constexpr std::uint64_t seed=0x4f504c2026111601ULL;
-  constexpr std::uint64_t draws=32, draw_work_cap=500000000;
-  const std::uint64_t attempt_cap=dealt ? 256 : 64;
+  const std::uint64_t seed=curve ? quality->seed : 0x4f504c2026111601ULL;
+  const std::uint64_t draws=curve ? quality->draws : 32;
+  constexpr std::uint64_t draw_work_cap=500000000;
+  const std::uint64_t attempt_cap=dealt ? 8*draws : 64;
   constexpr std::size_t output_cap=2U<<20;
   // Each word is reproducible from the retained seed, including rejections.
   std::uint64_t random_state=seed;
@@ -570,7 +577,8 @@ void sampled_grid_seeded(SeededGame profile) {
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(wide ? "SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 " :
+  header<<(curve ? "SAMPLED_PROOF9_QUALITY_V1 " :
+             wide ? "SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 " :
              policy_replay ? "SAMPLED_FULL52_POLICY_REPLAY_V1 " :
              full_deck ? "SAMPLED_FULL52_DEALT_REPLAY_V1 " :
              history_replay ? "SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1 " :
@@ -656,7 +664,7 @@ void sampled_grid_seeded(SeededGame profile) {
     }
     for (const auto card:board) line<<' '<<static_cast<unsigned>(card);
     line<<' '<<stage.rows.size()<<' '<<stage.forecast.work_upper<<' '<<stage.prepared_rank_calls;
-    if (eleven || full_deck) line<<' '<<stage.chance_work<<' '<<stage.history_work<<' '<<stage.common_regret_work
+    if (eleven || full_deck || curve) line<<' '<<stage.chance_work<<' '<<stage.history_work<<' '<<stage.common_regret_work
                      <<' '<<stage.average_work<<' '<<stage.policy_work;
     emit(line);
   }
@@ -670,9 +678,9 @@ void sampled_grid_seeded(SeededGame profile) {
   state->visit_committed([&](const sparse::Key& key,const sparse::RowView& row) {
     const auto policy=quantizer.average_export(row.average);
     std::ostringstream line;
-    line<<(wide ? "PACK " : "ROW ")<<static_cast<unsigned>(key.actor)<<' '
+    line<<(packed ? "PACK " : "ROW ")<<static_cast<unsigned>(key.actor)<<' '
         <<static_cast<unsigned>(key.first_card)<<' '<<static_cast<unsigned>(key.second_card);
-    if (wide) {
+    if (packed) {
       std::size_t common=0;
       if (previous_history) {
         const auto different=std::ranges::mismatch(*previous_history,key.history);
@@ -763,6 +771,18 @@ int main(int argc,char **argv) {
       if (argument=="sampled-grid-full52-policy-replay" || argument=="sampled-grid-full52-wide") {
         sampled_grid_seeded(argument=="sampled-grid-full52-wide" ?
                             SeededGame::wide52 : SeededGame::full52_policy);
+        return 0;
+      }
+      constexpr std::array<std::pair<std::string_view,QualityRun>,5> quality_runs{{
+          {"sampled-grid-quality-a32",{0x4f504c2026111601ULL,32}},
+          {"sampled-grid-quality-a128",{0x4f504c2026111601ULL,128}},
+          {"sampled-grid-quality-a512",{0x4f504c2026111601ULL,512}},
+          {"sampled-grid-quality-b128",{0x243f6a8885a308d3ULL,128}},
+          {"sampled-grid-quality-c128",{0x13198a2e03707344ULL,128}}
+      }};
+      for (const auto& [name,run]:quality_runs) {
+        if (argument!=name) continue;
+        sampled_grid_seeded(SeededGame::dealt9,run);
         return 0;
       }
       if (argument=="sampled-grid-full52-menu-frontier") {

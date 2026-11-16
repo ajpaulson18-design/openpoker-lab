@@ -24,6 +24,8 @@ from tests.virtual_frozen_run_control import run_bounded_child
 
 SEED = 0x4F504C2026111601
 DRAW_COUNT = 32
+QUALITY_RUNS = ((SEED,32),(SEED,128),(SEED,512),
+                (0x243F6A8885A308D3,128),(0x13198A2E03707344,128))
 ATTEMPT_CAP = 64
 DEALT_ATTEMPT_CAP = 256
 ELEVEN_DECK = tuple(sorted((*FRONTIER_DECK,0,1)))
@@ -50,7 +52,8 @@ def _records(raw):
     lines = raw.decode('ascii').splitlines()
     maximum_rows = (DRAW_COUNT*868 if lines and
                     lines[0].startswith('SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1 ') else 24_420)
-    require(len(lines) <= maximum_rows + DRAW_COUNT + 3, 'seeded record count')
+    maximum_draws = 512 if lines and lines[0].startswith('SAMPLED_PROOF9_QUALITY_V1 ') else DRAW_COUNT
+    require(len(lines) <= maximum_rows + maximum_draws + 3, 'seeded record count')
     for line in lines:
         require(0 < len(line) <= 4096, 'seeded line length')
         yield line.split()
@@ -148,25 +151,28 @@ def replay_saved_policy(path, expected_sha256):
     require(observed == expected_sha256, 'seeded artifact digest mismatch')
     records = _records(raw)
     tag, seed, draws, cap, work = next(records)
+    curve = tag == 'SAMPLED_PROOF9_QUALITY_V1'
     wide = tag == 'SAMPLED_FULL52_WIDE_POLICY_REPLAY_V1'
+    packed = wide or curve
     policy_replay = wide or tag == 'SAMPLED_FULL52_POLICY_REPLAY_V1'
     full_deck = policy_replay or tag == 'SAMPLED_FULL52_DEALT_REPLAY_V1'
     history_replay = tag == 'SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1'
     eleven = history_replay or tag == 'SAMPLED_PROOF11_DEALT_V1'
-    dealt = full_deck or eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
+    dealt = curve or full_deck or eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
     deck = tuple(range(52)) if full_deck else ELEVEN_DECK if eleven else FRONTIER_DECK
-    attempt_cap = DEALT_ATTEMPT_CAP if dealt else ATTEMPT_CAP
-    require((dealt or tag == 'SAMPLED_PROOF9_V1') and
-            (int(seed), int(draws), int(cap), int(work)) ==
-            (SEED, DRAW_COUNT, attempt_cap, DRAW_WORK_CAP), 'seeded admission identity')
+    seed,draw_count = int(seed),int(draws)
+    attempt_cap = 8*draw_count if curve else DEALT_ATTEMPT_CAP if dealt else ATTEMPT_CAP
+    accepted = QUALITY_RUNS if curve else ((SEED,DRAW_COUNT),)
+    require((dealt or tag == 'SAMPLED_PROOF9_V1') and (seed,draw_count) in accepted and
+            (int(cap),int(work))==(attempt_cap,DRAW_WORK_CAP), 'seeded admission identity')
     boards = () if dealt else tuple(_uniform_boards(deck))
     work_sums = dict.fromkeys(('chance','history','common_regret','average','quantization'),0)
-    words = _splitmix(SEED)
+    words = _splitmix(seed)
     lottery = _dealt_lottery() if dealt and not full_deck else ()
     private_limit = sum(size for _,size in lottery)
     if full_deck:
         private_limit,locate = _full_deck_lottery()
-    has_ledgers = eleven or full_deck
+    has_ledgers = curve or eleven or full_deck
     root, nodes = _model(True,wide=wide)
     if wide:
         require(len(nodes)==661, 'wide reference betting geometry')
@@ -178,7 +184,7 @@ def replay_saved_policy(path, expected_sha256):
         attempts += 1
         return next(words)
 
-    for draw in range(DRAW_COUNT):
+    for draw in range(draw_count):
         tag, *fields = next(records)
         ordinal_index, saved_attempt, word, ordinal, *tail = map(int, fields)
         private = None
@@ -239,7 +245,7 @@ def replay_saved_policy(path, expected_sha256):
     tag, *summary = next(records)
     row_count, slot_count = len(menus), sum(map(len,menus.values()))
     require(tag == 'POLICY' and tuple(map(int,summary)) ==
-            (DRAW_COUNT,row_count,slot_count,staged,reserved,rank_calls,attempts), 'seeded policy census')
+            (draw_count,row_count,slot_count,staged,reserved,rank_calls,attempts), 'seeded policy census')
 
     sparse = {}
     last = None
@@ -247,7 +253,7 @@ def replay_saved_policy(path, expected_sha256):
     for _ in range(row_count):
         tag, actor, a, b, depth, *tokens = next(records)
         player, first, second, n = map(int,(actor,a,b,depth))
-        if wide:
+        if packed:
             suffix_length,*tokens = tokens
             suffix = int(suffix_length)
             require(tag=='PACK' and 0 <= n <= len(last_history) and 0 <= suffix <= 64-n,
@@ -270,7 +276,7 @@ def replay_saved_policy(path, expected_sha256):
         last_history = history
         menu = menus[key]
         require(len(units)==count==len(menu), 'seeded policy action count')
-        if not wide:
+        if not packed:
             require(len(fields)==2*count and tuple(fields[::2])==menu, 'seeded policy legal menu')
         require(units == _grid(average[key]), 'seeded policy differs from independent exact average')
         sparse[key] = units
@@ -314,15 +320,16 @@ def replay_saved_policy(path, expected_sha256):
     quality = fixture.quality(dense)
     baseline = fixture.quality(uniform)
     limit = Fraction(1,10)
-    status = ('seeded_proof11_dealt_saved_policy_exact_replay_pass' if eleven else
+    status = ('seeded_proof9_quality_saved_policy_exact_replay_pass' if curve else
+              'seeded_proof11_dealt_saved_policy_exact_replay_pass' if eleven else
               'seeded_proof9_dealt_saved_policy_exact_replay_pass' if dealt else
               'seeded_proof9_saved_policy_exact_replay_pass')
     result = {
         'status': status,
         'raw_sha256': observed,
         'native_producer_calls': 0,
-        'seed': SEED,
-        'draws': DRAW_COUNT,
+        'seed': seed,
+        'draws': draw_count,
         'attempts': attempts,
         'staged_rows': staged,
         'saved_rows': row_count,
@@ -340,6 +347,8 @@ def replay_saved_policy(path, expected_sha256):
     if eleven:
         result.update(physical_worlds=len(fixture.worlds), physical_policy_rows=fixture.row_count,
                       physical_policy_slots=fixture.slot_count, measured_draw_ledgers=work_sums)
+    if curve:
+        result['measured_draw_ledgers'] = work_sums
     if history_replay:
         result['history_replay'] = True
     return result

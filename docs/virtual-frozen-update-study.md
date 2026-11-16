@@ -482,3 +482,20 @@ rows. Recorded policy work fell from 12,080,128 to 7,817,728 units. The
 median candidate to baseline elapsed ratio was 0.9562 across eight
 alternating complete-call pairs on the Windows test host. The paired
 timing applies to the matched control.
+
+### Multi-seed nine-card quality protocol
+
+The dealt nine-card cohort fixes Seed A at 32, 128, and 512 accepted draws,
+and Seeds B and C at 128. The SplitMix64 seed words are
+0x4F504C2026111601, 0x243F6A8885A308D3, and 0x13198A2E03707344.
+The sampler uses the same signed regrets, fixed policy grid and compatible
+physical deal law as the original dealt result. It reuses frozen decision
+policies across responder passes and exports the compact visible-history
+rows. The underlying game, 500,000,000-unit per-draw limit, state storage
+bounds, and 2 MiB capture limit are fixed.
+
+The operator captures one complete process per named case, retains every
+result, and verifies Seed A's sampled schedule is nested across budgets.
+Independent replay checks all emitted average units and evaluates both
+exact best responses against all 60 PROOF9 physical worlds. The existing
+0.1 big-blind target applies to each individual policy.
