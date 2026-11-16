@@ -422,6 +422,28 @@ struct SampledFrontierFixture {
   }
 };
 
+void private_deal_controls() {
+  const SampledFrontierFixture f;
+  chance::PublicChanceKernel prior(f.sb,f.bb,f.deck);
+  const CommonInteger total=prior.normalizer_integer();
+  const CommonInteger unit=total/29;
+  require(total==unit*29,"dealt fixture prior normalization");
+  const std::array<std::array<chance::Hand,2>,3> pairs{{
+      {{{43,48},{24,37}}}, {{{43,48},{16,32}}}, {{{32,43},{24,37}}}}};
+  std::array<int,4> bounds{0,3,11,29};
+  for (std::size_t i=0;i<pairs.size();++i) {
+    const std::array<CommonInteger,2> tickets{unit*bounds[i],unit*bounds[i+1]-1};
+    for (const auto& ticket:tickets) {
+      const auto selected=prior.private_deal(ticket);
+      require(selected[0].first==pairs[i][0].first && selected[0].second==pairs[i][0].second &&
+              selected[1].first==pairs[i][1].first && selected[1].second==pairs[i][1].second,
+              "dealt ticket crossed a physical prior interval");
+    }
+  }
+  rejects<chance::KernelError>([&] { (void)prior.private_deal(-1); },"dealt negative ticket accepted");
+  rejects<chance::KernelError>([&] { (void)prior.private_deal(total); },"dealt end ticket accepted");
+}
+
 void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   namespace sparse=openpoker::sampled_row_state;
   Fixture f;
@@ -485,13 +507,14 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
-void sampled_grid_seeded() {
+void sampled_grid_seeded(bool dealt=false) {
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
   const SampledFrontierFixture f;
   const UniformPublicBoards boards(f.deck);
   constexpr std::uint64_t seed=0x4f504c2026111601ULL;
-  constexpr std::uint64_t draws=32, attempt_cap=64, draw_work_cap=500000000;
+  constexpr std::uint64_t draws=32, draw_work_cap=500000000;
+  const std::uint64_t attempt_cap=dealt ? 256 : 64;
   constexpr std::size_t output_cap=2U<<20;
   // Each word is reproducible from the retained seed, including rejections.
   std::uint64_t random_state=seed;
@@ -511,26 +534,63 @@ void sampled_grid_seeded() {
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<"SAMPLED_PROOF9_V1 "<<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
+  header<<(dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
+        <<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
   emit(header);
   std::optional<sparse::State> state;
   std::uint64_t attempts=0, reserved=0, rank_calls=0;
+  std::optional<chance::PublicChanceKernel> prior;
+  if (dealt) prior.emplace(f.sb,f.bb,f.deck);
+  const auto word_attempt=[&] {
+    if (attempts==attempt_cap) throw std::length_error("sampled word attempts exceeded");
+    ++attempts;
+    return next_word();
+  };
+  const auto ticket=[&](const CommonInteger& limit) {
+    const CommonInteger top=limit-1;
+    const auto bits=chance::prior::magnitude_bits(top);
+    CommonInteger candidate;
+    do {
+      candidate=0;
+      for (std::size_t offset=0;offset<bits;offset+=64) {
+        const auto take=std::min<std::size_t>(64,bits-offset);
+        auto word=word_attempt();
+        if (take<64) word&=(std::uint64_t{1}<<take)-1;
+        candidate|=CommonInteger(word)<<offset;
+      }
+    } while (candidate>=limit);
+    return candidate;
+  };
   sparse::Limits state_limits;
   state_limits.iterations=draws;
   state_limits.stage_calls=draws*868;
   for (std::uint64_t draw=0;draw<draws;++draw) {
+    auto proposal=boards;
+    CommonInteger selected_ticket;
+    std::array<chance::Hand,2> private_deal{};
+    std::array<chance::WeightedHand,1> sb{}, bb{};
+    if (dealt) {
+      selected_ticket=ticket(prior->normalizer_integer());
+      private_deal=prior->private_deal(selected_ticket);
+      const auto mask=[](chance::Hand h) {return (1ULL<<h.first)|(1ULL<<h.second);};
+      proposal=UniformPublicBoards(f.deck,mask(private_deal[0])|mask(private_deal[1]));
+      sb[0]={private_deal[0],std::bit_cast<std::uint64_t>(1.)};
+      bb[0]={private_deal[1],std::bit_cast<std::uint64_t>(1.)};
+    }
     std::optional<std::uint64_t> ordinal;
     std::uint64_t word=0;
     do {
-      if (attempts==attempt_cap) throw std::length_error("sampled word attempts exceeded");
-      ++attempts;
-      word=next_word();
-      ordinal=boards.ordinal_from_word(word);
+      word=word_attempt();
+      ordinal=proposal.ordinal_from_word(word);
     } while (!ordinal);
-    const auto board=boards.at(*ordinal);
-    FrozenGame game(f.config,f.deck,f.sb,f.bb);
+    const auto board=proposal.at(*ordinal);
+    const auto sb_range=dealt ? std::span<const chance::WeightedHand>(sb) :
+                                std::span<const chance::WeightedHand>(f.sb);
+    const auto bb_range=dealt ? std::span<const chance::WeightedHand>(bb) :
+                                std::span<const chance::WeightedHand>(f.bb);
+    FrozenGame game(f.config,f.deck,sb_range,bb_range);
     const auto stage=FrozenUpdate::run_sampled(game,board,state ? &*state : nullptr,
-                                               SampledContraction::prepared);
+                       dealt ? SampledContraction::dealt : SampledContraction::prepared);
     if (stage.rows.size()>868 || stage.forecast.work_upper>draw_work_cap)
       throw std::length_error("seeded draw exceeds pinned envelope");
     reserved+=stage.forecast.work_upper;
@@ -543,6 +603,11 @@ void sampled_grid_seeded() {
     state->commit(draw);
     std::ostringstream line;
     line<<"DRAW "<<draw<<' '<<attempts<<' '<<word<<' '<<*ordinal;
+    if (dealt) {
+      line<<' '<<selected_ticket;
+      for (const auto hand:private_deal)
+        line<<' '<<static_cast<unsigned>(hand.first)<<' '<<static_cast<unsigned>(hand.second);
+    }
     for (const auto card:board) line<<' '<<static_cast<unsigned>(card);
     line<<' '<<stage.rows.size()<<' '<<stage.forecast.work_upper<<' '<<stage.prepared_rank_calls;
     emit(line);
@@ -592,8 +657,8 @@ int main(int argc,char **argv) {
         sampled_grid_controls(argument=="sampled-grid" ? SampledContraction::direct : SampledContraction::prepared);
         return 0;
       }
-      if (argument=="sampled-grid-seeded") {
-        sampled_grid_seeded();
+      if (argument=="sampled-grid-seeded" || argument=="sampled-grid-dealt-seeded") {
+        sampled_grid_seeded(argument=="sampled-grid-dealt-seeded");
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {
@@ -612,6 +677,7 @@ int main(int argc,char **argv) {
     history_and_profile_controls();
     zero_target_and_action_controls();
     implicit_public_board_controls();
+    private_deal_controls();
     sampled_row_publication_controls();
     sampled_row_precision_controls();
     publish_frozen_sample_controls();

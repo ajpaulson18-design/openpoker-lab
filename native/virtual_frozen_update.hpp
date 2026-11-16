@@ -33,7 +33,7 @@ struct FrozenUpdateForecast {
   bool admitted = false;
   std::uint64_t policy_work_upper = 0;
 };
-enum class SampledContraction { direct, prepared };
+enum class SampledContraction { direct, prepared, dealt };
 struct FrozenUpdateStage;
 class FrozenUpdate final {
   static std::uint64_t add(std::uint64_t a, std::uint64_t b) {
@@ -98,7 +98,10 @@ public:
     const auto scan = add(4096, add(mul(512, nodes), mul(256, edges)));
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
-    const bool prepared=contraction==SampledContraction::prepared;
+    const bool prepared=contraction==SampledContraction::prepared || contraction==SampledContraction::dealt;
+    if (contraction==SampledContraction::dealt &&
+        (game.hands_[0].size()!=1 || game.hands_[1].size()!=1))
+      throw FrozenUpdateError("dealt walk requires one compatible holding per player");
     if ((!changing && prepared) ||
         (!prepared && contraction!=SampledContraction::direct))
       throw FrozenUpdateError("invalid sampled terminal contraction route");

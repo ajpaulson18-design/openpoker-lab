@@ -327,3 +327,21 @@ testing exact sampling of a compatible private deal followed by its legal
 public board. The sampled private deal must remain hidden from row identity
 and policy selection. That route requires its own estimator proof and
 independent quality comparison.
+
+### Compatible-deal sampling
+
+The dealt route selects the first holding from its exact compatible marginal
+and the second from the selected holding's compatible intervals. The sampler
+walks the two ranges and never retains a private-pair table. It maps an
+unbiased board ordinal to the deck remaining after removing the four private
+cards.
+
+Within the walk, the sampled world contributes its exact payoff and the
+opponent's action reach to regret. Its average increment is own action reach
+times policy. The world itself is drawn from the physical prior, so those
+updates enter with unit weight. The expected increments therefore retain the
+physical prior without an additional public-proposal multiplier. The control
+sums both signed regret and average updates across all 60 physical worlds
+and compares every row with the independent exhaustive evaluator. Policy
+selection and publication retain the global seat, own holding and visible
+history keys.

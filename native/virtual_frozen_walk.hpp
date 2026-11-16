@@ -65,7 +65,8 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   CommonDenominatorLimits math_limits;
   math_limits.work = f.arithmetic_work_upper - f.average_work_upper;
   math_limits.integer_bits = f.integer_bits_upper;
-  math_limits.word_work = contraction==SampledContraction::prepared;
+  const bool dealt=contraction==SampledContraction::dealt;
+  math_limits.word_work = contraction!=SampledContraction::direct;
   math_limits.temporary_payload_bits =
       game.limits_.integer_payload_bits -
       game.chance_->receipt().setup_integer_payload_bits;
@@ -85,7 +86,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   std::optional<prepared_public_chance::PreparedPublicChance> prepared;
   std::size_t prior_shift=0;
   if constexpr (Changing) {
-    if (contraction==SampledContraction::prepared) {
+    if (contraction!=SampledContraction::direct) {
       chance::Limits limits;
       limits.max_hands_per_side=game.limits_.max_hands_per_side;
       limits.max_modeled_work=f.chance_work_upper;
@@ -108,6 +109,8 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   for (std::size_t k = 0; k < 4; ++k)
     prefixes[k] = game.chance_->prefix(
         std::span<const std::uint8_t>(board.data(), lengths[k]));
+  if (dealt && (!prefixes.back().physical_support[0][0] || !prefixes.back().physical_support[1][0]))
+    throw FrozenUpdateError("dealt board conflicts with its private holdings");
   HistoryLimits history_limits;
   history_limits.nodes = static_cast<std::size_t>(f.edge_occurrences + 1);
   history_limits.entries =
@@ -221,7 +224,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
           if (!prefix_divisor || divisor%prefix_divisor || law.prefix[p].numerator!=1)
             throw FrozenUpdateError("invalid prefix fold factor");
           const auto factor=divisor/prefix_divisor;
-          const auto qden=mul(law.prefix[p].denominator,factor);
+          const auto qden=dealt ? divisor : mul(law.prefix[p].denominator,factor);
           if (qden>law.board.denominator)
             throw FrozenUpdateError("prefix proposal exceeds forecast width");
           const auto prefix=std::span<const std::uint8_t>(board.data(),length);
@@ -236,7 +239,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
         } else {
           ++stage.full_board_queries;
           if constexpr (Changing) {
-            if (prepared) return via_prepared(board,law.board.denominator,divisor);
+            if (prepared) return via_prepared(board,dealt ? divisor : law.board.denominator,divisor);
             vector=game.chance_->terminal_exact_reach(target,board,kind,payoff,
                     reaches[opponent].numerators,reach_denominator,
                     CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
@@ -288,7 +291,10 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
       if (actor == target) {
         const auto p = prefix_index(node.state.street);
         const auto &snapshot = prefixes[p];
-        const auto ratio = law.prefix[p];
+        const auto lengths_remaining=game.deck_.count-4;
+        const auto flop_count=static_cast<std::uint64_t>(lengths_remaining)*(lengths_remaining-1)*(lengths_remaining-2)/6;
+        const std::array<std::uint64_t,4> dealt_inverse{1,flop_count,flop_count*(game.deck_.count-7),divisor};
+        const auto ratio=dealt ? SmallRatio{1,dealt_inverse[p]} : law.prefix[p];
         for (std::size_t i = 0; i < policies.size(); ++i) {
           if (!snapshot.physical_support[target][i])
             continue;

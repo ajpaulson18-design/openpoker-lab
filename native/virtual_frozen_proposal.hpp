@@ -59,6 +59,20 @@ public:
       : deck_(deck), mask_(public_proposal_deck_mask(deck_)),
         count_(uniform_public_prefix_counts(deck_.count).back()) {}
 
+  // Select a board from the remaining deck of one physical private deal.
+  // The caller uses the original deck for chance and betting semantics.
+  UniformPublicBoards(full_deck_public_chance::DeckDefinition deck,std::uint64_t private_mask)
+      : UniformPublicBoards(deck) {
+    if ((private_mask&mask_)!=private_mask || std::popcount(private_mask)!=4)
+      throw std::invalid_argument("invalid private blockers for a legal-board proposal");
+    mask_&=~private_mask;
+    deck_.count=0;
+    for (std::size_t i=0;i<deck.count;++i)
+      if (!(private_mask&(std::uint64_t{1}<<deck.cards[i]))) deck_.cards[deck_.count++]=deck.cards[i];
+    const auto n=static_cast<std::uint64_t>(deck_.count);
+    count_=n*(n-1)*(n-2)/6*(n-3)*(n-4);
+  }
+
   [[nodiscard]] std::uint64_t size() const noexcept { return count_; }
 
   // Uniform uint64 input on the accepted interval maps exactly equally to

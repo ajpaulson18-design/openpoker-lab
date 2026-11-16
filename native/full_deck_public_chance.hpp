@@ -395,6 +395,37 @@ public:
         for (const auto& x : out.hand_masses[0].numerators) out.total_numerator+=x;
         ++receipt_.prefix_queries; return out;
     }
+    // Index a compatible private deal by an exact ticket in [0, normalizer).
+    // The first marginal sums entire compatible rows. Only the selected row's
+    // second-seat intervals are evaluated, with no private-pair catalogue.
+    [[nodiscard]] std::array<Hand,2> private_deal(const Integer& ticket) {
+        charge(64);
+        if (width(ticket)>normalizer_bits_ || ticket<0 || ticket>=normalizer_)
+            fail(ErrorCode::invalid_query,"private deal ticket is out of range");
+        const auto h=hands_[0].size()+hands_[1].size();
+        const auto words=(normalizer_bits_+63)/64;
+        const auto pair_work=prior::checked_mul_count(words,words+8);
+        reserve_query(prior::checked_add_count(128,prior::checked_mul_count(h,32+pair_work)),
+                      12,normalizer_bits_);
+        Integer local=ticket;
+        std::size_t first=0;
+        {
+            const auto root=prefix({});
+            const auto& masses=root.hand_masses[0].numerators;
+            for (;first<masses.size() && local>=masses[first];++first) local-=masses[first];
+            if (first==masses.size())
+                fail(ErrorCode::invalid_query,"private ticket escaped first marginal");
+        }
+        const auto hand=hands_[0][first];
+        for (std::size_t other=0;other<hands_[1].size();++other) {
+            if (mask(hand)&mask(hands_[1][other])) continue;
+            const Integer mass=weights_[0][first]*weights_[1][other];
+            if (local<mass) return {hand,hands_[1][other]};
+            local-=mass;
+        }
+        fail(ErrorCode::invalid_query,"private ticket escaped second marginal");
+    }
+
 private:
     [[nodiscard]] ExactVector terminal_dyadic_reach_impl(std::size_t player, std::span<const std::uint8_t> board,
             TerminalKind kind, double payoff, std::span<const double> opponent_reach,
