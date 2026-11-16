@@ -35,6 +35,7 @@ constexpr std::size_t max_report_bytes=4*1024*1024,max_path_chars=32768;
 constexpr std::uint32_t default_interval_ms=20,max_interval_ms=1000;
 constexpr std::chrono::seconds child_deadline{60};
 constexpr std::chrono::milliseconds pause_deadline{250};
+constexpr DWORD terminal_exit_observation_ms=250;
 
 struct Failure final:std::runtime_error { using std::runtime_error::runtime_error; };
 struct Options {
@@ -706,7 +707,12 @@ bool collect_terminal_event(HANDLE process,HANDLE thread,Watchdog& watchdog,cons
                             const char* failure,const SampleRecord& record,RunReport& report) {
     if (!terminal_capture_allowed(snapshot,failure,watchdog.reason()) || !report.exit_race_events.empty())
         return false;
-    if (WaitForSingleObject(thread,0)!=WAIT_OBJECT_0 || WaitForSingleObject(process,0)!=WAIT_OBJECT_0)
+    // The kernel can reject a capture after thread teardown starts, before the
+    // two handles become signaled. Observe only this existing child and never
+    // attempt another capture. The watchdog remains active during the wait.
+    const std::array<HANDLE,2> owned_handles{thread,process};
+    if (WaitForMultipleObjects(static_cast<DWORD>(owned_handles.size()),owned_handles.data(),
+                               TRUE,terminal_exit_observation_ms)!=WAIT_OBJECT_0)
         return false;
     DWORD thread_exit=STILL_ACTIVE,process_exit=STILL_ACTIVE;
     if (!GetExitCodeThread(thread,&thread_exit) || !GetExitCodeProcess(process,&process_exit)) return false;
