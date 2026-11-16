@@ -430,6 +430,20 @@ units. The compatible-deal owner retained 21,472 modeled entries and made
 zero payoff-ranking calls. The walk ranked both actual holdings per draw.
 
 History was the largest executed ledger at 789,128,448 modeled units across
-the 32 draws. The full-deck result keeps the bounded 388-node betting template
-and does not assess the strategies at unsampled rows. Its quality field
-remains unknown.
+the 32 draws. The full-deck result uses the bounded 388-node betting template.
+Whole-game quality remains unknown.
+
+### Parent-linked history timing miss
+
+The [paired full-deck record](../benchmarks/results/native-sampled-full52-tree-history-v1/manifest.json)
+compares the current sampled history replay with a candidate that builds
+parent-linked nodes during the first seat pass without maintaining an index.
+The second seat pass reuses the same admitted cursor trace. The candidate
+source is retained on the separate sampled history branch.
+
+The candidate preserved all 13,885 policy rows. Its history ledger fell
+from 789,128,448 to 189,564,160 modeled units and its draw forecast fell
+from 261,600,883 to 239,143,283 units. Across eight alternating pairs of
+complete native calls, the median candidate to baseline elapsed ratio
+was 1.0478 on the Windows test host. The current sampled path remains the
+baseline for larger-game experiments.
