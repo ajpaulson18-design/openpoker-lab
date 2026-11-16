@@ -499,3 +499,21 @@ result, and verifies Seed A's sampled schedule is nested across budgets.
 Independent replay checks all emitted average units and evaluates both
 exact best responses against all 60 PROOF9 physical worlds. The existing
 0.1 big-blind target applies to each individual policy.
+
+The [source-frozen quality cohort](../benchmarks/results/native-sampled-proof9-quality-cohort-v1/manifest.json)
+retains all five policies, actual process observations and exact replay
+receipts. Seed A's first 32 and 128 deals match the corresponding prefixes
+of the longer runs. Its 32-draw metrics reproduce the earlier dealt policy.
+
+| Seed | Accepted draws | Saved rows | Exact exploitability, bb (rounded) |
+| --- | ---: | ---: | ---: |
+| A | 32 | 8,840 | 2.360084 |
+| A | 128 | 20,940 | 2.002378 |
+| A | 512 | 23,348 | 0.678807 |
+| B | 128 | 18,152 | 1.533940 |
+| C | 128 | 18,024 | 1.626978 |
+
+All five policies missed the 0.1 big-blind target. The fixed-seed curve
+shows improvement with additional draws, and the 128-draw checkpoints
+show the observed variation across seeds. The cohort covers the bounded
+nine-card game. Full-deck quality remains unknown.

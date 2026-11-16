@@ -1,0 +1,22 @@
+{
+  "actual_exit_observed": true,
+  "automatic_retries": 0,
+  "duration_seconds": 1.6343229999984032,
+  "failures": [],
+  "request_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "returncode": 0,
+  "status": "exited",
+  "streams": [
+    {
+      "observed_bytes": 1214547,
+      "saved_bytes": 1214547,
+      "sha256": "20b44b4a54a7f1123b98b8849d8cd2a787ec5b0285598b74a6dad48a3438fd71"
+    },
+    {
+      "observed_bytes": 0,
+      "saved_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "version": "bounded-child-observation-v1"
+}

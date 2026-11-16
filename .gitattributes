@@ -255,3 +255,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve the wider betting frontier, sampled policy, and paired timings.
 /benchmarks/results/native-sampled-full52-wide-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/native-sampled-full52-wide-v1/*.bin.gz binary
+
+# Preserve all sampled quality checkpoints and their exact receipts.
+/benchmarks/results/native-sampled-proof9-quality-cohort-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-sampled-proof9-quality-cohort-v1/**/policy.bin.gz binary
