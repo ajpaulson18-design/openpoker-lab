@@ -8,7 +8,7 @@ from tests.test_virtual_frozen_probe_protocol import fixture, BOARD
 from tests.test_virtual_frozen_update_comparison import reference
 from tests.virtual_frozen_reference_artifact import write_reference, read_reference, artifact_allowance
 from tests.virtual_frozen_saved_review import (canonical_boards, read_call, digest, metadata,
-    _bootstrap, check_export, replay_plan, replay_saved_numeric, observed_success)
+    _bootstrap, _check_study_command, check_export, replay_plan, replay_saved_numeric, observed_success)
 from tests.virtual_frozen_saved_review import read_observation, saved_reference, unlinked_path
 from tests.virtual_frozen_saved_review import bounded_inventory, check_plan
 
@@ -136,6 +136,24 @@ class SavedReviewTests(unittest.TestCase):
             with self.subTest(field=field):
                 with self.assertRaises(ValueError):
                     _bootstrap({**boot, field: value}, source, root, stage, identity, 'study')
+
+    def test_prefix_outer_command_resolves_only_recorded_output_paths(self):
+        producer = self.root.resolve() / 'producer'
+        files = self.root.resolve() / 'evidence'
+        command = ['python','--receipt',str(files/'boot.json'),'--','--output',str(files/'study'),
+                   '--expected-head','source','--prefix-folds']
+        relative = list(command)
+        relative[2] = str(Path('..')/'evidence'/'boot.json')
+        relative[5] = str(Path('..')/'evidence'/'study')
+        _check_study_command(relative, command, producer, prefix_folds=True)
+        for position, value in ((2,'other.json'), (4,'--alternate-output'), (7,'other-head')):
+            with self.subTest(position=position):
+                corrupt = list(relative)
+                corrupt[position] = value
+                with self.assertRaises(ValueError):
+                    _check_study_command(corrupt, command, producer, prefix_folds=True)
+        with self.assertRaises(ValueError):
+            _check_study_command(relative, command, producer)
 
     def test_incomplete_q_free_corpus_rejects_without_any_producer(self):
         row = next(iter(reference().rows.values()))

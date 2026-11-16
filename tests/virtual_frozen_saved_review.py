@@ -235,6 +235,22 @@ def _bootstrap(boot, source, root, stage, identity, entry, interpreter=None):
     return runtime
 
 
+def _check_study_command(command, expected, producer_root, *, prefix_folds=False):
+    """Resolve the two producer-relative paths without changing saved evidence."""
+    if not prefix_folds:
+        require_equal(command, expected, 'actual outer command')
+        return
+    if (type(command) is not list or len(command) != len(expected) or
+            any(type(arg) is not str or not arg or '\x00' in arg for arg in command)):
+        raise ValueError('invalid actual outer command')
+    normalized = list(command)
+    for flag in ('--receipt', '--output'):
+        position = expected.index(flag) + 1
+        path = Path(command[position])
+        normalized[position] = str((producer_root / path).resolve())
+    require_equal(normalized, expected, 'actual outer command')
+
+
 def authenticate_saved_study(study, operator, frozen_repo, head, *, prefix_folds=False):
     """Read-only source/build/operator admission, never executes saved source."""
     study, operator, frozen_repo = map(unlinked_path, (study, operator, frozen_repo))
@@ -296,11 +312,12 @@ def authenticate_saved_study(study, operator, frozen_repo, head, *, prefix_folds
     require_equal(file_hash(runtime['path']), runtime['sha256'], 'actual interpreter bytes')
     require_equal(run.get('compiled_project_files'), len(boot['compiled']), 'final compiled count')
     command = json.loads(bounded_bytes(operator / 'study/command.json', 65536))
-    require_equal(command, [runtime['path'], '-I', '-S', '-B', '-c', stage,
-                           str(frozen_repo / 'scripts/run_virtual_frozen_source_only.py'), identity,
-                           '--module', 'scripts.run_virtual_frozen_update_study', '--receipt',
-                           str(operator / 'study-bootstrap.json'), '--', '--output', str(study),
-                           '--expected-head', head, *(['--prefix-folds'] if prefix_folds else [])], 'actual outer command')
+    expected_command = [runtime['path'], '-I', '-S', '-B', '-c', stage,
+                        str(frozen_repo / 'scripts/run_virtual_frozen_source_only.py'), identity,
+                        '--module', 'scripts.run_virtual_frozen_update_study', '--receipt',
+                        str(operator / 'study-bootstrap.json'), '--', '--output', str(study),
+                        '--expected-head', head, *(['--prefix-folds'] if prefix_folds else [])]
+    _check_study_command(command, expected_command, frozen_repo, prefix_folds=prefix_folds)
     closure = metadata(study / 'execution-closure.json', 1 << 20)
     require_equal(closure.get('head'), head, 'execution closure HEAD')
     require_equal(closure.get('compiled_python_sha256'), boot['compiled'], 'final compiled closure')
