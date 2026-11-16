@@ -307,3 +307,23 @@ the independent 24,420-row fixture and groups physical worlds by visible
 history and own holding. The report includes the uniform baseline, both
 response gains and the existing 0.1 big-blind exploitability comparison.
 A miss remains in the result even when the exact replay passes.
+
+### Seeded uniform-public result
+
+The [source-frozen packet](../benchmarks/results/native-sampled-proof9-uniform-v1/manifest.json)
+retains the raw policy, native process observation and independent rational
+quality receipt. A fresh capture at a clean committed revision reproduced the
+first development policy byte for byte. The independent evaluator confirmed
+288 stored information-set rows and completed 24,132 untouched rows using the
+grid-uniform default. Of the stored rows, 168 had zero accumulated average
+mass.
+
+The resulting exploitability was 3.084660607 big blinds, compared with
+3.055348769 for the uniform grid policy. The 0.1 big-blind quality gate missed.
+Only 60 of the 2,520 uniform public proposals have positive full-board prior
+support, and this schedule sampled zero of them. Earlier visible prefixes
+still contribute folds and average masses. The observed coverage supports
+testing exact sampling of a compatible private deal followed by its legal
+public board. The sampled private deal must remain hidden from row identity
+and policy selection. That route requires its own estimator proof and
+independent quality comparison.
