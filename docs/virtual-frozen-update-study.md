@@ -245,3 +245,16 @@ arithmetic. Quantization and policy lookup are forecast at 298,203,136.
 These are admission estimates, with no runtime or quality measurement for the
 rejected request. The small replay does not discharge the full frozen-prefix
 expectation, long-horizon accumulation, or saved-policy best-response checks.
+
+The prepared contraction route reuses one rank plane across the sampled draw.
+It uses the same exact prior, payoff, and inclusion ratios as the direct
+route. Both routes matched the independent three-draw replay. Prepared
+contraction, setup, and result transport consumed 64,823, 57,294, and 51,991
+modeled work units on those draws versus 2,153,792, 1,673,312, and 1,577,664
+for the direct route. The prepared rank counts were 2, 2, and 1.
+
+On the 388-node fixture, the prepared chance forecast was 3,531,823 units
+against 1,674,057,536 for direct chance. Total prepared work still forecast
+2,070,645,807 against the existing 500,000,000 cap. Both admissions stopped
+before a terminal. These are distinct logical operation ledgers and do not
+establish an elapsed-time improvement.

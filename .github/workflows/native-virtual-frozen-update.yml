@@ -72,4 +72,4 @@ jobs:
           path: |
             ${{ runner.temp }}/frozen-update/**/*.log
             ${{ runner.temp }}/frozen-update/**/*.json
-            ${{ runner.temp }}/frozen-update/sampled-grid/*.bin
+            ${{ runner.temp }}/frozen-update/sampled-grid/**/*.bin

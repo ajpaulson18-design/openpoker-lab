@@ -7,6 +7,7 @@
 #include "virtual_frozen_common_denominator.hpp"
 #include "sampled_row_state.hpp"
 #include "dyadic_policy.hpp"
+#include "prepared_public_chance.hpp"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -32,6 +33,7 @@ struct FrozenUpdateForecast {
   bool admitted = false;
   std::uint64_t policy_work_upper = 0;
 };
+enum class SampledContraction { direct, prepared };
 struct FrozenUpdateStage;
 class FrozenUpdate final {
   static std::uint64_t add(std::uint64_t a, std::uint64_t b) {
@@ -53,7 +55,7 @@ class FrozenUpdate final {
 
   template<bool Changing>
   static FrozenUpdateStage walk(FrozenGame &, const std::array<std::uint8_t, 5> &,
-                                ProposalKind, bool, const sampled_row_state::State *);
+                                ProposalKind, bool, const sampled_row_state::State *, SampledContraction);
   static std::uint64_t denominator_shift(bool changing, std::uint64_t reach, std::uint64_t maxneg) {
     // Opponent actions before a terminal and own actions summed back from it
     // occupy disjoint edges of the same legal path.
@@ -64,7 +66,8 @@ public:
   // Evaluate an immutable committed generation. A null image supplies the
   // grid-uniform first policy. The caller owns replay and later publication.
   static FrozenUpdateStage run_sampled(FrozenGame &game,
-      const std::array<std::uint8_t,5> &board, const sampled_row_state::State *committed=nullptr);
+      const std::array<std::uint8_t,5> &board, const sampled_row_state::State *committed=nullptr,
+      SampledContraction contraction=SampledContraction::direct);
   // Preliminary structural/numeric envelope only. The execution method must be
   // paired with this exact ledger; this function performs no terminal callback.
   static FrozenUpdateStage run(FrozenGame &game,
@@ -73,7 +76,8 @@ public:
   static FrozenUpdateForecast forecast(FrozenGame &game,
                                        const std::array<std::uint8_t, 5> &board,
                                        ProposalKind proposal, bool prefix_fold=false,
-                                       bool changing=false) {
+                                       bool changing=false,
+                                       SampledContraction contraction=SampledContraction::direct) {
     if (game.update_used_)
       throw FrozenUpdateError("frozen game already consumed");
     game.update_used_ = true; // failure does not permit resetting child meters
@@ -84,11 +88,16 @@ public:
     const auto scan = add(4096, add(mul(512, nodes), mul(256, edges)));
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
+    const bool prepared=contraction==SampledContraction::prepared;
+    if ((!changing && prepared) ||
+        (!prepared && contraction!=SampledContraction::direct))
+      throw FrozenUpdateError("invalid sampled terminal contraction route");
     if (changing && !prefix_fold)
       throw FrozenUpdateError("changing policy requires visible-prefix folds");
     if (prefix_fold && proposal!=ProposalKind::uniform_public)
       throw FrozenUpdateError("prefix fold requires uniform proposal");
     const auto law = proposal_for(game.deck_, board, proposal);
+    std::uint64_t showdowns=0;
     std::uint64_t rows = 0, slots = 0, rowtokens = 0, edgeocc = 0,
                   tokenbytes = 0, terms = 0, maxmenu = 0, maxpayneg = 0,
                   maxpaypos = 0;
@@ -108,6 +117,7 @@ public:
       } else if (node.state.phase == betting::Phase::fold ||
                  node.state.phase == betting::Phase::showdown) {
         terms = add(terms, paths);
+        if (node.state.phase==betting::Phase::showdown) showdowns=add(showdowns,paths);
         const auto pay =
             std::min(node.state.committed[0], node.state.committed[1]);
         maximum_payoff = std::max(maximum_payoff, pay);
@@ -233,7 +243,7 @@ public:
         add(128,
             mul(32, std::max(game.hands_[0].size(), game.hands_[1].size()))),
         add(4096, add(mul(512, h), mul(mul(64, h), add(1, logceil(h))))));
-    if (changing) {
+    if (changing && !prepared) {
       const auto words=add(bits,63)/64;
       const auto reach_width=add(reach,1);
       // Exact chance adds width-bounded input scans and word products.
@@ -243,8 +253,43 @@ public:
     }
     // Both full-board and visible-prefix dyadic queries execute the same
     // bounded validation, sorting reservation and terminal kernel operations.
-    const auto chancework =
-        add(mul(mul(2, terms), perterminal), mul(4, add(576, mul(128, h))));
+    const auto prefixes_cost=mul(4,add(576,mul(128,h)));
+    auto chancework=add(mul(mul(2,terms),perterminal),prefixes_cost);
+    if (prepared) {
+      // One ordered rank plane suffices because showdowns always use this draw's
+      // complete board. Use unblocked maximums to bound every query.
+      const auto words=[](std::uint64_t width) { return std::max<std::uint64_t>(1,(width+63)/64); };
+      const auto copy=[&](std::uint64_t width) { return 1+2*words(width); };
+      const auto plus=[&](std::uint64_t width) { return 2+3*words(width); };
+      const auto product=[&](std::uint64_t a,std::uint64_t b) {
+        return add(2+2*(words(a)+words(b)),mul(words(a),words(b)));
+      };
+      const auto setup=add(game.chance_->receipt().modeled_work,
+          add(32+30*h+6*game.hands_[0].size()*game.hands_[1].size(),
+              add(mul(6*h,copy(std::max(weight_width[0],weight_width[1]))),
+                  4*words(normalizer_width)+copy(normalizer_width))));
+      chancework=add(prefixes_cost,setup);
+      const auto rank_once=20+12*h+4096*h+
+          64*game.hands_[0].size()*(1+logceil(game.hands_[0].size()))+
+          64*game.hands_[1].size()*(1+logceil(game.hands_[1].size()));
+      if (showdowns) chancework=add(chancework,rank_once);
+      for (std::size_t p=0;p<2;++p) {
+        const auto n=game.hands_[p].size(), opp=game.hands_[1-p].size();
+        const auto rb=reach+1;
+        const auto bucket=weight_width[1-p]+rb+logceil(opp)+4;
+        const auto out=weight_width[p]+bucket;
+        const auto input=23+opp*(4+2*words(rb))+2*n;
+        const auto common=h+8+opp*product(weight_width[1-p],rb)+32*h+
+            n*(product(weight_width[p],bucket)+copy(out)+2*words(bucket));
+        const auto fold=input+common+53+(3*opp+3*n)*plus(bucket);
+        const auto showdown=input+common+53*(2+n)+(9*opp+12*n)*plus(bucket)+6;
+        // Parent constructs the shared denominator and scales each result by
+        // the stake significand, proposal factor and fixed prior alignment.
+        const auto transport=128+8*copy(bits)+n*(64+2*product(bits,64)+4*copy(bits));
+        chancework=add(chancework,add(mul(terms-showdowns,add(fold,transport)),
+                                      mul(showdowns,add(showdown,transport))));
+      }
+    }
     const auto terminalhands = mul(
         mul(2, terms), std::max(game.hands_[0].size(), game.hands_[1].size()));
     const auto units = add(add(mul(64, terminalhands), mul(160, slots)),
@@ -283,14 +328,14 @@ public:
     // ordered actions/numbers: 8/slot; seen-key tree: 16/row. Remaining
     // terms cover arena records, depth frames, four prefixes, and fixed scratch.
     const auto entries = add(
-        game.receipt_.retained_entries_upper,
+        add(game.receipt_.retained_entries_upper,prepared ? 8192+64*h : 0),
         add(mul(48, rows),
             add(mul(8, slots),
                 add(mul(4, rowtokens),
                     add(mul(64, history_nodes),
                         add(mul(mul(128, h), add(rec.max_depth, 1)), 8192))))));
     const auto payload =
-        mul(bits, add(mul(8, add(rows, slots)),
+        mul(bits, add(add(mul(8, add(rows, slots)),prepared ? 8192+64*h : 0),
                       add(mul(mul(64, h), add(rec.max_depth, 1)), 4096)));
     const auto retained_text_bytes =
         add(add(mul(mul(64, rec.max_depth), rows), mul(64, slots)),

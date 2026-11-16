@@ -23,23 +23,24 @@ struct FrozenUpdateStage {
   std::vector<FrozenUpdateRow> rows;
   std::uint64_t prefix_fold_queries = 0, full_board_queries = 0;
   std::uint64_t chance_work = 0, history_work = 0, common_regret_work = 0,
-                average_work = 0, policy_work = 0;
+                average_work = 0, policy_work = 0, prepared_rank_calls = 0;
 };
 inline FrozenUpdateStage
 FrozenUpdate::run(FrozenGame &game, const std::array<std::uint8_t, 5> &board,
                   ProposalKind proposal, bool prefix_fold) {
-  return walk<false>(game,board,proposal,prefix_fold,nullptr);
+  return walk<false>(game,board,proposal,prefix_fold,nullptr,SampledContraction::direct);
 }
 inline FrozenUpdateStage
 FrozenUpdate::run_sampled(FrozenGame &game, const std::array<std::uint8_t,5> &board,
-                          const sampled_row_state::State *committed) {
-  return walk<true>(game,board,ProposalKind::uniform_public,true,committed);
+                          const sampled_row_state::State *committed, SampledContraction contraction) {
+  return walk<true>(game,board,ProposalKind::uniform_public,true,committed,contraction);
 }
 template<bool Changing>
 FrozenUpdateStage
 FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
-                   ProposalKind proposal, bool prefix_fold, const sampled_row_state::State *committed) {
-  const auto f = forecast(game, board, proposal, prefix_fold, Changing);
+                   ProposalKind proposal, bool prefix_fold, const sampled_row_state::State *committed,
+                   SampledContraction contraction) {
+  const auto f = forecast(game, board, proposal, prefix_fold, Changing, contraction);
   if (!f.admitted)
     throw FrozenUpdateError("whole frozen-update admission rejected");
   const auto &t = *game.template_;
@@ -80,6 +81,25 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
     limits.integer_bits=std::min<std::size_t>(65536,f.integer_bits_upper+dyadic_policy::grid_bits);
     quantizer.emplace(limits);
   }
+  std::optional<prepared_public_chance::PreparedPublicChance> prepared;
+  std::size_t prior_shift=0;
+  if constexpr (Changing) {
+    if (contraction==SampledContraction::prepared) {
+      chance::Limits limits;
+      limits.max_hands_per_side=game.limits_.max_hands_per_side;
+      limits.max_modeled_work=f.chance_work_upper;
+      limits.max_integer_bits=f.integer_bits_upper;
+      limits.max_storage_entries=8192+64*(game.hands_[0].size()+game.hands_[1].size());
+      limits.max_integer_payload_bits=limits.max_storage_entries*f.integer_bits_upper;
+      prepared.emplace(game.hands_[0],game.hands_[1],game.deck_,limits,1);
+      const auto reduced_bits=width(prepared->normalizer_integer());
+      if (reduced_bits>norm_bits)
+        throw FrozenUpdateError("prepared prior exceeds raw normalizer width");
+      prior_shift=norm_bits-reduced_bits;
+      if ((prepared->normalizer_integer()<<prior_shift)!=game.chance_->normalizer_integer())
+        throw FrozenUpdateError("prepared and raw prior normalizers differ");
+    }
+  }
   const auto chance_before = game.chance_->receipt().modeled_work;
   const auto terminal_before = game.chance_->receipt().terminal_queries;
   const std::array<std::size_t, 4> lengths{0, 3, 4, 5};
@@ -100,7 +120,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   stage.rows.reserve(static_cast<std::size_t>(f.rows_upper));
   std::set<std::tuple<std::size_t, std::uint8_t, std::uint8_t, std::uint8_t>>
       seen;
-  std::uint64_t staged_slots = 0, staged_text_upper = 0, average_work = 0;
+  std::uint64_t staged_slots = 0, staged_text_upper = 0, average_work = 0, transport_work=0;
   struct GridReach {
     std::vector<CommonInteger> numerators;
     std::size_t exponent=0;
@@ -140,7 +160,7 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
         std::vector<double> reach;
         CommonInteger reach_denominator;
         if constexpr (Changing) {
-          reach_denominator=CommonInteger(1)<<reaches[opponent].exponent;
+          if (!prepared) reach_denominator=CommonInteger(1)<<reaches[opponent].exponent;
         } else {
           reach.reserve(reaches[opponent].size());
           for (int e : reaches[opponent])
@@ -156,6 +176,34 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
                 ? -matched
                 : matched;
         chance::ExactVector vector;
+        const auto via_prepared=[&]([[maybe_unused]] std::span<const std::uint8_t> prefix,
+                                    [[maybe_unused]] std::uint64_t qden) {
+          chance::ExactVector result;
+          if constexpr (Changing) {
+            const auto words=[](std::uint64_t bits) {return std::max<std::uint64_t>(1,(bits+63)/64);};
+            const auto w=words(f.integer_bits_upper), copy=1+2*w, product=2+2*(w+1)+w;
+            const auto cost=128+8*copy+game.hands_[target].size()*(64+2*product+4*copy);
+            transport_work=add(transport_work,cost);
+            if (transport_work>f.chance_work_upper-prepared->receipt().modeled_work)
+              throw FrozenUpdateError("prepared transport exceeded its chance allowance");
+            auto values=prepared->contraction(target,prefix,kind,reaches[opponent].numerators,
+                                                reaches[opponent].exponent);
+            const auto p=chance::prior::decode_parts(std::bit_cast<std::uint64_t>(payoff),true,true,
+                                                      "invalid prepared matched payoff");
+            if (!values.prefix_divisor || divisor%values.prefix_divisor ||
+                values.reach_exponent!=reaches[opponent].exponent)
+              throw FrozenUpdateError("prepared terminal scale differs");
+            result.denominator=math.base() << (values.reach_exponent+std::max(0,-p.exponent));
+            result.numerators=std::move(values.numerators);
+            for (auto &value:result.numerators) {
+              value*=p.significand;
+              value*=qden;
+              value<<=(prior_shift+std::max(0,p.exponent));
+              if (payoff<0) value=-value;
+            }
+          }
+          return result;
+        };
         if (prefix_fold && kind==chance::TerminalKind::fold) {
           const auto length=static_cast<std::size_t>(node.state.street);
           const auto p=prefix_index(node.state.street);
@@ -171,17 +219,19 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
             throw FrozenUpdateError("prefix proposal exceeds forecast width");
           const auto prefix=std::span<const std::uint8_t>(board.data(),length);
           if constexpr (Changing)
-            vector=game.chance_->sampled_fold_prefix_exact_reach(target,prefix,payoff,
-                reaches[opponent].numerators,reach_denominator,CommonInteger(factor),CommonInteger(qden));
+            vector=prepared ? via_prepared(prefix,qden) :
+                game.chance_->sampled_fold_prefix_exact_reach(target,prefix,payoff,
+                    reaches[opponent].numerators,reach_denominator,CommonInteger(factor),CommonInteger(qden));
           else
             vector=game.chance_->sampled_fold_prefix_dyadic_reach(target,prefix,payoff,reach,
                 CommonInteger(factor),CommonInteger(qden));
           ++stage.prefix_fold_queries;
         } else {
           if constexpr (Changing)
-            vector=game.chance_->terminal_exact_reach(target,board,kind,payoff,
-                reaches[opponent].numerators,reach_denominator,
-                CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
+            vector=prepared ? via_prepared(board,law.board.denominator) :
+                game.chance_->terminal_exact_reach(target,board,kind,payoff,
+                    reaches[opponent].numerators,reach_denominator,
+                    CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
           else
             vector=game.chance_->terminal(target,board,kind,payoff,reach,
                 CommonInteger(law.board.numerator),CommonInteger(law.board.denominator));
@@ -368,9 +418,15 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
     (void)walk(t.root(), history.root(), initial);
   }
   if (prefix_fold && (stage.prefix_fold_queries+stage.full_board_queries!=2*f.terminal_occurrences ||
-      game.chance_->receipt().terminal_queries-terminal_before!=stage.prefix_fold_queries+stage.full_board_queries))
+      (prepared ? prepared->receipt().completed_contractions
+                : game.chance_->receipt().terminal_queries-terminal_before)!=
+          stage.prefix_fold_queries+stage.full_board_queries))
     throw FrozenUpdateError("prefix/full terminal query census differs");
   stage.chance_work = game.chance_->receipt().modeled_work - chance_before;
+  if (prepared) {
+    stage.chance_work=add(stage.chance_work,add(prepared->receipt().modeled_work,transport_work));
+    stage.prepared_rank_calls=prepared->receipt().rank_calls;
+  }
   stage.history_work = history.receipt().work;
   stage.common_regret_work = math.receipt().work;
   stage.average_work = average_work;

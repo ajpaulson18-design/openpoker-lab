@@ -121,7 +121,13 @@ def _read_rows(lines, count, regret_d):
 
 @unittest.skipUnless(EXECUTABLE, 'explicit source-built changing-policy controls required')
 class NativeSampledGridTests(unittest.TestCase):
-    def test_three_draws_against_signed_literal_reference(self):
+    def test_direct_draws_against_signed_literal_reference(self):
+        self._check_draws('sampled-grid', 'direct')
+
+    def test_prepared_draws_against_signed_literal_reference(self):
+        self._check_draws('sampled-grid-prepared', 'prepared')
+
+    def _check_draws(self, mode, suffix):
         executable = Path(EXECUTABLE).resolve()
         identity = authenticate(executable, ROOT, 'virtual-frozen-update-controls')
         destination = os.environ.get('OPENPOKER_NATIVE_SAMPLED_GRID_CONTROL_DIR')
@@ -129,9 +135,10 @@ class NativeSampledGridTests(unittest.TestCase):
         if destination is None:
             temporary = TemporaryDirectory()
             self.addCleanup(temporary.cleanup)
-            destination = str(Path(temporary.name) / 'sampled-grid')
-        directory = Path(destination).resolve()
-        receipt = run_bounded_child([str(executable), 'sampled-grid'], b'', directory,
+            destination = temporary.name
+        directory = Path(destination).resolve() / suffix
+        directory.parent.mkdir(parents=True, exist_ok=True)
+        receipt = run_bounded_child([str(executable), mode], b'', directory,
                                     stdout_limit=1 << 20, timeout=45)
         self.assertTrue(receipt['actual_exit_observed'])
         self.assertFalse(receipt['failures'])
@@ -146,7 +153,11 @@ class NativeSampledGridTests(unittest.TestCase):
         for draw, board in enumerate(DRAWS):
             fields = next(lines).split()
             self.assertEqual(fields[0], 'DRAW')
-            index, rows, regret_d, bound, chance, history, arithmetic, average, quantizer = map(int, fields[1:])
+            index, rows, regret_d, bound, chance, history, arithmetic, average, quantizer, ranks = map(int, fields[1:])
+            if mode == 'sampled-grid-prepared':
+                self.assertEqual(ranks, 1 if draw == 2 else 2)
+            else:
+                self.assertEqual(ranks, 0)
             self.assertEqual(index, draw)
             self.assertLessEqual(chance + history + arithmetic + average + quantizer, bound)
             self.assertLessEqual(bound, 500_000_000)

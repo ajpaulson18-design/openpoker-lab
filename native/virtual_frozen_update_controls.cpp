@@ -399,7 +399,7 @@ void zero_target_and_action_controls() {
               stage.average_work <= stage.forecast.average_work_upper,
           "counter exceeded forecast");
 }
-void sampled_grid_controls(bool emit) {
+void sampled_grid_controls(SampledContraction route) {
   namespace sparse=openpoker::sampled_row_state;
   Fixture f;
   const std::array<std::array<std::uint8_t,5>,3> boards{{
@@ -408,19 +408,19 @@ void sampled_grid_controls(bool emit) {
   bool saw_zero=false, saw_negative=false, saw_changed=false;
   for (std::size_t draw=0;draw<boards.size();++draw) {
     FrozenGame game(f.config,f.deck,f.sb,f.bb);
-    const auto stage=FrozenUpdate::run_sampled(game,boards[draw],state ? &*state : nullptr);
+    const auto stage=FrozenUpdate::run_sampled(game,boards[draw],state ? &*state : nullptr,route);
     require(!stage.rows.empty() && stage.prefix_fold_queries && stage.full_board_queries,
             "changing draw did not exercise fold and showdown");
     if (!state) state.emplace(stage.regret_denominator);
     require(state->usage().iterations==draw && !state->usage().pending.rows,
             "evaluating the changing draw mutated the row store");
     state->begin(draw,stage.regret_denominator);
-    if (emit) {
+    {
       require(stage.rows.size()<=512,"sampled control output row limit");
       std::cout<<"DRAW "<<draw<<' '<<stage.rows.size()<<' '<<stage.regret_denominator
                <<' '<<stage.forecast.work_upper<<' '<<stage.chance_work<<' '
                <<stage.history_work<<' '<<stage.common_regret_work<<' '
-               <<stage.average_work<<' '<<stage.policy_work<<'\n';
+               <<stage.average_work<<' '<<stage.policy_work<<' '<<stage.prepared_rank_calls<<'\n';
     }
     for (const auto &row : stage.rows) {
       const sparse::Key key{row.actor,row.first,row.second,row.history};
@@ -434,7 +434,7 @@ void sampled_grid_controls(bool emit) {
         });
         saw_changed=saw_changed || !all;
       }
-      if (emit) {
+      {
         std::cout<<"ROW "<<static_cast<unsigned>(row.actor)<<' '<<static_cast<unsigned>(row.first)
                  <<' '<<static_cast<unsigned>(row.second)<<' '<<row.history.size();
         for (const auto& token:row.history) std::cout<<' '<<token;
@@ -444,10 +444,10 @@ void sampled_grid_controls(bool emit) {
       for (std::size_t a=0;a<row.actions.size();++a) {
         saw_zero=saw_zero || (row.grid_policy_units[a]==0 && row.regret_numerators[a]!=0);
         saw_negative=saw_negative || row.regret_numerators[a]<0;
-        if (emit) std::cout<<' '<<row.actions[a]<<' '<<row.grid_policy_units[a]
+        std::cout<<' '<<row.actions[a]<<' '<<row.grid_policy_units[a]
                            <<' '<<row.regret_numerators[a]<<' '<<row.average_numerators[a];
       }
-      if (emit) std::cout<<'\n';
+      std::cout<<'\n';
       state->stage(draw,key,row.actions,row.regret_numerators,row.average_numerators,
                    row.average_denominator);
     }
@@ -456,7 +456,7 @@ void sampled_grid_controls(bool emit) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
-void sampled_grid_frontier() {
+void sampled_grid_frontier(SampledContraction route) {
   Fixture f;
   f.config.stacks={8,8};
   f.config.stages[0].bets={.5};
@@ -478,7 +478,7 @@ void sampled_grid_frontier() {
   require(geometry.nodes==388 && geometry.logical_occurrences==1105 && geometry.max_depth==15,
           "sampled frontier fixture geometry changed");
   const auto fcast=FrozenUpdate::forecast(game,{16,17,24,33,35},
-      ProposalKind::uniform_public,true,true);
+      ProposalKind::uniform_public,true,true,route);
   require(game.chance_receipt().terminal_queries==0,"sampled frontier executed a terminal");
   std::cout<<"FRONTIER "<<fcast.admitted<<' '<<fcast.work_upper<<' '<<fcast.chance_work_upper<<' '
            <<fcast.history_work_upper<<' '<<fcast.arithmetic_work_upper<<' '<<fcast.policy_work_upper
@@ -488,13 +488,17 @@ void sampled_grid_frontier() {
 } // namespace
 int main(int argc,char **argv) {
   try {
-    if (argc==2 && std::string_view(argv[1])=="sampled-grid") {
-      sampled_grid_controls(true);
-      return 0;
-    }
-    if (argc==2 && std::string_view(argv[1])=="sampled-grid-frontier") {
-      sampled_grid_frontier();
-      return 0;
+    if (argc==2) {
+      const std::string_view argument(argv[1]);
+      if (argument=="sampled-grid" || argument=="sampled-grid-prepared") {
+        sampled_grid_controls(argument=="sampled-grid" ? SampledContraction::direct : SampledContraction::prepared);
+        return 0;
+      }
+      if (argument=="sampled-grid-frontier" || argument=="sampled-grid-prepared-frontier") {
+        sampled_grid_frontier(argument=="sampled-grid-frontier" ? SampledContraction::direct
+                                                               : SampledContraction::prepared);
+        return 0;
+      }
     }
     require(argc==1,"unexpected control argument");
     arithmetic_controls();
