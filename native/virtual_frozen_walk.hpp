@@ -65,7 +65,8 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   CommonDenominatorLimits math_limits;
   math_limits.work = f.arithmetic_work_upper - f.average_work_upper;
   math_limits.integer_bits = f.integer_bits_upper;
-  const bool dealt=contraction==SampledContraction::dealt;
+  const bool history_replay=contraction==SampledContraction::dealt_history_replay;
+  const bool dealt=history_replay || contraction==SampledContraction::dealt;
   math_limits.word_work = contraction!=SampledContraction::direct;
   math_limits.temporary_payload_bits =
       game.limits_.integer_payload_bits -
@@ -118,6 +119,13 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
   history_limits.work = f.history_work_upper;
   history_limits.depth = std::max<std::size_t>(1, t.receipt().max_depth);
   HistoryArena history(history_limits);
+  struct Step {
+    std::size_t parent, edge;
+    HistoryArena::Cursor child;
+  };
+  std::vector<Step> steps;
+  if (history_replay) steps.reserve(static_cast<std::size_t>(f.edge_occurrences));
+  std::size_t replayed_steps=0;
   FrozenUpdateStage stage;
   stage.forecast = f;
   stage.regret_denominator = math.denominator();
@@ -149,6 +157,23 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
     throw FrozenUpdateError("invalid visible street");
   };
   for (std::size_t target = 0; target < 2; ++target) {
+    const auto transition=[&](HistoryArena::Cursor parent,std::size_t edge,auto append) {
+      if (!history_replay) return append();
+      const auto parent_id=history.ordinal(parent);
+      if (target==0) {
+        if (steps.size()>=f.edge_occurrences)
+          throw FrozenUpdateError("history trace exceeded admitted edge count");
+        const auto child=append();
+        steps.push_back({parent_id,edge,child});
+        return child;
+      }
+      if (replayed_steps>=steps.size())
+        throw FrozenUpdateError("history replay exhausted its trace");
+      const auto& step=steps[replayed_steps++];
+      if (step.parent!=parent_id || step.edge!=edge)
+        throw FrozenUpdateError("history replay transition differs from first visit");
+      return step.child;
+    };
     using Vector = std::vector<CommonInteger>;
     std::function<Vector(std::size_t, HistoryArena::Cursor, const Reaches &)>
         walk;
@@ -257,8 +282,9 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
         if (node.edges.size() != 1)
           throw FrozenUpdateError("invalid reveal edge count");
         const auto count = static_cast<std::size_t>(node.state.next_street);
-        const auto child = history.append_reveal(
-            cursor, std::span<const std::uint8_t>(board.data(), count));
+        const auto child=transition(cursor,0,[&] {
+          return history.append_reveal(cursor,std::span<const std::uint8_t>(board.data(),count));
+        });
         return walk(node.edges[0].child, child, reaches);
       }
       if (node.state.phase != betting::Phase::decision || actor > 1 ||
@@ -392,7 +418,9 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
               throw FrozenUpdateError("reach exponent overflow");
           }
         }
-        auto child = history.append_action(cursor, node.edges[a].action.token);
+        const auto child=transition(cursor,a,[&] {
+          return history.append_action(cursor,node.edges[a].action.token);
+        });
         children.push_back(walk(node.edges[a].child, child, next));
       }
       Vector mixed(game.hands_[target].size());
@@ -438,7 +466,9 @@ FrozenUpdate::walk(FrozenGame &game, const std::array<std::uint8_t,5> &board,
     stage.chance_work=add(stage.chance_work,add(prepared->receipt().modeled_work,transport_work));
     stage.prepared_rank_calls=prepared->receipt().rank_calls;
   }
-  stage.history_work = history.receipt().work;
+  if (history_replay && (steps.size()!=f.edge_occurrences || replayed_steps!=steps.size()))
+    throw FrozenUpdateError("incomplete history transition census");
+  stage.history_work=add(history.receipt().work,mul(64,replayed_steps));
   stage.common_regret_work = math.receipt().work;
   stage.average_work = average_work;
   if constexpr (Changing)

@@ -105,11 +105,12 @@ def replay_saved_policy(path, expected_sha256):
     require(observed == expected_sha256, 'seeded artifact digest mismatch')
     records = _records(raw)
     tag, seed, draws, cap, work = next(records)
-    eleven = tag == 'SAMPLED_PROOF11_DEALT_V1'
+    history_replay = tag == 'SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1'
+    eleven = history_replay or tag == 'SAMPLED_PROOF11_DEALT_V1'
     dealt = eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
     deck = ELEVEN_DECK if eleven else FRONTIER_DECK
     attempt_cap = DEALT_ATTEMPT_CAP if dealt else ATTEMPT_CAP
-    require(tag in ('SAMPLED_PROOF11_DEALT_V1','SAMPLED_PROOF9_DEALT_V1','SAMPLED_PROOF9_V1') and
+    require((dealt or tag == 'SAMPLED_PROOF9_V1') and
             (int(seed), int(draws), int(cap), int(work)) ==
             (SEED, DRAW_COUNT, attempt_cap, DRAW_WORK_CAP), 'seeded admission identity')
     boards = () if dealt else tuple(_uniform_boards(deck))
@@ -236,7 +237,33 @@ def replay_saved_policy(path, expected_sha256):
     if eleven:
         result.update(physical_worlds=len(fixture.worlds), physical_policy_rows=fixture.row_count,
                       physical_policy_slots=fixture.slot_count, measured_draw_ledgers=work_sums)
+    if history_replay:
+        result['history_replay'] = True
     return result
+
+
+def compare_eleven_history(baseline, candidate):
+    # The decoded strategy and draw schedule must be identical. Only history
+    # and the composed forecast may differ in the native resource transcript.
+    first,second = _records(baseline),_records(candidate)
+    header_a,header_b = next(first),next(second)
+    require(header_a[0]=='SAMPLED_PROOF11_DEALT_V1' and
+            header_b[0]=='SAMPLED_PROOF11_DEALT_HISTORY_REPLAY_V1' and
+            header_a[1:]==header_b[1:], 'history comparison seed admission')
+    original = current = 0
+    for _ in range(DRAW_COUNT):
+        a,b = next(first),next(second)
+        require(a[0]==b[0]=='DRAW' and a[:-7]==b[:-7] and a[-6:-4]==b[-6:-4] and
+                a[-3:]==b[-3:], 'history comparison changed a draw or its nonhistory work')
+        require(int(b[-7])<int(a[-7]) and int(b[-4])<int(a[-4]), 'history replay work did not decline')
+        original += int(a[-4])
+        current += int(b[-4])
+    a,b = next(first),next(second)
+    require(a[0]==b[0]=='POLICY' and a[:5]==b[:5] and a[6:]==b[6:],
+            'history comparison policy summary differs')
+    for a,b in zip(first,second,strict=True):
+        require(a==b, 'history replay changed the saved policy or export')
+    return {'baseline_history_work':original,'candidate_history_work':current}
 
 
 class DealtEstimatorTests(unittest.TestCase):
@@ -271,6 +298,32 @@ class DealtEstimatorTests(unittest.TestCase):
 
 @unittest.skipUnless(EXECUTABLE, 'explicit source-built changing-policy controls required')
 class NativeSampledSeededTests(unittest.TestCase):
+    def test_eleven_history_replay_preserves_policy_and_lowers_work(self):
+        exe = Path(EXECUTABLE).resolve()
+        identity = authenticate(exe,ROOT,'virtual-frozen-update-controls')
+        base = os.environ.get('OPENPOKER_NATIVE_SAMPLED_SEEDED_DIR')
+        if base is None:
+            temporary = TemporaryDirectory()
+            self.addCleanup(temporary.cleanup)
+            base = temporary.name
+        directory = Path(base) / 'eleven-history'
+        directory.mkdir(parents=True,exist_ok=False)
+        outputs = []
+        for label,mode in (('baseline','sampled-grid-dealt-eleven-seeded'),
+                           ('candidate','sampled-grid-eleven-history-replay')):
+            out = directory / label
+            observation = run_bounded_child([str(exe),mode],b'',out,stdout_limit=CAPTURE_LIMIT,timeout=90)
+            self.assertTrue(observation['actual_exit_observed'])
+            self.assertFalse(observation['failures'])
+            self.assertEqual(observation['returncode'],0,(out/'stderr.bin').read_bytes())
+            self.assertEqual((out/'stderr.bin').read_bytes(),b'')
+            outputs.append((out/'stdout.bin').read_bytes())
+        self.assertEqual(authenticate(exe,ROOT,'virtual-frozen-update-controls'),identity)
+        comparison = compare_eleven_history(*outputs)
+        with (directory/'comparison.json').open('x',encoding='utf-8') as receipt:
+            json.dump(comparison,receipt,sort_keys=True,indent=2)
+            receipt.write('\n')
+
     def test_saved_policy_and_independent_best_response(self):
         self._capture('sampled-grid-seeded','uniform')
 
