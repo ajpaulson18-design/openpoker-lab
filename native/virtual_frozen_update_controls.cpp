@@ -507,10 +507,15 @@ void sampled_grid_controls(SampledContraction route, bool frontier=false) {
   require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
           "changing draw did not exercise signed, changing and zero-action policies");
 }
-void sampled_grid_seeded(bool dealt=false) {
+void sampled_grid_seeded(bool dealt=false, bool eleven=false) {
   namespace sparse=openpoker::sampled_row_state;
   namespace grid=openpoker::dyadic_policy;
-  const SampledFrontierFixture f;
+  SampledFrontierFixture f;
+  if (eleven) {
+    require(dealt,"eleven-card seeded route requires physical deals");
+    const std::array<std::uint8_t,11> cards{0,1,16,17,24,32,33,35,37,43,48};
+    f.deck=chance::DeckDefinition::reduced(cards);
+  }
   const UniformPublicBoards boards(f.deck);
   constexpr std::uint64_t seed=0x4f504c2026111601ULL;
   constexpr std::uint64_t draws=32, draw_work_cap=500000000;
@@ -534,7 +539,8 @@ void sampled_grid_seeded(bool dealt=false) {
     if (!std::cout) throw std::runtime_error("seeded policy output failed");
   };
   std::ostringstream header;
-  header<<(dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
+  header<<(eleven ? "SAMPLED_PROOF11_DEALT_V1 " :
+             dealt ? "SAMPLED_PROOF9_DEALT_V1 " : "SAMPLED_PROOF9_V1 ")
         <<seed<<' '<<draws<<' '<<attempt_cap<<' '<<draw_work_cap;
   emit(header);
   std::optional<sparse::State> state;
@@ -610,6 +616,8 @@ void sampled_grid_seeded(bool dealt=false) {
     }
     for (const auto card:board) line<<' '<<static_cast<unsigned>(card);
     line<<' '<<stage.rows.size()<<' '<<stage.forecast.work_upper<<' '<<stage.prepared_rank_calls;
+    if (eleven) line<<' '<<stage.chance_work<<' '<<stage.history_work<<' '<<stage.common_regret_work
+                     <<' '<<stage.average_work<<' '<<stage.policy_work;
     emit(line);
   }
   grid::Quantizer quantizer;
@@ -659,6 +667,10 @@ int main(int argc,char **argv) {
       }
       if (argument=="sampled-grid-seeded" || argument=="sampled-grid-dealt-seeded") {
         sampled_grid_seeded(argument=="sampled-grid-dealt-seeded");
+        return 0;
+      }
+      if (argument=="sampled-grid-dealt-eleven-seeded") {
+        sampled_grid_seeded(true,true);
         return 0;
       }
       if (argument=="sampled-grid-prepared-frontier-draws") {

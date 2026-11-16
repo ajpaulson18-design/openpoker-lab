@@ -360,3 +360,20 @@ The dealt walk forecast 281,251,943 modeled work units per accepted draw
 under the existing 500,000,000 cap. The seeded study measures one schedule
 on the same bounded nine-card game. It leaves convergence, larger-game
 quality, and comparative runtime open.
+
+### Eleven-card dealt scaling protocol
+
+The eleven-card control uses the [pinned eleven-card fixture](native-dyadic-storage-census.md#compiled-eleven-card-forecast),
+with cards 0 and 1 added to PROOF9. It preserves the ranges, action menus,
+seed, 32 accepted draws, 256-word attempt limit and 500,000,000-unit individual
+draw cap. Each accepted deal still evaluates the four betting streets. Its
+conditional deck now has 420 possible complete boards per private pair.
+
+The capture preserves realized chance, history, regret, average and
+quantization ledgers for each draw. The independent saved-policy verifier
+replays sampled updates using explicit compatible deals, then evaluates both
+best responses on all 1,260 physical worlds of this bounded game. It verifies
+the complete positive-prior row inventory before completing untouched rows
+with the grid-uniform policy. The same 0.1 big-blind quality comparison
+applies. The exhaustive evaluator runs explicitly outside the short CI
+replay because the verification workload grows with full physical support.

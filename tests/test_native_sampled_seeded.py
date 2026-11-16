@@ -24,6 +24,7 @@ SEED = 0x4F504C2026111601
 DRAW_COUNT = 32
 ATTEMPT_CAP = 64
 DEALT_ATTEMPT_CAP = 256
+ELEVEN_DECK = tuple(sorted((*FRONTIER_DECK,0,1)))
 DRAW_WORK_CAP = 500_000_000
 CAPTURE_LIMIT = 2 << 20
 EXECUTABLE = os.environ.get('OPENPOKER_NATIVE_SAMPLED_GRID_EXECUTABLE')
@@ -104,12 +105,15 @@ def replay_saved_policy(path, expected_sha256):
     require(observed == expected_sha256, 'seeded artifact digest mismatch')
     records = _records(raw)
     tag, seed, draws, cap, work = next(records)
-    dealt = tag == 'SAMPLED_PROOF9_DEALT_V1'
+    eleven = tag == 'SAMPLED_PROOF11_DEALT_V1'
+    dealt = eleven or tag == 'SAMPLED_PROOF9_DEALT_V1'
+    deck = ELEVEN_DECK if eleven else FRONTIER_DECK
     attempt_cap = DEALT_ATTEMPT_CAP if dealt else ATTEMPT_CAP
-    require(tag in ('SAMPLED_PROOF9_DEALT_V1','SAMPLED_PROOF9_V1') and
+    require(tag in ('SAMPLED_PROOF11_DEALT_V1','SAMPLED_PROOF9_DEALT_V1','SAMPLED_PROOF9_V1') and
             (int(seed), int(draws), int(cap), int(work)) ==
             (SEED, DRAW_COUNT, attempt_cap, DRAW_WORK_CAP), 'seeded admission identity')
-    boards = tuple(_uniform_boards(FRONTIER_DECK))
+    boards = () if dealt else tuple(_uniform_boards(deck))
+    work_sums = dict.fromkeys(('chance','history','common_regret','average','quantization'),0)
     words = _splitmix(SEED)
     lottery = _dealt_lottery() if dealt else ()
     private_limit = sum(size for _,size in lottery)
@@ -138,10 +142,15 @@ def replay_saved_policy(path, expected_sha256):
                     break
                 residual -= size
             require(private == ((a,b),(c,d)), 'seeded compatible private deal drift')
-            remaining = tuple(card for card in FRONTIER_DECK if card not in (a,b,c,d))
+            remaining = tuple(card for card in deck if card not in (a,b,c,d))
             proposal = tuple(_uniform_boards(remaining))
         board = tuple(tail[:5])
-        rows, forecast, ranks = tail[5:]
+        rows, forecast, ranks, *ledgers = tail[5:]
+        require(len(ledgers) == (len(work_sums) if eleven else 0), 'seeded draw ledger shape')
+        if eleven:
+            require(min(ledgers) >= 0 and sum(ledgers) <= forecast, 'seeded draw ledger exceeds admission')
+            for key, value in zip(work_sums,ledgers,strict=True):
+                work_sums[key] += value
         require(tag == 'DRAW' and ordinal_index == draw, 'seeded draw index')
         rejection = (1 << 64) % len(proposal)
         expected_word = word_attempt()
@@ -190,7 +199,7 @@ def replay_saved_policy(path, expected_sha256):
     tag, rows, export_work = next(records)
     require(tag == 'END' and int(rows) == row_count and 0 < int(export_work) <= DRAW_WORK_CAP
             and next(records,None) is None, 'seeded complete export')
-    fixture = Fixture()
+    fixture = Fixture(eleven_card=eleven)
     holding_rank = [{hand:i for i,(hand,_) in enumerate(side)} for side in FRONTIER_RANGES]
     supplied = {(p,holding_rank[p][hand],h): units for (p,hand,h),units in sparse.items()}
     require(set(supplied) <= fixture.menus.keys(), 'seeded quality has invalid visible history')
@@ -201,9 +210,11 @@ def replay_saved_policy(path, expected_sha256):
     quality = fixture.quality(dense)
     baseline = fixture.quality(uniform)
     limit = Fraction(1,10)
-    return {
-        'status': ('seeded_proof9_dealt_saved_policy_exact_replay_pass' if dealt else
-                   'seeded_proof9_saved_policy_exact_replay_pass'),
+    status = ('seeded_proof11_dealt_saved_policy_exact_replay_pass' if eleven else
+              'seeded_proof9_dealt_saved_policy_exact_replay_pass' if dealt else
+              'seeded_proof9_saved_policy_exact_replay_pass')
+    result = {
+        'status': status,
         'raw_sha256': observed,
         'native_producer_calls': 0,
         'seed': SEED,
@@ -222,6 +233,10 @@ def replay_saved_policy(path, expected_sha256):
         'uniform_baseline': {name: _fractions(value) for name,value in baseline.items()},
         'quality_gate': {'threshold_bb': _fractions(limit), 'passed': quality['exploitability'] <= limit},
     }
+    if eleven:
+        result.update(physical_worlds=len(fixture.worlds), physical_policy_rows=fixture.row_count,
+                      physical_policy_slots=fixture.slot_count, measured_draw_ledgers=work_sums)
+    return result
 
 
 class DealtEstimatorTests(unittest.TestCase):

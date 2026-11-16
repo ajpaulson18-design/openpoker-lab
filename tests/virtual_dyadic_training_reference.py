@@ -36,14 +36,23 @@ class World:
 
 
 class Fixture:
-    def __init__(self, *, ten_card=False, quality32=False):
-        self.deck = tuple(sorted((*PROOF9, 0))) if ten_card else PROOF9
-        require(len(set(self.deck)) == (10 if ten_card else 9), 'reference deck geometry')
-        self.denominator = (3480 << 625) if ten_card else D
-        self.value_bits = 644 if ten_card or quality32 else 642
-        self.row_count = 119_196 if ten_card else ROWS
-        self.slot_count = 281_066 if ten_card else SLOTS
-        self.runouts = 120 if ten_card else 20
+    def __init__(self, *, ten_card=False, quality32=False, eleven_card=False):
+        require(not (eleven_card and (ten_card or quality32)), 'incompatible reference deck modes')
+        if eleven_card:
+            self.deck = tuple(sorted((*PROOF9, 0, 1)))
+            self.denominator = 12_180 << 625
+            self.value_bits = 646
+            self.row_count = 380_172
+            self.slot_count = 892_910
+            self.runouts = 420
+        else:
+            self.deck = tuple(sorted((*PROOF9, 0))) if ten_card else PROOF9
+            require(len(set(self.deck)) == (10 if ten_card else 9), 'reference deck geometry')
+            self.denominator = (3480 << 625) if ten_card else D
+            self.value_bits = 644 if ten_card or quality32 else 642
+            self.row_count = 119_196 if ten_card else ROWS
+            self.slot_count = 281_066 if ten_card else SLOTS
+            self.runouts = 120 if ten_card else 20
         self.template = build_reference_template(_template_case())
         self.nodes = self.template.nodes
         require(len(self.nodes) == 388, 'reference shared state geometry')
