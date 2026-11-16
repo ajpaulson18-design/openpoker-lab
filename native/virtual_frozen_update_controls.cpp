@@ -399,9 +399,104 @@ void zero_target_and_action_controls() {
               stage.average_work <= stage.forecast.average_work_upper,
           "counter exceeded forecast");
 }
+void sampled_grid_controls(bool emit) {
+  namespace sparse=openpoker::sampled_row_state;
+  Fixture f;
+  const std::array<std::array<std::uint8_t,5>,3> boards{{
+      {4,5,6,7,8},{4,5,6,7,8},{4,5,6,7,0}}};
+  std::optional<sparse::State> state;
+  bool saw_zero=false, saw_negative=false, saw_changed=false;
+  for (std::size_t draw=0;draw<boards.size();++draw) {
+    FrozenGame game(f.config,f.deck,f.sb,f.bb);
+    const auto stage=FrozenUpdate::run_sampled(game,boards[draw],state ? &*state : nullptr);
+    require(!stage.rows.empty() && stage.prefix_fold_queries && stage.full_board_queries,
+            "changing draw did not exercise fold and showdown");
+    if (!state) state.emplace(stage.regret_denominator);
+    require(state->usage().iterations==draw && !state->usage().pending.rows,
+            "evaluating the changing draw mutated the row store");
+    state->begin(draw,stage.regret_denominator);
+    if (emit) {
+      require(stage.rows.size()<=512,"sampled control output row limit");
+      std::cout<<"DRAW "<<draw<<' '<<stage.rows.size()<<' '<<stage.regret_denominator
+               <<' '<<stage.forecast.work_upper<<' '<<stage.chance_work<<' '
+               <<stage.history_work<<' '<<stage.common_regret_work<<' '
+               <<stage.average_work<<' '<<stage.policy_work<<'\n';
+    }
+    for (const auto &row : stage.rows) {
+      const sparse::Key key{row.actor,row.first,row.second,row.history};
+      const auto previous=state->committed_row(key);
+      require(row.grid_policy_units.size()==row.actions.size() && row.policy_exponents.empty(),
+              "changing draw used the wrong action representation");
+      if (previous) {
+        const auto all=std::ranges::all_of(row.grid_policy_units,[&](auto units) {
+          return units==openpoker::dyadic_policy::grid_units/row.actions.size() ||
+                 units==openpoker::dyadic_policy::grid_units/row.actions.size()+1;
+        });
+        saw_changed=saw_changed || !all;
+      }
+      if (emit) {
+        std::cout<<"ROW "<<static_cast<unsigned>(row.actor)<<' '<<static_cast<unsigned>(row.first)
+                 <<' '<<static_cast<unsigned>(row.second)<<' '<<row.history.size();
+        for (const auto& token:row.history) std::cout<<' '<<token;
+        std::cout<<' '<<row.actions.size()<<' '<<row.average_denominator<<' '
+                 <<row.average_mass_numerator;
+      }
+      for (std::size_t a=0;a<row.actions.size();++a) {
+        saw_zero=saw_zero || (row.grid_policy_units[a]==0 && row.regret_numerators[a]!=0);
+        saw_negative=saw_negative || row.regret_numerators[a]<0;
+        if (emit) std::cout<<' '<<row.actions[a]<<' '<<row.grid_policy_units[a]
+                           <<' '<<row.regret_numerators[a]<<' '<<row.average_numerators[a];
+      }
+      if (emit) std::cout<<'\n';
+      state->stage(draw,key,row.actions,row.regret_numerators,row.average_numerators,
+                   row.average_denominator);
+    }
+    state->commit(draw);
+  }
+  require(state->usage().iterations==boards.size() && saw_negative && saw_changed && saw_zero,
+          "changing draw did not exercise signed, changing and zero-action policies");
+}
+void sampled_grid_frontier() {
+  Fixture f;
+  f.config.stacks={8,8};
+  f.config.stages[0].bets={.5};
+  for (std::size_t street=1;street<4;++street) {
+    f.config.stages[street].bets={.5,1.};
+    f.config.stages[street].raises={.25};
+    f.config.stages[street].max_raises=1;
+  }
+  const std::array<std::uint8_t,9> cards{16,17,24,32,33,35,37,43,48};
+  const auto deck=chance::DeckDefinition::reduced(cards);
+  const std::array<chance::WeightedHand,2> sb{{
+      {{43,48},std::bit_cast<std::uint64_t>(.125)},
+      {{32,43},std::bit_cast<std::uint64_t>(.75)}}};
+  const std::array<chance::WeightedHand,2> bb{{
+      {{24,37},std::bit_cast<std::uint64_t>(.375)},
+      {{16,32},std::bit_cast<std::uint64_t>(1.)}}};
+  FrozenGame game(f.config,deck,sb,bb);
+  const auto &geometry=game.template_receipt();
+  require(geometry.nodes==388 && geometry.logical_occurrences==1105 && geometry.max_depth==15,
+          "sampled frontier fixture geometry changed");
+  const auto fcast=FrozenUpdate::forecast(game,{16,17,24,33,35},
+      ProposalKind::uniform_public,true,true);
+  require(game.chance_receipt().terminal_queries==0,"sampled frontier executed a terminal");
+  std::cout<<"FRONTIER "<<fcast.admitted<<' '<<fcast.work_upper<<' '<<fcast.chance_work_upper<<' '
+           <<fcast.history_work_upper<<' '<<fcast.arithmetic_work_upper<<' '<<fcast.policy_work_upper
+           <<' '<<fcast.integer_bits_upper<<' '<<fcast.rows_upper<<' '<<fcast.slots_upper
+           <<' '<<fcast.terminal_occurrences<<'\n';
+}
 } // namespace
-int main() {
+int main(int argc,char **argv) {
   try {
+    if (argc==2 && std::string_view(argv[1])=="sampled-grid") {
+      sampled_grid_controls(true);
+      return 0;
+    }
+    if (argc==2 && std::string_view(argv[1])=="sampled-grid-frontier") {
+      sampled_grid_frontier();
+      return 0;
+    }
+    require(argc==1,"unexpected control argument");
     arithmetic_controls();
     parent_and_reuse_controls();
     history_and_profile_controls();

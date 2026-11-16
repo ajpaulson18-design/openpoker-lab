@@ -2,6 +2,7 @@
 // Internal, exact common-denominator operations for a single admitted board.
 // The caller must include the returned integers in its already-reserved staging payload.
 #include "exact_binary64.hpp"
+#include "dyadic_policy.hpp"
 #include <algorithm>
 #include <bit>
 #include <cstddef>
@@ -125,6 +126,16 @@ public:
     if ((quotient << exponent) != magnitude)
       throw CommonDenominatorError("policy shift would lose exactness");
     return value < 0 ? -quotient : quotient;
+  }
+  [[nodiscard]] CommonInteger weight_grid(const CommonInteger &value, std::uint64_t units) {
+    if (units > dyadic_policy::grid_units)
+      throw CommonDenominatorError("grid units exceed one");
+    if (units == 0 || value == 0) return 0;
+    if (units == dyadic_policy::grid_units) return value;
+    const auto common=static_cast<unsigned>(std::countr_zero(units));
+    auto quotient=divide_power_two(value,dyadic_policy::grid_bits-common);
+    reserve(plus(bits(quotient),std::bit_width(units>>common)),3,64);
+    return quotient*(units>>common);
   }
   [[nodiscard]] CommonInteger add(const CommonInteger &a,
                                   const CommonInteger &b) {

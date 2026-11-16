@@ -109,7 +109,7 @@ class State final {
     }
 
     [[nodiscard]] static Extent row_extent(const Key& key, std::span<const std::string> actions) {
-        if (actions.size()<2 || actions.size()>20)
+        if (actions.empty() || actions.size()>20)
             throw std::invalid_argument("sampled row menu exceeds bounds");
         Extent shape{1,actions.size(),history_width(key)};
         for (std::size_t i=0;i<actions.size();++i) {

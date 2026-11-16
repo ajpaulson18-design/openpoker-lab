@@ -5,6 +5,8 @@
 #include "virtual_frozen_policy.hpp"
 #include "virtual_frozen_proposal.hpp"
 #include "virtual_frozen_common_denominator.hpp"
+#include "sampled_row_state.hpp"
+#include "dyadic_policy.hpp"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -28,6 +30,7 @@ struct FrozenUpdateForecast {
   std::uint64_t row_history_tokens_upper = 0, average_work_upper = 0,
                 retained_text_bytes_upper = 0;
   bool admitted = false;
+  std::uint64_t policy_work_upper = 0;
 };
 struct FrozenUpdateStage;
 class FrozenUpdate final {
@@ -48,7 +51,20 @@ class FrozenUpdate final {
     return n <= 1 ? 0 : std::bit_width(n - 1);
   }
 
+  template<bool Changing>
+  static FrozenUpdateStage walk(FrozenGame &, const std::array<std::uint8_t, 5> &,
+                                ProposalKind, bool, const sampled_row_state::State *);
+  static std::uint64_t denominator_shift(bool changing, std::uint64_t reach, std::uint64_t maxneg) {
+    // Opponent actions before a terminal and own actions summed back from it
+    // occupy disjoint edges of the same legal path.
+    return add(changing ? reach : add(52, mul(2, reach)), maxneg);
+  }
+
 public:
+  // Evaluate an immutable committed generation. A null image supplies the
+  // grid-uniform first policy. The caller owns replay and later publication.
+  static FrozenUpdateStage run_sampled(FrozenGame &game,
+      const std::array<std::uint8_t,5> &board, const sampled_row_state::State *committed=nullptr);
   // Preliminary structural/numeric envelope only. The execution method must be
   // paired with this exact ledger; this function performs no terminal callback.
   static FrozenUpdateStage run(FrozenGame &game,
@@ -56,7 +72,8 @@ public:
                                ProposalKind proposal, bool prefix_fold=false);
   static FrozenUpdateForecast forecast(FrozenGame &game,
                                        const std::array<std::uint8_t, 5> &board,
-                                       ProposalKind proposal, bool prefix_fold=false) {
+                                       ProposalKind proposal, bool prefix_fold=false,
+                                       bool changing=false) {
     if (game.update_used_)
       throw FrozenUpdateError("frozen game already consumed");
     game.update_used_ = true; // failure does not permit resetting child meters
@@ -67,6 +84,8 @@ public:
     const auto scan = add(4096, add(mul(512, nodes), mul(256, edges)));
     if (scan > game.limits_.work - game.receipt_.work)
       throw FrozenUpdateError("update forecast scan exceeds remaining work");
+    if (changing && !prefix_fold)
+      throw FrozenUpdateError("changing policy requires visible-prefix folds");
     if (prefix_fold && proposal!=ProposalKind::uniform_public)
       throw FrozenUpdateError("prefix fold requires uniform proposal");
     const auto law = proposal_for(game.deck_, board, proposal);
@@ -120,8 +139,8 @@ public:
         tokenbytes = add(tokenbytes, mul(paths, n));
       }
     }
-    const auto reach = mul(rec.max_depth, maxmenu ? maxmenu - 1 : 0);
-    if (reach > 1022)
+    const auto reach = mul(rec.max_depth, changing ? dyadic_policy::grid_bits : maxmenu ? maxmenu - 1 : 0);
+    if (!changing && reach > 1022)
       throw FrozenUpdateError(
           "normal binary64 reach exponent admission exceeded");
     const auto normalizer_width = width(game.chance_->normalizer_integer());
@@ -144,7 +163,7 @@ public:
     const auto divisor = static_cast<std::uint64_t>(deck_n) * (deck_n - 1) *
                          (deck_n - 2) / 6 * (game.deck_.count - 7) *
                          (game.deck_.count - 8);
-    const auto shift = add(add(52, add(reach, maxpayneg)), reach);
+    const auto shift = denominator_shift(changing, reach, maxpayneg);
     const auto denominator_width =
         add(add(add(normalizer_width, std::bit_width(divisor)),
                 std::bit_width(law.board.numerator)),
@@ -169,9 +188,10 @@ public:
     }
     const auto average_den_width = add(
         add(add(normalizer_width, std::bit_width(divisor)), qprefix_num_bits),
-        add(reach, add(maxmenu, 3)));
+        add(reach, add(changing ? dyadic_policy::grid_bits : maxmenu, 3)));
     const auto average_num_width =
-        add(add(normalizer_width, qprefix_den_bits), add(maxmenu, 3));
+        add(add(normalizer_width, qprefix_den_bits),
+            changing ? add(add(reach, dyadic_policy::grid_bits), 5) : add(maxmenu, 3));
     // The native query constructs unnormalized bucket products before the
     // value bound applies: admit its documented numerator and denominator
     // width formulas independently, including binary64 reach alignment.
@@ -201,16 +221,26 @@ public:
     const auto history_nodes = add(rec.logical_occurrences, 1);
     if (history_nodes > 250000)
       throw FrozenUpdateError("update history node admission exceeded");
-    const auto history = add(
+    auto history = add(
         4096, add(mul(2, mul(add(mul(512, edgeocc), mul(256, tokenbytes)),
                              add(1, std::bit_width(history_nodes + 1)))),
                   add(mul(2, mul(edgeocc, 640)),
                       add(mul(mul(2, rows), add(512, mul(256, rec.max_depth))),
                           mul(rows, add(256, mul(256, rec.max_depth)))))));
-    const auto perterminal = add(
+    if (changing)
+      history=add(history,mul(mul(2,rows),add(256,mul(256,rec.max_depth))));
+    auto perterminal = add(
         add(128,
             mul(32, std::max(game.hands_[0].size(), game.hands_[1].size()))),
         add(4096, add(mul(512, h), mul(mul(64, h), add(1, logceil(h))))));
+    if (changing) {
+      const auto words=add(bits,63)/64;
+      const auto reach_width=add(reach,1);
+      // Exact chance adds width-bounded input scans and word products.
+      perterminal=add(perterminal,
+          add(mul(16,add(std::max(bits,reach_width),mul(mul(2,h),reach_width))),
+              mul(add(4096,mul(64,h)),mul(words,words))));
+    }
     // Both full-board and visible-prefix dyadic queries execute the same
     // bounded validation, sorting reservation and terminal kernel operations.
     const auto chancework =
@@ -219,13 +249,26 @@ public:
         mul(2, terms), std::max(game.hands_[0].size(), game.hands_[1].size()));
     const auto units = add(add(mul(64, terminalhands), mul(160, slots)),
                            add(mul(mul(64, edgeocc), h), mul(128, rows)));
-    const auto arith =
+    auto arith =
         add(add(mul(bits, units),
                 mul(1024, add(add(terminalhands, mul(5, slots)),
                               add(mul(4, rows), mul(edgeocc, h))))),
             add(mul(512, bits), 1024));
     const auto avgwork = add(mul(bits, add(mul(128, rows), mul(32, slots))),
                              add(mul(4096, rows), mul(1024, slots)));
+    std::uint64_t policy_work=0;
+    if (changing) {
+      const auto words=add(bits,115)/64;
+      // One policy lookup and legacy quantization per physical row per target.
+      // Include full-token comparisons, ordered menu comparison, division,
+      // residual ordering and the bounded lookup path of the committed map.
+      const auto lookup=mul(8192,add(rec.max_depth,1));
+      const auto quantization=add(512,add(mul(mul(32,maxmenu),mul(words,words)),
+          mul(mul(8,mul(maxmenu,maxmenu)),add(words,8))));
+      policy_work=mul(mul(2,rows),add(lookup,quantization));
+      // One-word action multiplications on copied reaches and child values.
+      arith=add(arith,mul(add(mul(2,mul(edgeocc,h)),slots),add(mul(64,bits),1024)));
+    }
     // Fixed owner startup, common-denominator setup, frame and row bookkeeping.
     const auto other =
         add(8192, add(mul(mul(256, rec.logical_occurrences), h),
@@ -235,7 +278,7 @@ public:
                                   add(1, std::bit_width(add(rows, 1))))))));
     const auto work =
         add(game.receipt_.work,
-            add(scan, add(history, add(chancework, add(arith, other)))));
+            add(scan, add(history, add(chancework, add(arith, add(other,policy_work))))));
     // Row headers and vectors: 32 fields/row; full history string slots: 4/token;
     // ordered actions/numbers: 8/slot; seen-key tree: 16/row. Remaining
     // terms cover arena records, depth frames, four prefixes, and fixed scratch.
@@ -274,7 +317,7 @@ public:
             rowtokens,
             avgwork,
             retained_text_bytes,
-            admitted};
+            admitted, policy_work};
   }
 };
 } // namespace openpoker::virtual_frozen_update

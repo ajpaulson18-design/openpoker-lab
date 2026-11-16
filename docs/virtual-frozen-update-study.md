@@ -218,3 +218,30 @@ elapsed time. These observations measure the proof workload only, and the
 individual sources of overhead remain unmeasured.
 The next complete proof needs bounded, independently authenticated outputs
 that survive interruption without overwriting this attempt.
+
+### Changing-policy draw and capacity check
+
+The opt-in native draw reads one committed signed-regret image and uses the
+existing ordered 52-bit policy quantizer. Missing rows use the quantized
+uniform policy. Sequence reaches are integer vectors with a shared power-of-two
+denominator per player. The draw integrates folds at the visible prefix and
+showdowns on the sampled board. An action with zero policy can still receive
+counterfactual regret. The returned draw leaves the input row store untouched
+and the caller controls later publication.
+
+The compiled controls run three draws with one compatible private deal, a
+two-chip stack and the complete four-street action walk. They compare 44
+visible-information rows, including ordered policy units, signed regret and
+average action mass, with a separate Python model using literal board
+completions, independent hand ranks and rational traversal. Two identical
+boards exercise a changing policy, and the third keeps the turn while
+blocking the private deal on the river. The per-draw native forecast is
+64,482,400 modeled work units against the existing 500,000,000 cap.
+
+The same changing-policy forecast on the pinned 388-node, two-by-two PROOF9
+game rejects before entering any terminal. It requires 3,741,171,520 modeled
+work units, including 1,674,057,536 for chance and 1,655,130,304 for exact walk
+arithmetic. Quantization and policy lookup are forecast at 298,203,136.
+These are admission estimates, with no runtime or quality measurement for the
+rejected request. The small replay does not discharge the full frozen-prefix
+expectation, long-horizon accumulation, or saved-policy best-response checks.
