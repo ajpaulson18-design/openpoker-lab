@@ -546,3 +546,20 @@ It authenticates every archived equal-weight input and requires equality of
 the sampled word, private deal and board sequences in each matched case.
 It records every exact best-response result and the paired difference in
 exploitability. The 0.1 big-blind threshold still applies to each policy.
+
+The [source-frozen linear cohort](../benchmarks/results/native-sampled-proof9-linear-cohort-v1/manifest.json)
+replayed every saved policy and matched all five physical draw sequences.
+The exact best-response results below are rounded to six decimal places.
+
+| Seed | Draws | Equal-weight exploitability (bb) | Linear exploitability (bb) |
+| --- | ---: | ---: | ---: |
+| A | 32 | 2.360084 | 2.282648 |
+| A | 128 | 2.002378 | 1.964615 |
+| A | 512 | 0.678807 | 0.347252 |
+| B | 128 | 1.533940 | 1.221151 |
+| C | 128 | 1.626978 | 1.387924 |
+
+Linear averaging reduced exploitability in every matched case. All five
+policies missed the 0.1 big-blind threshold. These measurements establish
+the effect on the tested nine-card schedules. The sampled grid retains
+equal weighting by default pending quality evidence on wider games.

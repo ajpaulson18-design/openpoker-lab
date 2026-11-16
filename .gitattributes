@@ -259,3 +259,7 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 # Preserve all sampled quality checkpoints and their exact receipts.
 /benchmarks/results/native-sampled-proof9-quality-cohort-v1/** -text whitespace=cr-at-eol
 /benchmarks/results/native-sampled-proof9-quality-cohort-v1/**/policy.bin.gz binary
+
+# Preserve all matched linear averaging policies and exact receipts.
+/benchmarks/results/native-sampled-proof9-linear-cohort-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-sampled-proof9-linear-cohort-v1/**/policy.bin.gz binary

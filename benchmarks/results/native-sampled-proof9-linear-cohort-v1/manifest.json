@@ -1,0 +1,206 @@
+{
+  "artifact_sha256": {
+    "a128/matched.json": "c6a5d39df8fe143bcc3fa99d8af4791ab91d1183e32bf509c70d86edf741be9b",
+    "a128/policy.bin.gz": "92fdb3207c5c1195fb9c5c22f23cfe924f0c96c0f677732bb8c1ba7dc2cfe8fd",
+    "a128/process.json": "2d0eef7df9740d7a66b328090779e33f696f89af3b49438824a90959046061c6",
+    "a128/quality.json": "7e560593dac1004bb348227c76062800d7b1e70da35b8bae59d19220b13b83db",
+    "a32/matched.json": "398812f0749476f011a874664e9623e5ed2f6e8560b80a437e37646d40257814",
+    "a32/policy.bin.gz": "946fa390bd6182f1c529ec984474fe462dfb24a9f9a34056fe74074f288a7a14",
+    "a32/process.json": "8a6f1c601b0268cf356cdb30fe35acfea52e0a343172d87b80f2ef5ebf0afbbd",
+    "a32/quality.json": "12c65b8f3e6852e7b521c07878ba2307edab2fc9f19368446bae9ce1f5ba0e2b",
+    "a512/matched.json": "58e4fcec3a6781f11e7f816eea809201c85d384e84d22493837c3261cac9fd63",
+    "a512/policy.bin.gz": "13983ad05fcc1e206fddd93f7e27deea0f039e878344986ea9ffe0c5aeda5e21",
+    "a512/process.json": "80811766545733791ae7e30bdc4445bb9e877b28c03a958f5c9431b95c32c37d",
+    "a512/quality.json": "43e723debdffac606d47406a5ecc891a5a2072a269fe3beeac30c5165d0eb025",
+    "b128/matched.json": "27fb253c59fb51e9c17d0e7b1792ede1a4c34b0e7e11a8d0ee441e9df3625b24",
+    "b128/policy.bin.gz": "9d3cc3cecb71ffb6f3fd594a4a1cdc10eb02d40b6374cd935f93b5dc2ae0ae36",
+    "b128/process.json": "0e07472e436326887b29234d482d3cabd8f7cea69e1311ae9ec25c110e554447",
+    "b128/quality.json": "e228b11fa58b4a43d9565f536b4e3194fff2795eb0b7068e6449b1fa660cd607",
+    "c128/matched.json": "d5b86308c09be7d7ae080fec1bb5b1eaec6ca6077f7f1928da6bd41d35f37aac",
+    "c128/policy.bin.gz": "140ac8f04f14c96fb3c15ccbe2669b961cb35e36c8bd882f58f5b9493fadc36e",
+    "c128/process.json": "8e2b0b396e684e7b31233eff24e011e7e3685fc8103538cb9f91990bd123b3f7",
+    "c128/quality.json": "dd55d9fefad60f9f04b3d288ba2485ff573de8dbdcb2f1d3eff17008a77a9def",
+    "terminal.json": "89290c00757071d23c5ef41dde9f601f54d00cc026a143577ea3d17e351dcfa8"
+  },
+  "average_weight": "one-based draw number applied only to own-reach average",
+  "baseline_manifest": "../native-sampled-proof9-quality-cohort-v1/manifest.json",
+  "baseline_manifest_sha256": "048d4c3c4979494d123703d423ad3e12a371e1b33785f3b48962e3edfcf8f1f7",
+  "case_fixture": "dealt PROOF9, same seeds and ordered physical draws as the equal-weight cohort",
+  "cases": [
+    {
+      "baseline_exploitability": {
+        "denominator": "4725923465096007720142793997109757333639406673304972101475845842502164615450941158345481912320",
+        "numerator": "11153576797703554734789072210360344655950498749358366680369173850392583354175350222708398426969"
+      },
+      "baseline_sha256": "1854701f6211f58a86df9b2690860be9603a7b7ebf7f676d68f1b3d945695b22",
+      "case": "a32",
+      "draw_schedule_equal": true,
+      "draws": 32,
+      "exploitability": {
+        "denominator": "10429624198832568761694441924656016184583518175569593603257039100694432254788283935658994565120",
+        "numerator": "23807159198198142559677258200229061540376164381989877284076629670276197942824589168507655270289"
+      },
+      "linear_minus_equal": {
+        "denominator": "60491820353228898817827763163004893870584405418303642898890826784027707077772046826822168477696",
+        "numerator": "-4684259661056273759172026731283854661984630576245805261080973197423118865061865673323099297527"
+      },
+      "quality_gate": {
+        "passed": false,
+        "threshold_bb": {
+          "denominator": "10",
+          "numerator": "1"
+        }
+      },
+      "raw_policy_bytes": 592541,
+      "raw_policy_sha256": "d3ed51c87dc7e4a51ad29af982c76249c70f1ede9e89b6f2cda7ab9f85ff3a61",
+      "saved_rows": 8840,
+      "seed": 5715151628094477825
+    },
+    {
+      "baseline_exploitability": {
+        "denominator": "75614775441536123522284703953756117338230506772879553623613533480034633847215058533527710597120",
+        "numerator": "151409393356434316960318095748560138408255122951937392072394799067755189150340993500811081461133"
+      },
+      "baseline_sha256": "145aa22068306a8a8b148ea7761f50ae97bebf8d6e33500e7f9e136b1d37a6f5",
+      "case": "a128",
+      "draw_schedule_equal": true,
+      "draws": 128,
+      "exploitability": {
+        "denominator": "7561477544153612352228470395375611733823050677287955362361353348003463384721505853352771059712",
+        "numerator": "14855390024059871896974433325374271846230676580089085588500292314951112070122236457326717813499"
+      },
+      "linear_minus_equal": {
+        "denominator": "75614775441536123522284703953756117338230506772879553623613533480034633847215058533527710597120",
+        "numerator": "-2855493115835597990573762494817419945948357151046536187391875918244068449118628927543903326143"
+      },
+      "quality_gate": {
+        "passed": false,
+        "threshold_bb": {
+          "denominator": "10",
+          "numerator": "1"
+        }
+      },
+      "raw_policy_bytes": 1405133,
+      "raw_policy_sha256": "3f7e3f2757aa60773a77b3ae23cb2eafb365e059edc8cd255753fcbc75d7c9fd",
+      "saved_rows": 20940,
+      "seed": 5715151628094477825
+    },
+    {
+      "baseline_exploitability": {
+        "denominator": "1209836407064577976356555263260097877411688108366072857977816535680554141555440936536443369553920",
+        "numerator": "821244863044604971479295365386268198167418208944153158447647078380571751413865924075161025711157"
+      },
+      "baseline_sha256": "2013272f814df81614576943dcca3d13446758909ccc76b3561175bdde7d54d8",
+      "case": "a512",
+      "draw_schedule_equal": true,
+      "draws": 512,
+      "exploitability": {
+        "denominator": "604918203532288988178277631630048938705844054183036428988908267840277070777720468268221684776960",
+        "numerator": "210059055991345376769076805798777015631020390041156412213694445951416055778895821736060298573707"
+      },
+      "linear_minus_equal": {
+        "denominator": "1209836407064577976356555263260097877411688108366072857977816535680554141555440936536443369553920",
+        "numerator": "-401126751061914217941141753788714166905377428861840334020258186477739639856074280603040428563743"
+      },
+      "quality_gate": {
+        "passed": false,
+        "threshold_bb": {
+          "denominator": "10",
+          "numerator": "1"
+        }
+      },
+      "raw_policy_bytes": 1615433,
+      "raw_policy_sha256": "0ca16e0ddc3c9fab4f74e2504a37af3c72c507aea9ee6cf79de9ce8e349ed30a",
+      "saved_rows": 23348,
+      "seed": 5715151628094477825
+    },
+    {
+      "baseline_exploitability": {
+        "denominator": "472592346509600772014279399710975733363940667330497210147584584250216461545094115834548191232",
+        "numerator": "724928092524718559474055594388251352286118727395558333177323774097639184954713167185303570923"
+      },
+      "baseline_sha256": "e64fadb866ec5836b1be66e78d656b5f49c161d8b89b2a0f15924bc103fda9dc",
+      "case": "b128",
+      "draw_schedule_equal": true,
+      "draws": 128,
+      "exploitability": {
+        "denominator": "15122955088307224704456940790751223467646101354575910724722706696006926769443011706705542119424",
+        "numerator": "18467409211164724074057451572681180128170116690581466370099345184975834982619930116543563279639"
+      },
+      "linear_minus_equal": {
+        "denominator": "15122955088307224704456940790751223467646101354575910724722706696006926769443011706705542119424",
+        "numerator": "-4730289749626269829112327447742863144985682586076400291575015586148618935930891233386150989897"
+      },
+      "quality_gate": {
+        "passed": false,
+        "threshold_bb": {
+          "denominator": "10",
+          "numerator": "1"
+        }
+      },
+      "raw_policy_bytes": 1223209,
+      "raw_policy_sha256": "74ab911a28780854afccc7854182de8e363e29aed3286bbc9ed7dea1c28154c2",
+      "saved_rows": 18152,
+      "seed": 2611923443488327891
+    },
+    {
+      "baseline_exploitability": {
+        "denominator": "302459101766144494089138815815024469352922027091518214494454133920138535388860234134110842388480",
+        "numerator": "492094341664568982025760142843292642025223369966217128384063802999491614546163572680877636638947"
+      },
+      "baseline_sha256": "20b44b4a54a7f1123b98b8849d8cd2a787ec5b0285598b74a6dad48a3438fd71",
+      "case": "c128",
+      "draw_schedule_equal": true,
+      "draws": 128,
+      "exploitability": {
+        "denominator": "32592575621351777380295131014550050576823494298654980010178247189670100796213387298934358016",
+        "numerator": "45236031514674956985807727907845280190560523429245031328238642774074443539384244262028766849"
+      },
+      "linear_minus_equal": {
+        "denominator": "302459101766144494089138815815024469352922027091518214494454133920138535388860234134110842388480",
+        "numerator": "-72303969208385381197464427858488441856821712542823237658009198056080778500677785929250680280227"
+      },
+      "quality_gate": {
+        "passed": false,
+        "threshold_bb": {
+          "denominator": "10",
+          "numerator": "1"
+        }
+      },
+      "raw_policy_bytes": 1213395,
+      "raw_policy_sha256": "51a27d5ea9880cfde429930eb06ee4ae987013ea8a9a488bc1c3cd072b772ef6",
+      "saved_rows": 18024,
+      "seed": 1376283091369227076
+    }
+  ],
+  "contract": "native-sampled-proof9-linear-cohort-v1",
+  "native_build": {
+    "compiler_sha256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+    "executable_sha256": "7ed989da32f3ead5cdbf8bd2942b224fa0ea26678faa29ad91069711be5b0fae",
+    "source_sha256": {
+      "native/dyadic_policy.hpp": "2a1c0a485f5e1d3645740cfe5db9543ee0c0cadcd6e8aca2e54cf9249fca0d96",
+      "native/dyadic_policy_division.hpp": "94ecadef05d3edf254cf0187cf46e4806e45697eb0b5fccaafce7a062f1c8944",
+      "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+      "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+      "native/full_deck_public_chance.hpp": "29c8ef53603d5c8a1fa0bc072eb127bea181d37e3df992d05c3f9dfa67a5de1a",
+      "native/prepared_public_chance.hpp": "af304f29f55fe3a7b6aff8f787648cbece8dc58b1d9a0e83d8de21062633aec7",
+      "native/sampled_row_state.hpp": "dfacffe1075eb6d5bf4f12ad7e4e8cc520096f406591825ef12d8be70d6d298e",
+      "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+      "native/virtual_frozen_common_denominator.hpp": "2740ccfcf167196d2b091d95d2e7532a51e36e33d059a5413aec8780c20c19c2",
+      "native/virtual_frozen_game.hpp": "698cf61304234e00e42bc3aa20e469930d26b1ffbacd050e280c405a0e76e07c",
+      "native/virtual_frozen_history.hpp": "5c2c1a5d7085852acd19a37073c8f90e681b5ed323aef8978ce3b39f4a03c17f",
+      "native/virtual_frozen_policy.hpp": "9eb53e8e2f2a8df9e292fa524570b5d766e01cf24720edf8fb83324952931fee",
+      "native/virtual_frozen_proposal.hpp": "beae790ea1619cd29e3e81b176d0578cafb3831df70bc3c16b4234845d5318eb",
+      "native/virtual_frozen_update.hpp": "2fd6b74e6c6cb0e4263c2554a425be6648510dda93d3ad7e489bc514943bd685",
+      "native/virtual_frozen_update_controls.cpp": "0c7cbaebc7072b52da9355e578db1ae856d44571a1346127cd428cabb617a231",
+      "native/virtual_frozen_walk.hpp": "938e8093e9143015673beb4447b4c4dd6da02180115b0c7db05eb56d93a46b42",
+      "scripts/build_native_exact_four_street.py": "b4fb5cf3adc04679654df920bc6c680b94baf37b44e29d331a4af5e933e0e450",
+      "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+      "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+      "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+    },
+    "target": "virtual-frozen-update-controls"
+  },
+  "quality_scope": "exact finite-game best response, zero native producer calls during saved replay",
+  "source_head": "a387ef6d82a151dcc07abd5e271a35e6e3a6222b"
+}
