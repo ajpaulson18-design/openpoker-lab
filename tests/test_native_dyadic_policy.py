@@ -120,6 +120,17 @@ class NativeDyadicPolicyTests(unittest.TestCase):
         self.assertTrue(tiny_positive_zero)
         self.assertEqual(self.lines[361],f'END 360 {previous_work}')
 
+    def test_mixed_cache_returns_literal_grid_and_checks_first_sweep_guards(self):
+        records = [line.split() for line in self.lines if line.startswith('MEMO_ROW ')]
+        self.assertEqual(len(records), 48)
+        self.assertEqual(len({tuple(row[6:]) for row in records}), 48)
+        for index, row in enumerate(records):
+            self.assertEqual(int(row[1]), index)
+            expected, total = allocation([int(value, 16) for value in row[2:6]])
+            self.assertGreater(total, 0)
+            self.assertEqual(list(map(int, row[6:])), list(expected))
+        self.assertIn('MEMO_GUARD PASS', self.lines)
+
     def test_rejected_rows_limits_and_cumulative_exhaustion(self):
         end = self.lines.index('GUARDS_END PASS')
         guards = self.lines[362:end]

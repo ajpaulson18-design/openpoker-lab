@@ -352,6 +352,7 @@ struct Plan {
     bool bounded_stage_width=false;
     bool pair_complement=false;
     bool bounded_division=false;
+    bool mixed_policy_cache=false;
     std::uint64_t stage_arithmetic_work=0;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
@@ -547,7 +548,8 @@ class Forecast final {
         const auto bits=std::max({std::size_t{53},sum,scaled});
         const auto scans=words(input_bits)+1;
         const auto equal=plan_.equal_quantizer?16+4*n*scans:0;
-        const auto mixed=4*max_positive*scans+256+16*n*(words(bits)+1)+
+        const auto cache=plan_.mixed_policy_cache?dyadic_policy::Quantizer::mixed_cache_probe_work(n,input_bits):0;
+        const auto mixed=cache+4*max_positive*scans+256+16*n*(words(bits)+1)+
             8*max_positive*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+
             4*n*n*(words(sum)+1);
         return inspect+equal+std::max(sparse,mixed);
@@ -710,6 +712,9 @@ public:
         const bool eleven=profile==StrategyProfile::eleven_card_forecast;
         plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
         plan_.bounded_division=profile==StrategyProfile::ten_card_bounded_division;
+#ifdef OPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY
+        plan_.mixed_policy_cache=plan_.bounded_division;
+#endif
         plan_.pair_complement=profile==StrategyProfile::ten_card_pair_complement || plan_.bounded_division;
         plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement || eleven;
         plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound ||
@@ -868,6 +873,8 @@ public:
         plan_.state_work+=plan_.bounded_stage_width?plan_.stage_arithmetic_work:
             plan_.requested_sweeps*(16*S+8*R)*words(value_bits+58);
         if (plan_.zero_policy_bootstrap) plan_.state_work+=state::initial_uniform_policy_work*R;
+        if (plan_.mixed_policy_cache)
+            plan_.quantizer_terms[0]+=dyadic_policy::Quantizer::mixed_cache_setup_work;
         for (const auto work:plan_.quantizer_terms) plan_.quantizer_work+=work;
         plan_.quantizer_work+=plan_.general_quantizer_work;
         auto& w=plan_.parent;
@@ -1001,7 +1008,8 @@ public:
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
                 plan_.compact_directory,plan_.ordered_state,plan_.row_coverage,plan_.shared_policy,plan_.paged_directory,
                 q32?state::Lifecycle::quality32:bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
-                plan_.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,plan_.row_batched);
+                plan_.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,
+                plan_.row_batched,plan_.mixed_policy_cache);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -1533,6 +1541,7 @@ struct TrainingIO {
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
     std::uint64_t combined_divisions=0,compact_encoding_work=0,equal_rows=0,equal_divisions_avoided=0;
+    std::uint64_t mixed_cache_hits=0,mixed_cache_misses=0;
     std::optional<prepared::RankIndexReceipt> rank_index;
     std::optional<factored_dyadic::Receipt> factored;
     packed_signed_update::Counts packed_updates{};
@@ -1899,7 +1908,7 @@ public:
                     p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
                     p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
                     division_kernel,
-                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width}}:std::nullopt);
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width,p.mixed_policy_cache}}:std::nullopt);
 #ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
         phase_trace::mark(trace,phase_trace::Phase::owners_setup,phase_trace::Edge::end);
         phase_trace::mark(trace,phase_trace::Phase::row_registration,phase_trace::Edge::begin);
@@ -2026,6 +2035,8 @@ public:
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         result.combined_divisions=state_receipt.combined_divisions;
+        result.mixed_cache_hits=state_receipt.mixed_cache_hits;
+        result.mixed_cache_misses=state_receipt.mixed_cache_misses;
         result.equal_rows=state_receipt.equal_rows;
         result.equal_divisions_avoided=state_receipt.equal_divisions_avoided;
         if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();

@@ -124,6 +124,8 @@ TARGETS["virtual-dyadic-training-terminal-buffer"] = (
     "native-virtual-dyadic-training-terminal-buffer-probe", TARGETS["virtual-dyadic-training"][1])
 TARGETS["virtual-dyadic-training-allin-reach"] = (
     "native-virtual-dyadic-training-allin-reach-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-mixed-policy-cache"] = (
+    "native-virtual-dyadic-training-mixed-policy-cache-probe", TARGETS["virtual-dyadic-training"][1])
 
 
 def _hash(raw):
@@ -236,8 +238,10 @@ def build(output_directory, *, target="converter", sanitize=False):
         if target == "virtual-dyadic-training-profile":
             flags.append("/DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
         if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer",
-                      "virtual-dyadic-training-allin-reach"):
+                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache"):
             flags.append("/DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-mixed-policy-cache":
+            flags.append("/DOPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY")
         if target == "virtual-dyadic-training-allin-reach":
             flags.append("/DOPENPOKER_TRAINING_ALLIN_REACH_STUDY")
         if target == "virtual-dyadic-training-terminal-buffer":
@@ -253,8 +257,10 @@ def build(output_directory, *, target="converter", sanitize=False):
         if target == "virtual-dyadic-training-profile":
             flags.append("-DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
         if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer",
-                      "virtual-dyadic-training-allin-reach"):
+                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache"):
             flags.append("-DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-mixed-policy-cache":
+            flags.append("-DOPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY")
         if target == "virtual-dyadic-training-allin-reach":
             flags.append("-DOPENPOKER_TRAINING_ALLIN_REACH_STUDY")
         if target == "virtual-dyadic-training-terminal-buffer":
