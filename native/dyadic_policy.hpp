@@ -82,9 +82,10 @@ public:
 
 class Quantizer final {
     using CacheLimb = std::remove_cvref_t<decltype(std::declval<Integer>().backend().limbs()[0])>;
+    static constexpr auto limb_bits=std::numeric_limits<CacheLimb>::digits;
     static constexpr std::size_t cache_slots=16,cache_actions=4,cache_words=11;
     struct CachedPolicy {
-        std::array<std::array<CacheLimb,cache_words>,cache_actions> limbs{};
+        std::array<std::array<std::uint64_t,cache_words>,cache_actions> limbs{};
         std::array<std::uint64_t,cache_actions> units{};
         std::uint64_t signature=0;
         std::array<std::uint8_t,cache_actions> lengths{};
@@ -154,19 +155,31 @@ class Quantizer final {
         if (total != grid_units)
             fail(ErrorCode::arithmetic, "dyadic policy partition incomplete");
     }
-    static std::uint8_t limb_tag(const Integer& value) {
+    static std::uint8_t word_tag(const Integer& value) {
         const auto& raw=value.backend();
-        if (raw.size()>cache_words)
+        const auto count=limb_bits==64?raw.size():(raw.size()+1u)/2u;
+        if (count>cache_words)
             fail(ErrorCode::integer_width,"mixed policy cache limb width");
-        return static_cast<std::uint8_t>(raw.size()|(raw.sign()?0x80u:0u));
+        return static_cast<std::uint8_t>(count|(raw.sign()?0x80u:0u));
+    }
+    static std::uint64_t key_word(const Integer& value,std::size_t index) noexcept {
+        const auto& raw=value.backend();
+        if constexpr (limb_bits==64) {
+            return raw.limbs()[index];
+        } else {
+            const auto low=2*index;
+            auto word=static_cast<std::uint64_t>(raw.limbs()[low]);
+            if (low+1<raw.size()) word|=static_cast<std::uint64_t>(raw.limbs()[low+1])<<32;
+            return word;
+        }
     }
     static std::uint64_t signature(std::span<const Integer> row) {
         std::uint64_t hash=14695981039346656037ull^row.size();
         for (const auto& value:row) {
-            const auto& raw=value.backend();
-            hash=(hash^limb_tag(value))*1099511628211ull;
-            for (std::size_t i=0;i<raw.size();++i)
-                hash=(hash^raw.limbs()[i])*1099511628211ull;
+            const auto tag=word_tag(value);
+            hash=(hash^tag)*1099511628211ull;
+            for (std::size_t i=0;i<(tag&0x7fu);++i)
+                hash=(hash^key_word(value,i))*1099511628211ull;
         }
         hash^=hash>>32;
         hash*=0xd6e8feb86659fd93ull;
@@ -175,19 +188,20 @@ class Quantizer final {
     static bool matches(const CachedPolicy& saved,std::span<const Integer> row,std::uint64_t hash) {
         if (saved.count!=row.size() || saved.signature!=hash) return false;
         for (std::size_t action=0;action<row.size();++action) {
-            const auto& raw=row[action].backend();
-            if (saved.lengths[action]!=limb_tag(row[action]) ||
-                !std::equal(raw.limbs(),raw.limbs()+raw.size(),saved.limbs[action].begin()))
-                return false;
+            const auto tag=word_tag(row[action]);
+            if (saved.lengths[action]!=tag) return false;
+            for (std::size_t i=0;i<(tag&0x7fu);++i)
+                if (saved.limbs[action][i]!=key_word(row[action],i)) return false;
         }
         return true;
     }
     static void remember(CachedPolicy* saved,std::uint64_t hash,std::span<const Integer> row,const Policy& policy) {
         if (!saved) return;
         for (std::size_t action=0;action<row.size();++action) {
-            const auto& raw=row[action].backend();
-            saved->lengths[action]=limb_tag(row[action]);
-            std::copy_n(raw.limbs(),raw.size(),saved->limbs[action].begin());
+            const auto tag=word_tag(row[action]);
+            saved->lengths[action]=tag;
+            for (std::size_t i=0;i<(tag&0x7fu);++i)
+                saved->limbs[action][i]=key_word(row[action],i);
             saved->units[action]=policy.units_[action];
         }
         saved->signature=hash;
@@ -199,7 +213,7 @@ public:
     static constexpr std::size_t cache_storage_bytes() noexcept { return sizeof(MixedCache); }
     static std::uint64_t mixed_cache_probe_work(std::size_t count,std::size_t bits) noexcept {
         // Hash, exact collision check and possible replacement all fit here.
-        return 24+count*(12+8*words(bits));
+        return 24+count*(12+16*words(bits));
     }
 
     explicit Quantizer(Limits limits = {}) : limits_(limits) {
@@ -225,7 +239,7 @@ public:
             fail(ErrorCode::invalid_limits, "invalid reduce-only dyadic policy limits");
         if (limits.mixed_cache) {
             if (!proof10 || limits.division_kernel!=DivisionKernel::bounded_complement ||
-                std::numeric_limits<CacheLimb>::digits!=64 ||
+                (limb_bits!=32 && limb_bits!=64) ||
                 limits.entries<receipt_.retained_entries+mixed_cache_entries+112 ||
                 limits.integer_payload_bits<8*cache_storage_bytes())
                 fail(ErrorCode::invalid_limits,"mixed policy cache requires its bounded two-sweep envelope");
