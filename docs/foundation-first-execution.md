@@ -1390,3 +1390,12 @@ trainer compiles without hooks. The source-frozen evidence retains the first
 code-layout timing miss and the revised split-build study, complete output
 parity, saved-only replay, and 89 focused controls in each Python mode.
 [Measurement contract and limits](native-training-phase-profile.md)
+
+
+## Native training walk observations
+
+A bounded observer of the standard trainer preserved its first two shutdown
+failures and completed a fresh 32-call study with identical output. The wrapper
+missed the preset overhead limit, so context counts remain provisional. Image
+staging and checkpoint streaming were the most frequent identified contexts.
+[Study and scaling implications](native-training-walk-observation.md)

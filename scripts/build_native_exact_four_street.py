@@ -20,6 +20,11 @@ DEPENDENCY_MANIFEST_SHA256 = "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b48
 HEADER_ARCHIVE_SHA256 = "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
 LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
 TARGETS = {
+    "owned-child-stack-sample": ("native-owned-child-stack-sample", (
+        "native/owned_child_stack_sample.cpp",)),
+    "owned-child-stack-sample-controls": ("native-owned-child-stack-sample-controls", (
+        "tests/native/owned_child_stack_sample_controls.cpp", "native/owned_child_stack_sample.cpp")),
+
     "training-phase-profile-controls": ("native-training-phase-profile-controls", (
         "tests/native/training_phase_profile_controls.cpp", "native/training_phase_profile.hpp", "native/training_phase_trace.hpp")),
     "dyadic-policy-division-controls": ("native-dyadic-policy-division-controls", (
@@ -200,6 +205,8 @@ def _extract(directory, headers):
 def build(output_directory, *, target="converter", sanitize=False):
     _need(type(target) is str and target in TARGETS, "Unsupported native exact build target")
     _need(type(sanitize) is bool, "Native exact sanitize selection must be boolean")
+    if target.startswith("owned-child-stack-sample") and os.name != "nt":
+        raise ValueError("Owned child stack sampling requires Windows x64; no fallback")
     directory = Path(output_directory).resolve()
     _need(directory != ROOT and ROOT not in directory.parents, "Native exact builds must be outside the source checkout")
     if sanitize and os.name == "nt":
@@ -260,7 +267,8 @@ def build(output_directory, *, target="converter", sanitize=False):
     _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
           "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
-        "scope": ("Dedicated diagnostic trainer build; profiling hooks are absent from the standard trainer."
+        "scope": ("Bounded Windows x64 owned-child wall-time stack observation controls; not a solver backend or CPU-time claim."
+                  if target.startswith("owned-child-stack-sample") else "Dedicated diagnostic trainer build; profiling hooks are absent from the standard trainer."
                   if target == "virtual-dyadic-training-profile" else "Bounded coarse training phase recorder controls; no solver quality claim."
                   if target == "training-phase-profile-controls" else "Bounded exact policy-grid division controls."
                   if target == "dyadic-policy-division-controls" else "Bounded exact factored value arithmetic controls."
