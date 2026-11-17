@@ -1,0 +1,89 @@
+{
+  "alternating_pairs": 8,
+  "candidate_faster_pairs_min": 6,
+  "expected_footer_delta": {
+    "5": -2778556,
+    "11": -6174850,
+    "18": -2778556,
+    "27": -6174850
+  },
+  "independent_census_sha256": "aa761170bb71493684c8620a8684943cfec3db7e5e83f61feb66155a14e2cfe9",
+  "median_elapsed_ratio_max": 0.96,
+  "native_builds": {
+    "baseline": {
+      "compiler_sha256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "executable_sha256": "df7e4bfe3edca22a6648fa8f2d283f0d213e4dcd50c353b3bced56c0be1e9467",
+      "source_sha256": {
+        "native/dyadic_policy.hpp": "6d550e5520468c81c3dcb2a1cb7f61e0e7302958b88c26ff6affe6c4844a01d6",
+        "native/dyadic_policy_division.hpp": "94ecadef05d3edf254cf0187cf46e4806e45697eb0b5fccaafce7a062f1c8944",
+        "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+        "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+        "native/factored_dyadic.hpp": "bdf93c7755146fe89a964da8250c11462cbebcacdfed33b0167c15b0b8608716",
+        "native/factored_execution.hpp": "77b8ad8c69787f1ae4098b6acdef02ef23b41672084e2e9a75de1545171270b4",
+        "native/full_deck_public_chance.hpp": "a11727920fdd6a668ff8454fb9cbbd4cb70d26c510d2af07ca6381334a43eb0a",
+        "native/packed_signed_update.hpp": "effa94b42ddca59c3d5a6962d63d37a12c6510bdee447ab1f712ec8ff833d435",
+        "native/prepared_public_chance.hpp": "82e029b85e09ad57dbc78d5ecde833405cfc2fe9ec165638da2c3fa1f48b0951",
+        "native/training_phase_profile.hpp": "b57fd7ed3ef7eb9bb711816b456abf53d603cb6d84ccf72594412bf279f3c022",
+        "native/training_phase_trace.hpp": "ec33454507a44d7cafd4f5da13eaffbc79da4cbd8e9f2ff190c16059031b52ee",
+        "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+        "native/virtual_dyadic_history.hpp": "ea331354ff1eed1cf446497c036682d63434bcaac5a54175105b414170bd814a",
+        "native/virtual_dyadic_paged_image.hpp": "f529accce76961ab7cff3b4d5aac0f2f7dec12dafd6d2fc3298d672796f2547f",
+        "native/virtual_dyadic_state.hpp": "e62213740efb30594c862816cb61b79b2d6551df3f91d76e9b1f7bf0f5ac1bc6",
+        "native/virtual_dyadic_training.hpp": "da42c96c8992764fa072935a501969c85b8190cd6677a11f663e164ec97a5f8f",
+        "native/virtual_dyadic_training_probe.cpp": "acded5188363568bb60fc906500a639363dde9fb245ea74312793f0c3fecae42",
+        "scripts/build_native_exact_four_street.py": "6dbc0cf3e44519427f0b8160a7470019716754a962ce2e3c3eaf5ac44f72951e",
+        "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+        "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+        "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+      },
+      "target": "virtual-dyadic-training-staged-pages"
+    },
+    "factored": {
+      "compiler_sha256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+      "executable_sha256": "ffd321f233ee22fae3e6b8e607ac3ffd0e4d30884116f5173134c819a9a58cb9",
+      "source_sha256": {
+        "native/dyadic_policy.hpp": "6d550e5520468c81c3dcb2a1cb7f61e0e7302958b88c26ff6affe6c4844a01d6",
+        "native/dyadic_policy_division.hpp": "94ecadef05d3edf254cf0187cf46e4806e45697eb0b5fccaafce7a062f1c8944",
+        "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+        "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+        "native/factored_dyadic.hpp": "bdf93c7755146fe89a964da8250c11462cbebcacdfed33b0167c15b0b8608716",
+        "native/factored_execution.hpp": "77b8ad8c69787f1ae4098b6acdef02ef23b41672084e2e9a75de1545171270b4",
+        "native/full_deck_public_chance.hpp": "a11727920fdd6a668ff8454fb9cbbd4cb70d26c510d2af07ca6381334a43eb0a",
+        "native/packed_signed_update.hpp": "effa94b42ddca59c3d5a6962d63d37a12c6510bdee447ab1f712ec8ff833d435",
+        "native/prepared_public_chance.hpp": "82e029b85e09ad57dbc78d5ecde833405cfc2fe9ec165638da2c3fa1f48b0951",
+        "native/training_phase_profile.hpp": "b57fd7ed3ef7eb9bb711816b456abf53d603cb6d84ccf72594412bf279f3c022",
+        "native/training_phase_trace.hpp": "ec33454507a44d7cafd4f5da13eaffbc79da4cbd8e9f2ff190c16059031b52ee",
+        "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+        "native/virtual_dyadic_history.hpp": "ea331354ff1eed1cf446497c036682d63434bcaac5a54175105b414170bd814a",
+        "native/virtual_dyadic_paged_image.hpp": "f529accce76961ab7cff3b4d5aac0f2f7dec12dafd6d2fc3298d672796f2547f",
+        "native/virtual_dyadic_state.hpp": "e62213740efb30594c862816cb61b79b2d6551df3f91d76e9b1f7bf0f5ac1bc6",
+        "native/virtual_dyadic_training.hpp": "da42c96c8992764fa072935a501969c85b8190cd6677a11f663e164ec97a5f8f",
+        "native/virtual_dyadic_training_probe.cpp": "acded5188363568bb60fc906500a639363dde9fb245ea74312793f0c3fecae42",
+        "scripts/build_native_exact_four_street.py": "6dbc0cf3e44519427f0b8160a7470019716754a962ce2e3c3eaf5ac44f72951e",
+        "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+        "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+        "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+      },
+      "target": "virtual-dyadic-training-factored-average"
+    }
+  },
+  "operator_sha256": "02036382d4cc8a75cd60266d3bd10b9889ae01ed676690dd175a0a5e8878a79f",
+  "reference_wire_sha256": "bc0496571953a80fd6b1a0f321ed903e11691c5ae5328ed532853ded264ffa49",
+  "scope": "one Windows host; two complete matched ten-card native calls per pair",
+  "source_head": "299b4ec4ee011d63db9cf3b91fe2ab7e5e97e1d7",
+  "stable_sidecars": {
+    "compact-wire.json": "c55af3248c718078e54d35382bd2290165a74c639305d4e4b599b755c0da9d56",
+    "equal-quantizer.json": "f13894666de6e640c75d432f69039a19b282d4dcb8d75b9ece2fd59ba3d9f6bd",
+    "factored-execution.json": "ba6a9d1e39d9f81385a789d0ceced0a1def6ceea47014f1b75ab2218ba79f2fd",
+    "page-images-rows/rows.bin": "5ceab6207caa89d39d961268b434614533e11496e40e11335ba280b1c611a625",
+    "page-images-rows/rows.json": "f7853567dc545f4efffead7a9751edfb07e20045726a4a61e29fefa67a273a8f",
+    "page-images/committed.bin": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+    "page-images/paging.json": "65405e015cfb77e9898c31ac892285700d2d4148297317de07c45bfd25983d83",
+    "page-images/policy.bin": "020f6878fc6fede39a3fb05b512a4cf739126c392ce2636929f6ab15bab8ea3c",
+    "page-images/policy.json": "a56e3bd59bd30b840dd422f3cd8b86de034d909628aedc63f73a3323a32d56a1",
+    "page-images/quantizer.json": "834e9297bf994bd6e08bc2f9c63447f0425e1686b2b3dff2563d516b0cd65d89",
+    "page-images/rank-index.json": "4ae7ec7065cefc02e4e5f63786882f50ad2c2e1409aa13686124a8219b50b6de",
+    "page-images/staged.bin": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+  },
+  "warmup_pairs": 1
+}

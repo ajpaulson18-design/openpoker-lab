@@ -426,3 +426,48 @@ Use `python -m scripts.census_virtual_dyadic_mixed_policy_cache --help`
 for the independent saved checkpoint analysis. The source-frozen
 paired Windows operator is
 `python -m scripts.benchmark_native_mixed_policy_cache --help`.
+
+### Parent work inside the eleven-card forecast
+
+The [factored-average packet](../benchmarks/results/native-dyadic-factored-average-v1/manifest.json)
+adds a compiled report of the existing parent partitions. An independent
+rank-free traversal reproduces all nine partitions and their supporting
+storage-codec and bookkeeping formulas. The common forecast remains exactly
+equal to the earlier compiled eleven-card receipt, including its rejection
+and zero-training status.
+
+| Parent category | Modeled work units |
+| --- | ---: |
+| Geometry | 3,000,000 |
+| Visit | 28,558,112 |
+| Support | 45,896,000 |
+| Reach | 156,881,300 |
+| Value additions | 155,008,700 |
+| Terminal scaling | 469,977,848 |
+| Average construction and codec | 373,488,182 |
+| Routing, regret codec, paging, directory and policy spill | 1,025,869,790 |
+| Output | 49,769,852 |
+| Total parent | 2,308,449,784 |
+
+Routing includes 491,480,032 regret-codec units, 385,291,990 pager bookkeeping
+units, 79,395,904 directory units, 47,881,968 policy-spill units and 21,819,896
+row-routing units. Average codec work accounts for another 284,374,664 units.
+Factored execution metadata adds 1,203,613,696 units outside the parent partition.
+These are conservative modeled charges, not runtime percentages or new
+primitive-operation bounds. Existing State and codec reservations overlap
+conservatively and require a justified operation bound before any charge is removed.
+
+The new average-coefficient representation reduces observed ten-card average
+construction by 6,174,850 units. Its rank-free first-sweep bound would save
+9,098,697 units on eleven cards, and that representation is not enabled for
+eleven-card training. Even removing the entire 83,548,782-unit eleven-card
+average-construction category would leave the combined forecast far above
+the unchanged 2,150,000,000-unit ceiling. This experiment therefore does not
+resolve the scaling barrier.
+
+The next architectural investigation remains repeated packed-state conversion,
+parent routing and metadata work across the traversal. The bounds must follow
+actual operations and shared lifetimes, with independent output and resource
+validation. The preserved full-width Chance component measurement is useful
+evidence for larger ranges, while its two ten-card training misses and the
+average-staging timing miss remain unchanged.

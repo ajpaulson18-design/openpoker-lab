@@ -559,6 +559,18 @@ void packed_average_controls(h::History& history) {
         s::State packed(history,hands,denominator,plan,{}, {}, {4});
         (void)packed.register_row(root,0,0,menu,200);(void)packed.register_row(root,0,1,menu,200);
         packed.freeze();packed.begin_sweep();
+        const std::array<Integer,2> compact{1,0};
+        reject("scaled_coefficient_nonfactored",ErrorCode::invalid_row,[&] {
+            (void)packed.stage_scaled_row(0,zero_actions,{{compact.data(),compact.size()},200,1});
+        });
+        require(packed.receipt().staged_rows==0 && packed.average_numerator(0,0)==0,
+            "rejected coefficient shift changed a committed average");
+        require_poisoned(packed);
+    }
+    {
+        s::State packed(history,hands,denominator,plan,{}, {}, {4});
+        (void)packed.register_row(root,0,0,menu,200);(void)packed.register_row(root,0,1,menu,200);
+        packed.freeze();packed.begin_sweep();
         const std::array<Integer,2> compact{Integer(1)<<57,0};
         reject("scaled_width",ErrorCode::integer_width,[&] {
             (void)packed.stage_scaled_row(0,zero_actions,{{compact.data(),compact.size()},200});
