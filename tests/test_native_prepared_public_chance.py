@@ -232,16 +232,62 @@ class NativePreparedChanceTests(unittest.TestCase):
     def test_sparse_pairs_match_every_literal_case(self):
         self.check_literal_cases(sparse=True)
 
-    def check_literal_cases(self, *, sparse=False):
+    def test_reused_contraction_output_matches_every_literal_case(self):
+        self.check_literal_cases(buffered=True)
+        self.check_literal_cases(sparse=True, buffered=True)
+
+    def test_buffer_contract_guards_and_asymmetric_rows(self):
+        self.assertEqual(self.invoke('buffer-guards',['buffer-guards'],65536),['BUFFER_GUARDS PASS'])
+        self.assertEqual(self.invoke('same-buffered',['same-buffered'],65536),
+                         self.invoke('same-buffered-reference',['same'],65536))
+
+    def test_full_deck_buffer_matches_literal_blocker_and_signed_values(self):
+        hands = tuple(combinations(range(52), 2))
+        hand_masks = tuple((1 << a) | (1 << b) for a, b in hands)
+        weights = (tuple(1 + row % 5 for row in range(len(hands))),
+                   tuple(1 + (3 * row + 1) % 7 for row in range(len(hands))))
+        reaches = tuple(tuple((row + 2 * player) % 9 for row in range(len(hands)))
+                        for player in (0, 1))
+        board = (17, 24, 33, 35, 37)
+        board_mask = sum(1 << card for card in board)
+        live = [row for row, mask in enumerate(hand_masks) if not mask & board_mask]
+        ranks = {row: independent_rank(tuple(map(card_name, (*hands[row], *board)))) for row in live}
+        prior = sum(weights[0][i] * weights[1][j]
+                    for i, own in enumerate(hand_masks) for j, other in enumerate(hand_masks)
+                    if not own & other)
+        lines = self.invoke('full-deck-buffered', ['full-deck-buffered'], 65536)
+        self.assertEqual(len(lines), 4)
+        for index, line in enumerate(lines):
+            player, showdown = divmod(index, 2)
+            fields = line.split()
+            self.assertEqual(fields[0], 'WIDE')
+            self.assertEqual(tuple(map(int, fields[1:5])), (player, showdown, comb(48, 3) * 45 * 44, 3))
+            self.assertEqual(int(fields[5], 16), prior)
+            masses = [weights[1-player][j] * reaches[1-player][j] for j in range(len(hands))]
+            expected = [0] * len(hands)
+            for i in live:
+                rank = ranks[i]
+                subtotal = 0
+                for j in live:
+                    if not hand_masks[i] & hand_masks[j]:
+                        sign = (rank > ranks[j]) - (rank < ranks[j]) if showdown else 1
+                        subtotal += sign * masses[j]
+                expected[i] = weights[player][i] * subtotal
+            self.assertEqual([int(value, 16) for value in fields[6:]], expected)
+
+    def check_literal_cases(self, *, sparse=False, buffered=False):
         count = 0
         for profile in range(6):
             reach,e = fixture(profile)
             for player in (0,1):
                 for mode in (0,1):
                     selectors=list(map(str,(profile,player,mode)))
-                    if sparse:
-                        selectors.append('sparse')
-                    lines = self.invoke(f'{"sparse-" if sparse else ""}p{profile}-seat{player}-mode{mode}',selectors)
+                    storage = '-'.join(part for part, enabled in
+                                       (('sparse',sparse),('buffered',buffered)) if enabled)
+                    if storage:
+                        selectors.append(storage)
+                    prefix = f'{storage}-' if storage else ''
+                    lines = self.invoke(f'{prefix}p{profile}-seat{player}-mode{mode}',selectors)
                     self.assertEqual(lines[0],f'PREPARED_CASES_V1 {profile} {player} {mode} 1d')
                     boards = [p for p in prefixes() if not mode or len(p)==5]
                     self.assertEqual(len(lines),len(boards)+2)

@@ -1,0 +1,42 @@
+{
+  "artifact_sha256": {
+    "early-terminal-census.json": "520e25239fed4c7b6404cc513e16edee568f754f04a020c98624f428b4f8d9cf",
+    "full-deck-contractions.bin.gz": "9aa2383e3aaabd1929d1cee847efde8bbd13e78ae6d4388fff38b39e6da81fe7",
+    "full-deck-process.json": "80a9b13c8497f996dbda0db8ff1100ab9c48453650ad6f6d6cf32924fd32a123",
+    "protocol.json": "05b62ca62f5f3263d8abd6fc95546ec124ddb7b1ec2ba02fdecef978fe3f0f6f",
+    "timings.json": "5c548c04694a4604461f4bc9ecb420503ccfbaf47ce466332a727e85407888a1"
+  },
+  "complete_calls_with_wire_and_sidecar_parity": 18,
+  "contract": "native-dyadic-contraction-output-v1",
+  "faster_pairs": 5,
+  "full_deck_control_build": {
+    "compiler_sha256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+    "executable_sha256": "e66afa50c12ab6deee604ee7c4d05dcc5eaee99008b721f8ada3502f2b00fcc5",
+    "source_sha256": {
+      "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+      "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+      "native/full_deck_public_chance.hpp": "a11727920fdd6a668ff8454fb9cbbd4cb70d26c510d2af07ca6381334a43eb0a",
+      "native/prepared_public_chance.hpp": "7024bceab9db6d604ac827f0c003d841a36f4d2a5bcc2b7556145e201ed0b641",
+      "scripts/build_native_exact_four_street.py": "7e11e8f2845a9130a0080d5ac5ab630a9888a55257d41cfdb2c8da0752176f3a",
+      "tests/native/prepared_public_chance_controls.cpp": "2364c4327ffcb3cfde64846eef4ad23aca7c5f570773f2977a5c2d500b86b951",
+      "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+      "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+      "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+    },
+    "target": "prepared-public-chance-controls"
+  },
+  "full_deck_control_source_head": "3486fbe184711dff9667fcdfefe3b40862522fac",
+  "independent_checks": {
+    "borrowed_output_reduced_deck_values_checked": 135096,
+    "focused_tests_passed": 15,
+    "full_deck_fixed_board_row_values_checked": 5304,
+    "full_deck_holdings_per_seat": 1326,
+    "full_deck_raw_stdout_sha256": "a4b11f9903be77eecb2c0dcf03ade5b1f9b823b9cfbf6094f40795128a39089e",
+    "full_deck_saved_only_producer_calls": 0
+  },
+  "median_elapsed_ratio": 0.9410068393638465,
+  "timing_gate_passed": false,
+  "training_scope": "one Windows host and a bounded ten-card fixture",
+  "training_source_head": "e47e6ca67a7fc620dedded481f13bd3cb388da94",
+  "upstream_reference": "../native-dyadic-staged-pages-v1/manifest.json"
+}
