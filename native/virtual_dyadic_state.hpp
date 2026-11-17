@@ -419,6 +419,7 @@ class State final {
     static constexpr std::size_t paged_phase_directory_bytes=36'864;
     static constexpr std::size_t paged_phase_view_bytes=(410+388)*16;
     static constexpr std::size_t paged_phase_pager_bytes=591'008;
+    static constexpr std::size_t paged_phase_two_dirty_overhead_bytes=1'022;
     static constexpr std::size_t paged_phase_tags_bytes=119'196;
     static constexpr std::size_t paged_phase_spill_bytes=1'024;
     static constexpr std::size_t paged_phase_codec_bytes=88;
@@ -926,7 +927,8 @@ public:
              sizeof(RowDirectory)>paged_phase_directory_bytes || sizeof(PolicySpill)>paged_phase_spill_bytes ||
              sizeof(std::string_view)!=16 || sizeof(Menu)!=16 || page_codec_words*sizeof(std::uint64_t)!=88 ||
              f.rows!=paged_phase_tags_bytes ||
-             pager_resident_bytes(*paged,true)!=paged_phase_pager_bytes ||
+             pager_resident_bytes(*paged,true)!=paged_phase_pager_bytes+
+                 (paged->two_dirty_pages_per_field?paged_phase_two_dirty_overhead_bytes:0) ||
              (row_batched && row_batch_codec_words*sizeof(std::uint64_t)!=352)))
             fail(ErrorCode::invalid_forecast,"phase payload model ABI exceeds its named envelope");
         if (paged && (!catalog.sealed || (!expanded && !proof9_q32 && f.value_bits>642) || paged->page_words<words(f.value_bits) ||
@@ -1024,6 +1026,8 @@ public:
             // Integer/text workspace is the exact named phase envelope. Dense
             // export APIs are intentionally unavailable for this model.
             payload=paged_phase_payload_bits;
+            if (paged->two_dirty_pages_per_field)
+                payload=plus(payload,8*paged_phase_two_dirty_overhead_bytes);
             if (row_batched) {
                 payload=plus(payload,times(8,(row_batch_codec_words-page_codec_words)*sizeof(std::uint64_t)));
                 entries=plus(entries,row_batch_codec_words-page_codec_words);

@@ -1,0 +1,148 @@
+{
+  "artifact_sha256": {
+    "capture-1.json.gz": "79efbb73d8f20db0124aa0acc38e9e34fd6bfaa74deba359893a8aa92664ee15",
+    "capture-2.json.gz": "ed0f4fe2dbfa85b1eb8e0637e33b7237a241228bcf0b561e936b49caffcb1aea",
+    "capture-3.json.gz": "28cf0b62e2e962fdf7d1813e110ee0daba3877ce512e9b7c52471c36755c0fc9",
+    "normalize.py": "8bea79519d12461a197bf06ab4c60d503fd99e17e4eaaafa87defbd0aa1650b7",
+    "replay.py": "c7ae62f1b0cc63654bc8226e25b823ef3a056b9c3b9b81e719eda4f450bb7fcf"
+  },
+  "collector": "Visual Studio CPUUsageHigh, requested 4000 samples/sec, one Windows host",
+  "contract": "native-dyadic-walk-cpu-v1",
+  "identical_output_sidecar_sha256": {
+    "page-images-rows/rows.bin": "5ceab6207caa89d39d961268b434614533e11496e40e11335ba280b1c611a625",
+    "page-images-rows/rows.json": "f7853567dc545f4efffead7a9751edfb07e20045726a4a61e29fefa67a273a8f",
+    "page-images/committed.bin": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+    "page-images/paging.json": "42b0e4f399e4434f9c7ce79eaf262d546edcf0caf4cc504936c42a075106764b",
+    "page-images/policy.bin": "020f6878fc6fede39a3fb05b512a4cf739126c392ce2636929f6ab15bab8ea3c",
+    "page-images/policy.json": "a56e3bd59bd30b840dd422f3cd8b86de034d909628aedc63f73a3323a32d56a1",
+    "page-images/quantizer.json": "834e9297bf994bd6e08bc2f9c63447f0425e1686b2b3dff2563d516b0cd65d89",
+    "page-images/rank-index.json": "4ae7ec7065cefc02e4e5f63786882f50ad2c2e1409aa13686124a8219b50b6de",
+    "page-images/staged.bin": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+  },
+  "linker_map": {
+    "standard_and_mapped_text_identical": true,
+    "text": {
+      "rva": 4096,
+      "sha256": "94bf584c69ccf093a291df75f5101d875ed4ae9ea897219c9dcc4d412a09b757",
+      "virtual_bytes": 528020
+    }
+  },
+  "native_build": {
+    "compiler_sha256": "fe251ef50a1545b1b0835ee17b1e785459712b38d79e45b5c1d3d28970a36619",
+    "executable_sha256": "080a92dd0557cafbda78074e27d193115491a96fdba4f1d29569aff0f7eae0b3",
+    "source_sha256": {
+      "native/dyadic_policy.hpp": "2a1c0a485f5e1d3645740cfe5db9543ee0c0cadcd6e8aca2e54cf9249fca0d96",
+      "native/dyadic_policy_division.hpp": "94ecadef05d3edf254cf0187cf46e4806e45697eb0b5fccaafce7a062f1c8944",
+      "native/exact_binary64.hpp": "7da20a8fbf229c37367f347d79495298cd69bb54f3982c755dd7c263138be061",
+      "native/exact_selected_kernel.hpp": "a1fc642205ad4e4b2bafaa7e83b876627016340c3ba0d40c5bd333af4c92e16a",
+      "native/factored_dyadic.hpp": "bdf93c7755146fe89a964da8250c11462cbebcacdfed33b0167c15b0b8608716",
+      "native/factored_execution.hpp": "77b8ad8c69787f1ae4098b6acdef02ef23b41672084e2e9a75de1545171270b4",
+      "native/full_deck_public_chance.hpp": "a11727920fdd6a668ff8454fb9cbbd4cb70d26c510d2af07ca6381334a43eb0a",
+      "native/packed_signed_update.hpp": "effa94b42ddca59c3d5a6962d63d37a12c6510bdee447ab1f712ec8ff833d435",
+      "native/prepared_public_chance.hpp": "af304f29f55fe3a7b6aff8f787648cbece8dc58b1d9a0e83d8de21062633aec7",
+      "native/training_phase_profile.hpp": "3fb856c681e09f63dc10446f7f5c6c9ac6a30aaf93a582242b9776b4441df5a4",
+      "native/training_phase_trace.hpp": "702ec68b789463f8f37d1ec3993705ec9f88829c81562843b7feaa31f3e3ac8d",
+      "native/virtual_betting_template.hpp": "4cf507700d2ed3046bed8dbe41c9f4aef196ebc38f22828babb438d91728a0d0",
+      "native/virtual_dyadic_history.hpp": "ea331354ff1eed1cf446497c036682d63434bcaac5a54175105b414170bd814a",
+      "native/virtual_dyadic_paged_image.hpp": "20613b8eb8b25d0d34404dbfab34f5b8d2c6badb23576f8e5ad16e4947800141",
+      "native/virtual_dyadic_state.hpp": "9cf1b8a72d52956be83c8d411f2f78eb36aa82d9bca01253c7b5a0f2dc01edc9",
+      "native/virtual_dyadic_training.hpp": "53f1486f91c7a804ef21266115b1b7f91496d7d80b72fab0f13de14238f8f536",
+      "native/virtual_dyadic_training_probe.cpp": "8128761a8548bbc280e5944380690dfe3a734b093805ff040f6b538f6339434e",
+      "scripts/build_native_exact_four_street.py": "79ec048e0d1efe210bf941c5d371629ed3a36bc6f84d9737e96f9441c0d2c0bc",
+      "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+      "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+      "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
+    },
+    "target": "virtual-dyadic-training"
+  },
+  "native_output_wire_bytes": 50507464,
+  "native_output_wire_sha256": "7fde396c4c2e645087d9fd8abdc373a97a485265bf157e537e3cfd181c538945",
+  "records": [
+    {
+      "capture": "capture-1.json.gz",
+      "checkpoint_policy_and_row_directory_identity_equal": true,
+      "collector_and_native_exit_observed": true,
+      "lost_buffers": 0,
+      "lost_events": 0,
+      "native_stdout_wire_identity_equal": true,
+      "trainer_samples": 20917,
+      "walk_inclusive_hits": {
+        "chance_contract": 2439,
+        "chance_contraction": 2501,
+        "history_append_action": 0,
+        "history_append_reveal": 0,
+        "history_enter_visit": 0,
+        "history_visit_action": 53,
+        "history_visit_reveal": 15,
+        "pager_flush_dirty": 2189,
+        "pager_stage": 2405,
+        "state_stage_direct": 4248,
+        "state_stage_row": 5018,
+        "terminal": 5100,
+        "terminal_or_state_stage_row": 10118,
+        "walk": 16327
+      },
+      "walk_sampled_instruction_outside_trainer": 4805,
+      "walk_samples": 16327
+    },
+    {
+      "capture": "capture-2.json.gz",
+      "checkpoint_policy_and_row_directory_identity_equal": true,
+      "collector_and_native_exit_observed": true,
+      "lost_buffers": 0,
+      "lost_events": 0,
+      "native_stdout_wire_identity_equal": true,
+      "trainer_samples": 22312,
+      "walk_inclusive_hits": {
+        "chance_contract": 2452,
+        "chance_contraction": 2521,
+        "history_append_action": 0,
+        "history_append_reveal": 0,
+        "history_enter_visit": 0,
+        "history_visit_action": 84,
+        "history_visit_reveal": 12,
+        "pager_flush_dirty": 2068,
+        "pager_stage": 2253,
+        "state_stage_direct": 3979,
+        "state_stage_row": 4712,
+        "terminal": 5113,
+        "terminal_or_state_stage_row": 9825,
+        "walk": 16407
+      },
+      "walk_sampled_instruction_outside_trainer": 4676,
+      "walk_samples": 16407
+    },
+    {
+      "capture": "capture-3.json.gz",
+      "checkpoint_policy_and_row_directory_identity_equal": true,
+      "collector_and_native_exit_observed": true,
+      "lost_buffers": 0,
+      "lost_events": 0,
+      "native_stdout_wire_identity_equal": true,
+      "trainer_samples": 18914,
+      "walk_inclusive_hits": {
+        "chance_contract": 2011,
+        "chance_contraction": 2058,
+        "history_append_action": 0,
+        "history_append_reveal": 0,
+        "history_enter_visit": 0,
+        "history_visit_action": 68,
+        "history_visit_reveal": 20,
+        "pager_flush_dirty": 1735,
+        "pager_stage": 1891,
+        "state_stage_direct": 3458,
+        "state_stage_row": 4056,
+        "terminal": 4392,
+        "terminal_or_state_stage_row": 8448,
+        "walk": 14054
+      },
+      "walk_sampled_instruction_outside_trainer": 4103,
+      "walk_samples": 14054
+    }
+  ],
+  "reference_manifest": "../native-dyadic-phase-profile-v1/manifest.json",
+  "request": "DYADIC_T2_V1 TRAIN_TEN_BOUNDED_DIVISION",
+  "request_sha256": "f135c9c3c49ad0e4c8ec99b6c182cae7f58d6980c00967acd574f2ca74ee9666",
+  "scope": "three complete bounded ten-card native calls; inclusive stack labels, no optimizer or solver changes",
+  "source_head": "53a4072c3bd055e1fca9b787556da170af3c3c6d"
+}
