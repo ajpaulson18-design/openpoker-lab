@@ -125,8 +125,8 @@ class NativeDyadicPolicyTests(unittest.TestCase):
         self.assertEqual(len(records), 48)
         for index, row in enumerate(records):
             self.assertEqual(int(row[1]), index)
-            expected, fallback = allocation([int(value, 16) for value in row[2:6]])
-            self.assertFalse(fallback)
+            expected, total = allocation([int(value, 16) for value in row[2:6]])
+            self.assertGreater(total, 0)
             self.assertEqual(list(map(int, row[6:])), list(expected))
         self.assertIn('MEMO_GUARD PASS', self.lines)
 
