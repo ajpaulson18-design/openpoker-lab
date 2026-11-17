@@ -123,6 +123,7 @@ class NativeDyadicPolicyTests(unittest.TestCase):
     def test_mixed_cache_returns_literal_grid_and_checks_first_sweep_guards(self):
         records = [line.split() for line in self.lines if line.startswith('MEMO_ROW ')]
         self.assertEqual(len(records), 48)
+        self.assertEqual(len({tuple(row[6:]) for row in records}), 48)
         for index, row in enumerate(records):
             self.assertEqual(int(row[1]), index)
             expected, total = allocation([int(value, 16) for value in row[2:6]])

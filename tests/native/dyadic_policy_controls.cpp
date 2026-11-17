@@ -340,7 +340,8 @@ bool mixed_cache_controls() {
     limits.mixed_cache=false;
     grid::Quantizer literal(limits);
     for (std::size_t n=0;n<48;++n) {
-        const std::array<Integer,4> row{(Integer(1)<<(64+n))+n,0,3*n+7,n+1};
+        const Integer scale=Integer(1)<<(64+n);
+        const std::array<Integer,4> row{scale*(n+1)+n,0,scale*(49-n)+7,scale*(3*n+7)+1};
         const auto uncached=literal.regret_policy(row);
         const auto first=cached.regret_policy(row);
         const auto second=cached.average_export(row);
