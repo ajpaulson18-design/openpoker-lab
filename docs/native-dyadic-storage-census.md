@@ -374,3 +374,55 @@ public request parser rejects eleven-card training. The test packet
 also checks rejection of scratch arguments and exact integers above
 2^32.
 [Compiled forecast evidence](../benchmarks/results/native-dyadic-eleven-native-forecast-v1/manifest.json)
+
+### Quantizer work by phase and exact mixed-row reuse
+
+The [quantizer study](../benchmarks/results/native-dyadic-mixed-policy-cache-v1/manifest.json)
+reconstructs the compiled eleven-card quantizer forecast from physical
+row support, menu width, and each row's signed-regret and average scales.
+Of its 1,014,146,272 work units, 286,195,384 belong to the second regret
+policy and 727,950,888 to final average export. Two-action river average
+rows alone account for 431,249,280.
+
+| Eleven-card accounting case | Quantizer work |
+| --- | ---: |
+| Compiled forecast | 1,014,146,272 |
+| Exclude one division term per unequal mixed row | 921,245,072 |
+| Exclude every division term | 801,653,984 |
+| Existing comparison ceiling | 520,000,000 |
+
+The accounting cases hold all other terms fixed. They isolate the
+division charge and provide no new training admission. The compiled
+parent work alone is 2,308,449,784 units against the 2,150,000,000
+composed ceiling, before adding any child owner or transport work.
+
+The ten-card saved checkpoint census independently verifies the row
+directory and both generations. It finds 19,758 unequal mixed regret
+rows with 272 distinct exact ordered inputs, and 25,592 mixed average
+rows with 208 distinct exact ordered inputs. An opt-in 16-slot
+direct-mapped cache compares the complete ordered weight words on a
+hit. A hash collision with a different input goes through the normal
+exact allocator. Zero, pure, and equal-positive rows keep their
+existing paths. Exact canonical keys use the same logical 64-bit
+representation on both supported backend limb widths.
+
+The saved-only replay predicted all 24,119 hits, 21,231 misses,
+and 33,795 actual divisions in the cached run. The baseline used
+72,928 divisions. Recorded quantizer work fell from 154,758,136 to
+138,305,756. The cache adds 192 retained entries and 6,400 bytes.
+The worst-case quantizer forecast grows by 40,092,208 because it
+reserves every potential miss and probe under the existing ceilings.
+
+All 18 complete native calls reproduced the numerical stream,
+checkpoint images, policy spill, and row directory. Only the six
+forecast, observed work, and resource reservation footer fields
+changed. Four of eight alternating pairs were faster, and the median
+elapsed ratio was 1.00114. This misses the preset timing gate and
+leaves the cache as a separate study target.
+
+Recount the forecast with
+`python -m scripts.forecast_virtual_dyadic_quantizer_components`.
+Use `python -m scripts.census_virtual_dyadic_mixed_policy_cache --help`
+for the independent saved checkpoint analysis. The source-frozen
+paired Windows operator is
+`python -m scripts.benchmark_native_mixed_policy_cache --help`.

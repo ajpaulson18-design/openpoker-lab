@@ -1,0 +1,35 @@
+{
+  "artifact_sha256": {
+    "admissions.json": "0ea1d1dcbbfc298cd47f2ec36374581155173303c39f24d86c78dc8af9afa380",
+    "protocol.json": "09f85b4d82fbb4edf250ee3b82bf7c02971d70f6afc5735e435774d5dcf1d481",
+    "rank-free-forecast.json": "31b7d2355082d72e503789f5b3c5c1ca07dbaadbd0e7857cf33301fa579bfdd0",
+    "saved-quantizer-replay.json": "923f3a938680f320493f968c3c0ccbfb58864e7b19d1af2f6c38f4dadac7d9aa",
+    "timing.json": "0fdfa4d7f1a1012c951080070c3766c0cf2ff44c643917714aebe39d5eeea37c"
+  },
+  "cache_peak_retained_bytes_reserved": 6400,
+  "cache_retained_logical_entries": 192,
+  "compiled_eleven_reference": "../native-dyadic-eleven-native-forecast-v1/manifest.json",
+  "complete_numerical_parity_calls": 18,
+  "contract": "native-dyadic-mixed-policy-cache-v1",
+  "faster_pairs": 4,
+  "independent_native_controls": {
+    "optimized_python_passes": {
+      "policy": 7,
+      "state": 11
+    },
+    "source_head": "a8c0d275d2339b9abacd6ab8bc5c5367c55e8b02"
+  },
+  "median_elapsed_ratio": 1.0011353340348705,
+  "native_divisions_after": 33795,
+  "native_divisions_before": 72928,
+  "pre_timing_attempts": [
+    "32-bit backend limb guard corrected by canonical 64-bit keys",
+    "independent control wrapper corrected to read the allocator total"
+  ],
+  "quantizer_work_after": 138305756,
+  "quantizer_work_before": 154758136,
+  "saved_checkpoint_reference": "../native-dyadic-staged-pages-v1/protocol.json",
+  "timing_gate_passed": false,
+  "timing_scope": "bounded exact ten-card paired two-sweep trainer on one Windows host",
+  "timing_source_head": "a7c9552a96c326ee38424195efd68b88b8911fa2"
+}
