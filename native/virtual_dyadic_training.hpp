@@ -362,6 +362,19 @@ struct Plan {
     std::uint64_t normalizer=0,denominator_base=0,expected_rank_calls=0;
     std::size_t rank_planes=0;
     std::uint64_t showdown_contractions=0,hidden_candidates=0;
+    std::uint64_t prepared_showdown_groups=0,prepared_showdown_boards=0;
+#ifdef OPENPOKER_TRAINING_ALLIN_REACH_STUDY
+    std::array<bool,4> prepare_reach_on_street{};
+#endif
+
+    [[nodiscard]] bool weighted_reach(std::size_t street) const {
+#ifdef OPENPOKER_TRAINING_ALLIN_REACH_STUDY
+        return prepare_reach_on_street[street_index(street)];
+#else
+        (void)street;
+        return false;
+#endif
+    }
     std::uint64_t template_work=0,chance_work=0,history_work=0,state_work=0,quantizer_work=0,total_work=0;
     std::uint64_t state_entries=0,state_payload=0,entries=0,payload_bits=0,output_bytes=0;
     std::uint64_t packed_average_limbs=0,packed_average_work=0;
@@ -496,7 +509,8 @@ class Forecast final {
         result.mark=2;
         return result;
     }
-    std::uint64_t chance_cost(bool showdown,std::size_t size,std::size_t target,std::size_t exp) {
+    std::uint64_t chance_cost(bool showdown,std::size_t size,std::size_t target,
+                              std::size_t exp,bool reuse=false) {
         const auto& population=plan_.prefixes[street_index(size)].unblocked;
         const auto lookup=plan_.indexed_cache?prepared::PreparedPublicChance::sorted_lookup_work(plan_.rank_planes):
             plan_.rank_board_sets?prepared::PreparedPublicChance::board_set_probe_work*plan_.rank_planes:6*64;
@@ -509,13 +523,14 @@ class Forecast final {
             // All unblocked opponent rows may have a full-width positive reach.
             // Both normalized ranges have weights of at most four bits.
             const auto bucket=4+reach+logceil(opp)+4, out=4+bucket;
-            const auto input=12+(6+size)+2*(4+2*words(reach))+4;
+            const auto input=12+(6+size)+(reuse?4:2*(4+2*words(reach)))+4;
+            const auto products=reuse?0:opp*mul_cost(4,reach);
             const auto bucket_count=showdown?2+own:1;
             const auto dynamic=plan_.sparse_chance?
                 prepared::PreparedPublicChance::sparse_pairs_dynamic_cost(2,2,own,opp,
-                    opp*mul_cost(4,reach),bucket,out,4,
+                    products,bucket,out,4,
                     showdown?chance::TerminalKind::showdown:chance::TerminalKind::fold):
-                12+opp*mul_cost(4,reach)+53*bucket_count+
+                12+products+53*bucket_count+
                 (showdown?9:3)*opp*add_cost(bucket)+
                 own*((showdown?12:3)*add_cost(bucket)+mul_cost(4,bucket)+copy_cost(out)+2*words(bucket))+128;
             // This is the full lookup bound. Miss construction is admitted separately.
@@ -612,10 +627,15 @@ class Forecast final {
             const auto showdown=node.state.phase==betting::Phase::showdown;
             require(!m && (showdown?node.state.winner==2:node.state.phase==betting::Phase::fold && node.state.winner<2),"pinned terminal census");
             (showdown?shape.showdowns:shape.folds)+=np;
+            const bool reuse=showdown && k<5 && plan_.weighted_reach(k);
             if (showdown) {
                 const auto full=plan_.prefixes[3].count;
                 plan_.showdown_contractions+=full;
                 if (k<5) {
+                    if (reuse) {
+                        plan_.prepared_showdown_groups+=np;
+                        plan_.prepared_showdown_boards+=full;
+                    }
                     constexpr std::array<std::size_t,3> visible{0,3,4};
                     for (auto street=street_index(k);street<visible.size();++street)
                         plan_.hidden_candidates+=plan_.prefixes[street].count*candidate_count(deck_size,visible[street]);
@@ -623,15 +643,19 @@ class Forecast final {
                 }
             }
             for (std::size_t target=0;target<2;++target) {
-                contractions_+=chance_cost(showdown,showdown?5:k,target,first[1-target]);
-                contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
+                const auto terminal_cost=[&](std::size_t exponent) {
+                    const auto prepare=reuse?np*(28+2*(4+2*words(exponent+1)+mul_cost(4,exponent+1))):0;
+                    return chance_cost(showdown,showdown?5:k,target,exponent,reuse)+prepare;
+                };
+                contractions_+=terminal_cost(first[1-target]);
+                contractions_+=terminal_cost(grid_bits*past[1-target]);
                 if (plan_.proof9_q32_base()) {
                     // All later grid-policy operands share the same full-width
                     // bound. Census that bound once and multiply its lifetime.
                     contractions_+=(plan_.requested_sweeps-2)*
-                        chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
+                        terminal_cost(grid_bits*past[1-target]);
                 } else for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep)
-                    contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
+                    contractions_+=terminal_cost(grid_bits*past[1-target]);
             }
             work[work_index(Work::terminal_scale)]+=plan_.seat_passes*np*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits));
         }
@@ -745,6 +769,14 @@ public:
             "pinned terminal scale exceeds uint64");
         for (const auto divisor:game.divisors)
             require(divisor && full_divisor%divisor==0,"pinned terminal divisor must divide the full divisor");
+#ifdef OPENPOKER_TRAINING_ALLIN_REACH_STUDY
+        if (plan_.bounded_division && plan_.traversal==Traversal::paired) {
+            // Every physically compatible private pair has this many ordered
+            // completions. Preparation is reserved for genuine fan-out.
+            for (std::size_t i=0;i+1<game.divisors.size();++i)
+                plan_.prepare_reach_on_street[i]=full_divisor/game.divisors[i]>=4;
+        }
+#endif
         prefixes(Prefix{},physical_support(0));
         const auto& p=plan_.prefixes;
         for (std::size_t i=0;i<p.size();++i)
@@ -1095,19 +1127,29 @@ template<bool Paired,bool Factored=false> class Walk final {
         }
         return masses;
     }
+    template<bool Reuse=false>
     LaneValues ranked(const Prefix& board,const Reach& sb,const Reach& bb) {
         require(board.size==5 && ++showdown_contractions_<=plan_.showdown_contractions,"ranked completion census changed");
         LaneValues values{};
         for (std::size_t lane=0;lane<lanes;++lane) {
             const auto target=seat(lane);
-            auto result=contraction(target,board,chance::TerminalKind::showdown,opposite(target,sb,bb));
+            const auto& reach=opposite(target,sb,bb);
+            auto result=[&] {
+                if constexpr (Reuse) {
+                    auto exact=chance_.family_showdown(target,board.view());
+                    require(exact.numerators.size()==2 && exact.reach_exponent==reach.exponent &&
+                            exact.prefix_divisor==plan_.game().divisors[3],"prepared family identity changed");
+                    return exact;
+                } else return contraction(target,board,chance::TerminalKind::showdown,reach);
+            }();
             values[lane]={make_value(std::move(result.numerators[0])),make_value(std::move(result.numerators[1]))};
         }
         return values;
     }
+    template<bool Reuse=false>
     void hidden_completions(const Prefix& prefix,const Reach& sb,const Reach& bb,LaneValues& sum) {
         if (prefix.size==5) {
-            add_lanes(sum,ranked(prefix,sb,bb));
+            add_lanes(sum,ranked<Reuse>(prefix,sb,bb));
             return;
         }
         const auto deck=plan_.game().deck;
@@ -1116,7 +1158,7 @@ template<bool Paired,bool Factored=false> class Walk final {
         hidden_candidates_+=candidates;
         require(hidden_candidates_<=plan_.hidden_candidates,"hidden runout candidate census changed");
         reveal(deck,prefix,[&](const Prefix& next) {
-            if (physical_support(next.mask)[0]) hidden_completions(next,sb,bb,sum);
+            if (physical_support(next.mask)[0]) hidden_completions<Reuse>(next,sb,bb,sum);
         });
     }
     LaneValues terminal(const betting::State& node,const Prefix& prefix,const Reach& sb,const Reach& bb) {
@@ -1138,7 +1180,12 @@ template<bool Paired,bool Factored=false> class Walk final {
             if (prefix.size==5) result=ranked(prefix,sb,bb);
             // An all-in has no later information sets. Integrate completions
             // as raw full-board numerators on one scale, with no History reveal.
-            else hidden_completions(prefix,sb,bb,result);
+            else if (plan_.weighted_reach(prefix.size)) {
+                chance_.with_showdown_reaches({prepared::ReachInput{sb.numerators,sb.exponent},
+                                               prepared::ReachInput{bb.numerators,bb.exponent}},[&] {
+                    hidden_completions<true>(prefix,sb,bb,result);
+                });
+            } else hidden_completions(prefix,sb,bb,result);
         } else {
             for (std::size_t lane=0;lane<lanes;++lane) {
                 const auto target=seat(lane);
@@ -1628,6 +1675,9 @@ class Driver final {
             state.completed_sweeps==p.requested_sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
+        require(chance.weighted_families==p.requested_sweeps*p.prepared_showdown_groups &&
+                chance.weighted_showdowns==p.seat_passes*p.prepared_showdown_boards,
+                "prepared reach family cadence changed");
         require(!p.checked_history || history.work==p.history_work,"checked History census realization differs");
         require((chance.sparse_pair_visits>0)==p.sparse_chance,"sparse chance execution receipt differs");
         out.text(p.proof9_linear32()?"OPLDSL32":p.proof9_quality32()?"OPLDSQ32":p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":

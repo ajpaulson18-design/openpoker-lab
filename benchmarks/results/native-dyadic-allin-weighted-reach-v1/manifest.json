@@ -1,0 +1,53 @@
+{
+  "artifact_sha256": {
+    "all-early/admissions.json": "8b75f8978095489257fe75776e7476b46c711ad1a75bc2fe48e1e0a9f9ad5c1d",
+    "all-early/protocol.json": "2c017c78cbd211049e4fb7996aeed31295ddef37ddc5e120b0aa36a96e32057b",
+    "all-early/timings.json": "1b7f88f50dbb21d4c0a2dcf0525fc9d22b4a0930e59105cef2562ca4c9618583",
+    "full-width/independent.json": "c631c6d5ab225116b61f047e3f65a23e3f18bab95f15f2021357c11bc68d75b8",
+    "full-width/numerical.bin.gz": "dbe6488126f05e99b88051e83dc71d716e97e3eeb7ec1bb580d3b08a32b5d31a",
+    "full-width/protocol.json": "152c3861d170eceb55730eb611c7f5d2db27e6852aac9305623f0229c9cc416c",
+    "full-width/timings.json": "e1f87524a13ec9b9c44c3da57cd48ac0e2598d8c973bcf009926081c01c6db20",
+    "min-four/admissions.json": "5914aaf1196e427778b7acbc63fc962ef8542726826a84547a5546a160969d2f",
+    "min-four/protocol.json": "65138edff2b455713c9a82a12f485d0299ace577d5345a808b849e034a30a927",
+    "min-four/timings.json": "713a42297d554ce13d73b7987ff4083cec9ac6ceadaeff0a1e6a852d961aadde",
+    "rank-free-forecast.json": "ef79c9129a76d69cd6726a2f5fca1d280dffff1def7399df06dc5f498ebe61cd"
+  },
+  "contract": "native-dyadic-allin-weighted-reach-v1",
+  "focused_independent_chance_tests": 17,
+  "prior_output_study": "../native-dyadic-contraction-output-v1/manifest.json",
+  "scope": "two ten-card trainer comparisons and one distinct full-width showdown component comparison",
+  "staged_page_reference": "../native-dyadic-staged-pages-v1/manifest.json",
+  "studies": {
+    "all-early": {
+      "chance_forecast_after": 132636514,
+      "chance_forecast_before": 132742404,
+      "chance_work_after": 71012170,
+      "chance_work_before": 70637650,
+      "faster_pairs": 5,
+      "median_elapsed_ratio": 0.995047452989017,
+      "source_head": "78309bcb271e58a4b3acf4855a5e6f30e3c27502",
+      "timing_gate_passed": false
+    },
+    "full-width": {
+      "faster_pairs": 6,
+      "independently_replayed_row_values": 31824,
+      "median_elapsed_ratio": 0.8722296194522955,
+      "peak_integer_payload_after": 4187977,
+      "peak_integer_payload_before": 3683728,
+      "source_head": "8987e610b1ea6c90addb73f51ad53fd645fd55d8",
+      "timing_gate_passed": true,
+      "work_after": 333253837,
+      "work_before": 342447725
+    },
+    "min-four": {
+      "chance_forecast_after": 132404050,
+      "chance_forecast_before": 132742404,
+      "chance_work_after": 70462886,
+      "chance_work_before": 70637650,
+      "faster_pairs": 4,
+      "median_elapsed_ratio": 1.0026691469528903,
+      "source_head": "8cde31fe7450b6bd5b8b95ab4ad84e7acf5497d2",
+      "timing_gate_passed": false
+    }
+  }
+}

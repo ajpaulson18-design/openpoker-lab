@@ -244,3 +244,62 @@ Build `virtual-dyadic-training-staged-pages` and
 `virtual-dyadic-training-terminal-buffer` at the manifest's training
 source. Use the previous staged-page candidate's warmup directory as
 the reference to authenticate the complete stream and sidecars.
+
+## Prepared reach across hidden showdowns
+
+The [weighted-reach study](../benchmarks/results/native-dyadic-allin-weighted-reach-v1/manifest.json)
+prepares the exact integer product of prior weight and reach once per
+opposing holding. One scope owns both weighted vectors and their original
+dyadic exponents. Each completion still excludes that board's blocked
+holdings, applies private blockers, and uses its own signed rank relation.
+Rank planes and ordered public history retain their existing rules.
+The scope admits both live vectors before allocation and releases them
+when the family ends. It retains no pair-by-board payoff table.
+
+The ten-card study compared an all-early selector with a selector that
+requires at least four physical completions for any compatible private
+pair. A fixed private pair has six possible ordered completions on a
+ten-card flop and two on a ten-card turn. The four-completion selector
+therefore prepares 1,292 families and serves 21,760 showdown contractions
+during the paired two-sweep run. Both selectors reproduced all numerical
+bytes, checkpoint images, policy, pager receipt and row directory.
+Only the admitted and observed Chance work and scratch fields could
+differ in the complete stream footer.
+
+| Ten-card comparison | Observed Chance work | Forecast Chance work | Median elapsed ratio | Pairs faster |
+| --- | ---: | ---: | ---: | ---: |
+| Same-source staged-page baseline | 70,637,650 | 132,742,404 | | |
+| Prepare at every early all-in | 71,012,170 | 132,636,514 | 0.99505 | 5 of 8 |
+| Prepare at four or more completions | 70,462,886 | 132,404,050 | 1.00267 | 4 of 8 |
+
+Both ten-card selectors missed the preset timing gate of 0.96 and six
+faster pairs. The rank-free model reproduced both native forecast
+differences. Its eleven-card forecast projects a Chance reduction of
+1,421,968 work units for the four-completion rule, with no new training
+admission. The existing State, quantizer, and composed work ceilings
+remain binding for exhaustive eleven-card training.
+
+The full-width component used two 1,326-holding ranges, a fixed turn,
+12 legal rivers, and 16 repeated scope lifetimes. It completed 384
+showdowns per child under the existing work and storage limits.
+Modeled work fell from 342,447,725 to 333,253,837. Peak live integer
+payload rose from 3,683,728 to 4,187,977 bits. The median complete-call
+elapsed ratio was **0.87223**, with six of eight pairs faster. All 18
+children emitted identical numerical captures. The independent saved-only
+verifier checked 31,824 captured values by literal hand-pair enumeration
+and independent ranking across all 12 rivers and both seats. This
+measurement covers the Chance component for one fixed turn on one host.
+
+The prepared-reach trainer remains available only through the explicit
+`virtual-dyadic-training-allin-reach` study target. The packet keeps all
+timing pairs and both misses. The native Chance suite passed all 17
+focused tests, including small-range sparse and bucket kernels, both
+full-width ranges, reveal-order rank-cache reuse, and scope guards.
+
+Run the operators with `python -m scripts.benchmark_native_allin_reach --help`
+and `python -m scripts.benchmark_native_wide_reach --help`. Build at each
+study revision listed in the manifest. The ten-card comparison expects
+the staged-page study's `warm-reuse` capture as its exact reference.
+Recount the forecast with `python -m scripts.forecast_virtual_dyadic_allin_reach`
+and verify the compressed numerical capture with
+`python -m scripts.verify_virtual_dyadic_wide_reach PATH`.
