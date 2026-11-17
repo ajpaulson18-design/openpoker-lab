@@ -333,6 +333,44 @@ bool first_sweep_regret_controls() {
     return false;
 }
 
+bool mixed_cache_controls() {
+    grid::Limits limits{grid::proof10_work_cap,702,336,32u*1024u*8u,
+                        grid::Profile::proof10,grid::DivisionKernel::bounded_complement,true};
+    grid::Quantizer cached(limits);
+    limits.mixed_cache=false;
+    grid::Quantizer literal(limits);
+    for (std::size_t n=0;n<48;++n) {
+        const std::array<Integer,4> row{(Integer(1)<<(64+n))+n,0,3*n+7,n+1};
+        const auto uncached=literal.regret_policy(row);
+        const auto first=cached.regret_policy(row);
+        const auto second=cached.average_export(row);
+        if (!std::ranges::equal(first.units(),uncached.units()) ||
+            !std::ranges::equal(second.units(),uncached.units()) ||
+            first.kind()!=grid::ImageKind::current_regret || second.kind()!=grid::ImageKind::exported_average)
+            return false;
+        std::cout<<"MEMO_ROW "<<n;
+        for (const auto& nweight:row) std::cout<<' '<<hex(nweight);
+        for (const auto unit:second.units()) std::cout<<' '<<unit;
+        std::cout<<'\n';
+    }
+    const auto& record=cached.receipt();
+    if (record.mixed_cache_hits!=48 || record.mixed_cache_misses!=48 ||
+        record.combined_divisions!=96 || record.rows!=96 ||
+        record.retained_entries+record.peak_scratch_entries>336)
+        return false;
+    const std::array<Integer,2> selected{5,3};
+    (void)cached.average_export(selected);
+    try {
+        (void)cached.first_sweep_regret_policy(selected);
+    } catch (const grid::Error& error) {
+        if (error.code()!=grid::ErrorCode::invalid_row || !cached.failed() || record.mixed_cache_hits!=48)
+            return false;
+        std::cout<<"MEMO_GUARD PASS\n";
+        return true;
+    }
+    return false;
+}
+
 int main() {
     try {
         grid::Quantizer owner;
@@ -367,7 +405,7 @@ int main() {
         std::cout<<"END "<<count<<' '<<owner.receipt().work<<'\n';
         const bool legacy=guards();
         return combined_controls() && complement_controls() && equal_complement_controls() &&
-            pair_complement_controls() && first_sweep_regret_controls() && legacy ? 0 : 1;
+            pair_complement_controls() && first_sweep_regret_controls() && mixed_cache_controls() && legacy ? 0 : 1;
     } catch (const std::exception& error) {
         std::cerr<<error.what()<<'\n'; return 1;
     }

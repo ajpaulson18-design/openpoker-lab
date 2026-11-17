@@ -88,6 +88,7 @@ struct PagedStrategy {
     bool first_regret_bound=false;
     bool initial_packed_stage=false;
     bool bounded_stage_width=false;
+    bool mixed_policy_cache=false;
 };
 inline constexpr std::uint64_t initial_uniform_policy_work=32;
 // Child action values share the regret scale plus one grid factor.
@@ -114,6 +115,7 @@ struct Receipt {
     std::size_t reserved_entries = 0, reserved_integer_and_text_payload_bits = 0;
     std::size_t peak_input_bits = 0, peak_arithmetic_bits = 0;
     std::uint64_t combined_divisions=0,equal_rows=0,equal_divisions_avoided=0;
+    std::uint64_t mixed_cache_hits=0,mixed_cache_misses=0;
 };
 struct Row {
     std::size_t history_ordinal = 0, actor = 0, holding_index = 0;
@@ -558,7 +560,8 @@ class State final {
         return {f.quantizer_work,limits.integer_bits,336,
             std::min(limits.integer_payload_bits,std::size_t{1}<<30),
             proof10(paged)?dyadic_policy::Profile::proof10:proof9_q32(paged)?dyadic_policy::Profile::proof9_q32:dyadic_policy::Profile::legacy,
-            paged?paged->division_kernel:dyadic_policy::DivisionKernel::separate};
+            paged?paged->division_kernel:dyadic_policy::DivisionKernel::separate,
+            paged && paged->mixed_policy_cache};
     }
     static ActionCatalogCapacity admit_catalog(const Forecast& f, ActionCatalogCapacity capacity) {
         if (!capacity.keys && !capacity.token_slots) {
@@ -642,7 +645,7 @@ class State final {
                                               paged && paged->row_coverage,paged && paged->shared_policy,
                                               paged && paged->paged_directory,lifecycle,
                                               paged?paged->payload_model:PayloadModel::legacy,
-                                              paged && paged->row_batched);
+                                              paged && paged->row_batched,paged && paged->mixed_policy_cache);
         if (footprint.entries>limits.entries || footprint.payload_bits>limits.integer_payload_bits)
             fail(ErrorCode::capacity,"persistent state/export footprint admission exceeded");
         return footprint;
@@ -885,7 +888,7 @@ public:
                                              bool shared_policy=false,bool paged_directory=false,
                                              Lifecycle lifecycle=Lifecycle::fixed_two_sweep,
                                              PayloadModel payload_model=PayloadModel::legacy,
-                                             bool row_batched=false) {
+                                             bool row_batched=false,bool mixed_policy_cache=false) {
         (void)admit_catalog(f,catalog);
         if (ordered_rows && !compact_rows)
             fail(ErrorCode::invalid_forecast,"ordered registration requires compact rows");
@@ -1036,6 +1039,12 @@ public:
             payload=plus(payload,times(8,(row_batch_codec_words-page_codec_words)*sizeof(std::uint64_t)));
             entries=plus(entries,row_batch_codec_words-page_codec_words);
         }
+        if (mixed_policy_cache) {
+            if (!expanded || !row_batched || payload_model!=PayloadModel::paged_phases)
+                fail(ErrorCode::invalid_forecast,"mixed policy cache requires the paged phase envelope");
+            entries=plus(entries,dyadic_policy::Quantizer::mixed_cache_entries);
+            payload=plus(payload,8*dyadic_policy::Quantizer::cache_storage_bytes());
+        }
         if (entries>std::numeric_limits<std::size_t>::max() || payload>std::numeric_limits<std::size_t>::max())
             fail(ErrorCode::capacity,"state storage forecast exceeds platform size");
         return {static_cast<std::size_t>(entries),static_cast<std::size_t>(payload)};
@@ -1096,6 +1105,8 @@ public:
         answer.combined_divisions=quantizer_.receipt().combined_divisions;
         answer.equal_rows=quantizer_.receipt().equal_rows;
         answer.equal_divisions_avoided=quantizer_.receipt().equal_divisions_avoided;
+        answer.mixed_cache_hits=quantizer_.receipt().mixed_cache_hits;
+        answer.mixed_cache_misses=quantizer_.receipt().mixed_cache_misses;
         answer.work=answer.state_work+answer.quantizer_work;
         return answer;
     }

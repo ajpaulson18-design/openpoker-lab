@@ -9,6 +9,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include <memory>
+#include <type_traits>
+#include <utility>
 #include <span>
 #include <stdexcept>
 
@@ -39,6 +42,7 @@ struct Limits {
     std::size_t integer_payload_bits = std::size_t{1} << 30;
     Profile profile = Profile::legacy;
     DivisionKernel division_kernel = DivisionKernel::separate;
+    bool mixed_cache = false;
 };
 struct Receipt {
     std::uint64_t work = 0, rows = 0;
@@ -47,6 +51,7 @@ struct Receipt {
     std::size_t peak_integer_payload_bits = 0;
     std::uint64_t combined_divisions = 0;
     std::uint64_t equal_rows = 0, equal_divisions_avoided = 0;
+    std::uint64_t mixed_cache_hits = 0, mixed_cache_misses = 0;
 };
 class Quantizer;
 class Policy final {
@@ -76,6 +81,17 @@ public:
 };
 
 class Quantizer final {
+    using CacheLimb = std::remove_cvref_t<decltype(std::declval<Integer>().backend().limbs()[0])>;
+    static constexpr std::size_t cache_slots=16,cache_actions=4,cache_words=11;
+    struct CachedPolicy {
+        std::array<std::array<CacheLimb,cache_words>,cache_actions> limbs{};
+        std::array<std::uint64_t,cache_actions> units{};
+        std::uint64_t signature=0;
+        std::array<std::uint8_t,cache_actions> lengths{};
+        std::uint8_t count=0;
+    };
+    using MixedCache = std::array<CachedPolicy,cache_slots>;
+    std::unique_ptr<MixedCache> mixed_cache_;
     Limits limits_;
     Receipt receipt_{};
     bool failed_ = false;
@@ -120,12 +136,13 @@ class Quantizer final {
         if (entries > limits_.entries-receipt_.retained_entries)
             fail(ErrorCode::storage_limit, "dyadic policy scratch entry admission");
         const auto payload = (6*count+32)*std::max<std::size_t>(bits,64);
-        if (payload > limits_.integer_payload_bits)
+        const auto retained=mixed_cache_?8*cache_storage_bytes():0;
+        if (payload > limits_.integer_payload_bits-retained)
             fail(ErrorCode::payload_limit, "dyadic policy integer payload admission");
         charge(work);
         receipt_.peak_forecast_bits = std::max(receipt_.peak_forecast_bits,bits);
         receipt_.peak_scratch_entries = std::max(receipt_.peak_scratch_entries,entries);
-        receipt_.peak_integer_payload_bits = std::max(receipt_.peak_integer_payload_bits,payload);
+        receipt_.peak_integer_payload_bits = std::max(receipt_.peak_integer_payload_bits,retained+payload);
     }
     static void partition(const Policy& policy) {
         std::uint64_t total = 0;
@@ -137,7 +154,54 @@ class Quantizer final {
         if (total != grid_units)
             fail(ErrorCode::arithmetic, "dyadic policy partition incomplete");
     }
+    static std::uint8_t limb_tag(const Integer& value) {
+        const auto& raw=value.backend();
+        if (raw.size()>cache_words)
+            fail(ErrorCode::integer_width,"mixed policy cache limb width");
+        return static_cast<std::uint8_t>(raw.size()|(raw.sign()?0x80u:0u));
+    }
+    static std::uint64_t signature(std::span<const Integer> row) {
+        std::uint64_t hash=14695981039346656037ull^row.size();
+        for (const auto& value:row) {
+            const auto& raw=value.backend();
+            hash=(hash^limb_tag(value))*1099511628211ull;
+            for (std::size_t i=0;i<raw.size();++i)
+                hash=(hash^raw.limbs()[i])*1099511628211ull;
+        }
+        hash^=hash>>32;
+        hash*=0xd6e8feb86659fd93ull;
+        return hash^(hash>>32);
+    }
+    static bool matches(const CachedPolicy& saved,std::span<const Integer> row,std::uint64_t hash) {
+        if (saved.count!=row.size() || saved.signature!=hash) return false;
+        for (std::size_t action=0;action<row.size();++action) {
+            const auto& raw=row[action].backend();
+            if (saved.lengths[action]!=limb_tag(row[action]) ||
+                !std::equal(raw.limbs(),raw.limbs()+raw.size(),saved.limbs[action].begin()))
+                return false;
+        }
+        return true;
+    }
+    static void remember(CachedPolicy* saved,std::uint64_t hash,std::span<const Integer> row,const Policy& policy) {
+        if (!saved) return;
+        for (std::size_t action=0;action<row.size();++action) {
+            const auto& raw=row[action].backend();
+            saved->lengths[action]=limb_tag(row[action]);
+            std::copy_n(raw.limbs(),raw.size(),saved->limbs[action].begin());
+            saved->units[action]=policy.units_[action];
+        }
+        saved->signature=hash;
+        saved->count=static_cast<std::uint8_t>(row.size());
+    }
 public:
+    static constexpr std::size_t mixed_cache_entries=12*cache_slots;
+    static constexpr std::uint64_t mixed_cache_setup_work=64*cache_slots;
+    static constexpr std::size_t cache_storage_bytes() noexcept { return sizeof(MixedCache); }
+    static std::uint64_t mixed_cache_probe_work(std::size_t count,std::size_t bits) noexcept {
+        // Hash, exact collision check and possible replacement all fit here.
+        return 24+count*(12+8*words(bits));
+    }
+
     explicit Quantizer(Limits limits = {}) : limits_(limits) {
         const bool proof10=limits.profile==Profile::proof10;
         const bool proof9_q32=limits.profile==Profile::proof9_q32;
@@ -159,6 +223,17 @@ public:
                 limits.entries > ((proof10||proof9_q32)?336u:2000000u) || !limits.integer_payload_bits ||
                 limits.integer_payload_bits > (std::size_t{1} << 30))
             fail(ErrorCode::invalid_limits, "invalid reduce-only dyadic policy limits");
+        if (limits.mixed_cache) {
+            if (!proof10 || limits.division_kernel!=DivisionKernel::bounded_complement ||
+                std::numeric_limits<CacheLimb>::digits!=64 ||
+                limits.entries<receipt_.retained_entries+mixed_cache_entries+112 ||
+                limits.integer_payload_bits<8*cache_storage_bytes())
+                fail(ErrorCode::invalid_limits,"mixed policy cache requires its bounded two-sweep envelope");
+            charge(mixed_cache_setup_work);
+            receipt_.retained_entries+=mixed_cache_entries;
+            receipt_.peak_integer_payload_bits=8*cache_storage_bytes();
+            mixed_cache_=std::make_unique<MixedCache>();
+        }
     }
     Quantizer(const Quantizer&) = delete;
     Quantizer& operator=(const Quantizer&) = delete;
@@ -192,13 +267,15 @@ private:
                 fail(ErrorCode::invalid_row, "complement kernel menu width");
             charge(64+16*count);
             std::size_t positives = 0, first_positive_index = 0, positive_index = 0, max_positive_bits = 0;
+            std::size_t max_row_bits=0;
             for (std::size_t i=0; i<count; ++i) {
                 const auto bits = width(regrets[i]);
                 if (bits > limits_.integer_bits)
                     fail(ErrorCode::integer_width, "dyadic policy input integer width");
                 if (kind==ImageKind::exported_average && regrets[i]<0)
                     fail(ErrorCode::invalid_row, "dyadic average mass must be nonnegative");
-                receipt_.max_input_bits = std::max(receipt_.max_input_bits,bits);
+                receipt_.max_input_bits=std::max(receipt_.max_input_bits,bits);
+                if (mixed_cache_) max_row_bits=std::max(max_row_bits,bits);
                 if (regrets[i] > 0) {
                     if (positives==0) first_positive_index=i;
                     ++positives; positive_index = i;
@@ -246,6 +323,22 @@ private:
                     receipt_.equal_divisions_avoided=add(receipt_.equal_divisions_avoided,static_cast<std::uint64_t>(positives-1));
                     partition(policy); ++receipt_.rows; return policy;
                 }
+            }
+            CachedPolicy* cache_entry=nullptr;
+            std::uint64_t cache_hash=0;
+            if (mixed_cache_) {
+                charge(mixed_cache_probe_work(count,max_row_bits));
+                cache_hash=signature(regrets);
+                cache_entry=&(*mixed_cache_)[cache_hash % cache_slots];
+                if (matches(*cache_entry,regrets,cache_hash)) {
+                    Policy policy; policy.count_=count; policy.kind_=kind;
+                    std::copy_n(cache_entry->units.begin(),count,policy.units_.begin());
+                    partition(policy);
+                    ++receipt_.mixed_cache_hits;
+                    ++receipt_.rows;
+                    return policy;
+                }
+                ++receipt_.mixed_cache_misses;
             }
             // Cancel only an exact common power of two; no weight is rounded.
             // Charge bounded limb scans before asking lsb to inspect them.
@@ -306,7 +399,9 @@ private:
                     if (remainder>=complementary_remainder) ++policy.units_[first];
                     else ++policy.units_[second];
                 }
-                partition(policy); ++receipt_.rows; return policy;
+                partition(policy);
+                remember(cache_entry,cache_hash,regrets,policy);
+                ++receipt_.rows; return policy;
             }
             std::array<Integer,maximum_actions> remainders{};
             std::array<std::size_t,maximum_actions> order{};
@@ -371,7 +466,9 @@ private:
                     fail(ErrorCode::arithmetic, "dyadic policy remainder assigned to zero weight");
                 ++policy.units_[selected];
             }
-            partition(policy); ++receipt_.rows; return policy;
+            partition(policy);
+            remember(cache_entry,cache_hash,regrets,policy);
+            ++receipt_.rows; return policy;
         } catch (...) {
             failed_ = true;
             throw;

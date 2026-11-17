@@ -609,6 +609,14 @@ int main(int argc,char* argv[]) {
                 receipt.close();
                 training::require(bool(receipt),"equal quantizer receipt write failed");
             }
+            if (driver.plan().mixed_policy_cache) {
+                std::ofstream cache(scratch.parent_path()/"mixed-policy-cache.json",std::ios::binary);
+                training::require(bool(cache),"mixed policy cache receipt open failed");
+                cache<<"{\"hits\":"<<io.mixed_cache_hits<<",\"misses\":"<<io.mixed_cache_misses
+                     <<",\"divisions\":"<<io.combined_divisions<<"}\n";
+                cache.close();
+                training::require(bool(cache),"mixed policy cache receipt write failed");
+            }
             if (io.rank_index) save_rank_index(scratch,*io.rank_index);
             if (io.factored) {
                 const auto& work=*io.factored;
