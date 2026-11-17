@@ -84,8 +84,11 @@ no basis for accepting another narrowly chosen shortcut from these context
 counts alone.
 
 The next integration audit concerns traversal and State schedules that avoid
-work on unvisited public branches. Existing frozen-update proposal proofs must
-first accept the fixed-grid policy representation used by the accepted trainer.
+work on unvisited public branches. The new
+[frozen trainer-grid reference](frozen-grid-update-reference.md) accepts exact
+Q52 policy units and proves the expected raw update for two frozen profiles.
+Its 421-bit one-board witness exceeds the historical probe's 384-bit cap;
+native grid arithmetic and transport admission remain separate gates.
 Expected raw signed regret, value and own-reach average contributions must match
 an independent q-free whole-game reference. Per-draw CFR+ clipping is nonlinear
 and is a separate learning/convergence question. Zero-target final boards can

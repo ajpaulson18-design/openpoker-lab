@@ -2,6 +2,14 @@
 
 ## Unified solver foundation in development
 
+The [frozen Q52 update reference](../frozen-grid-update-reference.md) connects
+the accepted trainer's policy representation to independent whole-game raw
+regret/average expectation checks. Two profiles under two proposal laws match
+all 24,420 rows exactly, with saved-only replay. A 421-bit per-board witness
+exceeds the old frozen probe's 384-bit cap, so native input/arithmetic admission
+must precede sampled-traversal benchmarks. No sampled learner, larger native
+capacity or new quality result is claimed.
+
 The explicit [two-sweep native trainer](../native-dyadic-two-sweep.md)
 now connects exact chance, reach and payoff operators to changing-policy
 four-street CFR+ training. Its production traversal does not retain complete
