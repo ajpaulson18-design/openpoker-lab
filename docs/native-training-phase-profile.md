@@ -345,7 +345,7 @@ integer increment. Other profiles keep their earlier representation. The new
 layout is enabled only by the explicit
 `virtual-dyadic-training-factored-average` build target.
 
-An independent saved-only traversal authenticates both checkpoint generation
+An independent saved-only traversal authenticates the first-regret checkpoint
 and the full-history row directory, reconstructs grid policies and both actors'
 reach exponents, and predicts all changed average charges across 238,392 rows.
 It enters no native producer or hand ranker. Recorded average-construction
