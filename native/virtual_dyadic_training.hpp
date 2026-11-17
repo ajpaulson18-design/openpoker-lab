@@ -353,6 +353,7 @@ struct Plan {
     bool pair_complement=false;
     bool bounded_division=false;
     bool mixed_policy_cache=false;
+    bool factored_average_stage=false;
     std::uint64_t stage_arithmetic_work=0;
     std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
@@ -608,8 +609,10 @@ class Forecast final {
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
             work[work_index(Work::value_add)]+=plan_.requested_sweeps*np*m*2*add_cost(value_bits);
             if (plan_.scaled_averages) {
-                const auto build=plan_.requested_sweeps*rows*(scaled_average_cost(grid_bits*past[actor],
-                    plan_.proof9_linear32()?15:base_bits,m)+(plan_.proof9_linear32()?8:0));
+                const auto full_cost=scaled_average_cost(grid_bits*past[actor],
+                    plan_.proof9_linear32()?15:base_bits,m)+(plan_.proof9_linear32()?8:0);
+                const auto first_cost=plan_.factored_average_stage?scaled_average_cost(first[actor],base_bits,m):full_cost;
+                const auto build=rows*(first_cost+(plan_.requested_sweeps-1)*full_cost);
                 plan_.scaled_average_build_work+=build;
                 work[work_index(Work::average)]+=build;
             } else {
@@ -712,6 +715,9 @@ public:
         const bool eleven=profile==StrategyProfile::eleven_card_forecast;
         plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
         plan_.bounded_division=profile==StrategyProfile::ten_card_bounded_division;
+#ifdef OPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY
+        plan_.factored_average_stage=plan_.bounded_division;
+#endif
 #ifdef OPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY
         plan_.mixed_policy_cache=plan_.bounded_division;
 #endif
@@ -1256,23 +1262,26 @@ template<bool Paired,bool Factored=false> class Walk final {
             out[action]<<=scale-grid_bits;
         }
     }
-    void stage_scaled_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
+    [[nodiscard]] std::size_t stage_scaled_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
                               const Marginal& prior,const Reach& own,std::size_t holding,
                               std::size_t row_shift) {
         require(row_shift<=plan_.shift-grid_bits,"scaled average row shift outside fixed game scale");
         const auto past_bits=plan_.shift-grid_bits-row_shift;
-        meter_.charge(Work::average,scaled_average_cost(past_bits,
-            plan_.proof9_linear32()?15:width(plan_.denominator_base),out.size())+(plan_.proof9_linear32()?8:0));
         require(own.exponent<=past_bits && prior.scale && prior.numerators[holding]>0 &&
             prior.numerators[holding]<=plan_.denominator_base/prior.scale,
             "scaled average reach exponent or marginal outside fixed bounds");
+        const auto cost_bits=plan_.factored_average_stage?own.exponent:past_bits;
+        meter_.charge(Work::average,scaled_average_cost(cost_bits,
+            plan_.proof9_linear32()?15:width(plan_.denominator_base),out.size())+(plan_.proof9_linear32()?8:0));
         const auto raw_marginal=prior.numerators[holding].convert_to<std::uint64_t>()*prior.scale;
         const auto marginal=plan_.linear_average?checked_weighted_marginal(raw_marginal,averaging_sweep_):raw_marginal;
         // The reduced own reach is at most one. Factor the row scale out
         // before multiplying by the frozen action units, including zeros.
         Integer row_base=own.numerators[holding]*marginal;
-        row_base<<=past_bits-own.exponent;
+        const auto coefficient_shift=past_bits-own.exponent;
+        if (!plan_.factored_average_stage) row_base<<=coefficient_shift;
         for (std::size_t action=0;action<out.size();++action) out[action]=row_base*policy[action];
+        return plan_.factored_average_stage?coefficient_shift:0;
     }
     LaneValues visit(std::size_t id,Cursor cursor,const Prefix& prefix,Support support,
                      const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
@@ -1404,13 +1413,15 @@ template<bool Paired,bool Factored=false> class Walk final {
                 const std::span<Integer> average{increments.data(),menu};
                 const std::span<const Value> values{action_values[holding].data(),menu};
                 if (plan_.scaled_averages) {
-                    stage_scaled_average(average,policy[holding],prior[acting_lane],actor_reach,holding,row_shift);
+                    const auto left=stage_scaled_average(average,policy[holding],prior[acting_lane],
+                        actor_reach,holding,row_shift);
+                    const state::ScaledAverageIncrements scaled{average,row_shift,left};
                     if constexpr (Factored) {
                         if (snapshots[holding])
-                            result[acting_lane][holding]=state_.stage_frozen_row(*snapshots[holding],values,{average,row_shift});
-                        else result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,{average,row_shift});
+                            result[acting_lane][holding]=state_.stage_frozen_row(*snapshots[holding],values,scaled);
+                        else result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,scaled);
                     }
-                    else result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
+                    else result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,scaled);
                 } else {
                     if constexpr (Factored) require(false,"factored traversal requires scaled averages");
                     else {

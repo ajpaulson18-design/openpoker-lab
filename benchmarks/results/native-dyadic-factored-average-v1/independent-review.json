@@ -1,0 +1,19 @@
+{
+  "actionable_material_defects": [],
+  "checked": [
+    "exact nonnegative coefficient multiplication and shifted packed staging equivalence",
+    "State phase, representation, sign and width rejection boundaries",
+    "conservative first-sweep bound and saved-policy reach-width reconstruction",
+    "four-field footer accounting comparison and full owner artifact identity",
+    "rank-free eleven-card parent partition and unchanged admission limits"
+  ],
+  "controls_and_evidence_head": "1860a4f5c3f3daa9bfc2b7a033367f9a399f7d26",
+  "corrected_parent_total": 2308449784,
+  "limits": "Source inspection only. The reviewer did not independently execute tests, benchmarks or native producers.",
+  "review_number_correction": "A transposed parent total in the initial review prose was corrected against the executed receipts. The compiled parent forecast was not changed.",
+  "reviewer_native_producer_calls": 0,
+  "reviewer_test_executions": 0,
+  "reviewer_timing_calls": 0,
+  "scope": "independent read-only source and evidence review",
+  "source_reviewed": "299b4ec4ee011d63db9cf3b91fe2ab7e5e97e1d7"
+}

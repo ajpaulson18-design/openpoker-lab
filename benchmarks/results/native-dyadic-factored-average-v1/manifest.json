@@ -1,0 +1,64 @@
+{
+  "all_numerical_and_owner_artifacts_identical": true,
+  "allowed_footer_delta": {
+    "11": -6174850,
+    "18": -2778556,
+    "27": -6174850,
+    "5": -2778556
+  },
+  "archive": {
+    "bytes": 5750758,
+    "members": 132,
+    "path": "verification.zip",
+    "sha256": "04a4f0f3a5c3ad16cea7721830434280e819504b9a4d47511eec30d5d421ddd0"
+  },
+  "artifact_sha256": {
+    "admissions.json": "852e4d3cd944e4aeb7ac7ee7037ba8882c19dd54791bb8b0547caeb68abe7a73",
+    "eleven-parent-partition.json": "8c6b3f06dd2ba6716f27cfbaf28e3f41784f8f8a963109d437aa2b01e743e268",
+    "independent-review.json": "bacfce5143d0f1a47498b368f0ac069401fc97ceaaa5e5b2f737f7648876f472",
+    "native-eleven-forecast.json": "590c163d24bb302eb633457c7bd6670f6a5e7936f96d17cc4b54852843460d85",
+    "protocol.json": "bbbf171a01f54bd69b3dbdd42fd483703bce71c3d31bbf4c46f7d385596d98b7",
+    "saved-average-replay.json": "aa761170bb71493684c8620a8684943cfec3db7e5e83f61feb66155a14e2cfe9",
+    "timing.json": "1c1dc16f74edbd1a73ede02f155a4e7ff4705b2271508b0a9cf96432f991cee5"
+  },
+  "average_build_actual": {
+    "after": 19889534,
+    "before": 26064384,
+    "implicit_zero_bits": 80534985,
+    "nonzero_shift_rows": 238116,
+    "reduction": 6174850,
+    "rows": 238392
+  },
+  "average_build_forecast": {
+    "after": 23285828,
+    "before": 26064384,
+    "reduction": 2778556
+  },
+  "baseline_reference": "../native-dyadic-staged-pages-v1/manifest.json",
+  "compiled_forecast_reference": "../native-dyadic-eleven-native-forecast-v1/manifest.json",
+  "complete_native_timing_calls": 18,
+  "contract": "native-dyadic-factored-average-v1",
+  "control_modes": [
+    "normal",
+    "optimized"
+  ],
+  "controls_source_head": "1860a4f5c3f3daa9bfc2b7a033367f9a399f7d26",
+  "eleven_composed_work": 5954402351,
+  "eleven_hypothetical_average_forecast_saving": 9098697,
+  "eleven_parent_work": 2308449784,
+  "eleven_training_invocations": 0,
+  "faster_pairs": 5,
+  "focused_controls_per_mode": 21,
+  "focused_skips": 0,
+  "independent_source_review": "independent-review.json",
+  "median_elapsed_ratio": 0.964476737934114,
+  "operator_identity_limit": "External operators are archived after execution. The initial external saved census has no before/after raw Python import-closure receipt.",
+  "published_census_reproduces_external_receipts": true,
+  "quality_gate": null,
+  "saved_only_hand_rank_calls": 0,
+  "saved_only_native_producer_calls": 0,
+  "scope": "bounded ten-card complete-call study; eleven-card rank-free parent decomposition only",
+  "source_closure_entries": 39,
+  "timing_gate_passed": false,
+  "timing_source_head": "299b4ec4ee011d63db9cf3b91fe2ab7e5e97e1d7"
+}

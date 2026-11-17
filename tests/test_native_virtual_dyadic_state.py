@@ -30,7 +30,8 @@ GUARDS = (
     'sealed_lookup_after_freeze', 'sealed_generic_registration', 'sealed_foreign_cursor',
     'sealed_invalid_shift', 'sealed_nondecision_cursor',
     'packed_nondivisible', 'packed_cumulative_width', 'packed_limb_census',
-    'scaled_wrong_shift', 'scaled_width', 'scaled_dense_mode', 'packed_regret_nondivisible',
+    'scaled_wrong_shift', 'scaled_coefficient_nonfactored', 'scaled_width', 'scaled_dense_mode',
+    'packed_regret_nondivisible',
 )
 
 

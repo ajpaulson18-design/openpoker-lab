@@ -1,0 +1,44 @@
+{
+  "forecast_average_build": {
+    "10": {
+      "after": 23285828,
+      "before": 26064384,
+      "reduction": 2778556
+    },
+    "11": {
+      "after": 74450085,
+      "before": 83548782,
+      "reduction": 9098697
+    }
+  },
+  "saved": {
+    "hand_rank_calls": 0,
+    "native_producer_calls": 0,
+    "phases": [
+      {
+        "after": 10250926,
+        "before": 13032192,
+        "implicit_zero_bits": 35976812,
+        "nonzero_shift_rows": 118928,
+        "reduction": 2781266,
+        "rows": 119196
+      },
+      {
+        "after": 9638608,
+        "before": 13032192,
+        "implicit_zero_bits": 44558173,
+        "nonzero_shift_rows": 119188,
+        "reduction": 3393584,
+        "rows": 119196
+      }
+    ],
+    "total": {
+      "after": 19889534,
+      "before": 26064384,
+      "implicit_zero_bits": 80534985,
+      "nonzero_shift_rows": 238116,
+      "reduction": 6174850,
+      "rows": 238392
+    }
+  }
+}

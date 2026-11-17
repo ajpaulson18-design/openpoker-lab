@@ -167,6 +167,18 @@ void forecast_eleven(const training::Driver& driver) {
         <<",\"entries\":"<<p.entries<<",\"payload_bits\":"<<p.payload_bits
         <<",\"composed_entries\":"<<entries<<",\"composed_payload_bits\":"<<payload
         <<",\"stage_arithmetic_work\":"<<p.stage_arithmetic_work
+#ifdef OPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY
+        <<",\"parent_work\":[";
+    for (std::size_t i=0;i<p.parent.size();++i) {
+        if (i) std::cout<<',';
+        std::cout<<p.parent[i];
+    }
+    std::cout<<']'<<",\"parent_details\":{\"packed_average\":"<<p.packed_average_work
+        <<",\"packed_regret\":"<<p.packed_regret_work<<",\"paging\":"<<p.paging_work
+        <<",\"policy_spill\":"<<p.policy_spill_work<<",\"directory\":"<<p.directory_work
+        <<",\"average_build\":"<<p.scaled_average_build_work
+        <<",\"factored_metadata\":"<<training::factored_metadata_work(p)<<'}'
+#endif
         <<",\"quantizer_terms\":["<<p.quantizer_terms[0]<<','<<p.quantizer_terms[1]<<','<<p.quantizer_terms[2]<<']'
         <<",\"work\":{\"template\":"<<p.template_work<<",\"chance\":"<<p.chance_work
         <<",\"history\":"<<p.history_work<<",\"state\":"<<p.state_work

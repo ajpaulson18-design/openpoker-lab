@@ -126,6 +126,8 @@ TARGETS["virtual-dyadic-training-allin-reach"] = (
     "native-virtual-dyadic-training-allin-reach-probe", TARGETS["virtual-dyadic-training"][1])
 TARGETS["virtual-dyadic-training-mixed-policy-cache"] = (
     "native-virtual-dyadic-training-mixed-policy-cache-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-factored-average"] = (
+    "native-virtual-dyadic-training-factored-average-probe", TARGETS["virtual-dyadic-training"][1])
 
 
 def _hash(raw):
@@ -238,8 +240,11 @@ def build(output_directory, *, target="converter", sanitize=False):
         if target == "virtual-dyadic-training-profile":
             flags.append("/DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
         if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer",
-                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache"):
+                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache",
+                      "virtual-dyadic-training-factored-average"):
             flags.append("/DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-factored-average":
+            flags.append("/DOPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY")
         if target == "virtual-dyadic-training-mixed-policy-cache":
             flags.append("/DOPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY")
         if target == "virtual-dyadic-training-allin-reach":
@@ -257,8 +262,11 @@ def build(output_directory, *, target="converter", sanitize=False):
         if target == "virtual-dyadic-training-profile":
             flags.append("-DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
         if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer",
-                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache"):
+                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache",
+                      "virtual-dyadic-training-factored-average"):
             flags.append("-DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-factored-average":
+            flags.append("-DOPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY")
         if target == "virtual-dyadic-training-mixed-policy-cache":
             flags.append("-DOPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY")
         if target == "virtual-dyadic-training-allin-reach":

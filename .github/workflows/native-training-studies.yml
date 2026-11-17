@@ -37,13 +37,13 @@ jobs:
       - name: Build every explicit study target
         shell: bash
         run: |
-          for target in virtual-dyadic-training virtual-dyadic-training-staged-pages virtual-dyadic-training-terminal-buffer virtual-dyadic-training-allin-reach virtual-dyadic-training-mixed-policy-cache; do
+          for target in virtual-dyadic-training virtual-dyadic-training-staged-pages virtual-dyadic-training-terminal-buffer virtual-dyadic-training-allin-reach virtual-dyadic-training-mixed-policy-cache virtual-dyadic-training-factored-average; do
             if ! python -B -m scripts.build_native_exact_four_street --target "$target" --output-dir "$RUNNER_TEMP/training-studies/builds/$target" ${{ matrix.sanitize }}; then
               cat "$RUNNER_TEMP/training-studies/builds/$target/build.log"
               exit 1
             fi
           done
-      - name: Verify five complete training calls against preserved evidence
+      - name: Verify six complete training calls against preserved evidence
         shell: bash
         run: |
           python -B -O -m scripts.check_native_training_studies --builds "$RUNNER_TEMP/training-studies/builds" --output "$RUNNER_TEMP/training-studies/captures"

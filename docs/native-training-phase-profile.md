@@ -307,13 +307,13 @@ and verify the compressed numerical capture with
 ## Cross-platform study regression
 
 The [study workflow](../.github/workflows/native-training-studies.yml) builds
-the standard trainer and each of the four experimental trainer targets on
+the standard trainer and each of the five experimental trainer targets on
 Windows, Linux, and sanitized Linux. Each job requires one complete ten-card
 T2 call per target and preserves the first failure without an automatic retry.
 
 The [regression operator](../scripts/check_native_training_studies.py)
 authenticates each executable, compiler, dependency headers, and complete
-introduced source closure before launching any trainer. All five builds must
+introduced source closure before launching any trainer. All six builds must
 share the same source bytes. It checks the full 50,507,464-byte wire hash,
 including the resource footer, against the corresponding preserved study.
 Checkpoint stream frames, both State image files, policy spill, full-history
@@ -334,3 +334,37 @@ This extends regression coverage of the named experiments. Historical
 independent mathematical replay remains separate, and CI elapsed times do
 not enter a performance gate. All experimental targets remain explicit.
 Eleven-card training admission and wider-game quality remain open.
+
+### Factored average coefficients and parent work
+
+The [factored-average study](../benchmarks/results/native-dyadic-factored-average-v1/manifest.json)
+carries a nonnegative average coefficient and a common power-of-two shift
+through State staging. It performs the smaller coefficient multiplication
+before the existing packed writer applies the shift. This preserves the exact
+integer increment. Other profiles keep their earlier representation. The new
+layout is enabled only by the explicit
+`virtual-dyadic-training-factored-average` build target.
+
+An independent saved-only traversal authenticates the first-regret checkpoint
+and the full-history row directory, reconstructs grid policies and both actors'
+reach exponents, and predicts all changed average charges across 238,392 rows.
+It enters no native producer or hand ranker. Recorded average-construction
+work falls from 26,064,384 to 19,889,534 units. The first-sweep conservative
+bound reduces the forecast from 26,064,384 to 23,285,828 units. Selected uniform
+actions can have a smaller exponent than the maximum across the menu, so the
+observed first-sweep charge can be below that bound.
+
+All 18 complete calls at source `299b4ec` preserve the numerical stream,
+both checkpoint images, policies, row directory and arithmetic sidecars.
+Only four average and parent accounting footer fields change. The median
+paired complete-call elapsed ratio was **0.96448**, with five of eight pairs
+faster. This misses the unchanged gate of at most 0.96 and at least six faster
+pairs. All observations remain retained, including the large variation between
+pairs on this Windows host. The study remains opt-in.
+
+Reproduce the rank-free and saved-only analysis with
+`python -m scripts.census_virtual_dyadic_factored_average --help`.
+The source-frozen timing operator is
+`python -m scripts.benchmark_native_factored_average --help`.
+The packet retains the external operators actually used for measurement.
+Published operators accept explicit paths and do not replace their identities.

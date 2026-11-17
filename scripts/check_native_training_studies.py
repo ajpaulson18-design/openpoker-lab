@@ -33,6 +33,8 @@ EXPECTED_WIRES = {
         "d00004c1f2dc2a87efacc52d9b08cfe7c0c5f0bf4e2bd81b95bdafc524704ead",
     "virtual-dyadic-training-mixed-policy-cache":
         "ab27fc16c9321108806c1cc7e0061ed34459381795bedd2026d697fee91379a7",
+    "virtual-dyadic-training-factored-average":
+        "52bb0aece041eb99aa2dbcb37b28e43e2725d4e8cfc5d3d112a1b22272458da3",
 }
 FIRST_IMAGE = "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
 SECOND_IMAGE = "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
@@ -130,7 +132,7 @@ def run(builds, output):
             target: hashlib.sha256(identity[0]).hexdigest()
             for target, identity in identities.items()
         },
-        "scope": "five complete fixed ten-card T2 regression calls; no timing gate",
+        "scope": "six complete fixed ten-card T2 regression calls; no timing gate",
     })
     results = []
     try:

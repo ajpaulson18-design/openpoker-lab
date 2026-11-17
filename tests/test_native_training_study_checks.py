@@ -32,8 +32,8 @@ def observation(target):
 
 
 class StudyObservationTests(unittest.TestCase):
-    def test_all_five_preserved_wire_identities(self):
-        self.assertEqual(len(EXPECTED_WIRES), 5)
+    def test_all_six_preserved_wire_identities(self):
+        self.assertEqual(len(EXPECTED_WIRES), 6)
         for target in EXPECTED_WIRES:
             with self.subTest(target=target):
                 self.assertEqual(verify_observation(observation(target), target)["target"], target)
