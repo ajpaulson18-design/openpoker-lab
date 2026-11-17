@@ -303,3 +303,34 @@ the staged-page study's `warm-reuse` capture as its exact reference.
 Recount the forecast with `python -m scripts.forecast_virtual_dyadic_allin_reach`
 and verify the compressed numerical capture with
 `python -m scripts.verify_virtual_dyadic_wide_reach PATH`.
+
+## Cross-platform study regression
+
+The [study workflow](../.github/workflows/native-training-studies.yml) builds
+the standard trainer and each of the four experimental trainer targets on
+Windows, Linux, and sanitized Linux. Each job requires one complete ten-card
+T2 call per target and preserves the first failure without an automatic retry.
+
+The [regression operator](../scripts/check_native_training_studies.py)
+authenticates each executable, compiler, dependency headers, and complete
+introduced source closure before launching any trainer. All five builds must
+share the same source bytes. It checks the full 50,507,464-byte wire hash,
+including the resource footer, against the corresponding preserved study.
+Checkpoint stream frames, both State image files, policy spill, full-history
+row directory, arithmetic receipts, and staged-page schedules must match
+their historical identities. Mixed-policy reuse also checks the independent
+saved-census prediction of 24,119 hits, 21,231 misses, and 33,795 divisions.
+Source and executable identities are rechecked after all calls.
+
+The operator uses the existing bounded child and checkpoint-stream capture.
+It retains the numerical stream, checkpoint frame hashes, process outcomes,
+and build/source manifests. It requires observed successful child exits,
+empty stderr, complete stream extents, and zero retries. Synthetic mutation
+controls check rejection of foreign profiles, partial or failed processes,
+stream corruption, changed checkpoint values and order, and conflicting
+transport receipts.
+
+This extends regression coverage of the named experiments. Historical
+independent mathematical replay remains separate, and CI elapsed times do
+not enter a performance gate. All experimental targets remain explicit.
+Eleven-card training admission and wider-game quality remain open.
