@@ -368,3 +368,7 @@ The source-frozen timing operator is
 `python -m scripts.benchmark_native_factored_average --help`.
 The packet retains the external operators actually used for measurement.
 Published operators accept explicit paths and do not replace their identities.
+
+The later [staged-page wall-time observation study](native-staged-walk-observation.md)
+refreshes the accepted pager baseline through the owned-child observer. Its
+counts and overhead controls are separate from the historical ETW measurements.

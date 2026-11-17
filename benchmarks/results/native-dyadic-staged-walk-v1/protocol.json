@@ -1,0 +1,62 @@
+{
+  "automatic_retries": 0,
+  "changed_baseline": "accepted two-dirty-page layout and current exact arithmetic code",
+  "comparisons": [
+    "wrapper",
+    "instrumentation"
+  ],
+  "expected_capture": {
+    "contract": {
+      "copy_work": 11943624,
+      "frame_header_bytes": 32,
+      "frames": 2,
+      "image_bytes": 23701776,
+      "read_bytes": 47403552,
+      "retained_bytes": 3103848,
+      "scratch_bytes": 32768,
+      "version": 1,
+      "wire_bytes": 50507464
+    },
+    "frames": [
+      {
+        "bytes": 23701776,
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a",
+        "slot": 1,
+        "sweep": 1
+      },
+      {
+        "bytes": 23701776,
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+        "slot": 0,
+        "sweep": 2
+      }
+    ],
+    "retained_sha256": "ab657bc229ed5729a05f00aeced87ddcae8e9357442b74fdbde6a6421bfa9a5f",
+    "wire_sha256": "bc0496571953a80fd6b1a0f321ed903e11691c5ae5328ed532853ded264ffa49"
+  },
+  "expected_owner_sha256": {
+    "compact-wire.json": "c55af3248c718078e54d35382bd2290165a74c639305d4e4b599b755c0da9d56",
+    "equal-quantizer.json": "f13894666de6e640c75d432f69039a19b282d4dcb8d75b9ece2fd59ba3d9f6bd",
+    "factored-execution.json": "ba6a9d1e39d9f81385a789d0ceced0a1def6ceea47014f1b75ab2218ba79f2fd",
+    "page-images-rows/rows.bin": "5ceab6207caa89d39d961268b434614533e11496e40e11335ba280b1c611a625",
+    "page-images-rows/rows.json": "f7853567dc545f4efffead7a9751edfb07e20045726a4a61e29fefa67a273a8f",
+    "page-images/committed.bin": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+    "page-images/paging.json": "65405e015cfb77e9898c31ac892285700d2d4148297317de07c45bfd25983d83",
+    "page-images/policy.bin": "020f6878fc6fede39a3fb05b512a4cf739126c392ce2636929f6ab15bab8ea3c",
+    "page-images/policy.json": "a56e3bd59bd30b840dd422f3cd8b86de034d909628aedc63f73a3323a32d56a1",
+    "page-images/quantizer.json": "834e9297bf994bd6e08bc2f9c63447f0425e1686b2b3dff2563d516b0cd65d89",
+    "page-images/rank-index.json": "4ae7ec7065cefc02e4e5f63786882f50ad2c2e1409aa13686124a8219b50b6de",
+    "page-images/staged.bin": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+  },
+  "interval_ms": 20,
+  "measurement": "bounded primary-thread wall-time stack observations, including I/O waits",
+  "median_paired_ratio_max": 1.01,
+  "minimum_enabled_samples": 50,
+  "observer_source_head": "c3fe3535ce25e68db1ad946cc87305be460fb509",
+  "pairs_per_comparison": 8,
+  "prior_observer_packet": "native-owned-child-walk-v1",
+  "quality_gate": null,
+  "required_enabled_calls": 8,
+  "scope": "fixed ten-card two-sweep staged-page trainer; one Windows host",
+  "trainer_source_head": "7c10ea680e2075e8592cb978f2a0fa09c0c6b867"
+}

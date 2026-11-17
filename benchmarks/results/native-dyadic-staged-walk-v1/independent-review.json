@@ -1,0 +1,8 @@
+{
+  "analysis_source_head": "c0ae60927ecaa96b90d57b35cfb33db1c7eccb00",
+  "limits": "Reviewer did not execute tests or producers. Observation counts are nested wall-time contexts.",
+  "material_findings": [],
+  "native_producer_calls": 0,
+  "scope": "independent read-only analysis-source, control and saved-receipt review",
+  "test_executions": 0
+}
