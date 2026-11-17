@@ -143,7 +143,8 @@ struct AverageExport {
 };
 struct ScaledAverageIncrements {
     std::span<const Integer> values;
-    std::size_t shift = 0;
+    std::size_t shift = 0;             // scale of the row in the fixed denominator
+    std::size_t coefficient_shift = 0; // common left shift within packed units
 };
 struct PolicySpillSweep {
     std::size_t uniform_rows=0,pure_rows=0,mixed_rows=0,extent_words=0;
@@ -1580,7 +1581,8 @@ private:
     template<class Increment>
     void stage_direct_row(PackedField field,std::size_t offset,std::size_t shift,
                           std::span<const Increment> increments,
-                          const factored_dyadic::Value* mixed=nullptr) {
+                          const factored_dyadic::Value* mixed=nullptr,
+                          std::size_t coefficient_shift=0) {
         if (!paged_ || !paged_->factored || !paged_image_ || !paged_->row_batched ||
             increments.empty() || increments.size()>row_batch_max_actions)
             fail(ErrorCode::invalid_row,"invalid direct packed update");
@@ -1595,7 +1597,7 @@ private:
         for (std::size_t action=0;action<increments.size();++action) {
             auto destination=live.subspan(action*stride,stride);
             if constexpr (std::is_same_v<Increment,factored_dyadic::Value>) {
-                if (field!=PackedField::regret || !mixed)
+                if (field!=PackedField::regret || !mixed || coefficient_shift)
                     fail(ErrorCode::invalid_row,"factored regret update needs its mixed value");
                 auto delta=paged_->factored->subtracted(increments[action],*mixed);
                 const auto* coefficient=&delta.coefficient();
@@ -1623,9 +1625,9 @@ private:
             } else {
                 if (field!=PackedField::average || mixed || increments[action]<0)
                     fail(ErrorCode::invalid_row,"direct average update needs nonnegative reduced units");
-                if (initial) packed_signed_update::initialize_from_zero(destination,increments[action],0,false,
+                if (initial) packed_signed_update::initialize_from_zero(destination,increments[action],coefficient_shift,false,
                     forecast_.value_bits-shift,packed_update_counts_);
-                else packed_signed_update::apply(destination,increments[action],0,false,
+                else packed_signed_update::apply(destination,increments[action],coefficient_shift,false,
                     forecast_.value_bits-shift,packed_update_counts_);
             }
         }
@@ -1637,7 +1639,7 @@ private:
     Value stage_row_impl(std::size_t row,std::span<const Value> action_values,
                            std::span<const Integer> average_action_increments,
                            std::optional<std::size_t> scaled_shift,
-                           const FrozenRow* snapshot=nullptr) {
+                           const FrozenRow* snapshot=nullptr,std::size_t coefficient_shift=0) {
         healthy();
         try {
             if (phase_!=Phase::sweeping) fail(ErrorCode::phase,"state staging requires active sweep");
@@ -1658,6 +1660,9 @@ private:
             const PackedRegretRow regret_row{descriptor.regret_offset,descriptor.regret_shift};
             if (scaled_shift && (!packed() || *scaled_shift!=average_row.shift))
                 fail(ErrorCode::invalid_row,"state scaled average requires matching packed row shift");
+            if (coefficient_shift && (!factored || !scaled_shift ||
+                coefficient_shift>forecast_.value_bits-*scaled_shift))
+                fail(ErrorCode::invalid_row,"state factored average coefficient shift outside packed row");
             // Constant bounded backend width inspection/sign checks precede
             // arithmetic. Inputs are caller-owned and never mutated.
             charge(64+128*count);
@@ -1673,7 +1678,8 @@ private:
                     receipt_.peak_input_bits=std::max(receipt_.peak_input_bits,std::size_t{bits});
                 } else input_width(action_values[a]);
                 if (scaled_shift) {
-                    const auto bits=width(average_action_increments[a]);
+                    const auto coefficient_bits=width(average_action_increments[a]);
+                    const auto bits=coefficient_bits?coefficient_bits+coefficient_shift:0;
                     receipt_.peak_input_bits=std::max(receipt_.peak_input_bits,bits);
                     if (bits>forecast_.value_bits-*scaled_shift)
                         fail(ErrorCode::integer_width,"state scaled average increment exceeds packed admission");
@@ -1704,7 +1710,7 @@ private:
                 stage_direct_row(PackedField::regret,regret_row.limb_offset,regret_row.shift,
                     action_values,&mixed);
                 stage_direct_row(PackedField::average,average_row.limb_offset,average_row.shift,
-                    average_action_increments);
+                    average_action_increments,nullptr,coefficient_shift);
             } else if (paged_ && paged_->row_batched) {
                 stage_compact_row(PackedField::regret,regret_row.limb_offset,regret_row.shift,
                     action_values,BatchUpdate::regret_delta,
@@ -1747,19 +1753,21 @@ public:
     }
     Integer stage_scaled_row(std::size_t row,std::span<const Integer> action_values,
                              ScaledAverageIncrements average_increments) {
-        return stage_row_impl(row,action_values,average_increments.values,average_increments.shift);
+        return stage_row_impl(row,action_values,average_increments.values,average_increments.shift,
+            nullptr,average_increments.coefficient_shift);
     }
     factored_dyadic::Value stage_factored_scaled_row(std::size_t row,
                 std::span<const factored_dyadic::Value> action_values,
                 ScaledAverageIncrements average_increments) {
-        return stage_row_impl(row,action_values,average_increments.values,average_increments.shift);
+        return stage_row_impl(row,action_values,average_increments.values,average_increments.shift,
+            nullptr,average_increments.coefficient_shift);
     }
 private:
     factored_dyadic::Value stage_frozen_row(const FrozenRow& snapshot,
                 std::span<const factored_dyadic::Value> action_values,
                 ScaledAverageIncrements average_increments) {
         return stage_row_impl(snapshot.row_,action_values,average_increments.values,
-            average_increments.shift,&snapshot);
+            average_increments.shift,&snapshot,average_increments.coefficient_shift);
     }
 public:
     void commit_sweep() {
