@@ -1,5 +1,19 @@
 # Foundation-first execution record
 
+## Immutable native policy boundary (November 18)
+
+[PR329](https://github.com/ajpaulson18-design/openpoker-lab/pull/329) connects
+complete externally supplied Q52 policy images to the existing native History
+and State owners. Independent replay matches every one of 24,420 rows and
+58,164 slots for two profiles. Both normal/optimized native suites pass, as do
+Windows, Linux and sanitized Linux conformance jobs. The
+[contract and execution evidence](native-frozen-policy-state.md) retain whole
+request resource equations, exact source/build records, unchanged legacy control
+output, immutable failures and zero-native-call archive replay. This establishes
+the policy-input gate only: no raw update, learning, speedup or eleven-card
+capacity is claimed. State/quantizer/storage and parent work remain the scaling
+gates; resource limits are unchanged.
+
 ## Sorted terminal-rank lookup (November 8)
 
 The explicit ten-card indexed-cache profile at `0122ce9` passed a

@@ -2,6 +2,12 @@
 
 ## Unified solver foundation in development
 
+The opt-in [native immutable policy State boundary](../native-frozen-policy-state.md)
+adds complete external Q52 import and bounded read lifetime through the existing
+History/State owners. It is resident-only conformance work, with no raw update,
+training, speedup or larger-game capacity acceptance. The separate workflow
+retains Windows, Linux and sanitizer checks and saved-only independent replay.
+
 The [frozen Q52 update reference](../frozen-grid-update-reference.md) connects
 the accepted trainer's policy representation to independent whole-game raw
 regret/average expectation checks. Two profiles under two proposal laws match

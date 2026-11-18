@@ -87,6 +87,10 @@ masses cancels `a/b` only after including zero-full-target futures.
 
 ## Required native gates
 
+The [immutable native policy State boundary](native-frozen-policy-state.md)
+implements the first import/read gate with separate complete-request admission.
+It does not yet execute the raw update described here.
+
 Validate a complete immutable snapshot by actor, original own holding, full
 ordered visible history and ordered legal menu; include zero units and
 zero-reach rows. No policy callback may inspect hidden future cards. Reuse the

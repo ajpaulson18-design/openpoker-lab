@@ -130,6 +130,17 @@ struct PolicySnapshot {
     RowDescriptor descriptor;
     std::span<const std::uint64_t> units;
 };
+struct FrozenPolicyForecast {
+    std::uint64_t import_work=0,read_work=0,history_work=0;
+};
+struct FrozenPolicyReceipt {
+    std::size_t imported_rows=0,read_calls=0,read_limit=0;
+    bool ready=false;
+};
+struct FrozenPolicyView {
+    Row row;
+    std::span<const std::uint64_t> units;
+};
 struct RowDirectoryReceipt {
     std::size_t appended_rows=0,build_snapshots=0,read_calls=0,cache_hits=0,page_reads=0,
                 read_rows=0,write_calls=0,written_rows=0;
@@ -410,7 +421,7 @@ class State final {
     };
     static constexpr std::size_t policy_spill_entries=128;
     static_assert(sizeof(PolicySpill)+20*sizeof(std::uint64_t)<=8*policy_spill_entries);
-    enum class Phase { building, closed, sweeping };
+    enum class Phase { building, closed, sweeping, importing_policy, frozen_policy };
     enum class PackedField { average, regret };
     static constexpr std::size_t page_codec_words=11;
     static constexpr std::size_t row_batch_max_actions=4;
@@ -471,6 +482,7 @@ class State final {
     Phase phase_ = Phase::building;
     mutable bool failed_ = false;
     bool exported_ = false;
+    std::size_t imported_policy_rows_=0,frozen_policy_read_calls_=0,frozen_policy_read_limit_=0;
 
     [[noreturn]] static void fail(ErrorCode code, const char* message) { throw Error(code,message); }
     static std::uint64_t plus(std::uint64_t a,std::uint64_t b) {
@@ -585,6 +597,9 @@ class State final {
         return catalog_.keys?catalog_.token_slots:forecast_.slots;
     }
     [[nodiscard]] bool packed() const noexcept { return packed_.limb_count!=0; }
+    [[nodiscard]] bool numerical_state_absent() const noexcept {
+        return phase_==Phase::building || phase_==Phase::importing_policy || phase_==Phase::frozen_policy;
+    }
     [[nodiscard]] bool packed_regrets() const noexcept { return packed_.regret_limbs!=0; }
     [[nodiscard]] bool compact() const noexcept {return paged_ && paged_->compact_rows;}
     [[nodiscard]] bool disk_rows() const noexcept {return paged_ && paged_->paged_directory;}
@@ -1174,10 +1189,10 @@ public:
             catalog_.sealed?sizeof(std::string_view):sizeof(ActionText)+sizeof(std::string_view),sizeof(Menu)};
     }
     [[nodiscard]] std::span<const Integer> regrets() const noexcept {
-        return phase_==Phase::building || packed_regrets() ? std::span<const Integer>() : std::span<const Integer>(regrets_.get(),forecast_.slots);
+        return numerical_state_absent() || packed_regrets() ? std::span<const Integer>() : std::span<const Integer>(regrets_.get(),forecast_.slots);
     }
     [[nodiscard]] std::span<const Integer> averages() const noexcept {
-        return phase_==Phase::building || packed()?std::span<const Integer>():
+        return numerical_state_absent() || packed()?std::span<const Integer>():
             std::span<const Integer>(averages_.get(),forecast_.slots);
     }
     [[nodiscard]] std::size_t average_row_shift(std::size_t row) const {
@@ -1191,7 +1206,8 @@ public:
         return regret_record(row).shift;
     }
     [[nodiscard]] Integer regret_numerator(std::size_t row,std::size_t action) const {
-        if (phase_==Phase::building) fail(ErrorCode::phase,"state regret read before freeze");
+        if (numerical_state_absent()) fail(ErrorCode::phase,phase_==Phase::building?
+            "state regret read before freeze":"state imported policy has no committed regret image");
         index_bound(row);
         const auto info=row_at(row);
         if (action>=info.actions.size()) fail(ErrorCode::invalid_row,"state regret action index");
@@ -1204,7 +1220,8 @@ public:
     // This reads the committed image, including after a failed staging call.
     // A packed caller admits the copy/shift codec work for each requested value.
     [[nodiscard]] Integer average_numerator(std::size_t row,std::size_t action) const {
-        if (phase_==Phase::building) fail(ErrorCode::phase,"state average read before freeze");
+        if (numerical_state_absent()) fail(ErrorCode::phase,phase_==Phase::building?
+            "state average read before freeze":"state imported policy has no committed average image");
         index_bound(row);
         const auto info=row_at(row);
         if (action>=info.actions.size()) fail(ErrorCode::invalid_row,"state average action index");
@@ -1431,6 +1448,102 @@ public:
             if (found==index_.end()) fail(ErrorCode::invalid_row,"state full-history row is absent");
             return found->second;
         } catch (...) {failed_=true;throw;}
+    }
+    // Component reservation only. The parent separately admits complete input
+    // parsing/history reconstruction, catalog construction and update/output.
+    // Keep the existing conservative dense storage reservation unchanged.
+    [[nodiscard]] static FrozenPolicyForecast frozen_policy_forecast(const Forecast& f,std::size_t reads) {
+        if (!f.rows || !f.slots || f.slots<f.rows || f.slots>times(20,f.rows) || !reads ||
+            sizeof(State)+20*sizeof(std::string_view)+256>8*1024)
+            fail(ErrorCode::invalid_forecast,"invalid frozen policy component geometry");
+        return {plus(1088,plus(times(130,f.rows),times(258,f.slots))),
+            times(plus(208,times(16,logceil(f.rows+1))),reads),
+            plus(plus(times(56,f.rows),times(16,f.slots)),times(40,reads))};
+    }
+    void begin_frozen_policy_import(std::size_t reads) {
+        healthy();
+        try {
+            if (phase_!=Phase::building || forecast_.sweeps!=1 || packed() || paged_ ||
+                receipt_.rows!=forecast_.rows || receipt_.slots!=forecast_.slots)
+                fail(ErrorCode::phase,"frozen policy import needs a complete resident one-epoch catalog");
+            const auto bound=frozen_policy_forecast(forecast_,reads);
+            if (plus(bound.import_work,bound.read_work)>forecast_.own_work-receipt_.state_work)
+                fail(ErrorCode::work_limit,"frozen policy lifetime exceeds remaining state work");
+            charge(plus(1024,plus(times(2,forecast_.rows),times(2,forecast_.slots))));
+            units_=std::make_unique<std::uint64_t[]>(forecast_.slots);
+            frozen_policy_read_limit_=reads;
+            phase_=Phase::importing_policy;
+        } catch (...) {failed_=true;throw;}
+    }
+    // The enclosing importer reconstructs a full visible history from its
+    // bounded input and maps authenticated original cards to holding index.
+    // This owner rechecks cursor identity and the immutable source menu.
+    void import_frozen_policy_row(std::size_t row,History::Cursor cursor,std::size_t actor,std::size_t holding,
+                                  std::span<const std::string_view> actions,std::span<const std::uint64_t> units) {
+        healthy();
+        try {
+            if (phase_!=Phase::importing_policy) fail(ErrorCode::phase,"frozen policy import is not active");
+            if (row!=imported_policy_rows_ || row>=receipt_.rows || actions.empty() || actions.size()>20 ||
+                units.size()!=actions.size() || actor>1 || holding>=hand_counts_[actor])
+                fail(ErrorCode::invalid_row,"frozen policy input order or extent");
+            charge(128);
+            const auto record=row_at(row);
+            if (record.actions.size()!=actions.size())
+                fail(ErrorCode::invalid_row,"frozen policy catalog menu extent differs");
+            charge(times(256,actions.size()));
+            for (const auto action:actions)
+                if (action.empty() || action.size()>64) fail(ErrorCode::changed_menu,"frozen policy token extent");
+            const auto info=history_->decision_key(cursor);
+            if (info.depth>forecast_.max_history_depth || info.actor!=actor || info.actions!=actions.size() ||
+                record.history_ordinal!=info.ordinal || record.actor!=actor || record.holding_index!=holding ||
+                record.actions.size()!=actions.size())
+                fail(ErrorCode::invalid_row,"frozen policy full-history identity differs");
+            std::array<std::string_view,20> expected{};
+            const auto legal=std::span(expected).first(actions.size());
+            history_->decision_actions(cursor,legal);
+            if (!same_menu(record.actions,actions) || !same_menu(legal,actions))
+                fail(ErrorCode::changed_menu,"frozen policy ordered legal menu differs");
+            std::uint64_t total=0;
+            for (const auto unit:units) {
+                if (unit>dyadic_policy::grid_units-total)
+                    fail(ErrorCode::invalid_row,"frozen policy grid partition overflow");
+                total+=unit;
+            }
+            if (total!=dyadic_policy::grid_units) fail(ErrorCode::invalid_row,"frozen policy grid partition differs");
+            std::copy(units.begin(),units.end(),units_.get()+record.offset);
+            ++imported_policy_rows_;
+        } catch (const virtual_dyadic_history::Error&) {
+            failed_=true;fail(ErrorCode::invalid_row,"frozen policy history owner or cursor differs");
+        } catch (...) {failed_=true;throw;}
+    }
+    void seal_frozen_policy() {
+        healthy();
+        try {
+            if (phase_!=Phase::importing_policy || imported_policy_rows_!=receipt_.rows)
+                fail(ErrorCode::phase,"frozen policy image is incomplete");
+            charge(64);
+            phase_=Phase::frozen_policy;
+        } catch (...) {failed_=true;throw;}
+    }
+    // Borrowed immutable view, valid only while this State owner remains alive.
+    // No training operation can mutate or replace a sealed imported image.
+    [[nodiscard]] FrozenPolicyView frozen_policy(History::Cursor cursor,std::size_t actor,std::size_t holding) {
+        healthy();
+        try {
+            if (phase_!=Phase::frozen_policy) fail(ErrorCode::phase,"frozen policy is not sealed");
+            if (frozen_policy_read_calls_>=frozen_policy_read_limit_)
+                fail(ErrorCode::capacity,"frozen policy read count exceeded");
+            const auto row=find_row(cursor,actor,holding);
+            const auto record=row_at(row);
+            charge(plus(64,times(4,record.actions.size())));
+            ++frozen_policy_read_calls_;
+            return {record,{units_.get()+record.offset,record.actions.size()}};
+        } catch (const virtual_dyadic_history::Error&) {
+            failed_=true;fail(ErrorCode::invalid_row,"frozen policy lookup history differs");
+        } catch (...) {failed_=true;throw;}
+    }
+    [[nodiscard]] FrozenPolicyReceipt frozen_policy_receipt() const noexcept {
+        return {imported_policy_rows_,frozen_policy_read_calls_,frozen_policy_read_limit_,phase_==Phase::frozen_policy};
     }
     void freeze() {
         healthy();
