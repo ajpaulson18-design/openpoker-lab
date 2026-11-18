@@ -83,6 +83,43 @@ replays saved inputs/outputs and actual process exits with zero candidate calls.
 Archived source is never executed. Historical packets remain immutable. Executed
 evidence is recorded separately from this contract.
 
+The [retained packet](../benchmarks/results/native-frozen-policy-state-v1/manifest.json)
+contains 408 members in a 7,733,361-byte archive, SHA256
+`ecb72cd2bcbcdb1fb7089da6401ae558a4d71855daefdda86828b7c3817fbdd5`.
+Native source `a776062138346a58e4703b46d8e606834d47d3de` and observation source
+`5ae1757e560e249975a28c9f215cff47953eea9c` passed five complete conformance
+tests normally and optimized. Each mode observed nine native cases with actual
+exits; both complete profiles matched all rows and slots. Actual modeled work
+was 209,671,033, History 31,606,488 and State 52,404,808 for each profile.
+The 11 existing compiled State tests passed; their 48,753-byte output stayed
+identical to the pre-change baseline, SHA256
+`e939f1a865ac94fc791299a4c9b21fef19490a31fdc7615aa7d4954d3d47c26e`.
+The packet retains exact source/build closure for both legacy binaries, the
+new target, inputs/outputs, exits, original refusals and their repairs.
+
+The [archive-only replay](../benchmarks/results/native-frozen-policy-state-v1/archive-replay.json)
+passes for both extracted observations with zero native calls. Saved controls
+can be reproduced with `python -B -m scripts.replay_native_policy_packet`;
+the historical replay workflow runs that command normally and optimized on
+Windows and Linux, authenticating every archive member before replay.
+Saved controls
+normally and optimized reject source bytes/membership/blob drift, false exits,
+foreign commands, stream identity drift, an ordinal mutation with recomputed
+transport hash, and an invalid input partition with recomputed transport hash.
+The active entrypoint is trusted executed code checked against its current
+committed bytes; the captured oracle/codec dependencies remain frozen. The two
+historical mixed-ending native headers use exact raw/blob pins recovered from
+the immutable PR325 packet. No arbitrary source normalization is accepted.
+
+At PR329 source `ed5ee143bd4e1dda76c96621a16505def0c73374`, Windows job
+[135223168130](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44423763831/job/135223168130),
+Linux job [135223168104](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44423763831/job/135223168104)
+and sanitizer job [135223167858](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44423763831/job/135223167858)
+passed both five-test import suites, saved replay and two saved-control tests.
+Decoded logs are retained beside the immutable archive, with line endings
+converted to LF for storage. This is executed cross-platform conformance,
+not a runtime benchmark or a solved-quality result.
+
 The next computation gate is a fully admitted per-board raw update through
 existing prepared contractions and exact reach, followed by complete independent
 row comparison. This read boundary alone cannot remove the eleven-card State,

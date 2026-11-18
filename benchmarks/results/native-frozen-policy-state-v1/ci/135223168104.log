@@ -1,0 +1,457 @@
+﻿2026-11-18T23:50:02.8695186Z Current runner version: '2.338.2'
+2026-11-18T23:50:02.8715515Z ##[group]Runner Image Provisioner
+2026-11-18T23:50:02.8716295Z Hosted Compute Agent
+2026-11-18T23:50:02.8716778Z Version: 20261103.629
+2026-11-18T23:50:02.8717296Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-18T23:50:02.8718167Z Build Date: 2026-11-03T17:26:59Z
+2026-11-18T23:50:02.8718738Z Worker ID: {ec85bd6a-8679-4557-b306-5b08e429289c}
+2026-11-18T23:50:02.8719318Z Region: eastus2
+2026-11-18T23:50:02.8719810Z Cloud: Azure
+2026-11-18T23:50:02.8720251Z ##[endgroup]
+2026-11-18T23:50:02.8721701Z ##[group]Operating System
+2026-11-18T23:50:02.8722218Z Ubuntu
+2026-11-18T23:50:02.8722663Z 26.04.1
+2026-11-18T23:50:02.8723146Z LTS
+2026-11-18T23:50:02.8723571Z ##[endgroup]
+2026-11-18T23:50:02.8724052Z ##[group]Runner Image
+2026-11-18T23:50:02.8724542Z Image: ubuntu-26.04
+2026-11-18T23:50:02.8725033Z Version: 20261111.196.1
+2026-11-18T23:50:02.8726069Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.196/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-18T23:50:02.8727341Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.196
+2026-11-18T23:50:02.8728868Z ##[endgroup]
+2026-11-18T23:50:02.8730278Z ##[group]GITHUB_TOKEN Permissions
+2026-11-18T23:50:02.8732427Z Contents: read
+2026-11-18T23:50:02.8732939Z Metadata: read
+2026-11-18T23:50:02.8733465Z ##[endgroup]
+2026-11-18T23:50:02.8735327Z Secret source: Actions
+2026-11-18T23:50:02.8736155Z Cache mode: write
+2026-11-18T23:50:02.8736703Z Prepare workflow directory
+2026-11-18T23:50:02.8994338Z Prepare all required actions
+2026-11-18T23:50:02.9032998Z Getting action download info
+2026-11-18T23:50:03.0565402Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-18T23:50:03.2377403Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-18T23:50:03.3415950Z Download action repository 'ilammy/msvc-dev-cmd@v1' (SHA:0b201ec74fa43914dc39ae48a89fd1d8cb592756)
+2026-11-18T23:50:03.4760502Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-18T23:50:03.6613937Z Complete job name: frozen-policy-state (ubuntu-latest, linux)
+2026-11-18T23:50:03.7437009Z ##[group]Run actions/checkout@v4
+2026-11-18T23:50:03.7438075Z with:
+2026-11-18T23:50:03.7438822Z   repository: ajpaulson18-design/openpoker-lab
+2026-11-18T23:50:03.7442916Z   token: ***
+2026-11-18T23:50:03.7443421Z   ssh-strict: true
+2026-11-18T23:50:03.7444007Z   ssh-user: git
+2026-11-18T23:50:03.7444524Z   persist-credentials: true
+2026-11-18T23:50:03.7445091Z   clean: true
+2026-11-18T23:50:03.7446616Z   sparse-checkout-cone-mode: true
+2026-11-18T23:50:03.7447225Z   fetch-depth: 1
+2026-11-18T23:50:03.7448615Z   fetch-tags: false
+2026-11-18T23:50:03.7449044Z   show-progress: true
+2026-11-18T23:50:03.7449406Z   lfs: false
+2026-11-18T23:50:03.7449940Z   submodules: false
+2026-11-18T23:50:03.7450469Z   set-safe-directory: true
+2026-11-18T23:50:03.7450912Z   allow-unsafe-pr-checkout: false
+2026-11-18T23:50:03.7451926Z ##[endgroup]
+2026-11-18T23:50:04.2793826Z Syncing repository: ajpaulson18-design/openpoker-lab
+2026-11-18T23:50:04.2795601Z ##[group]Getting Git version info
+2026-11-18T23:50:04.2796394Z Working directory is '/home/runner/work/openpoker-lab/openpoker-lab'
+2026-11-18T23:50:04.2797332Z [command]/usr/bin/git version
+2026-11-18T23:50:04.2798017Z git version 2.56.1
+2026-11-18T23:50:04.2799774Z ##[endgroup]
+2026-11-18T23:50:04.2803706Z Temporarily overriding HOME='/home/runner/work/_temp/0aee0235-3844-49e1-9c1a-efc64bdcaf01' before making global git config changes
+2026-11-18T23:50:04.2804891Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-18T23:50:04.2805883Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openpoker-lab/openpoker-lab
+2026-11-18T23:50:04.3116519Z Deleting the contents of '/home/runner/work/openpoker-lab/openpoker-lab'
+2026-11-18T23:50:04.3121130Z ##[group]Initializing the repository
+2026-11-18T23:50:04.3125116Z [command]/usr/bin/git init /home/runner/work/openpoker-lab/openpoker-lab
+2026-11-18T23:50:04.3201760Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-18T23:50:04.3203354Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-18T23:50:04.3204903Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-18T23:50:04.3206132Z hint: call:
+2026-11-18T23:50:04.3206874Z hint:
+2026-11-18T23:50:04.3207893Z hint: 	git config --global init.defaultBranch <name>
+2026-11-18T23:50:04.3208948Z hint:
+2026-11-18T23:50:04.3209930Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-18T23:50:04.3211400Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-18T23:50:04.3212600Z hint:
+2026-11-18T23:50:04.3213413Z hint: 	git branch -m <name>
+2026-11-18T23:50:04.3214242Z hint:
+2026-11-18T23:50:04.3215255Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-18T23:50:04.3226015Z Initialized empty Git repository in /home/runner/work/openpoker-lab/openpoker-lab/.git/
+2026-11-18T23:50:04.3235452Z [command]/usr/bin/git remote add origin https://github.com/ajpaulson18-design/openpoker-lab
+2026-11-18T23:50:04.3278505Z ##[endgroup]
+2026-11-18T23:50:04.3279654Z ##[group]Disabling automatic garbage collection
+2026-11-18T23:50:04.3281453Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-18T23:50:04.3311386Z ##[endgroup]
+2026-11-18T23:50:04.3312503Z ##[group]Setting up auth
+2026-11-18T23:50:04.3318089Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T23:50:04.3349319Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-18T23:50:04.3752362Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T23:50:04.3770909Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-18T23:50:04.4002450Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T23:50:04.4030584Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-18T23:50:04.4261892Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-18T23:50:04.4296631Z ##[endgroup]
+2026-11-18T23:50:04.4297509Z ##[group]Fetching the repository
+2026-11-18T23:50:04.4304773Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f2459545dd38b63c4cd798a9f998f630936b20fb:refs/remotes/pull/329/merge
+2026-11-18T23:50:10.0003301Z From https://github.com/ajpaulson18-design/openpoker-lab
+2026-11-18T23:50:10.0004412Z  * [new ref]         f2459545dd38b63c4cd798a9f998f630936b20fb -> pull/329/merge
+2026-11-18T23:50:10.0009927Z ##[endgroup]
+2026-11-18T23:50:10.0010640Z ##[group]Determining the checkout info
+2026-11-18T23:50:10.0011348Z ##[endgroup]
+2026-11-18T23:50:10.0013903Z [command]/usr/bin/git sparse-checkout disable
+2026-11-18T23:50:10.0081065Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-18T23:50:10.0106009Z ##[group]Checking out the ref
+2026-11-18T23:50:10.0108863Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/329/merge
+2026-11-18T23:50:11.0374125Z Updating files:  25% (692/2717)
+2026-11-18T23:50:11.1350504Z Updating files:  26% (707/2717)
+2026-11-18T23:50:11.1402853Z Updating files:  27% (734/2717)
+2026-11-18T23:50:11.1438358Z Updating files:  28% (761/2717)
+2026-11-18T23:50:11.1799861Z Updating files:  29% (788/2717)
+2026-11-18T23:50:11.1852356Z Updating files:  30% (816/2717)
+2026-11-18T23:50:11.1930345Z Updating files:  31% (843/2717)
+2026-11-18T23:50:11.2059718Z Updating files:  32% (870/2717)
+2026-11-18T23:50:11.2106036Z Updating files:  33% (897/2717)
+2026-11-18T23:50:11.2182007Z Updating files:  34% (924/2717)
+2026-11-18T23:50:11.2259790Z Updating files:  35% (951/2717)
+2026-11-18T23:50:11.2310943Z Updating files:  36% (979/2717)
+2026-11-18T23:50:11.2327258Z Updating files:  37% (1006/2717)
+2026-11-18T23:50:11.2425308Z Updating files:  38% (1033/2717)
+2026-11-18T23:50:11.2490862Z Updating files:  39% (1060/2717)
+2026-11-18T23:50:11.2561547Z Updating files:  40% (1087/2717)
+2026-11-18T23:50:11.2592559Z Updating files:  41% (1114/2717)
+2026-11-18T23:50:11.2648508Z Updating files:  42% (1142/2717)
+2026-11-18T23:50:11.2687378Z Updating files:  43% (1169/2717)
+2026-11-18T23:50:11.2722485Z Updating files:  44% (1196/2717)
+2026-11-18T23:50:11.3025357Z Updating files:  45% (1223/2717)
+2026-11-18T23:50:11.3062245Z Updating files:  46% (1250/2717)
+2026-11-18T23:50:11.4065586Z Updating files:  47% (1277/2717)
+2026-11-18T23:50:11.4249170Z Updating files:  48% (1305/2717)
+2026-11-18T23:50:11.4321633Z Updating files:  49% (1332/2717)
+2026-11-18T23:50:11.4404764Z Updating files:  50% (1359/2717)
+2026-11-18T23:50:11.4477893Z Updating files:  51% (1386/2717)
+2026-11-18T23:50:11.4538297Z Updating files:  52% (1413/2717)
+2026-11-18T23:50:11.4580773Z Updating files:  53% (1441/2717)
+2026-11-18T23:50:11.4609418Z Updating files:  54% (1468/2717)
+2026-11-18T23:50:11.4642756Z Updating files:  55% (1495/2717)
+2026-11-18T23:50:11.4663108Z Updating files:  56% (1522/2717)
+2026-11-18T23:50:11.4681023Z Updating files:  57% (1549/2717)
+2026-11-18T23:50:11.4702618Z Updating files:  58% (1576/2717)
+2026-11-18T23:50:11.4720459Z Updating files:  59% (1604/2717)
+2026-11-18T23:50:11.4737282Z Updating files:  60% (1631/2717)
+2026-11-18T23:50:11.4754729Z Updating files:  61% (1658/2717)
+2026-11-18T23:50:11.4777304Z Updating files:  62% (1685/2717)
+2026-11-18T23:50:11.4801537Z Updating files:  63% (1712/2717)
+2026-11-18T23:50:11.4829783Z Updating files:  64% (1739/2717)
+2026-11-18T23:50:11.4850822Z Updating files:  65% (1767/2717)
+2026-11-18T23:50:11.4871953Z Updating files:  66% (1794/2717)
+2026-11-18T23:50:11.4893788Z Updating files:  67% (1821/2717)
+2026-11-18T23:50:11.4919118Z Updating files:  68% (1848/2717)
+2026-11-18T23:50:11.4947856Z Updating files:  69% (1875/2717)
+2026-11-18T23:50:11.4976609Z Updating files:  70% (1902/2717)
+2026-11-18T23:50:11.4997445Z Updating files:  71% (1930/2717)
+2026-11-18T23:50:11.5018248Z Updating files:  72% (1957/2717)
+2026-11-18T23:50:11.5039170Z Updating files:  73% (1984/2717)
+2026-11-18T23:50:11.5059591Z Updating files:  74% (2011/2717)
+2026-11-18T23:50:11.5081698Z Updating files:  75% (2038/2717)
+2026-11-18T23:50:11.5104383Z Updating files:  76% (2065/2717)
+2026-11-18T23:50:11.5128735Z Updating files:  77% (2093/2717)
+2026-11-18T23:50:11.5145162Z Updating files:  78% (2120/2717)
+2026-11-18T23:50:11.5172196Z Updating files:  79% (2147/2717)
+2026-11-18T23:50:11.5200779Z Updating files:  80% (2174/2717)
+2026-11-18T23:50:11.5219339Z Updating files:  81% (2201/2717)
+2026-11-18T23:50:11.5239350Z Updating files:  82% (2228/2717)
+2026-11-18T23:50:11.5257082Z Updating files:  83% (2256/2717)
+2026-11-18T23:50:11.5272577Z Updating files:  84% (2283/2717)
+2026-11-18T23:50:11.5290217Z Updating files:  85% (2310/2717)
+2026-11-18T23:50:11.5304947Z Updating files:  86% (2337/2717)
+2026-11-18T23:50:11.5322424Z Updating files:  87% (2364/2717)
+2026-11-18T23:50:11.5340268Z Updating files:  88% (2391/2717)
+2026-11-18T23:50:11.5356820Z Updating files:  89% (2419/2717)
+2026-11-18T23:50:11.5374307Z Updating files:  90% (2446/2717)
+2026-11-18T23:50:11.5388555Z Updating files:  91% (2473/2717)
+2026-11-18T23:50:11.5403149Z Updating files:  92% (2500/2717)
+2026-11-18T23:50:11.5417262Z Updating files:  93% (2527/2717)
+2026-11-18T23:50:11.5434119Z Updating files:  94% (2554/2717)
+2026-11-18T23:50:11.5451689Z Updating files:  95% (2582/2717)
+2026-11-18T23:50:11.5468032Z Updating files:  96% (2609/2717)
+2026-11-18T23:50:11.5483921Z Updating files:  97% (2636/2717)
+2026-11-18T23:50:11.5496269Z Updating files:  98% (2663/2717)
+2026-11-18T23:50:11.5647052Z Updating files:  99% (2690/2717)
+2026-11-18T23:50:11.5647368Z Updating files: 100% (2717/2717)
+2026-11-18T23:50:11.5647833Z Updating files: 100% (2717/2717), done.
+2026-11-18T23:50:11.5671731Z Note: switching to 'refs/remotes/pull/329/merge'.
+2026-11-18T23:50:11.5671977Z 
+2026-11-18T23:50:11.5672211Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-18T23:50:11.5672599Z changes and commit them, and you can discard any commits you make in this
+2026-11-18T23:50:11.5672964Z state without impacting any branches by switching back to a branch.
+2026-11-18T23:50:11.5673179Z 
+2026-11-18T23:50:11.5673323Z If you want to create a new branch to retain commits you create, you may
+2026-11-18T23:50:11.5673671Z do so (now or later) by using -c with the switch command. Example:
+2026-11-18T23:50:11.5673861Z 
+2026-11-18T23:50:11.5673954Z   git switch -c <new-branch-name>
+2026-11-18T23:50:11.5674110Z 
+2026-11-18T23:50:11.5674202Z Or undo this operation with:
+2026-11-18T23:50:11.5674340Z 
+2026-11-18T23:50:11.5674410Z   git switch -
+2026-11-18T23:50:11.5674514Z 
+2026-11-18T23:50:11.5674681Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-18T23:50:11.5674971Z 
+2026-11-18T23:50:11.5675250Z HEAD is now at f245954 Merge ed5ee143bd4e1dda76c96621a16505def0c73374 into 1697b05d73da4341d8abf1db60409e364f1320b5
+2026-11-18T23:50:11.5796387Z ##[endgroup]
+2026-11-18T23:50:11.5841906Z [command]/usr/bin/git log -1 --format=%H
+2026-11-18T23:50:11.5865999Z f2459545dd38b63c4cd798a9f998f630936b20fb
+2026-11-18T23:50:11.6104295Z ##[group]Run actions/setup-python@v5
+2026-11-18T23:50:11.6104524Z with:
+2026-11-18T23:50:11.6104691Z   python-version: 3.12
+2026-11-18T23:50:11.6104878Z   check-latest: false
+2026-11-18T23:50:11.6106679Z   token: ***
+2026-11-18T23:50:11.6106855Z   update-environment: true
+2026-11-18T23:50:11.6107053Z   allow-prereleases: false
+2026-11-18T23:50:11.6107253Z   freethreaded: false
+2026-11-18T23:50:11.6107429Z ##[endgroup]
+2026-11-18T23:50:11.7182225Z ##[group]Installed versions
+2026-11-18T23:50:11.7456788Z (node:2221) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-18T23:50:11.7457973Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-18T23:50:11.7458470Z Successfully set up CPython (3.12.16)
+2026-11-18T23:50:11.7459145Z ##[endgroup]
+2026-11-18T23:50:11.7922897Z ##[group]Run python -B -m scripts.build_native_exact_four_street --target virtual-frozen-policy-state-controls --output-dir "$RUNNER_TEMP/frozen-policy-state" 
+2026-11-18T23:50:11.7923891Z [36;1mpython -B -m scripts.build_native_exact_four_street --target virtual-frozen-policy-state-controls --output-dir "$RUNNER_TEMP/frozen-policy-state" [0m
+2026-11-18T23:50:11.7924514Z [36;1mif [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi[0m
+2026-11-18T23:50:11.7925144Z [36;1mecho "OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE=$RUNNER_TEMP/frozen-policy-state/native-virtual-frozen-policy-state-controls$suffix" >> "$GITHUB_ENV"[0m
+2026-11-18T23:50:11.7985414Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-18T23:50:11.7985706Z env:
+2026-11-18T23:50:11.7985927Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:11.7986279Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-18T23:50:11.7986658Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:11.7986965Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:11.7987261Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:11.7987560Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-18T23:50:11.7987962Z ##[endgroup]
+2026-11-18T23:50:24.8104005Z {
+2026-11-18T23:50:24.8104369Z   "contract": "native-exact-build-v1",
+2026-11-18T23:50:24.8109477Z   "target": "virtual-frozen-policy-state-controls",
+2026-11-18T23:50:24.8110561Z   "scope": "Frozen Q52 policy import/read conformance only; no update, training, solver or capacity acceptance.",
+2026-11-18T23:50:24.8111165Z   "source_sha256": {
+2026-11-18T23:50:24.8111584Z     "tests/native/virtual_frozen_policy_state_controls.cpp": "ec8e9301f7e41b8a12fef774d431702992cf3be7916f6a3cc55e23632a51d383",
+2026-11-18T23:50:24.8112217Z     "native/virtual_dyadic_training.hpp": "da42c96c8992764fa072935a501969c85b8190cd6677a11f663e164ec97a5f8f",
+2026-11-18T23:50:24.8112759Z     "native/training_phase_profile.hpp": "592e592d8bdced91363cd1b4e7745894bec334b0c7d02d7d929197752403f3cb",
+2026-11-18T23:50:24.8113301Z     "native/training_phase_trace.hpp": "de7baf7be4dd6b73257eaacc17fdaa843cef0a23bf571b163e3113009676dc94",
+2026-11-18T23:50:24.8113866Z     "native/prepared_public_chance.hpp": "82e029b85e09ad57dbc78d5ecde833405cfc2fe9ec165638da2c3fa1f48b0951",
+2026-11-18T23:50:24.8114401Z     "native/virtual_dyadic_history.hpp": "c2e7dd6cff3a2c6e67353311694227c3397506bee1bfac9c824ee4adae018ae2",
+2026-11-18T23:50:24.8114925Z     "native/virtual_dyadic_state.hpp": "ee3c8aab4dfe339b6854653a387197445895be5282afafb8c8a151f0880de105",
+2026-11-18T23:50:24.8115471Z     "native/virtual_dyadic_paged_image.hpp": "f529accce76961ab7cff3b4d5aac0f2f7dec12dafd6d2fc3298d672796f2547f",
+2026-11-18T23:50:24.8116015Z     "native/factored_dyadic.hpp": "501694966bfcab807af79b83a348f75b4ec8166aeefcf2a26208d2f64e6446a5",
+2026-11-18T23:50:24.8116523Z     "native/factored_execution.hpp": "3f6821249e03afffa9f0256cd115f43c5734f76dd369387f8aadd704f8869742",
+2026-11-18T23:50:24.8117037Z     "native/packed_signed_update.hpp": "ac51cf4fd178ca5d592a0195dd2703e2c489c635aca44d683877de44ae4c8b51",
+2026-11-18T23:50:24.8117533Z     "native/dyadic_policy.hpp": "6d550e5520468c81c3dcb2a1cb7f61e0e7302958b88c26ff6affe6c4844a01d6",
+2026-11-18T23:50:24.8118392Z     "native/dyadic_policy_division.hpp": "dcd999f416487c78708720838a7307fb9fb3ecfecb8616489cfaf8dc41b80627",
+2026-11-18T23:50:24.8118931Z     "native/virtual_betting_template.hpp": "8eac9dd5249b6520e4a2a16d59a9f8be1a48cdbf65c1d27f10ae0c82b283c54d",
+2026-11-18T23:50:24.8119484Z     "native/full_deck_public_chance.hpp": "a85af096a5744814a950148afb1c440575eecffeb9424904b78cd21bfebbb6d7",
+2026-11-18T23:50:24.8120000Z     "native/exact_selected_kernel.hpp": "374e2509f28b38c95d34d9592921b7023a4920d018037349ceb05bdff607563f",
+2026-11-18T23:50:24.8120504Z     "native/exact_binary64.hpp": "596cd7fa8707bcdf683f609fb6c172773f4a8fe6e0052a0b438b430c26b2b6cd",
+2026-11-18T23:50:24.8121216Z     "scripts/build_native_exact_four_street.py": "9eb85251765f62b7a10f93c3d4a84a1ea19c885508ed4a94de7d4b301c373071",
+2026-11-18T23:50:24.8121836Z     "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555",
+2026-11-18T23:50:24.8122468Z     "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566",
+2026-11-18T23:50:24.8123118Z     "third_party/boost-multiprecision-1.92.0/headers.zip": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
+2026-11-18T23:50:24.8123526Z   },
+2026-11-18T23:50:24.8123686Z   "source_lf_sha256": {
+2026-11-18T23:50:24.8124084Z     "tests/native/virtual_frozen_policy_state_controls.cpp": "ec8e9301f7e41b8a12fef774d431702992cf3be7916f6a3cc55e23632a51d383",
+2026-11-18T23:50:24.8124662Z     "native/virtual_dyadic_training.hpp": "da42c96c8992764fa072935a501969c85b8190cd6677a11f663e164ec97a5f8f",
+2026-11-18T23:50:24.8125195Z     "native/training_phase_profile.hpp": "592e592d8bdced91363cd1b4e7745894bec334b0c7d02d7d929197752403f3cb",
+2026-11-18T23:50:24.8125729Z     "native/training_phase_trace.hpp": "de7baf7be4dd6b73257eaacc17fdaa843cef0a23bf571b163e3113009676dc94",
+2026-11-18T23:50:24.8126276Z     "native/prepared_public_chance.hpp": "82e029b85e09ad57dbc78d5ecde833405cfc2fe9ec165638da2c3fa1f48b0951",
+2026-11-18T23:50:24.8126807Z     "native/virtual_dyadic_history.hpp": "c2e7dd6cff3a2c6e67353311694227c3397506bee1bfac9c824ee4adae018ae2",
+2026-11-18T23:50:24.8127439Z     "native/virtual_dyadic_state.hpp": "ee3c8aab4dfe339b6854653a387197445895be5282afafb8c8a151f0880de105",
+2026-11-18T23:50:24.8128133Z     "native/virtual_dyadic_paged_image.hpp": "f529accce76961ab7cff3b4d5aac0f2f7dec12dafd6d2fc3298d672796f2547f",
+2026-11-18T23:50:24.8128663Z     "native/factored_dyadic.hpp": "501694966bfcab807af79b83a348f75b4ec8166aeefcf2a26208d2f64e6446a5",
+2026-11-18T23:50:24.8129171Z     "native/factored_execution.hpp": "3f6821249e03afffa9f0256cd115f43c5734f76dd369387f8aadd704f8869742",
+2026-11-18T23:50:24.8129690Z     "native/packed_signed_update.hpp": "ac51cf4fd178ca5d592a0195dd2703e2c489c635aca44d683877de44ae4c8b51",
+2026-11-18T23:50:24.8130186Z     "native/dyadic_policy.hpp": "6d550e5520468c81c3dcb2a1cb7f61e0e7302958b88c26ff6affe6c4844a01d6",
+2026-11-18T23:50:24.8130683Z     "native/dyadic_policy_division.hpp": "dcd999f416487c78708720838a7307fb9fb3ecfecb8616489cfaf8dc41b80627",
+2026-11-18T23:50:24.8131214Z     "native/virtual_betting_template.hpp": "8eac9dd5249b6520e4a2a16d59a9f8be1a48cdbf65c1d27f10ae0c82b283c54d",
+2026-11-18T23:50:24.8131748Z     "native/full_deck_public_chance.hpp": "a85af096a5744814a950148afb1c440575eecffeb9424904b78cd21bfebbb6d7",
+2026-11-18T23:50:24.8132263Z     "native/exact_selected_kernel.hpp": "374e2509f28b38c95d34d9592921b7023a4920d018037349ceb05bdff607563f",
+2026-11-18T23:50:24.8132753Z     "native/exact_binary64.hpp": "596cd7fa8707bcdf683f609fb6c172773f4a8fe6e0052a0b438b430c26b2b6cd",
+2026-11-18T23:50:24.8133280Z     "scripts/build_native_exact_four_street.py": "9eb85251765f62b7a10f93c3d4a84a1ea19c885508ed4a94de7d4b301c373071",
+2026-11-18T23:50:24.8133884Z     "third_party/boost-multiprecision-1.92.0/manifest.json": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555",
+2026-11-18T23:50:24.8134533Z     "third_party/boost-multiprecision-1.92.0/LICENSE_1_0.txt": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
+2026-11-18T23:50:24.8134932Z   },
+2026-11-18T23:50:24.8135150Z   "dependency_commit": "1f7acd34fe929573c131e869867dc1d12b8080b6",
+2026-11-18T23:50:24.8135565Z   "dependency_archive_sha256": "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831",
+2026-11-18T23:50:24.8136047Z   "dependency_manifest_sha256": "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555",
+2026-11-18T23:50:24.8136398Z   "dependency_headers": 198,
+2026-11-18T23:50:24.8136605Z   "license": "BSL-1.0",
+2026-11-18T23:50:24.8136814Z   "compiler": "/usr/bin/x86_64-linux-gnu-g++-15",
+2026-11-18T23:50:24.8137278Z   "compiler_sha256": "fd8730a05275b1f8a149b7df3e38ef67cf7a21ec817a706206955cd2929b900b",
+2026-11-18T23:50:24.8138084Z   "system_build_inputs": "SDK/standard headers, linker/libraries/runtime are environmental inputs, not exhaustively byte-attested; bit reproducibility unproven",
+2026-11-18T23:50:24.8138610Z   "toolchain_environment": {},
+2026-11-18T23:50:24.8139407Z   "compiler_version": "x86_64-linux-gnu-g++-15 (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+2026-11-18T23:50:24.8140270Z   "flags": [
+2026-11-18T23:50:24.8140440Z     "-std=c++20",
+2026-11-18T23:50:24.8140600Z     "-O3",
+2026-11-18T23:50:24.8140750Z     "-Wall",
+2026-11-18T23:50:24.8140910Z     "-Wextra",
+2026-11-18T23:50:24.8141066Z     "-Werror",
+2026-11-18T23:50:24.8141219Z     "-pedantic",
+2026-11-18T23:50:24.8141390Z     "-ffp-contract=off",
+2026-11-18T23:50:24.8141576Z     "-fno-fast-math",
+2026-11-18T23:50:24.8141760Z     "-DBOOST_MP_STANDALONE",
+2026-11-18T23:50:24.8142016Z     "-I/home/runner/work/_temp/frozen-policy-state/boost-include"
+2026-11-18T23:50:24.8142270Z   ],
+2026-11-18T23:50:24.8142481Z   "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+2026-11-18T23:50:24.8142733Z   "command": [
+2026-11-18T23:50:24.8142911Z     "/usr/bin/x86_64-linux-gnu-g++-15",
+2026-11-18T23:50:24.8143118Z     "-std=c++20",
+2026-11-18T23:50:24.8143385Z     "-O3",
+2026-11-18T23:50:24.8143533Z     "-Wall",
+2026-11-18T23:50:24.8143679Z     "-Wextra",
+2026-11-18T23:50:24.8143828Z     "-Werror",
+2026-11-18T23:50:24.8143979Z     "-pedantic",
+2026-11-18T23:50:24.8144148Z     "-ffp-contract=off",
+2026-11-18T23:50:24.8144328Z     "-fno-fast-math",
+2026-11-18T23:50:24.8144507Z     "-DBOOST_MP_STANDALONE",
+2026-11-18T23:50:24.8144770Z     "-I/home/runner/work/_temp/frozen-policy-state/boost-include",
+2026-11-18T23:50:24.8145219Z     "/home/runner/work/openpoker-lab/openpoker-lab/tests/native/virtual_frozen_policy_state_controls.cpp",
+2026-11-18T23:50:24.8145593Z     "-o",
+2026-11-18T23:50:24.8145903Z     "/home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls"
+2026-11-18T23:50:24.8146238Z   ],
+2026-11-18T23:50:24.8146563Z   "executable": "/home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls",
+2026-11-18T23:50:24.8147072Z   "executable_sha256": "7eeba14a267dcf516add4d8d10e7f2b5063e9ddf8eafee4030176bce81fc006b",
+2026-11-18T23:50:24.8147549Z   "manifest_path": "/home/runner/work/_temp/frozen-policy-state/native-exact-build-manifest.json"
+2026-11-18T23:50:24.8148124Z }
+2026-11-18T23:50:24.8333255Z ##[group]Run python -B -m unittest tests.test_native_frozen_policy_state -v
+2026-11-18T23:50:24.8333881Z [36;1mpython -B -m unittest tests.test_native_frozen_policy_state -v[0m
+2026-11-18T23:50:24.8380154Z shell: /usr/bin/bash -e {0}
+2026-11-18T23:50:24.8380362Z env:
+2026-11-18T23:50:24.8380581Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:24.8380929Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-18T23:50:24.8381271Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:24.8381569Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:24.8381860Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:24.8382153Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-18T23:50:24.8382670Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE: /home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls
+2026-11-18T23:50:24.8383310Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: /home/runner/work/_temp/frozen-policy-normal
+2026-11-18T23:50:24.8383667Z ##[endgroup]
+2026-11-18T23:50:27.2193159Z test_bad_complete_inputs_never_expose_partial_policy (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_bad_complete_inputs_never_expose_partial_policy) ... ok
+2026-11-18T23:50:27.2194822Z test_compiled_lifetime_guards_and_independent_small_row_keys (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_compiled_lifetime_guards_and_independent_small_row_keys) ... ok
+2026-11-18T23:50:27.6634480Z test_complete_imports_match_every_original_holding_history_and_grid_unit (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_complete_imports_match_every_original_holding_history_and_grid_unit) ... ok
+2026-11-18T23:50:27.9450158Z test_saved_wire_corruptions_are_detected_without_native_calls (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_saved_wire_corruptions_are_detected_without_native_calls) ... ok
+2026-11-18T23:50:29.5480166Z test_versioned_format_uses_full_complete_history_and_ordered_menus (tests.test_native_frozen_policy_state.SnapshotEncodingTests.test_versioned_format_uses_full_complete_history_and_ordered_menus) ... ok
+2026-11-18T23:50:29.5481168Z 
+2026-11-18T23:50:29.5481368Z ----------------------------------------------------------------------
+2026-11-18T23:50:29.5481774Z Ran 5 tests in 4.419s
+2026-11-18T23:50:29.5481937Z 
+2026-11-18T23:50:29.5482045Z OK
+2026-11-18T23:50:29.5806362Z ##[group]Run python -O -B -m unittest tests.test_native_frozen_policy_state -v
+2026-11-18T23:50:29.5806798Z [36;1mpython -O -B -m unittest tests.test_native_frozen_policy_state -v[0m
+2026-11-18T23:50:29.5851223Z shell: /usr/bin/bash -e {0}
+2026-11-18T23:50:29.5851430Z env:
+2026-11-18T23:50:29.5851815Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:29.5852167Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-18T23:50:29.5852502Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:29.5852800Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:29.5853098Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:29.5853392Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-18T23:50:29.5853905Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE: /home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls
+2026-11-18T23:50:29.5854537Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: /home/runner/work/_temp/frozen-policy-optimized
+2026-11-18T23:50:29.5854896Z ##[endgroup]
+2026-11-18T23:50:32.6321820Z test_bad_complete_inputs_never_expose_partial_policy (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_bad_complete_inputs_never_expose_partial_policy) ... ok
+2026-11-18T23:50:32.6323655Z test_compiled_lifetime_guards_and_independent_small_row_keys (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_compiled_lifetime_guards_and_independent_small_row_keys) ... ok
+2026-11-18T23:50:33.0698457Z test_complete_imports_match_every_original_holding_history_and_grid_unit (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_complete_imports_match_every_original_holding_history_and_grid_unit) ... ok
+2026-11-18T23:50:33.3506288Z test_saved_wire_corruptions_are_detected_without_native_calls (tests.test_native_frozen_policy_state.NativeFrozenPolicyStateTests.test_saved_wire_corruptions_are_detected_without_native_calls) ... ok
+2026-11-18T23:50:34.9333697Z test_versioned_format_uses_full_complete_history_and_ordered_menus (tests.test_native_frozen_policy_state.SnapshotEncodingTests.test_versioned_format_uses_full_complete_history_and_ordered_menus) ... ok
+2026-11-18T23:50:34.9334306Z 
+2026-11-18T23:50:34.9334495Z ----------------------------------------------------------------------
+2026-11-18T23:50:34.9334786Z Ran 5 tests in 3.835s
+2026-11-18T23:50:34.9334909Z 
+2026-11-18T23:50:34.9334976Z OK
+2026-11-18T23:50:34.9668198Z ##[group]Run python -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-normal" > "$RUNNER_TEMP/frozen-policy-normal/replay.json"
+2026-11-18T23:50:34.9669041Z [36;1mpython -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-normal" > "$RUNNER_TEMP/frozen-policy-normal/replay.json"[0m
+2026-11-18T23:50:34.9669808Z [36;1mpython -O -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-optimized" > "$RUNNER_TEMP/frozen-policy-optimized/replay.json"[0m
+2026-11-18T23:50:34.9714507Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-18T23:50:34.9714775Z env:
+2026-11-18T23:50:34.9714990Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:34.9715335Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-18T23:50:34.9715678Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:34.9716002Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:34.9716296Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:34.9716590Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-18T23:50:34.9717090Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE: /home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls
+2026-11-18T23:50:34.9717528Z ##[endgroup]
+2026-11-18T23:50:38.5328590Z ##[group]Run python -B -m unittest tests.test_frozen_policy_saved_replay -v
+2026-11-18T23:50:38.5329036Z [36;1mpython -B -m unittest tests.test_frozen_policy_saved_replay -v[0m
+2026-11-18T23:50:38.5372863Z shell: /usr/bin/bash -e {0}
+2026-11-18T23:50:38.5373066Z env:
+2026-11-18T23:50:38.5373285Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:38.5373802Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-18T23:50:38.5374135Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:38.5374427Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:38.5374718Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:38.5375007Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-18T23:50:38.5375505Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE: /home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls
+2026-11-18T23:50:38.5376114Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: /home/runner/work/_temp/frozen-policy-normal
+2026-11-18T23:50:38.5376457Z ##[endgroup]
+2026-11-18T23:50:42.0474043Z test_saved_observations_and_corruptions_without_candidate_calls (tests.test_frozen_policy_saved_replay.SavedReplayTests.test_saved_observations_and_corruptions_without_candidate_calls) ... ok
+2026-11-18T23:50:42.0475771Z test_only_canonical_relative_source_paths (tests.test_frozen_policy_saved_replay.SourcePathTests.test_only_canonical_relative_source_paths) ... ok
+2026-11-18T23:50:42.0476281Z 
+2026-11-18T23:50:42.0476433Z ----------------------------------------------------------------------
+2026-11-18T23:50:42.0476731Z Ran 2 tests in 3.428s
+2026-11-18T23:50:42.0476844Z 
+2026-11-18T23:50:42.0476918Z OK
+2026-11-18T23:50:42.0720298Z ##[group]Run actions/upload-artifact@v4
+2026-11-18T23:50:42.0720535Z with:
+2026-11-18T23:50:42.0720714Z   name: frozen-policy-state-linux
+2026-11-18T23:50:42.0721845Z   path: /home/runner/work/_temp/frozen-policy-state/build.log
+/home/runner/work/_temp/frozen-policy-state/build-failure.json
+/home/runner/work/_temp/frozen-policy-state/native-exact-build-manifest.json
+/home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls*
+/home/runner/work/_temp/frozen-policy-normal/**
+/home/runner/work/_temp/frozen-policy-optimized/**
+
+2026-11-18T23:50:42.0722964Z   if-no-files-found: warn
+2026-11-18T23:50:42.0723175Z   compression-level: 6
+2026-11-18T23:50:42.0723353Z   overwrite: false
+2026-11-18T23:50:42.0723531Z   include-hidden-files: false
+2026-11-18T23:50:42.0723723Z env:
+2026-11-18T23:50:42.0723927Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:42.0724256Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-18T23:50:42.0724618Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:42.0724916Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:42.0725207Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-18T23:50:42.0725501Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-18T23:50:42.0726009Z   OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE: /home/runner/work/_temp/frozen-policy-state/native-virtual-frozen-policy-state-controls
+2026-11-18T23:50:42.0726450Z ##[endgroup]
+2026-11-18T23:50:42.2081963Z (node:2890) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-18T23:50:42.2082674Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-18T23:50:42.2648495Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-11-18T23:50:42.2651039Z The least common ancestor is /home/runner/work/_temp. This will be the root directory of the artifact
+2026-11-18T23:50:42.2651837Z With the provided path, there will be 209 files uploaded
+2026-11-18T23:50:42.2661255Z Artifact name is valid!
+2026-11-18T23:50:42.2668154Z Root directory input is valid!
+2026-11-18T23:50:42.6136546Z Beginning upload of artifact content to blob storage
+2026-11-18T23:50:43.4156691Z (node:2890) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-18T23:50:43.5552387Z Uploaded bytes 4323850
+2026-11-18T23:50:43.5673073Z Finished uploading artifact content to blob storage!
+2026-11-18T23:50:43.5675469Z SHA256 digest of uploaded artifact zip is d4f98b45691a66e1b1cb3460381da1d8a3833e1c6f3253fbb221aeb64406dc7b
+2026-11-18T23:50:43.5677081Z Finalizing artifact upload
+2026-11-18T23:50:43.9998573Z Artifact frozen-policy-state-linux.zip successfully finalized. Artifact ID 14483855703
+2026-11-18T23:50:43.9999613Z Artifact frozen-policy-state-linux has been successfully uploaded! Final size is 4323850 bytes. Artifact ID is 14483855703
+2026-11-18T23:50:44.0005358Z Artifact download URL: https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44423764032/artifacts/14483855703
+2026-11-18T23:50:44.0198967Z Post job cleanup.
+2026-11-18T23:50:44.1166614Z (node:2902) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-18T23:50:44.1167242Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-18T23:50:44.1365109Z Post job cleanup.
+2026-11-18T23:50:44.2114373Z [command]/usr/bin/git version
+2026-11-18T23:50:44.2151346Z git version 2.56.1
+2026-11-18T23:50:44.2189881Z Temporarily overriding HOME='/home/runner/work/_temp/b4fc8056-a826-4237-8af1-816f6ab3fe33' before making global git config changes
+2026-11-18T23:50:44.2190838Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-18T23:50:44.2191603Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/openpoker-lab/openpoker-lab
+2026-11-18T23:50:44.2224432Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T23:50:44.2255042Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-18T23:50:44.2536237Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T23:50:44.2559690Z http.https://github.com/.extraheader
+2026-11-18T23:50:44.2569343Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-18T23:50:44.2600865Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-18T23:50:44.2863017Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T23:50:44.2908733Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-18T23:50:44.3321984Z Cleaning up orphan processes
+2026-11-18T23:50:44.3665232Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
