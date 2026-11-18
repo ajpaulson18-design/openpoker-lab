@@ -1,0 +1,28 @@
+name: Frozen trainer-grid saved replay
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  frozen-grid-packet:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -B -m unittest tests.test_frozen_grid_packet_replay -v
+      - run: python -O -B -m unittest tests.test_frozen_grid_packet_replay -v
+      - run: python -B -m scripts.replay_frozen_grid_packet > saved-grid-replay.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-grid-saved-replay-${{ matrix.os }}
+          path: saved-grid-replay.json
+          if-no-files-found: ignore
