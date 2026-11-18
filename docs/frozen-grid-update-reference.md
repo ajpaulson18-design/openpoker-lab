@@ -104,8 +104,10 @@ The original runner's strict whole-checkout guard remains part of its frozen
 protocol. The maintained replayer instead authenticates the pinned archive,
 all 1,034 member hashes, the complete 998-file historical source closure and
 its committed blob map before importing the current q-free oracle. Its thirteen
-executed oracle dependencies must match archived raw bytes or the exact frozen
-committed blob; arbitrary source normalization is not accepted. Unrelated
+executed oracle dependencies must match archived raw bytes, the exact frozen
+committed blob, or that LF-only blob's exact uniform CRLF checkout. The
+candidate source is never normalized; other mixed endings and code changes
+reject. Unrelated
 source additions are permitted. Archived code is never imported or executed.
 Both checkout forms are exercised by a separate Windows/Linux workflow with
 full Git history. Native and candidate-estimator calls remain zero.
@@ -115,6 +117,17 @@ passed normally and optimized, and independent source/workflow review found
 no material defect. The [replay evidence](../benchmarks/results/frozen-q52-maintained-replay-v1/manifest.json)
 retains the actual results, source identities and control logs. Cross-platform
 CI acceptance is recorded separately from the local result.
+
+The first Linux CI replays passed, while both Windows jobs at `aaf8ca0`
+rejected `tests/test_native_dyadic_policy.py` before mathematical replay.
+Its frozen working-tree bytes contained a historical mixture of line endings;
+a fresh Git checkout produced uniform CRLF, which matched neither the captured
+raw bytes nor the LF committed blob. At `c60398d`, authentication also accepts
+the exact uniform CRLF form derived from that pinned LF blob, without changing
+or normalizing candidate source. A fresh Windows worktree reproduced the old
+rejection and passed all four full replays with the correction; seven controls
+passed normally and optimized. The [preserved correction evidence](../benchmarks/results/frozen-q52-crlf-replay-fix-v1/manifest.json)
+retains the CI failure, exact source-form comparison and actual results.
 
 ## Next architectural gates
 

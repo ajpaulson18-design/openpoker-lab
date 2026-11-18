@@ -1,0 +1,606 @@
+﻿2026-11-18T22:03:25.9192919Z Current runner version: '2.338.2'
+2026-11-18T22:03:25.9217465Z ##[group]Runner Image Provisioner
+2026-11-18T22:03:25.9218410Z Hosted Compute Agent
+2026-11-18T22:03:25.9219042Z Version: 20261103.629
+2026-11-18T22:03:25.9219777Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-18T22:03:25.9220648Z Build Date: 2026-11-03T17:26:59Z
+2026-11-18T22:03:25.9221440Z Worker ID: {c6dd22fa-c2a0-413a-9739-8d48a41172d8}
+2026-11-18T22:03:25.9222309Z Region: westus2
+2026-11-18T22:03:25.9222870Z Cloud: Azure
+2026-11-18T22:03:25.9223512Z ##[endgroup]
+2026-11-18T22:03:25.9225196Z ##[group]Operating System
+2026-11-18T22:03:25.9225971Z Microsoft Windows Server 2025
+2026-11-18T22:03:25.9226723Z 10.0.26100
+2026-11-18T22:03:25.9227275Z Datacenter
+2026-11-18T22:03:25.9227845Z ##[endgroup]
+2026-11-18T22:03:25.9228467Z ##[group]Runner Image
+2026-11-18T22:03:25.9229141Z Image: windows-2025-vs2026
+2026-11-18T22:03:25.9229812Z Version: 20261103.298.1
+2026-11-18T22:03:25.9231828Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261103.298/images/windows/Windows2025-VS2026-Readme.md
+2026-11-18T22:03:25.9234106Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261103.298
+2026-11-18T22:03:25.9235370Z ##[endgroup]
+2026-11-18T22:03:25.9237281Z ##[group]GITHUB_TOKEN Permissions
+2026-11-18T22:03:25.9239516Z Contents: read
+2026-11-18T22:03:25.9240181Z Metadata: read
+2026-11-18T22:03:25.9240765Z ##[endgroup]
+2026-11-18T22:03:25.9243021Z Secret source: Actions
+2026-11-18T22:03:25.9244053Z Cache mode: write
+2026-11-18T22:03:25.9244900Z Prepare workflow directory
+2026-11-18T22:03:25.9564011Z Prepare all required actions
+2026-11-18T22:03:25.9602980Z Getting action download info
+2026-11-18T22:03:26.2890329Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-18T22:03:26.3908463Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-18T22:03:26.5069122Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-18T22:03:26.7843856Z Complete job name: frozen-grid-packet (windows-latest)
+2026-11-18T22:03:26.9122756Z ##[group]Run actions/checkout@v4
+2026-11-18T22:03:26.9123650Z with:
+2026-11-18T22:03:26.9123948Z   fetch-depth: 0
+2026-11-18T22:03:26.9124315Z   repository: ajpaulson18-design/openpoker-lab
+2026-11-18T22:03:26.9128228Z   token: ***
+2026-11-18T22:03:26.9128536Z   ssh-strict: true
+2026-11-18T22:03:26.9128849Z   ssh-user: git
+2026-11-18T22:03:26.9129160Z   persist-credentials: true
+2026-11-18T22:03:26.9129593Z   clean: true
+2026-11-18T22:03:26.9129979Z   sparse-checkout-cone-mode: true
+2026-11-18T22:03:26.9130359Z   fetch-tags: false
+2026-11-18T22:03:26.9130775Z   show-progress: true
+2026-11-18T22:03:26.9131111Z   lfs: false
+2026-11-18T22:03:26.9131497Z   submodules: false
+2026-11-18T22:03:26.9131809Z   set-safe-directory: true
+2026-11-18T22:03:26.9132161Z   allow-unsafe-pr-checkout: false
+2026-11-18T22:03:26.9132781Z ##[endgroup]
+2026-11-18T22:03:27.0319520Z Syncing repository: ajpaulson18-design/openpoker-lab
+2026-11-18T22:03:27.0320943Z ##[group]Getting Git version info
+2026-11-18T22:03:27.0321448Z Working directory is 'D:\a\openpoker-lab\openpoker-lab'
+2026-11-18T22:03:27.0864513Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-18T22:03:27.3575112Z git version 2.56.0.windows.4
+2026-11-18T22:03:27.3618769Z ##[endgroup]
+2026-11-18T22:03:27.3634241Z Temporarily overriding HOME='D:\a\_temp\a83c41de-c265-4e35-a1bb-f19137a1dd2b' before making global git config changes
+2026-11-18T22:03:27.3635224Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-18T22:03:27.3642472Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\openpoker-lab\openpoker-lab
+2026-11-18T22:03:27.4295659Z Deleting the contents of 'D:\a\openpoker-lab\openpoker-lab'
+2026-11-18T22:03:27.4300468Z ##[group]Initializing the repository
+2026-11-18T22:03:27.4308286Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\openpoker-lab\openpoker-lab
+2026-11-18T22:03:27.4949779Z Initialized empty Git repository in D:/a/openpoker-lab/openpoker-lab/.git/
+2026-11-18T22:03:27.4997305Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/ajpaulson18-design/openpoker-lab
+2026-11-18T22:03:27.5615013Z ##[endgroup]
+2026-11-18T22:03:27.5615934Z ##[group]Disabling automatic garbage collection
+2026-11-18T22:03:27.5620921Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-18T22:03:27.5929574Z ##[endgroup]
+2026-11-18T22:03:27.5930429Z ##[group]Setting up auth
+2026-11-18T22:03:27.5939235Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T22:03:27.6246183Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-18T22:03:29.2199410Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T22:03:29.2513408Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-18T22:03:29.7099211Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T22:03:29.7415375Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-18T22:03:30.2160577Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-18T22:03:30.2497569Z ##[endgroup]
+2026-11-18T22:03:30.2498097Z ##[group]Fetching the repository
+2026-11-18T22:03:30.2514418Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +33ffd4e4a401405713b449c02f5a45dc8f18eee9:refs/remotes/pull/326/merge
+2026-11-18T22:03:38.2555931Z From https://github.com/ajpaulson18-design/openpoker-lab
+2026-11-18T22:03:38.2558658Z  * [new branch]      architecture/native-four-street-cfr-20261025 -> origin/architecture/native-four-street-cfr-20261025
+2026-11-18T22:03:38.2559853Z  * [new branch]      architecture/unified-four-street-20261024 -> origin/architecture/unified-four-street-20261024
+2026-11-18T22:03:38.2560701Z  * [new branch]      audit/foundation-first-20261026          -> origin/audit/foundation-first-20261026
+2026-11-18T22:03:38.2561560Z  * [new branch]      audit/full-deck-raised-exact-20261019    -> origin/audit/full-deck-raised-exact-20261019
+2026-11-18T22:03:38.2562388Z  * [new branch]      audit/full-deck-raised-turn-20261018     -> origin/audit/full-deck-raised-turn-20261018
+2026-11-18T22:03:38.2563346Z  * [new branch]      audit/river-rational-20261016            -> origin/audit/river-rational-20261016
+2026-11-18T22:03:38.2564178Z  * [new branch]      benchmark/full-deck-raised-turn-20261019 -> origin/benchmark/full-deck-raised-turn-20261019
+2026-11-18T22:03:38.2565200Z  * [new branch]      benchmark/preflop-aa-kk-physical-range-20261018 -> origin/benchmark/preflop-aa-kk-physical-range-20261018
+2026-11-18T22:03:38.2566309Z  * [new branch]      benchmark/preflop-exact-anchor-20261018  -> origin/benchmark/preflop-exact-anchor-20261018
+2026-11-18T22:03:38.2567331Z  * [new branch]      benchmark/preflop-mixed-physical-range-20261018 -> origin/benchmark/preflop-mixed-physical-range-20261018
+2026-11-18T22:03:38.2568235Z  * [new branch]      chore/copilot-core-agents                -> origin/chore/copilot-core-agents
+2026-11-18T22:03:38.2569095Z  * [new branch]      coach/board-pair-teaching-20261008       -> origin/coach/board-pair-teaching-20261008
+2026-11-18T22:03:38.2570761Z  * [new branch]      coach/live-starter-questions-20261008    -> origin/coach/live-starter-questions-20261008
+2026-11-18T22:03:38.2571326Z  * [new branch]      coach/saved-action-labels-20261008       -> origin/coach/saved-action-labels-20261008
+2026-11-18T22:03:38.2571957Z  * [new branch]      codex/modern-poker-academia              -> origin/codex/modern-poker-academia
+2026-11-18T22:03:38.2572435Z  * [new branch]      copilot-agentic-workflows                -> origin/copilot-agentic-workflows
+2026-11-18T22:03:38.2573035Z  * [new branch]      copilot/audit-documentation-against-implementation -> origin/copilot/audit-documentation-against-implementation
+2026-11-18T22:03:38.2573687Z  * [new branch]      copilot/audit-river-cfr-solver           -> origin/copilot/audit-river-cfr-solver
+2026-11-18T22:03:38.2574374Z  * [new branch]      copilot/connect-browser-ui-to-backend-explanation-endpoint -> origin/copilot/connect-browser-ui-to-backend-explanation-endpoint
+2026-11-18T22:03:38.2575448Z  * [new branch]      copilot/connect-frontend-to-backend-explanation-endpoint -> origin/copilot/connect-frontend-to-backend-explanation-endpoint
+2026-11-18T22:03:38.2576112Z  * [new branch]      copilot/expand-river-equilibrium-solver  -> origin/copilot/expand-river-equilibrium-solver
+2026-11-18T22:03:38.2576645Z  * [new branch]      copilot/fix-stale-documentation          -> origin/copilot/fix-stale-documentation
+2026-11-18T22:03:38.2577150Z  * [new branch]      copilot/inspect-existing-repository      -> origin/copilot/inspect-existing-repository
+2026-11-18T22:03:38.2577656Z  * [new branch]      copilot/qa-testing-evaluation            -> origin/copilot/qa-testing-evaluation
+2026-11-18T22:03:38.2578186Z  * [new branch]      copilot/repository-maintenance-pass      -> origin/copilot/repository-maintenance-pass
+2026-11-18T22:03:38.2579535Z  * [new branch]      copilot/review-current-openpoker-lab-pr  -> origin/copilot/review-current-openpoker-lab-pr
+2026-11-18T22:03:38.2635702Z  * [new branch]      docs/coach-architecture-20261007         -> origin/docs/coach-architecture-20261007
+2026-11-18T22:03:38.2637346Z  * [new branch]      docs/coach-decision-capture-20261007     -> origin/docs/coach-decision-capture-20261007
+2026-11-18T22:03:38.2638044Z  * [new branch]      docs/coach-followup-handoff-20261007     -> origin/docs/coach-followup-handoff-20261007
+2026-11-18T22:03:38.2638910Z  * [new branch]      docs/coach-grounding-handoff             -> origin/docs/coach-grounding-handoff
+2026-11-18T22:03:38.2639477Z  * [new branch]      docs/coach-one-shot-handoff-20261007     -> origin/docs/coach-one-shot-handoff-20261007
+2026-11-18T22:03:38.2640021Z  * [new branch]      docs/coach-teaching-notes-handoff-20261007 -> origin/docs/coach-teaching-notes-handoff-20261007
+2026-11-18T22:03:38.2640667Z  * [new branch]      docs/current-decision-preview-handoff-20261007 -> origin/docs/current-decision-preview-handoff-20261007
+2026-11-18T22:03:38.2641470Z  * [new branch]      docs/live-current-coach-handoff-20261007 -> origin/docs/live-current-coach-handoff-20261007
+2026-11-18T22:03:38.2642403Z  * [new branch]      docs/live-preview-followups-handoff      -> origin/docs/live-preview-followups-handoff
+2026-11-18T22:03:38.2643320Z  * [new branch]      docs/project-knowledge-transfer-20261008 -> origin/docs/project-knowledge-transfer-20261008
+2026-11-18T22:03:38.2644330Z  * [new branch]      feature/after-action-choice-explanation-20261008 -> origin/feature/after-action-choice-explanation-20261008
+2026-11-18T22:03:38.2645262Z  * [new branch]      feature/coach-decision-capture-20261007  -> origin/feature/coach-decision-capture-20261007
+2026-11-18T22:03:38.2646152Z  * [new branch]      feature/coach-followups-20261007         -> origin/feature/coach-followups-20261007
+2026-11-18T22:03:38.2647024Z  * [new branch]      feature/coach-plain-language-20261008    -> origin/feature/coach-plain-language-20261008
+2026-11-18T22:03:38.2647940Z  * [new branch]      feature/coach-poker-terms-20261008       -> origin/feature/coach-poker-terms-20261008
+2026-11-18T22:03:38.2649108Z  * [new branch]      feature/coach-situation-context-20261008 -> origin/feature/coach-situation-context-20261008
+2026-11-18T22:03:38.2650134Z  * [new branch]      feature/current-decision-study-preview-20261007 -> origin/feature/current-decision-study-preview-20261007
+2026-11-18T22:03:38.2651175Z  * [new branch]      feature/current-situation-teaching-20261008 -> origin/feature/current-situation-teaching-20261008
+2026-11-18T22:03:38.2652082Z  * [new branch]      feature/decision-study-view-20261007     -> origin/feature/decision-study-view-20261007
+2026-11-18T22:03:38.2653106Z  * [new branch]      feature/direct-original-weight-river-tail-20261019 -> origin/feature/direct-original-weight-river-tail-20261019
+2026-11-18T22:03:38.2654253Z  * [new branch]      feature/direct-original-weight-turn-tail-20261019 -> origin/feature/direct-original-weight-turn-tail-20261019
+2026-11-18T22:03:38.2655467Z  * [new branch]      feature/espresso-interface               -> origin/feature/espresso-interface
+2026-11-18T22:03:38.2655983Z  * [new branch]      feature/explanation-engine               -> origin/feature/explanation-engine
+2026-11-18T22:03:38.2656493Z  * [new branch]      feature/flop-alternating-results-20261021 -> origin/feature/flop-alternating-results-20261021
+2026-11-18T22:03:38.2657049Z  * [new branch]      feature/flop-alternating-study-20261021  -> origin/feature/flop-alternating-study-20261021
+2026-11-18T22:03:38.2657605Z  * [new branch]      feature/flop-alternating-trainers-20261021 -> origin/feature/flop-alternating-trainers-20261021
+2026-11-18T22:03:38.2658352Z  * [new branch]      feature/flop-delayed-benchmark-20261020  -> origin/feature/flop-delayed-benchmark-20261020
+2026-11-18T22:03:38.2659162Z  * [new branch]      feature/flop-delayed-cfrplus-20261020    -> origin/feature/flop-delayed-cfrplus-20261020
+2026-11-18T22:03:38.2660005Z  * [new branch]      feature/flop-delayed-results-20261021    -> origin/feature/flop-delayed-results-20261021
+2026-11-18T22:03:38.2661068Z  * [new branch]      feature/flop-delayed-study-fix-20261020  -> origin/feature/flop-delayed-study-fix-20261020
+2026-11-18T22:03:38.2661994Z  * [new branch]      feature/flop-public-class-audit-20261021 -> origin/feature/flop-public-class-audit-20261021
+2026-11-18T22:03:38.2662943Z  * [new branch]      feature/flop-public-diagnostics-20261020 -> origin/feature/flop-public-diagnostics-20261020
+2026-11-18T22:03:38.2663848Z  * [new branch]      feature/full-deck-flop-cfrplus-20261020  -> origin/feature/full-deck-flop-cfrplus-20261020
+2026-11-18T22:03:38.2664834Z  * [new branch]      feature/grounded-coach-teaching-notes-20261007 -> origin/feature/grounded-coach-teaching-notes-20261007
+2026-11-18T22:03:38.2665882Z  * [new branch]      feature/hand-review-learning-focus-20261008 -> origin/feature/hand-review-learning-focus-20261008
+2026-11-18T22:03:38.2666785Z  * [new branch]      feature/human-model-contracts            -> origin/feature/human-model-contracts
+2026-11-18T22:03:38.2667632Z  * [new branch]      feature/live-current-coach-20261007      -> origin/feature/live-current-coach-20261007
+2026-11-18T22:03:38.2668549Z  * [new branch]      feature/live-preview-followups-20261008  -> origin/feature/live-preview-followups-20261008
+2026-11-18T22:03:38.2669478Z  * [new branch]      feature/native-cfrplus-rematch-20261020  -> origin/feature/native-cfrplus-rematch-20261020
+2026-11-18T22:03:38.2670520Z  * [new branch]      feature/native-flop-complete-admission-20261019 -> origin/feature/native-flop-complete-admission-20261019
+2026-11-18T22:03:38.2671540Z  * [new branch]      feature/one-shot-opt-in-ai-coach-20261007 -> origin/feature/one-shot-opt-in-ai-coach-20261007
+2026-11-18T22:03:38.2673081Z  * [new branch]      feature/preflop-covered-count-pool-20261018 -> origin/feature/preflop-covered-count-pool-20261018
+2026-11-18T22:03:38.2674207Z  * [new branch]      feature/provider-safe-grounding-reply-plan-20261007 -> origin/feature/provider-safe-grounding-reply-plan-20261007
+2026-11-18T22:03:38.2675442Z  * [new branch]      feature/situation-teaching-20261008      -> origin/feature/situation-teaching-20261008
+2026-11-18T22:03:38.2676435Z  * [new branch]      feature/unified-four-street-boundary-20261024 -> origin/feature/unified-four-street-boundary-20261024
+2026-11-18T22:03:38.2677388Z  * [new branch]      fix/background-agent-model-route         -> origin/fix/background-agent-model-route
+2026-11-18T22:03:38.2678181Z  * [new branch]      fix/copilot-pi-runtime                   -> origin/fix/copilot-pi-runtime
+2026-11-18T22:03:38.2678844Z  * [new branch]      fix/copilot-supported-model              -> origin/fix/copilot-supported-model
+2026-11-18T22:03:38.2679365Z  * [new branch]      fix/current-study-action-labels-20261008 -> origin/fix/current-study-action-labels-20261008
+2026-11-18T22:03:38.2679900Z  * [new branch]      fix/expired-coach-recovery-20261007      -> origin/fix/expired-coach-recovery-20261007
+2026-11-18T22:03:38.2680409Z  * [new branch]      fix/quality-review-credit-guardrail      -> origin/fix/quality-review-credit-guardrail
+2026-11-18T22:03:38.2680896Z  * [new branch]      foundation/batched-paged-rows            -> origin/foundation/batched-paged-rows
+2026-11-18T22:03:38.2681384Z  * [new branch]      foundation/batched-suit-row-lookup       -> origin/foundation/batched-suit-row-lookup
+2026-11-18T22:03:38.2681887Z  * [new branch]      foundation/bounded-board-rank-cache      -> origin/foundation/bounded-board-rank-cache
+2026-11-18T22:03:38.2682375Z  * [new branch]      foundation/bounded-policy-division       -> origin/foundation/bounded-policy-division
+2026-11-18T22:03:38.2682850Z  * [new branch]      foundation/bounded-stage-width           -> origin/foundation/bounded-stage-width
+2026-11-18T22:03:38.2683340Z  * [new branch]      foundation/bounded-training-lifecycle    -> origin/foundation/bounded-training-lifecycle
+2026-11-18T22:03:38.2683838Z  * [new branch]      foundation/checked-history-cursor        -> origin/foundation/checked-history-cursor
+2026-11-18T22:03:38.2684324Z  * [new branch]      foundation/compact-exact-policy          -> origin/foundation/compact-exact-policy
+2026-11-18T22:03:38.2684948Z  * [new branch]      foundation/compact-exact-sweep-wire      -> origin/foundation/compact-exact-sweep-wire
+2026-11-18T22:03:38.2685473Z  * [new branch]      foundation/direct-shared-topology        -> origin/foundation/direct-shared-topology
+2026-11-18T22:03:38.2685994Z  * [new branch]      foundation/dyadic-four-street-training   -> origin/foundation/dyadic-four-street-training
+2026-11-18T22:03:38.2686517Z  * [new branch]      foundation/eleven-card-native-forecast   -> origin/foundation/eleven-card-native-forecast
+2026-11-18T22:03:38.2687048Z  * [new branch]      foundation/eleven-card-resource-frontier -> origin/foundation/eleven-card-resource-frontier
+2026-11-18T22:03:38.2687569Z  * [new branch]      foundation/equal-weight-quantizer        -> origin/foundation/equal-weight-quantizer
+2026-11-18T22:03:38.2688101Z  * [new branch]      foundation/equivariant-selected-reference -> origin/foundation/equivariant-selected-reference
+2026-11-18T22:03:38.2688624Z  * [new branch]      foundation/exact-dyadic-kernel           -> origin/foundation/exact-dyadic-kernel
+2026-11-18T22:03:38.2689086Z  * [new branch]      foundation/exact-policy-reach            -> origin/foundation/exact-policy-reach
+2026-11-18T22:03:38.2689575Z  * [new branch]      foundation/exact-quantizer-complement    -> origin/foundation/exact-quantizer-complement
+2026-11-18T22:03:38.2690084Z  * [new branch]      foundation/exact-selected-kernel         -> origin/foundation/exact-selected-kernel
+2026-11-18T22:03:38.2690580Z  * [new branch]      foundation/exact-storage-frontier        -> origin/foundation/exact-storage-frontier
+2026-11-18T22:03:38.2691074Z  * [new branch]      foundation/factored-exact-training       -> origin/foundation/factored-exact-training
+2026-11-18T22:03:38.2691581Z  * [new branch]      foundation/first-regret-support-bound    -> origin/foundation/first-regret-support-bound
+2026-11-18T22:03:38.2692685Z  * [new branch]      foundation/frozen-grid-saved-replay      -> origin/foundation/frozen-grid-saved-replay
+2026-11-18T22:03:38.2693549Z  * [new branch]      foundation/frozen-grid-update-reference  -> origin/foundation/frozen-grid-update-reference
+2026-11-18T22:03:38.2694094Z  * [new branch]      foundation/full-deck-sampling-contract   -> origin/foundation/full-deck-sampling-contract
+2026-11-18T22:03:38.2694593Z  * [new branch]      foundation/history-visit-cursor          -> origin/foundation/history-visit-cursor
+2026-11-18T22:03:38.2695104Z  * [new branch]      foundation/implicit-public-board-index   -> origin/foundation/implicit-public-board-index
+2026-11-18T22:03:38.2695599Z  * [new branch]      foundation/indexed-rank-cache            -> origin/foundation/indexed-rank-cache
+2026-11-18T22:03:38.2696059Z  * [new branch]      foundation/initial-packed-stage          -> origin/foundation/initial-packed-stage
+2026-11-18T22:03:38.2696580Z  * [new branch]      foundation/matrix-free-policy-certificate -> origin/foundation/matrix-free-policy-certificate
+2026-11-18T22:03:38.2697131Z  * [new branch]      foundation/native-active-traversal-frame -> origin/foundation/native-active-traversal-frame
+2026-11-18T22:03:38.2697671Z  * [new branch]      foundation/native-allin-weighted-reach   -> origin/foundation/native-allin-weighted-reach
+2026-11-18T22:03:38.2698168Z  * [new branch]      foundation/native-exact-engine           -> origin/foundation/native-exact-engine
+2026-11-18T22:03:38.2698660Z  * [new branch]      foundation/native-exact-engine-ci-fix    -> origin/foundation/native-exact-engine-ci-fix
+2026-11-18T22:03:38.2699159Z  * [new branch]      foundation/native-exact-four-street      -> origin/foundation/native-exact-four-street
+2026-11-18T22:03:38.2699629Z  * [new branch]      foundation/native-exact-kernel           -> origin/foundation/native-exact-kernel
+2026-11-18T22:03:38.2700165Z  * [new branch]      foundation/native-exact-mixed-policy-cache -> origin/foundation/native-exact-mixed-policy-cache
+2026-11-18T22:03:38.2701108Z  * [new branch]      foundation/native-factored-average-stage -> origin/foundation/native-factored-average-stage
+2026-11-18T22:03:38.2701647Z  * [new branch]      foundation/native-fold-mask-classes      -> origin/foundation/native-fold-mask-classes
+2026-11-18T22:03:38.2702159Z  * [new branch]      foundation/native-heldout-evidence       -> origin/foundation/native-heldout-evidence
+2026-11-18T22:03:38.2702657Z  * [new branch]      foundation/native-history-index          -> origin/foundation/native-history-index
+2026-11-18T22:03:38.2703139Z  * [new branch]      foundation/native-indexed-routing        -> origin/foundation/native-indexed-routing
+2026-11-18T22:03:38.2703636Z  * [new branch]      foundation/native-indexed-work-plan      -> origin/foundation/native-indexed-work-plan
+2026-11-18T22:03:38.2704129Z  * [new branch]      foundation/native-selected-operator      -> origin/foundation/native-selected-operator
+2026-11-18T22:03:38.2704606Z  * [new branch]      foundation/native-shared-dag             -> origin/foundation/native-shared-dag
+2026-11-18T22:03:38.2705231Z  * [new branch]      foundation/native-staged-page-reuse      -> origin/foundation/native-staged-page-reuse
+2026-11-18T22:03:38.2705730Z  * [new branch]      foundation/native-study-training-ci      -> origin/foundation/native-study-training-ci
+2026-11-18T22:03:38.2706283Z  * [new branch]      foundation/native-terminal-contraction-buffer -> origin/foundation/native-terminal-contraction-buffer
+2026-11-18T22:03:38.2706862Z  * [new branch]      foundation/native-training-phase-profile -> origin/foundation/native-training-phase-profile
+2026-11-18T22:03:38.2707412Z  * [new branch]      foundation/native-training-walk-sampling -> origin/foundation/native-training-walk-sampling
+2026-11-18T22:03:38.2707909Z  * [new branch]      foundation/native-walk-sampling          -> origin/foundation/native-walk-sampling
+2026-11-18T22:03:38.2708497Z  * [new branch]      foundation/nine-card-linear-average32    -> origin/foundation/nine-card-linear-average32
+2026-11-18T22:03:38.2708989Z  * [new branch]      foundation/nine-card-quality32           -> origin/foundation/nine-card-quality32
+2026-11-18T22:03:38.2709486Z  * [new branch]      foundation/nonmaterialized-four-street   -> origin/foundation/nonmaterialized-four-street
+2026-11-18T22:03:38.2710004Z  * [new branch]      foundation/owned-state-row-snapshot      -> origin/foundation/owned-state-row-snapshot
+2026-11-18T22:03:38.2710522Z  * [new branch]      foundation/packed-policy-deferred-width  -> origin/foundation/packed-policy-deferred-width
+2026-11-18T22:03:38.2711042Z  * [new branch]      foundation/packed-policy-shortcuts       -> origin/foundation/packed-policy-shortcuts
+2026-11-18T22:03:38.2711528Z  * [new branch]      foundation/packed-strategy-storage       -> origin/foundation/packed-strategy-storage
+2026-11-18T22:03:38.2712005Z  * [new branch]      foundation/paged-state-payload           -> origin/foundation/paged-state-payload
+2026-11-18T22:03:38.2712463Z  * [new branch]      foundation/proof9-four-sweep             -> origin/foundation/proof9-four-sweep
+2026-11-18T22:03:38.2712908Z  * [new branch]      foundation/proof9-three-sweep            -> origin/foundation/proof9-three-sweep
+2026-11-18T22:03:38.2713667Z  * [new branch]      foundation/sampled-history-replay        -> origin/foundation/sampled-history-replay
+2026-11-18T22:03:38.2714179Z  * [new branch]      foundation/sampled-signed-row-state      -> origin/foundation/sampled-signed-row-state
+2026-11-18T22:03:38.2714671Z  * [new branch]      foundation/sampled-template-reuse        -> origin/foundation/sampled-template-reuse
+2026-11-18T22:03:38.2715181Z  * [new branch]      foundation/sampled-visible-prefix-folds  -> origin/foundation/sampled-visible-prefix-folds
+2026-11-18T22:03:38.2715695Z  * [new branch]      foundation/shared-public-topology        -> origin/foundation/shared-public-topology
+2026-11-18T22:03:38.2716235Z  * [new branch]      foundation/single-division-quantizer     -> origin/foundation/single-division-quantizer
+2026-11-18T22:03:38.2716952Z  * [new branch]      foundation/sparse-prepared-chance        -> origin/foundation/sparse-prepared-chance
+2026-11-18T22:03:38.2717499Z  * [new branch]      foundation/staged-walk-observation       -> origin/foundation/staged-walk-observation
+2026-11-18T22:03:38.2718075Z  * [new branch]      foundation/streamed-sweep-checkpoints    -> origin/foundation/streamed-sweep-checkpoints
+2026-11-18T22:03:38.2718586Z  * [new branch]      foundation/suit-quotient-storage         -> origin/foundation/suit-quotient-storage
+2026-11-18T22:03:38.2719056Z  * [new branch]      foundation/two-positive-policy           -> origin/foundation/two-positive-policy
+2026-11-18T22:03:38.2719553Z  * [new branch]      foundation/virtual-betting-template      -> origin/foundation/virtual-betting-template
+2026-11-18T22:03:38.2720046Z  * [new branch]      foundation/virtual-frozen-update         -> origin/foundation/virtual-frozen-update
+2026-11-18T22:03:38.2720574Z  * [new branch]      foundation/virtual-zero-policy-bootstrap -> origin/foundation/virtual-zero-policy-bootstrap
+2026-11-18T22:03:38.2721089Z  * [new branch]      improve/background-agent-system          -> origin/improve/background-agent-system
+2026-11-18T22:03:38.2721679Z  * [new branch]      integration/four-street-chance-expansion-v2-20261025 -> origin/integration/four-street-chance-expansion-v2-20261025
+2026-11-18T22:03:38.2722350Z  * [new branch]      integration/four-street-exact-operators-v3-20261025 -> origin/integration/four-street-exact-operators-v3-20261025
+2026-11-18T22:03:38.2722831Z  * [new branch]      main                                     -> origin/main
+2026-11-18T22:03:38.2723275Z  * [new branch]      performance/native-flop-preparation-20261019 -> origin/performance/native-flop-preparation-20261019
+2026-11-18T22:03:38.2723783Z  * [new branch]      release/steps-1-6-ordered                -> origin/release/steps-1-6-ordered
+2026-11-18T22:03:38.2724358Z  * [new branch]      research/fixed-direct-river-tail-20261020 -> origin/research/fixed-direct-river-tail-20261020
+2026-11-18T22:03:38.2725019Z  * [new branch]      research/fixed-long-river-evidence-20261020 -> origin/research/fixed-long-river-evidence-20261020
+2026-11-18T22:03:38.2725936Z  * [new branch]      research/flop-class-cfrplus-20261021     -> origin/research/flop-class-cfrplus-20261021
+2026-11-18T22:03:38.2726877Z  * [new branch]      research/flop-compact-cost-evidence-20261021 -> origin/research/flop-compact-cost-evidence-20261021
+2026-11-18T22:03:38.2727842Z  * [new branch]      research/flop-compact-work-envelope-20261021 -> origin/research/flop-compact-work-envelope-20261021
+2026-11-18T22:03:38.2728754Z  * [new branch]      research/flop-owned-context-20261022     -> origin/research/flop-owned-context-20261022
+2026-11-18T22:03:38.2729664Z  * [new branch]      research/flop-phase-profile-20261022     -> origin/research/flop-phase-profile-20261022
+2026-11-18T22:03:38.2730632Z  * [new branch]      research/flop-prior-call-diagnostic-20261022 -> origin/research/flop-prior-call-diagnostic-20261022
+2026-11-18T22:03:38.2731562Z  * [new branch]      research/flop-prior-cfrplus-20261022     -> origin/research/flop-prior-cfrplus-20261022
+2026-11-18T22:03:38.2732504Z  * [new branch]      research/flop-prior-reweight-proof-20261022 -> origin/research/flop-prior-reweight-proof-20261022
+2026-11-18T22:03:38.2733835Z  * [new branch]      research/flop-second-board-cfrplus-20261023 -> origin/research/flop-second-board-cfrplus-20261023
+2026-11-18T22:03:38.2734995Z  * [new branch]      research/flop-second-board-cfrplus-replay-v2-20261023 -> origin/research/flop-second-board-cfrplus-replay-v2-20261023
+2026-11-18T22:03:38.2736181Z  * [new branch]      research/flop-second-board-equivalence-20261022 -> origin/research/flop-second-board-equivalence-20261022
+2026-11-18T22:03:38.2737143Z  * [new branch]      research/flop-second-board-proof-20261022 -> origin/research/flop-second-board-proof-20261022
+2026-11-18T22:03:38.2737927Z  * [new branch]      research/full-deck-direct-turn-tail-20261019 -> origin/research/full-deck-direct-turn-tail-20261019
+2026-11-18T22:03:38.2738603Z  * [new branch]      research/full-deck-raised-turn-clean-witness-20261019 -> origin/research/full-deck-raised-turn-clean-witness-20261019
+2026-11-18T22:03:38.2739337Z  * [new branch]      research/full-deck-raised-turn-physical-exact-20261019 -> origin/research/full-deck-raised-turn-physical-exact-20261019
+2026-11-18T22:03:38.2739981Z  * [new branch]      research/full-deck-raised-turn-tail-20261019 -> origin/research/full-deck-raised-turn-tail-20261019
+2026-11-18T22:03:38.2740603Z  * [new branch]      research/full-deck-raised-turn-tail-exact-20261019 -> origin/research/full-deck-raised-turn-tail-exact-20261019
+2026-11-18T22:03:38.2741297Z  * [new branch]      research/independent-ranked-river-certificate-20261024 -> origin/research/independent-ranked-river-certificate-20261024
+2026-11-18T22:03:38.2742004Z  * [new branch]      research/matrix-free-river-range-quality-20261023 -> origin/research/matrix-free-river-range-quality-20261023
+2026-11-18T22:03:38.2742593Z  * [new branch]      research/matrix-free-river-tail-20261023 -> origin/research/matrix-free-river-tail-20261023
+2026-11-18T22:03:38.2743121Z  * [new branch]      research/matrix-free-turn-tail-20261023  -> origin/research/matrix-free-turn-tail-20261023
+2026-11-18T22:03:38.2743642Z  * [new branch]      research/native-river-adapter-20261023   -> origin/research/native-river-adapter-20261023
+2026-11-18T22:03:38.2744185Z  * [new branch]      research/native-river-range-quality-20261023 -> origin/research/native-river-range-quality-20261023
+2026-11-18T22:03:38.2744752Z  * [new branch]      research/preflop-aa-ak-transport-20261024 -> origin/research/preflop-aa-ak-transport-20261024
+2026-11-18T22:03:38.2745292Z  * [new branch]      research/preflop-aa-ak-witness-20261024  -> origin/research/preflop-aa-ak-witness-20261024
+2026-11-18T22:03:38.2745908Z  * [new branch]      research/preflop-ak-basis-plan-20261023  -> origin/research/preflop-ak-basis-plan-20261023
+2026-11-18T22:03:38.2746514Z  * [new branch]      research/preflop-five-card-count-reference-20261018 -> origin/research/preflop-five-card-count-reference-20261018
+2026-11-18T22:03:38.2747199Z  * [new branch]      research/preflop-generic-best-five-reference-20261018 -> origin/research/preflop-generic-best-five-reference-20261018
+2026-11-18T22:03:38.2747864Z  * [new branch]      research/preflop-jj-kk-basis-20261023    -> origin/research/preflop-jj-kk-basis-20261023
+2026-11-18T22:03:38.2748666Z  * [new branch]      research/preflop-mixed-exact-witness-20261019 -> origin/research/preflop-mixed-exact-witness-20261019
+2026-11-18T22:03:38.2749747Z  * [new branch]      research/preflop-three-rank-transport-20261023 -> origin/research/preflop-three-rank-transport-20261023
+2026-11-18T22:03:38.2750835Z  * [new branch]      research/preflop-three-rank-witness-20261023 -> origin/research/preflop-three-rank-witness-20261023
+2026-11-18T22:03:38.2751966Z  * [new branch]      research/preflop-weighted-equilibrium-20261018 -> origin/research/preflop-weighted-equilibrium-20261018
+2026-11-18T22:03:38.2753038Z  * [new branch]      research/raised-turn-value-control-20261019 -> origin/research/raised-turn-value-control-20261019
+2026-11-18T22:03:38.2754078Z  * [new branch]      research/river-blocker-equilibrium-20261017 -> origin/research/river-blocker-equilibrium-20261017
+2026-11-18T22:03:38.2754644Z  * [new branch]      research/river-heldout-quality-20261023  -> origin/research/river-heldout-quality-20261023
+2026-11-18T22:03:38.2755176Z  * [new branch]      research/river-heldout-tail-20261023     -> origin/research/river-heldout-tail-20261023
+2026-11-18T22:03:38.2756139Z  * [new branch]      research/river-long-direct-tail-20261020 -> origin/research/river-long-direct-tail-20261020
+2026-11-18T22:03:38.2757147Z  * [new branch]      research/river-sequence-equilibrium-20261016 -> origin/research/river-sequence-equilibrium-20261016
+2026-11-18T22:03:38.2758118Z  * [new branch]      research/turn-blocker-cfrplus-20261018   -> origin/research/turn-blocker-cfrplus-20261018
+2026-11-18T22:03:38.2758653Z  * [new branch]      research/turn-blocker-compact-20261018   -> origin/research/turn-blocker-compact-20261018
+2026-11-18T22:03:38.2759472Z  * [new branch]      research/turn-class-tail-T6000-20261021  -> origin/research/turn-class-tail-T6000-20261021
+2026-11-18T22:03:38.2760465Z  * [new branch]      research/turn-class-tail-publication-20261023 -> origin/research/turn-class-tail-publication-20261023
+2026-11-18T22:03:38.2761432Z  * [new branch]      research/turn-sequence-equilibrium-20261018 -> origin/research/turn-sequence-equilibrium-20261018
+2026-11-18T22:03:38.2762005Z  * [new branch]      research/turn-suit-equivariance-20261018 -> origin/research/turn-suit-equivariance-20261018
+2026-11-18T22:03:38.2762560Z  * [new branch]      research/turn-terminal-memoization-20261014 -> origin/research/turn-terminal-memoization-20261014
+2026-11-18T22:03:38.2763197Z  * [new branch]      research/turn-three-hand-compact-budget-20261021 -> origin/research/turn-three-hand-compact-budget-20261021
+2026-11-18T22:03:38.2763880Z  * [new branch]      research/turn-three-hand-direct-tail-evidence-20261020 -> origin/research/turn-three-hand-direct-tail-evidence-20261020
+2026-11-18T22:03:38.2764554Z  * [new branch]      research/turn-three-hand-exact-classes-20261021 -> origin/research/turn-three-hand-exact-classes-20261021
+2026-11-18T22:03:38.2765198Z  * [new branch]      research/turn-three-hand-physical-oracle-20261020 -> origin/research/turn-three-hand-physical-oracle-20261020
+2026-11-18T22:03:38.2765792Z  * [new branch]      research/turn-weighted-cfrplus-20261018  -> origin/research/turn-weighted-cfrplus-20261018
+2026-11-18T22:03:38.2766332Z  * [new branch]      research/turn-weighted-sequence-20261018 -> origin/research/turn-weighted-sequence-20261018
+2026-11-18T22:03:38.2767440Z  * [new branch]      solver/complete-flop-convergence-20261009 -> origin/solver/complete-flop-convergence-20261009
+2026-11-18T22:03:38.2767966Z  * [new branch]      solver/dcfr-validation-20261008          -> origin/solver/dcfr-validation-20261008
+2026-11-18T22:03:38.2768466Z  * [new branch]      solver/direct-flop-checkdown-20261013    -> origin/solver/direct-flop-checkdown-20261013
+2026-11-18T22:03:38.2768974Z  * [new branch]      solver/flop-equity-reuse-20261015        -> origin/solver/flop-equity-reuse-20261015
+2026-11-18T22:03:38.2769485Z  * [new branch]      solver/flop-suit-equity-transfer-20261015 -> origin/solver/flop-suit-equity-transfer-20261015
+2026-11-18T22:03:38.2770035Z  * [new branch]      solver/flop-weighted-eight-hand-20261015 -> origin/solver/flop-weighted-eight-hand-20261015
+2026-11-18T22:03:38.2770569Z  * [new branch]      solver/full-deck-turn-accuracy-20261014  -> origin/solver/full-deck-turn-accuracy-20261014
+2026-11-18T22:03:38.2771091Z  * [new branch]      solver/full-deck-turn-rational-20261014  -> origin/solver/full-deck-turn-rational-20261014
+2026-11-18T22:03:38.2771600Z  * [new branch]      solver/known-cfr-quality-20261009        -> origin/solver/known-cfr-quality-20261009
+2026-11-18T22:03:38.2772070Z  * [new branch]      solver/matrix-free-river-20261009        -> origin/solver/matrix-free-river-20261009
+2026-11-18T22:03:38.2772554Z  * [new branch]      solver/matrix-free-turn-20261009         -> origin/solver/matrix-free-turn-20261009
+2026-11-18T22:03:38.2773086Z  * [new branch]      solver/native-fixed-street-backend-20261017 -> origin/solver/native-fixed-street-backend-20261017
+2026-11-18T22:03:38.2773976Z  * [new branch]      solver/native-fixed-street-training-20261016 -> origin/solver/native-fixed-street-training-20261016
+2026-11-18T22:03:38.2774545Z  * [new branch]      solver/native-preflop-equity-20261016    -> origin/solver/native-preflop-equity-20261016
+2026-11-18T22:03:38.2775043Z  * [new branch]      solver/planned-traversal-20261008        -> origin/solver/planned-traversal-20261008
+2026-11-18T22:03:38.2775551Z  * [new branch]      solver/preflop-action-coverage-20261011  -> origin/solver/preflop-action-coverage-20261011
+2026-11-18T22:03:38.2776428Z  * [new branch]      solver/preflop-active-prefixes-20261010  -> origin/solver/preflop-active-prefixes-20261010
+2026-11-18T22:03:38.2776940Z  * [new branch]      solver/preflop-betting-20261008          -> origin/solver/preflop-betting-20261008
+2026-11-18T22:03:38.2777425Z  * [new branch]      solver/preflop-blocker-index-20261009    -> origin/solver/preflop-blocker-index-20261009
+2026-11-18T22:03:38.2777916Z  * [new branch]      solver/preflop-cfrplus-20261009          -> origin/solver/preflop-cfrplus-20261009
+2026-11-18T22:03:38.2778416Z  * [new branch]      solver/preflop-delayed-cfrplus-20261009  -> origin/solver/preflop-delayed-cfrplus-20261009
+2026-11-18T22:03:38.2778935Z  * [new branch]      solver/preflop-equity-reweight-20261015  -> origin/solver/preflop-equity-reweight-20261015
+2026-11-18T22:03:38.2779523Z  * [new branch]      solver/preflop-expanded-range-coverage-20261012 -> origin/solver/preflop-expanded-range-coverage-20261012
+2026-11-18T22:03:38.2780089Z  * [new branch]      solver/preflop-flop-chance-20261009      -> origin/solver/preflop-flop-chance-20261009
+2026-11-18T22:03:38.2780597Z  * [new branch]      solver/preflop-flop-checkdown-20261010   -> origin/solver/preflop-flop-checkdown-20261010
+2026-11-18T22:03:38.2781152Z  * [new branch]      solver/preflop-flop-raise-coverage-20261010 -> origin/solver/preflop-flop-raise-coverage-20261010
+2026-11-18T22:03:38.2781721Z  * [new branch]      solver/preflop-full-board-betting-20261016 -> origin/solver/preflop-full-board-betting-20261016
+2026-11-18T22:03:38.2782240Z  * [new branch]      solver/preflop-full-flop-20261009        -> origin/solver/preflop-full-flop-20261009
+2026-11-18T22:03:38.2782763Z  * [new branch]      solver/preflop-full-private-chance-20261009 -> origin/solver/preflop-full-private-chance-20261009
+2026-11-18T22:03:38.2783435Z  * [new branch]      solver/preflop-grouped-plan-probe-20261012 -> origin/solver/preflop-grouped-plan-probe-20261012
+2026-11-18T22:03:38.2784035Z  * [new branch]      solver/preflop-grouped-world-admission-20261011 -> origin/solver/preflop-grouped-world-admission-20261011
+2026-11-18T22:03:38.2784641Z  * [new branch]      solver/preflop-hidden-future-groups-20261010 -> origin/solver/preflop-hidden-future-groups-20261010
+2026-11-18T22:03:38.2785196Z  * [new branch]      solver/preflop-local-profile-20261011    -> origin/solver/preflop-local-profile-20261011
+2026-11-18T22:03:38.2785719Z  * [new branch]      solver/preflop-monetary-replay-20261009  -> origin/solver/preflop-monetary-replay-20261009
+2026-11-18T22:03:38.2786228Z  * [new branch]      solver/preflop-multi-flop-20261010       -> origin/solver/preflop-multi-flop-20261010
+2026-11-18T22:03:38.2786695Z  * [new branch]      solver/preflop-next-20261010             -> origin/solver/preflop-next-20261010
+2026-11-18T22:03:38.2787149Z  * [new branch]      solver/preflop-next-20261010-v2          -> origin/solver/preflop-next-20261010-v2
+2026-11-18T22:03:38.2787674Z  * [new branch]      solver/preflop-normalization-probe-20261011 -> origin/solver/preflop-normalization-probe-20261011
+2026-11-18T22:03:38.2788207Z  * [new branch]      solver/preflop-pair-mean-20261016        -> origin/solver/preflop-pair-mean-20261016
+2026-11-18T22:03:38.2788906Z  * [new branch]      solver/preflop-prepared-budget-20261015  -> origin/solver/preflop-prepared-budget-20261015
+2026-11-18T22:03:38.2789759Z  * [new branch]      solver/preflop-private-compaction-20261010 -> origin/solver/preflop-private-compaction-20261010
+2026-11-18T22:03:38.2790286Z  * [new branch]      solver/preflop-push-fold-20261013        -> origin/solver/preflop-push-fold-20261013
+2026-11-18T22:03:38.2790786Z  * [new branch]      solver/preflop-raised-coverage-20261010  -> origin/solver/preflop-raised-coverage-20261010
+2026-11-18T22:03:38.2791313Z  * [new branch]      solver/preflop-range-evidence-20261009   -> origin/solver/preflop-range-evidence-20261009
+2026-11-18T22:03:38.2791960Z  * [new branch]      solver/preflop-streamed-worlds-20261012  -> origin/solver/preflop-streamed-worlds-20261012
+2026-11-18T22:03:38.2792478Z  * [new branch]      solver/preflop-suit-remap-20261015       -> origin/solver/preflop-suit-remap-20261015
+2026-11-18T22:03:38.2792965Z  * [new branch]      solver/preflop-target-plan-20261010      -> origin/solver/preflop-target-plan-20261010
+2026-11-18T22:03:38.2793489Z  * [new branch]      solver/preflop-vector-diagnostics-20261009 -> origin/solver/preflop-vector-diagnostics-20261009
+2026-11-18T22:03:38.2794395Z  * [new branch]      solver/preflop-weighted-range-coverage-20261011 -> origin/solver/preflop-weighted-range-coverage-20261011
+2026-11-18T22:03:38.2795026Z  * [new branch]      solver/public-batched-cfr-20261008       -> origin/solver/public-batched-cfr-20261008
+2026-11-18T22:03:38.2795495Z  * [new branch]      solver/ranked-river-20261009             -> origin/solver/ranked-river-20261009
+2026-11-18T22:03:38.2795997Z  * [new branch]      solver/river-accuracy-extension-20261013 -> origin/solver/river-accuracy-extension-20261013
+2026-11-18T22:03:38.2796509Z  * [new branch]      solver/river-long-budget-20261014        -> origin/solver/river-long-budget-20261014
+2026-11-18T22:03:38.2797005Z  * [new branch]      solver/river-tail-realization-20261013   -> origin/solver/river-tail-realization-20261013
+2026-11-18T22:03:38.2797492Z  * [new branch]      solver/shared-postflop-20261008          -> origin/solver/shared-postflop-20261008
+2026-11-18T22:03:38.2797965Z  * [new branch]      solver/traversal-lifetime-20261008       -> origin/solver/traversal-lifetime-20261008
+2026-11-18T22:03:38.2798458Z  * [new branch]      solver/turn-conditioned-mass-20261013    -> origin/solver/turn-conditioned-mass-20261013
+2026-11-18T22:03:38.2798990Z  * [new branch]      solver/turn-rational-certificate-20261014 -> origin/solver/turn-rational-certificate-20261014
+2026-11-18T22:03:38.2799617Z  * [new branch]      solver/turn-river-accuracy-20261009      -> origin/solver/turn-river-accuracy-20261009
+2026-11-18T22:03:38.2800109Z  * [new branch]      solver/turn-river-chance-20261008        -> origin/solver/turn-river-chance-20261008
+2026-11-18T22:03:38.2800573Z  * [new branch]      solver/turn-river-gains-20261013         -> origin/solver/turn-river-gains-20261013
+2026-11-18T22:03:38.2801045Z  * [new branch]      solver/turn-river-metadata-20261013      -> origin/solver/turn-river-metadata-20261013
+2026-11-18T22:03:38.2801529Z  * [new branch]      solver/turn-river-quality-20261009       -> origin/solver/turn-river-quality-20261009
+2026-11-18T22:03:38.2802019Z  * [new branch]      solver/turn-river-validation-20261013    -> origin/solver/turn-river-validation-20261013
+2026-11-18T22:03:38.2802558Z  * [new branch]      solver/turn-root-reach-stability-20261014 -> origin/solver/turn-root-reach-stability-20261014
+2026-11-18T22:03:38.2803091Z  * [new branch]      solver/turn-selected-accuracy-20261014   -> origin/solver/turn-selected-accuracy-20261014
+2026-11-18T22:03:38.2803618Z  * [new branch]      solver/turn-terminal-cache-20261014      -> origin/solver/turn-terminal-cache-20261014
+2026-11-18T22:03:38.2804194Z  * [new branch]      validation/four-street-exact-certificate-20261024 -> origin/validation/four-street-exact-certificate-20261024
+2026-11-18T22:03:38.2804879Z  * [new branch]      validation/four-street-integration-quality-v1-20261025 -> origin/validation/four-street-integration-quality-v1-20261025
+2026-11-18T22:03:38.2805579Z  * [new branch]      validation/four-street-physical-certificate-20261024 -> origin/validation/four-street-physical-certificate-20261024
+2026-11-18T22:03:38.2806209Z  * [new branch]      validation/weighted-full-deck-flop-20261020 -> origin/validation/weighted-full-deck-flop-20261020
+2026-11-18T22:03:38.2806678Z  * [new ref]         33ffd4e4a401405713b449c02f5a45dc8f18eee9 -> pull/326/merge
+2026-11-18T22:03:38.2807674Z ##[endgroup]
+2026-11-18T22:03:38.2808101Z ##[group]Determining the checkout info
+2026-11-18T22:03:38.2808409Z ##[endgroup]
+2026-11-18T22:03:38.2808724Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-18T22:03:38.3069692Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-18T22:03:38.3404742Z ##[group]Checking out the ref
+2026-11-18T22:03:38.3413323Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/326/merge
+2026-11-18T22:03:39.5152817Z Updating files:  19% (530/2703)
+2026-11-18T22:03:39.8896692Z Updating files:  20% (541/2703)
+2026-11-18T22:03:39.9736447Z Updating files:  21% (568/2703)
+2026-11-18T22:03:40.1761315Z Updating files:  22% (595/2703)
+2026-11-18T22:03:40.3159537Z Updating files:  23% (622/2703)
+2026-11-18T22:03:40.3879256Z Updating files:  24% (649/2703)
+2026-11-18T22:03:40.4360782Z Updating files:  25% (676/2703)
+2026-11-18T22:03:40.4565970Z Updating files:  25% (684/2703)
+2026-11-18T22:03:40.5765216Z Updating files:  26% (703/2703)
+2026-11-18T22:03:40.5875571Z Updating files:  27% (730/2703)
+2026-11-18T22:03:40.5926461Z Updating files:  28% (757/2703)
+2026-11-18T22:03:40.6434356Z Updating files:  29% (784/2703)
+2026-11-18T22:03:40.6576408Z Updating files:  30% (811/2703)
+2026-11-18T22:03:40.6725420Z Updating files:  31% (838/2703)
+2026-11-18T22:03:40.7013484Z Updating files:  32% (865/2703)
+2026-11-18T22:03:40.7139656Z Updating files:  33% (892/2703)
+2026-11-18T22:03:40.7381045Z Updating files:  34% (920/2703)
+2026-11-18T22:03:40.7518143Z Updating files:  35% (947/2703)
+2026-11-18T22:03:40.7612566Z Updating files:  36% (974/2703)
+2026-11-18T22:03:40.7697078Z Updating files:  37% (1001/2703)
+2026-11-18T22:03:40.7868404Z Updating files:  38% (1028/2703)
+2026-11-18T22:03:40.8048530Z Updating files:  39% (1055/2703)
+2026-11-18T22:03:40.8176865Z Updating files:  40% (1082/2703)
+2026-11-18T22:03:40.8265406Z Updating files:  41% (1109/2703)
+2026-11-18T22:03:40.8404882Z Updating files:  42% (1136/2703)
+2026-11-18T22:03:40.8522473Z Updating files:  43% (1163/2703)
+2026-11-18T22:03:40.8636315Z Updating files:  44% (1190/2703)
+2026-11-18T22:03:40.9044798Z Updating files:  45% (1217/2703)
+2026-11-18T22:03:40.9130015Z Updating files:  46% (1244/2703)
+2026-11-18T22:03:41.1273675Z Updating files:  47% (1271/2703)
+2026-11-18T22:03:41.1563363Z Updating files:  48% (1298/2703)
+2026-11-18T22:03:41.1704851Z Updating files:  49% (1325/2703)
+2026-11-18T22:03:41.1849826Z Updating files:  50% (1352/2703)
+2026-11-18T22:03:41.1984985Z Updating files:  51% (1379/2703)
+2026-11-18T22:03:41.2098199Z Updating files:  52% (1406/2703)
+2026-11-18T22:03:41.2200663Z Updating files:  53% (1433/2703)
+2026-11-18T22:03:41.2308515Z Updating files:  54% (1460/2703)
+2026-11-18T22:03:41.3689379Z Updating files:  55% (1487/2703)
+2026-11-18T22:03:41.3750522Z Updating files:  56% (1514/2703)
+2026-11-18T22:03:41.3808477Z Updating files:  57% (1541/2703)
+2026-11-18T22:03:41.3871351Z Updating files:  58% (1568/2703)
+2026-11-18T22:03:41.3929104Z Updating files:  59% (1595/2703)
+2026-11-18T22:03:41.3992576Z Updating files:  60% (1622/2703)
+2026-11-18T22:03:41.4050673Z Updating files:  61% (1649/2703)
+2026-11-18T22:03:41.4109024Z Updating files:  62% (1676/2703)
+2026-11-18T22:03:41.4184197Z Updating files:  63% (1703/2703)
+2026-11-18T22:03:41.4266747Z Updating files:  64% (1730/2703)
+2026-11-18T22:03:41.4293773Z Updating files:  65% (1757/2703)
+2026-11-18T22:03:41.4332919Z Updating files:  65% (1769/2703)
+2026-11-18T22:03:41.4400730Z Updating files:  66% (1784/2703)
+2026-11-18T22:03:41.4469606Z Updating files:  67% (1812/2703)
+2026-11-18T22:03:41.4543204Z Updating files:  68% (1839/2703)
+2026-11-18T22:03:41.4624373Z Updating files:  69% (1866/2703)
+2026-11-18T22:03:41.4698418Z Updating files:  70% (1893/2703)
+2026-11-18T22:03:41.4760971Z Updating files:  71% (1920/2703)
+2026-11-18T22:03:41.4824410Z Updating files:  72% (1947/2703)
+2026-11-18T22:03:41.4889972Z Updating files:  73% (1974/2703)
+2026-11-18T22:03:41.4953035Z Updating files:  74% (2001/2703)
+2026-11-18T22:03:41.5015625Z Updating files:  75% (2028/2703)
+2026-11-18T22:03:41.5077633Z Updating files:  76% (2055/2703)
+2026-11-18T22:03:41.5148444Z Updating files:  77% (2082/2703)
+2026-11-18T22:03:41.5206664Z Updating files:  78% (2109/2703)
+2026-11-18T22:03:41.5279421Z Updating files:  79% (2136/2703)
+2026-11-18T22:03:41.5360041Z Updating files:  80% (2163/2703)
+2026-11-18T22:03:41.5424204Z Updating files:  81% (2190/2703)
+2026-11-18T22:03:41.5485873Z Updating files:  82% (2217/2703)
+2026-11-18T22:03:41.5544614Z Updating files:  83% (2244/2703)
+2026-11-18T22:03:41.5600479Z Updating files:  84% (2271/2703)
+2026-11-18T22:03:41.5657387Z Updating files:  85% (2298/2703)
+2026-11-18T22:03:41.5712188Z Updating files:  86% (2325/2703)
+2026-11-18T22:03:41.5769635Z Updating files:  87% (2352/2703)
+2026-11-18T22:03:41.5829599Z Updating files:  88% (2379/2703)
+2026-11-18T22:03:41.5887652Z Updating files:  89% (2406/2703)
+2026-11-18T22:03:41.5947631Z Updating files:  90% (2433/2703)
+2026-11-18T22:03:41.5997955Z Updating files:  91% (2460/2703)
+2026-11-18T22:03:41.6064461Z Updating files:  92% (2487/2703)
+2026-11-18T22:03:41.6125724Z Updating files:  93% (2514/2703)
+2026-11-18T22:03:41.6180663Z Updating files:  94% (2541/2703)
+2026-11-18T22:03:41.6236020Z Updating files:  95% (2568/2703)
+2026-11-18T22:03:41.6290276Z Updating files:  96% (2595/2703)
+2026-11-18T22:03:41.6349190Z Updating files:  97% (2622/2703)
+2026-11-18T22:03:41.6397659Z Updating files:  98% (2649/2703)
+2026-11-18T22:03:41.6604876Z Updating files:  99% (2676/2703)
+2026-11-18T22:03:41.6605145Z Updating files: 100% (2703/2703)
+2026-11-18T22:03:41.6605353Z Updating files: 100% (2703/2703), done.
+2026-11-18T22:03:41.6716314Z Note: switching to 'refs/remotes/pull/326/merge'.
+2026-11-18T22:03:41.6716598Z 
+2026-11-18T22:03:41.6716786Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-18T22:03:41.6717148Z changes and commit them, and you can discard any commits you make in this
+2026-11-18T22:03:41.6717761Z state without impacting any branches by switching back to a branch.
+2026-11-18T22:03:41.6717958Z 
+2026-11-18T22:03:41.6718110Z If you want to create a new branch to retain commits you create, you may
+2026-11-18T22:03:41.6718438Z do so (now or later) by using -c with the switch command. Example:
+2026-11-18T22:03:41.6718626Z 
+2026-11-18T22:03:41.6718735Z   git switch -c <new-branch-name>
+2026-11-18T22:03:41.6718869Z 
+2026-11-18T22:03:41.6718938Z Or undo this operation with:
+2026-11-18T22:03:41.6719069Z 
+2026-11-18T22:03:41.6719130Z   git switch -
+2026-11-18T22:03:41.6719224Z 
+2026-11-18T22:03:41.6719380Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-18T22:03:41.6719602Z 
+2026-11-18T22:03:41.6720236Z HEAD is now at 33ffd4e Merge aaf8ca0c304184fdcc86aa105c6d7825b3a483f3 into 0862087c4a524239bb900d96624a8f45efdcf327
+2026-11-18T22:03:41.7104283Z ##[endgroup]
+2026-11-18T22:03:41.7433560Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-18T22:03:41.7708399Z 33ffd4e4a401405713b449c02f5a45dc8f18eee9
+2026-11-18T22:03:41.8089772Z ##[group]Run actions/setup-python@v5
+2026-11-18T22:03:41.8090050Z with:
+2026-11-18T22:03:41.8090209Z   python-version: 3.13
+2026-11-18T22:03:41.8090391Z   check-latest: false
+2026-11-18T22:03:41.8092479Z   token: ***
+2026-11-18T22:03:41.8092642Z   update-environment: true
+2026-11-18T22:03:41.8092824Z   allow-prereleases: false
+2026-11-18T22:03:41.8092983Z   freethreaded: false
+2026-11-18T22:03:41.8093136Z ##[endgroup]
+2026-11-18T22:03:41.9377138Z ##[group]Installed versions
+2026-11-18T22:03:41.9535168Z (node:8072) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-18T22:03:41.9536195Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-18T22:03:41.9536949Z Successfully set up CPython (3.13.17)
+2026-11-18T22:03:41.9537947Z ##[endgroup]
+2026-11-18T22:03:41.9817222Z ##[group]Run python -B -m unittest tests.test_frozen_grid_packet_replay -v
+2026-11-18T22:03:41.9817762Z [36;1mpython -B -m unittest tests.test_frozen_grid_packet_replay -v[0m
+2026-11-18T22:03:42.1690341Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T22:03:42.1690645Z env:
+2026-11-18T22:03:42.1690877Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:42.1691265Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T22:03:42.1691611Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:42.1691911Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:42.1692208Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:42.1692449Z ##[endgroup]
+2026-11-18T22:03:44.0248434Z test_duplicate_json_and_byte_ceiling (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_duplicate_json_and_byte_ceiling) ... ok
+2026-11-18T22:03:44.0337616Z test_foreign_packet_rejected_before_git_or_oracle (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_foreign_packet_rejected_before_git_or_oracle) ... ok
+2026-11-18T22:03:44.0338782Z test_historical_revision_must_be_the_declared_pin (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_historical_revision_must_be_the_declared_pin) ... ok
+2026-11-18T22:03:44.0341484Z test_saved_rational_canonical_and_exact (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_saved_rational_canonical_and_exact) ... ok
+2026-11-18T22:03:44.0343094Z test_saved_rational_is_guarded_before_large_operation (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_saved_rational_is_guarded_before_large_operation) ... ok
+2026-11-18T22:03:44.0872563Z test_unrelated_sources_tolerated_executed_sources_rejected (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_unrelated_sources_tolerated_executed_sources_rejected) ... ok
+2026-11-18T22:03:44.0873626Z 
+2026-11-18T22:03:44.0873797Z ----------------------------------------------------------------------
+2026-11-18T22:03:44.0874073Z Ran 6 tests in 0.063s
+2026-11-18T22:03:44.0874177Z 
+2026-11-18T22:03:44.0874240Z OK
+2026-11-18T22:03:44.2304212Z ##[group]Run python -O -B -m unittest tests.test_frozen_grid_packet_replay -v
+2026-11-18T22:03:44.2304713Z [36;1mpython -O -B -m unittest tests.test_frozen_grid_packet_replay -v[0m
+2026-11-18T22:03:44.2363411Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T22:03:44.2363682Z env:
+2026-11-18T22:03:44.2363905Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:44.2364249Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T22:03:44.2364596Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:44.2364912Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:44.2365221Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:44.2365484Z ##[endgroup]
+2026-11-18T22:03:45.6463176Z test_duplicate_json_and_byte_ceiling (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_duplicate_json_and_byte_ceiling) ... ok
+2026-11-18T22:03:45.6486435Z test_foreign_packet_rejected_before_git_or_oracle (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_foreign_packet_rejected_before_git_or_oracle) ... ok
+2026-11-18T22:03:45.6487650Z test_historical_revision_must_be_the_declared_pin (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_historical_revision_must_be_the_declared_pin) ... ok
+2026-11-18T22:03:45.6489812Z test_saved_rational_canonical_and_exact (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_saved_rational_canonical_and_exact) ... ok
+2026-11-18T22:03:45.6490848Z test_saved_rational_is_guarded_before_large_operation (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_saved_rational_is_guarded_before_large_operation) ... ok
+2026-11-18T22:03:45.6938309Z test_unrelated_sources_tolerated_executed_sources_rejected (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_unrelated_sources_tolerated_executed_sources_rejected) ... ok
+2026-11-18T22:03:45.6938915Z 
+2026-11-18T22:03:45.6939055Z ----------------------------------------------------------------------
+2026-11-18T22:03:45.6939317Z Ran 6 tests in 0.048s
+2026-11-18T22:03:45.6939424Z 
+2026-11-18T22:03:45.6939480Z OK
+2026-11-18T22:03:45.8036994Z ##[group]Run python -B -m scripts.replay_frozen_grid_packet > saved-grid-replay.json
+2026-11-18T22:03:45.8037522Z [36;1mpython -B -m scripts.replay_frozen_grid_packet > saved-grid-replay.json[0m
+2026-11-18T22:03:45.8093542Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-18T22:03:45.8093822Z env:
+2026-11-18T22:03:45.8094033Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:45.8094380Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T22:03:45.8094739Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:45.8095039Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:45.8095343Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:45.8095590Z ##[endgroup]
+2026-11-18T22:03:46.7594684Z Traceback (most recent call last):
+2026-11-18T22:03:46.7620024Z   File "<frozen runpy>", line 203, in _run_module_as_main
+2026-11-18T22:03:46.7620420Z   File "<frozen runpy>", line 88, in _run_code
+2026-11-18T22:03:46.7620841Z   File "D:\a\openpoker-lab\openpoker-lab\scripts\replay_frozen_grid_packet.py", line 202, in <module>
+2026-11-18T22:03:46.7621247Z     print(json.dumps(replay(),indent=2))
+2026-11-18T22:03:46.7621451Z                      ~~~~~~^^
+2026-11-18T22:03:46.7621796Z   File "D:\a\openpoker-lab\openpoker-lab\scripts\replay_frozen_grid_packet.py", line 188, in replay
+2026-11-18T22:03:46.7622454Z     before=authenticate_oracle(source)
+2026-11-18T22:03:46.7622870Z   File "D:\a\openpoker-lab\openpoker-lab\scripts\replay_frozen_grid_packet.py", line 67, in authenticate_oracle
+2026-11-18T22:03:46.7623368Z     require(hashes[name]==sha256(canonical).hexdigest(),'current oracle source drift: '+name)
+2026-11-18T22:03:46.7623739Z     ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-18T22:03:46.7624137Z   File "D:\a\openpoker-lab\openpoker-lab\scripts\replay_frozen_grid_packet.py", line 35, in require
+2026-11-18T22:03:46.7624504Z     if not condition:raise ValueError(message)
+2026-11-18T22:03:46.7624718Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-18T22:03:46.7625008Z ValueError: current oracle source drift: tests/test_native_dyadic_policy.py
+2026-11-18T22:03:46.8582372Z ##[error]Process completed with exit code 1.
+2026-11-18T22:03:46.8759228Z ##[group]Run actions/upload-artifact@v4
+2026-11-18T22:03:46.8759494Z with:
+2026-11-18T22:03:46.8759703Z   name: frozen-grid-saved-replay-windows-latest
+2026-11-18T22:03:46.8759949Z   path: saved-grid-replay.json
+2026-11-18T22:03:46.8760134Z   if-no-files-found: ignore
+2026-11-18T22:03:46.8760310Z   compression-level: 6
+2026-11-18T22:03:46.8760469Z   overwrite: false
+2026-11-18T22:03:46.8760625Z   include-hidden-files: false
+2026-11-18T22:03:46.8760794Z env:
+2026-11-18T22:03:46.8760988Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:46.8761344Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.13.17\x64/lib/pkgconfig
+2026-11-18T22:03:46.8761675Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:46.8761971Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:46.8762259Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.13.17\x64
+2026-11-18T22:03:46.8762522Z ##[endgroup]
+2026-11-18T22:03:47.0548867Z (node:7116) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-18T22:03:47.0549618Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-18T22:03:47.0582731Z With the provided path, there will be 1 file uploaded
+2026-11-18T22:03:47.0588057Z Artifact name is valid!
+2026-11-18T22:03:47.0589548Z Root directory input is valid!
+2026-11-18T22:03:47.4570845Z Beginning upload of artifact content to blob storage
+2026-11-18T22:03:47.4719791Z (node:7116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-18T22:03:47.7308717Z Uploaded bytes 160
+2026-11-18T22:03:47.8047876Z Finished uploading artifact content to blob storage!
+2026-11-18T22:03:47.8048554Z SHA256 digest of uploaded artifact zip is eabb479f76f4078cd7d61cfa0a6c9c1788f90781bb7584aa4ab21fa65df25347
+2026-11-18T22:03:47.8050132Z Finalizing artifact upload
+2026-11-18T22:03:48.3179382Z Artifact frozen-grid-saved-replay-windows-latest.zip successfully finalized. Artifact ID 14475476873
+2026-11-18T22:03:48.3180479Z Artifact frozen-grid-saved-replay-windows-latest has been successfully uploaded! Final size is 160 bytes. Artifact ID is 14475476873
+2026-11-18T22:03:48.3189584Z Artifact download URL: https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44407547552/artifacts/14475476873
+2026-11-18T22:03:48.3487252Z Post job cleanup.
+2026-11-18T22:03:48.4884631Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-18T22:03:48.5162813Z git version 2.56.0.windows.4
+2026-11-18T22:03:48.5217935Z Temporarily overriding HOME='D:\a\_temp\bf18a5c3-17b5-4e39-ac46-412034f77a48' before making global git config changes
+2026-11-18T22:03:48.5218717Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-18T22:03:48.5227586Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\openpoker-lab\openpoker-lab
+2026-11-18T22:03:48.5610257Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-18T22:03:48.5992389Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-18T22:03:49.0562552Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-18T22:03:49.0826532Z http.https://github.com/.extraheader
+2026-11-18T22:03:49.0864673Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-18T22:03:49.1188067Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-18T22:03:49.5932631Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-18T22:03:49.6225004Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-18T22:03:50.1018325Z Cleaning up orphan processes
+2026-11-18T22:03:50.1105615Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
