@@ -51,6 +51,14 @@ def git(*args):
     return subprocess.check_output(['git',*args],cwd=ROOT,text=True).strip()
 
 
+def source_checkout_hashes(archived_hash,canonical):
+    """Accept exact pinned bytes, never normalize the candidate source."""
+    result={archived_hash,sha256(canonical).hexdigest()}
+    if b'\r' not in canonical:
+        result.add(sha256(canonical.replace(b'\n',b'\r\n')).hexdigest())
+    return result
+
+
 def authenticate_oracle(source,root=ROOT):
     require(source['head']==FROZEN_HEAD,'unknown historical source')
     hashes={}
@@ -59,12 +67,14 @@ def authenticate_oracle(source,root=ROOT):
         require(path.is_file() and path.stat().st_size<=MAX_JSON,'oracle source bound/missing file')
         hashes[name]=sha256(path.read_bytes()).hexdigest()
         if hashes[name]!=source['files'].get(name):
-            # Accept exactly the committed blob as the other checkout form.
-            # Do not normalize arbitrary mixed endings or altered source.
+            # Accept exact LF/CRLF checkout forms of the committed blob.
+            # The archived raw form may itself contain historical mixed
+            # endings. Never normalize the candidate to hide other drift.
             try:canonical=subprocess.check_output(['git','show',FROZEN_HEAD+':'+name],cwd=ROOT)
             except subprocess.CalledProcessError as error:
                 raise ValueError('historical oracle blob unavailable: '+name) from error
-            require(hashes[name]==sha256(canonical).hexdigest(),'current oracle source drift: '+name)
+            require(hashes[name] in source_checkout_hashes(source['files'].get(name),canonical),
+                    'current oracle source drift: '+name)
     return hashes
 
 

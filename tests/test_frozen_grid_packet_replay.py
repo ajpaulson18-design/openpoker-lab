@@ -7,11 +7,19 @@ import unittest
 
 from scripts.matrix_free_certificate_budget import Budget
 from scripts.replay_frozen_grid_packet import (
-    FROZEN_HEAD,ORACLE_SOURCES,authenticate_oracle,decode_json,rational,replay,
+    FROZEN_HEAD,ORACLE_SOURCES,authenticate_oracle,decode_json,rational,replay,source_checkout_hashes,
 )
 
 
 class HistoricalGridReplayTests(unittest.TestCase):
+    def test_exact_checkout_forms_preserve_bytes_and_reject_other_mixed_endings(self):
+        lf=b'first\nsecond\n';crlf=b'first\r\nsecond\r\n'
+        archived=b'first\r\nsecond\n';other_mixed=b'first\nsecond\r\n'
+        accepted=source_checkout_hashes(sha256(archived).hexdigest(),lf)
+        for raw in (lf,crlf,archived):self.assertIn(sha256(raw).hexdigest(),accepted)
+        for raw in (other_mixed,b'first \nsecond\n',b'first\nchanged\n'):
+            self.assertNotIn(sha256(raw).hexdigest(),accepted)
+
     def test_duplicate_json_and_byte_ceiling(self):
         with self.assertRaisesRegex(ValueError,'duplicate'):
             decode_json(b'{"same":1,"same":2}')
