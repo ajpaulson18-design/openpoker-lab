@@ -1,0 +1,112 @@
+{
+  "source_head": "0c94835184878a8dada5b58847d87e93ef796dc0",
+  "current_head": "e2c88208d5aac14a68a996a25d708b03b6489107",
+  "replayer_sha256": "419287f03f4db24244d5f21bc92bad7f19c6ef112696305fe9d3e30910e74502",
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "python_executable_sha256": "6978056b764c5764c079555bfed352141c49af6273bc879165040019f12c6841",
+  "archived_sources_authenticated": 998,
+  "current_oracle_sources_authenticated": 13,
+  "archived_code_executed": false,
+  "results": [
+    {
+      "case": "uniform-uniform",
+      "rows": 24420,
+      "action_slots": 58164,
+      "grid_sha256": "f5c7f210b3932707d789fcde536553970a804580a49c05a7f52b205aeb9dec32",
+      "resource_accounting": {
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "integer_bits": 65536,
+          "created_bits": 16000000000
+        },
+        "work": 202047890,
+        "entries": 5429074,
+        "created_bits": 13383726076,
+        "max_forecast_bits": 4096,
+        "counters": {
+          "literal_reference_reserved": 201117260,
+          "fraction_operations": 930630
+        }
+      },
+      "candidate_calls": 0,
+      "native_calls": 0,
+      "exact": true
+    },
+    {
+      "case": "uniform-river_weighted",
+      "rows": 24420,
+      "action_slots": 58164,
+      "grid_sha256": "f5c7f210b3932707d789fcde536553970a804580a49c05a7f52b205aeb9dec32",
+      "resource_accounting": {
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "integer_bits": 65536,
+          "created_bits": 16000000000
+        },
+        "work": 202047890,
+        "entries": 5429074,
+        "created_bits": 13383726076,
+        "max_forecast_bits": 4096,
+        "counters": {
+          "literal_reference_reserved": 201117260,
+          "fraction_operations": 930630
+        }
+      },
+      "candidate_calls": 0,
+      "native_calls": 0,
+      "exact": true
+    },
+    {
+      "case": "zero-skew-uniform",
+      "rows": 24420,
+      "action_slots": 58164,
+      "grid_sha256": "57795d818a1c42b75fe3fe301dcc9dc7967758b0265ad1e44518cbf7450726b7",
+      "resource_accounting": {
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "integer_bits": 65536,
+          "created_bits": 16000000000
+        },
+        "work": 202047890,
+        "entries": 5429074,
+        "created_bits": 13226838794,
+        "max_forecast_bits": 4096,
+        "counters": {
+          "literal_reference_reserved": 201117260,
+          "fraction_operations": 930630
+        }
+      },
+      "candidate_calls": 0,
+      "native_calls": 0,
+      "exact": true
+    },
+    {
+      "case": "zero-skew-river_weighted",
+      "rows": 24420,
+      "action_slots": 58164,
+      "grid_sha256": "57795d818a1c42b75fe3fe301dcc9dc7967758b0265ad1e44518cbf7450726b7",
+      "resource_accounting": {
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "integer_bits": 65536,
+          "created_bits": 16000000000
+        },
+        "work": 202047890,
+        "entries": 5429074,
+        "created_bits": 13226838794,
+        "max_forecast_bits": 4096,
+        "counters": {
+          "literal_reference_reserved": 201117260,
+          "fraction_operations": 930630
+        }
+      },
+      "candidate_calls": 0,
+      "native_calls": 0,
+      "exact": true
+    }
+  ]
+}

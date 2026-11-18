@@ -1,0 +1,12 @@
+test_duplicate_json_and_byte_ceiling (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_duplicate_json_and_byte_ceiling) ... ok
+test_exact_checkout_forms_preserve_bytes_and_reject_other_mixed_endings (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_exact_checkout_forms_preserve_bytes_and_reject_other_mixed_endings) ... ok
+test_foreign_packet_rejected_before_git_or_oracle (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_foreign_packet_rejected_before_git_or_oracle) ... ok
+test_historical_revision_must_be_the_declared_pin (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_historical_revision_must_be_the_declared_pin) ... ok
+test_saved_rational_canonical_and_exact (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_saved_rational_canonical_and_exact) ... ok
+test_saved_rational_is_guarded_before_large_operation (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_saved_rational_is_guarded_before_large_operation) ... ok
+test_unrelated_sources_tolerated_executed_sources_rejected (tests.test_frozen_grid_packet_replay.HistoricalGridReplayTests.test_unrelated_sources_tolerated_executed_sources_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.142s
+
+OK

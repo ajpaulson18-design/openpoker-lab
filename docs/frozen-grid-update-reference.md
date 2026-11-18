@@ -94,6 +94,41 @@ python -B -m unittest tests.test_virtual_grid_update_reference -v
 python -O -B -m unittest tests.test_virtual_grid_update_reference -v
 ```
 
+For later checkouts, use the maintained saved-only replay:
+
+```text
+python -B -m scripts.replay_frozen_grid_packet
+```
+
+The original runner's strict whole-checkout guard remains part of its frozen
+protocol. The maintained replayer instead authenticates the pinned archive,
+all 1,034 member hashes, the complete 998-file historical source closure and
+its committed blob map before importing the current q-free oracle. Its thirteen
+executed oracle dependencies must match archived raw bytes, the exact frozen
+committed blob, or that LF-only blob's exact uniform CRLF checkout. The
+candidate source is never normalized; other mixed endings and code changes
+reject. Unrelated
+source additions are permitted. Archived code is never imported or executed.
+Both checkout forms are exercised by a separate Windows/Linux workflow with
+full Git history. Native and candidate-estimator calls remain zero.
+
+At source `e2c8820`, all four maintained replays passed, six focused controls
+passed normally and optimized, and independent source/workflow review found
+no material defect. The [replay evidence](../benchmarks/results/frozen-q52-maintained-replay-v1/manifest.json)
+retains the actual results, source identities and control logs. Cross-platform
+CI acceptance is recorded separately from the local result.
+
+The first Linux CI replays passed, while both Windows jobs at `aaf8ca0`
+rejected `tests/test_native_dyadic_policy.py` before mathematical replay.
+Its frozen working-tree bytes contained a historical mixture of line endings;
+a fresh Git checkout produced uniform CRLF, which matched neither the captured
+raw bytes nor the LF committed blob. At `c60398d`, authentication also accepts
+the exact uniform CRLF form derived from that pinned LF blob, without changing
+or normalizing candidate source. A fresh Windows worktree reproduced the old
+rejection and passed all four full replays with the correction; seven controls
+passed normally and optimized. The [preserved correction evidence](../benchmarks/results/frozen-q52-crlf-replay-fix-v1/manifest.json)
+retains the CI failure, exact source-form comparison and actual results.
+
 ## Next architectural gates
 
 Frozen raw-update equality does not imply sampled CFR+ convergence:
@@ -138,6 +173,9 @@ selector or increasing its limit. Reuse of the trainer's existing factored
 integer representation is a candidate to assess; no feasibility or speed
 acceptance follows yet. A complete width/work/storage forecast and independent
 per-board comparisons precede any native benchmark or evolving-policy learner.
+The [native arithmetic contract audit](native-frozen-grid-arithmetic.md)
+proves a possible common scale and identifies the existing exact carrier;
+its resource and implementation gates remain open.
 
 The [immutable evidence manifest](../benchmarks/results/frozen-q52-update-reference-v1/manifest.json)
 links the complete saved rows, source closure, replay/control logs, corruption

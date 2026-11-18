@@ -1,0 +1,74 @@
+{
+  "old_guard_rejected": [
+    "tests/test_native_dyadic_policy.py"
+  ],
+  "current_guard_passed": true,
+  "checkout_forms": {
+    "pokerlab/__init__.py": {
+      "raw_sha256": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+      "lf": 3,
+      "crlf": 3
+    },
+    "pokerlab/cards.py": {
+      "raw_sha256": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+      "lf": 120,
+      "crlf": 120
+    },
+    "scripts/matrix_free_certificate_budget.py": {
+      "raw_sha256": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+      "lf": 109,
+      "crlf": 109
+    },
+    "scripts/matrix_free_four_street_rules.py": {
+      "raw_sha256": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+      "lf": 757,
+      "crlf": 757
+    },
+    "scripts/preflop_validation.py": {
+      "raw_sha256": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+      "lf": 480,
+      "crlf": 480
+    },
+    "tests/full_deck_public_chance_reference.py": {
+      "raw_sha256": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+      "lf": 114,
+      "crlf": 114
+    },
+    "tests/test_native_dyadic_policy.py": {
+      "raw_sha256": "b9a3de45749f13e660de820a3f922175437b30433fb3b0915f8c5b0026b78231",
+      "lf": 193,
+      "crlf": 193
+    },
+    "tests/test_native_exact_reach.py": {
+      "raw_sha256": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+      "lf": 286,
+      "crlf": 286
+    },
+    "tests/virtual_betting_template_reference.py": {
+      "raw_sha256": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+      "lf": 517,
+      "crlf": 517
+    },
+    "tests/virtual_dyadic_training_reference.py": {
+      "raw_sha256": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+      "lf": 242,
+      "crlf": 242
+    },
+    "tests/virtual_frozen_run_control.py": {
+      "raw_sha256": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+      "lf": 259,
+      "crlf": 259
+    },
+    "tests/virtual_frozen_update_reference.py": {
+      "raw_sha256": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+      "lf": 637,
+      "crlf": 637
+    },
+    "tests/virtual_frozen_value_reference.py": {
+      "raw_sha256": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+      "lf": 446,
+      "crlf": 446
+    }
+  },
+  "native_calls": 0
+}
