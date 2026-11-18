@@ -10,6 +10,8 @@ import unittest
 from tests.test_native_exact_reach import authenticate,sha
 from tests.virtual_dyadic_training_reference import Fixture,Q
 from tests.virtual_frozen_run_control import run_bounded_child
+from tests.virtual_frozen_policy_input_reference import decode_snapshot,encode_snapshot,profile,verify_snapshot_wire
+from scripts.replay_native_frozen_policy_state import capture_sources,save_sources
 
 ROOT=Path(__file__).resolve().parents[1]
 EXE_ENV='OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE'
@@ -19,34 +21,6 @@ GUARDS=('unsealed_read','incomplete','duplicate','out_of_order','wrong_history',
         'freeze','commit','export','reimport','zero_reads','overflow_reads','lifetime_one_short')
 
 
-def encode_snapshot(fixture,policy):
-    fixture._probabilities(policy)
-    ordered=tuple(fixture.ordered_rows())
-    if len(ordered)!=24420 or len(set(ordered))!=24420:raise ValueError('snapshot complete row order')
-    tokens=sum(len(k[2]) for k in ordered)
-    history_bytes=sum(sum(len(t.encode('ascii')) for t in k[2]) for k in ordered)
-    action_bytes=sum(sum(len(t.encode('ascii')) for t in fixture.menus[k]) for k in ordered)
-    data=bytearray(b'OPLFGS01'+struct.pack('<6Q',24420,58164,tokens,history_bytes,action_bytes,Q))
-    layout={}
-    hands=(((43,48),(32,43)),((24,37),(16,32)))
-    def token(text):
-        raw=text.encode('ascii')
-        if not 0<len(raw)<=64:raise ValueError('snapshot token bound')
-        data.extend(bytes((len(raw),)));data.extend(raw)
-    for row,key in enumerate(ordered):
-        actor,holding,history=key;menu=fixture.menus[key]
-        first,second=hands[actor][holding]
-        data.extend(struct.pack('<5Q',actor,first,second,len(history),len(menu)))
-        if history and 'history' not in layout:layout['history']=len(data)
-        for text in history:token(text)
-        if not row:layout['menu']=len(data)
-        for text in menu:token(text)
-        layout['last_units']=len(data);layout['last_width']=len(menu)
-        data.extend(struct.pack('<'+'Q'*len(menu),*policy[key]))
-    if len(data)>8<<20:raise ValueError('snapshot byte ceiling')
-    return bytes(data),ordered,layout
-
-
 class SnapshotEncodingTests(unittest.TestCase):
     def test_versioned_format_uses_full_complete_history_and_ordered_menus(self):
         fixture=Fixture();data,ordered,_=encode_snapshot(fixture,fixture.grid())
@@ -54,6 +28,9 @@ class SnapshotEncodingTests(unittest.TestCase):
         self.assertEqual(struct.unpack_from('<6Q',data,8),(24420,58164,249662,1500675,294353,Q))
         self.assertEqual(len(data),3545022)
         self.assertEqual(set(ordered),set(fixture.menus))
+        self.assertEqual(decode_snapshot(fixture,data),fixture.grid())
+        for changed in (data[:-1],data+b'\0',data[:56]+b'\xff'*8+data[64:]):
+            with self.assertRaises(ValueError):decode_snapshot(fixture,changed)
 
 
 @unittest.skipUnless(os.environ.get(EXE_ENV),'explicit source-built frozen policy controls required')
@@ -64,6 +41,7 @@ class NativeFrozenPolicyStateTests(unittest.TestCase):
         identity=authenticate(cls.exe,ROOT,'virtual-frozen-policy-state-controls')
         if identity[1]['scope']!='Frozen Q52 policy import/read conformance only; no update, training, solver or capacity acceptance.':
             raise AssertionError('frozen policy build scope differs')
+        source_before=capture_sources(identity[1])
         target=os.environ.get(OUTPUT_ENV)
         if target is None:
             temporary=TemporaryDirectory(dir=ROOT.parent);cls.addClassCleanup(temporary.cleanup)
@@ -77,18 +55,14 @@ class NativeFrozenPolicyStateTests(unittest.TestCase):
                 path=cls.output/(name+'.input.bin');path.write_bytes(data)
                 before=sha(path);command.append(str(path))
             directory=cls.output/name
+            (cls.output/(name+'.command.json')).write_text(json.dumps(command)+'\n')
             observed=run_bounded_child(command,b'',directory,stdout_limit=2_100_000,timeout=180)
             if data is not None:
                 if sha(path)!=before:raise AssertionError('snapshot input drift')
                 (directory/'input-identity.json').write_text(json.dumps({'sha256':before,'bytes':len(data)})+'\n')
             cls.cases[name]=(observed,(directory/'stdout.bin').read_bytes(),(directory/'stderr.bin').read_bytes())
         run('guards')
-        cls.profiles['uniform']=cls.fixture.grid()
-        cls.profiles['zero-skew']={}
-        for i,key in enumerate(sorted(cls.fixture.menus)):
-            count=len(cls.fixture.menus[key]);units=[0 if i%2 else 1]*count
-            units[i%count]=Q-sum(units)+units[i%count]
-            cls.profiles['zero-skew'][key]=tuple(units)
+        cls.profiles={name:profile(cls.fixture,name) for name in ('uniform','zero-skew')}
         for name,policy in cls.profiles.items():
             data,cls.ordered,layout=encode_snapshot(cls.fixture,policy);run(name,data)
         data,_,layout=encode_snapshot(cls.fixture,cls.profiles['uniform'])
@@ -103,6 +77,9 @@ class NativeFrozenPolicyStateTests(unittest.TestCase):
             raise AssertionError('frozen policy executable/source drift')
         (cls.output/'native-identity.json').write_text(json.dumps({'manifest_sha256':hashlib.sha256(identity[0]).hexdigest(),
             'executable_sha256':identity[1]['executable_sha256']})+'\n')
+        if capture_sources(identity[1])!=source_before:raise AssertionError('introduced source drift')
+        (cls.output/'native-build-manifest.json').write_bytes(identity[0])
+        save_sources(cls.output,source_before)
 
     def exited(self,name,code):
         observed,stdout,stderr=self.cases[name]
@@ -138,32 +115,21 @@ class NativeFrozenPolicyStateTests(unittest.TestCase):
         for name,policy in self.profiles.items():
             with self.subTest(profile=name):
                 stdout,stderr=self.exited(name,0);self.assertFalse(stderr)
-                self.assertEqual(stdout[:8],b'OPLFGV01')
-                rows,slots,work,entries,payload,history_work,state_work=struct.unpack_from('<7Q',stdout,8)
-                self.assertEqual((rows,slots),(24420,58164))
-                self.assertLessEqual(int(work),500_000_000);self.assertLessEqual(int(entries),2_000_000)
-                self.assertLessEqual(int(payload),1<<30);self.assertLessEqual(int(history_work),42_000_000)
-                self.assertLessEqual(int(state_work),75_000_000)
-                self.assertEqual(len(stdout),1442320);offset=0;position=64
-                for row,key in enumerate(self.ordered):
-                    actor,holding,ordinal,slot,count=struct.unpack_from('<5Q',stdout,position);position+=40
-                    self.assertEqual(count,len(self.fixture.menus[key]))
-                    units=struct.unpack_from('<'+'Q'*count,stdout,position);position+=8*count
-                    self.assertEqual((int(actor),int(holding),int(slot),int(count)),
-                                     (key[0],key[1],offset,len(self.fixture.menus[key])))
-                    self.assertEqual(self.fixture.compact_key(int(ordinal),int(actor),int(holding)),key)
-                    self.assertEqual(tuple(map(int,units)),policy[key]);offset+=int(count)
-                footer=struct.unpack_from('<18Q',stdout,position);position+=144
-                rows,slots,actual,actual_history,actual_state=footer[:5]
-                template_work,parent_work,chance_work,input_bytes,output_bytes=footer[5:10]
-                self.assertEqual(footer[10:15],(0,0,0,0,0))
-                self.assertEqual(footer[15:],(24420,24420,1))
-                self.assertEqual(output_bytes,len(stdout));self.assertEqual(input_bytes,3545022)
-                self.assertEqual(actual,template_work+parent_work+chance_work+actual_history+actual_state+16*input_bytes+16*output_bytes)
-                self.assertEqual(position,len(stdout))
-                self.assertEqual((int(rows),int(slots),offset),(24420,58164,58164))
-                self.assertLessEqual(int(actual),int(work));self.assertLessEqual(int(actual_history),int(history_work))
-                self.assertLessEqual(int(actual_state),int(state_work))
+                result=verify_snapshot_wire(self.fixture,policy,stdout)
+                self.assertEqual((result['rows'],result['slots']),(24420,58164))
+                self.assertTrue(result['all_policy_units_exact'])
+
+    def test_saved_wire_corruptions_are_detected_without_native_calls(self):
+        original=self.cases['uniform'][1]
+        for name in ('unit','holding','ordinal','scope','truncated'):
+            changed=bytearray(original)
+            if name=='unit':struct.pack_into('<Q',changed,104,struct.unpack_from('<Q',changed,104)[0]+1)
+            elif name=='holding':struct.pack_into('<Q',changed,72,1)
+            elif name=='ordinal':struct.pack_into('<Q',changed,80,1)
+            elif name=='scope':struct.pack_into('<Q',changed,len(changed)-144+80,1)
+            else:changed=changed[:-1]
+            with self.subTest(case=name),self.assertRaises(ValueError):
+                verify_snapshot_wire(self.fixture,self.profiles['uniform'],bytes(changed))
 
     def test_bad_complete_inputs_never_expose_partial_policy(self):
         for name in ('late-zero-partition','foreign-holding','reordered-menu','foreign-history-token','truncated','incomplete-header'):

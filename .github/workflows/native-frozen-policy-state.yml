@@ -40,6 +40,11 @@ jobs:
         env:
           OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: ${{ runner.temp }}/frozen-policy-optimized
         run: python -O -B -m unittest tests.test_native_frozen_policy_state -v
+      - name: Replay saved observations without native calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-normal" > "$RUNNER_TEMP/frozen-policy-normal/replay.json"
+          python -O -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-optimized" > "$RUNNER_TEMP/frozen-policy-optimized/replay.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
