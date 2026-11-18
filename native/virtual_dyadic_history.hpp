@@ -250,6 +250,29 @@ public:
         }
     }
     [[nodiscard]] std::size_t literal_ordinal(Cursor c) const {validate(c);return c.path_;}
+    // Restore an already-owned decision directory key in this owner. This is
+    // grammar validation, not authentication of an external policy history.
+    // External inputs must still replay their full action/reveal sequence.
+    [[nodiscard]] Cursor decision_cursor(std::uint64_t ordinal) {
+        try {
+            if (failed_) throw Error("compact history owner failed");
+            charge(128+32*5);
+            const auto path=ordinal>>33;
+            const auto size=static_cast<std::size_t>((ordinal>>30)&7);
+            if (path>=path_count_ || paths_[path].phase!=betting::Phase::decision ||
+                paths_[path].visible!=size || (size!=0 && size!=3 && size!=4 && size!=5))
+                throw Error("compact decision directory key shape");
+            const auto cards=ordinal&((std::uint64_t{1}<<30)-1);
+            if (cards>>(6*size)) throw Error("compact decision directory unused card bits");
+            std::array<std::uint8_t,5> board{};
+            for (std::size_t i=0;i<size;++i) board[i]=static_cast<std::uint8_t>((cards>>(6*i))&63);
+            std::uint64_t mask=0;
+            const auto code=board_code(std::span(board).first(size),&mask);
+            if (code!=(ordinal&((std::uint64_t{1}<<33)-1)))
+                throw Error("compact decision directory prefix code");
+            return Cursor(this,generation_,static_cast<std::size_t>(path),size,board,code,mask);
+        } catch (...) {failed_=true;throw;}
+    }
     [[nodiscard]] std::size_t source_node(Cursor c) const {return validate(c).source;}
     [[nodiscard]] std::size_t depth(Cursor c) const {return validate(c).depth;}
     [[nodiscard]] std::size_t visible_size(Cursor c) const {validate(c);return c.size_;}
