@@ -6,7 +6,7 @@ independent oracle is authenticated before import; unrelated source may evolve.
 import argparse
 from hashlib import sha256
 import json
-from pathlib import Path,PurePosixPath
+from pathlib import Path,PurePosixPath,PureWindowsPath
 import subprocess
 import sys
 
@@ -152,10 +152,16 @@ def replay(directory):
     from tests.virtual_frozen_policy_input_reference import decode_snapshot,profile,verify_snapshot_wire
     fixture=Fixture();results=[]
     for case in ('uniform','zero-skew'):
+        command=read_json(directory/(case+'.command.json'))
+        require(type(command) is list and len(command)==2 and all(type(x) is str for x in command) and
+                command[0]==native['executable'] and PureWindowsPath(command[1]).name==case+'.input.bin',
+                'saved candidate invocation identity')
         input_raw=bounded(directory/(case+'.input.bin'),8<<20)
         input_identity=read_json(directory/case/'input-identity.json')
         require(input_identity=={'bytes':len(input_raw),'sha256':sha256(input_raw).hexdigest()},'saved snapshot input identity')
         process=read_json(directory/case/'process.json')
+        require(not bounded(directory/case/'request.bin',0) and
+                process['request_sha256']==sha256(b'').hexdigest(),'saved candidate stdin identity')
         require(process['status']=='exited' and type(process['returncode']) is int and process['returncode']==0 and
                 process['actual_exit_observed'] is True and process['automatic_retries']==0 and not process['failures'],
                 'saved candidate process did not complete')
@@ -171,6 +177,8 @@ def replay(directory):
     require(authenticate_sources(directory,native)==(saved,before),'replay source changed during verification')
     return {'status':'exact','candidate_calls':0,'archived_code_executed':False,'source_head':saved['head'],
             'active_replay_head':git('rev-parse','HEAD'),'active_replay_sha256':before[ENTRYPOINT],
+            'native_executable_sha256':native['executable_sha256'],
+            'invocation_receipt':'captured controller command and observed exit; not an independent execution attestation',
             'introduced_sources_authenticated':len(saved['raw_sha256']),'current_python_sources_authenticated':len(before),
             'results':results,'scope':'saved read-only import conformance; no raw update, training or quality acceptance'}
 
