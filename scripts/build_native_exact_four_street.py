@@ -132,11 +132,12 @@ TARGETS["virtual-dyadic-training-factored-average"] = (
 
 TARGETS["virtual-frozen-policy-state-controls"] = (
     "native-virtual-frozen-policy-state-controls",
-    ("tests/native/virtual_frozen_policy_state_controls.cpp", *TARGETS["virtual-dyadic-training"][1][1:]),
+    ("tests/native/virtual_frozen_policy_state_controls.cpp", "native/virtual_frozen_policy_snapshot.hpp",
+     *TARGETS["virtual-dyadic-training"][1][1:]),
 )
 TARGETS["virtual-frozen-grid-update-preflight"] = (
     "native-virtual-frozen-grid-update-preflight",
-    ("tests/native/virtual_frozen_grid_preflight.cpp", "native/virtual_frozen_proposal.hpp",
+    ("tests/native/virtual_frozen_grid_preflight.cpp", "native/virtual_frozen_grid_update_forecast.hpp", "native/virtual_frozen_proposal.hpp",
      *TARGETS["virtual-dyadic-training"][1][1:]),
 )
 
