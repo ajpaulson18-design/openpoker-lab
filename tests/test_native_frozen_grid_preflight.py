@@ -11,6 +11,7 @@ import unittest
 from tests.test_native_exact_reach import authenticate
 from tests.virtual_frozen_run_control import run_bounded_child
 from tests.virtual_frozen_grid_preflight_reference import boards,census,geometry
+from tests.virtual_frozen_grid_envelope_reference import envelope,verify_wire
 from scripts.replay_native_frozen_policy_state import ORACLE_SOURCES
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -38,7 +39,7 @@ class NativeEnvelopeTests(unittest.TestCase):
         self.assertEqual(identity[1]['scope'],'Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission.')
         names=sorted(set(identity[1]['source_sha256'])|set(ORACLE_SOURCES)|{
             'scripts/replay_native_frozen_policy_state.py','tests/test_native_frozen_grid_preflight.py',
-            'tests/virtual_frozen_grid_preflight_reference.py'})
+            'tests/virtual_frozen_grid_preflight_reference.py','tests/virtual_frozen_grid_envelope_reference.py'})
         self.assertLessEqual(len(names),128)
         self.assertFalse(subprocess.check_output(['git','status','--porcelain','--untracked-files=all','--',*names],cwd=ROOT))
         head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
@@ -57,13 +58,21 @@ class NativeEnvelopeTests(unittest.TestCase):
                 self.assertEqual((ROOT/name).read_bytes(),raw)
                 path=directory/'source'/name;path.parent.mkdir(parents=True,exist_ok=True)
                 with path.open('xb') as output:output.write(raw)
-            (directory/'source-identity.json').write_text(json.dumps({'head':head,'raw_sha256':raw_hashes,'committed_blobs':tree,
+            (directory/'source-identity.json').write_text(json.dumps({'version':'frozen-grid-envelope-source-v1','head':head,'raw_sha256':raw_hashes,'committed_blobs':tree,
                 'python_version':sys.version,'python_executable_sha256':hashlib.sha256(Path(sys.executable).read_bytes()).hexdigest()},indent=2)+'\n')
             (directory/'native-build-manifest.json').write_bytes(identity[0])
+            (directory/'native-identity.json').write_text(json.dumps({'manifest_sha256':hashlib.sha256(identity[0]).hexdigest(),
+                'executable_sha256':identity[1]['executable_sha256']})+'\n')
             (directory/'command.json').write_text(json.dumps([str(exe)])+'\n')
             self.assertEqual((observed['status'],observed['returncode'],observed['actual_exit_observed']),('exited',0,True))
             self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
             lines=(directory/'stdout.bin').read_text(encoding='ascii').splitlines()
+            raw=(directory/'stdout.bin').read_bytes()
+            result=verify_wire(raw)
+            (directory/'independent-equations.json').write_text(json.dumps(result,indent=2)+'\n')
+            # Recomputed transport hashes would not hide these semantic edits.
+            for changed in (raw.replace(b'F 0 ',b'F 1 ',1),raw[:-1],raw.replace(b'END 5040 0 0 0 0 0',b'END 5040 0 0 0 1 0')):
+                with self.assertRaises(ValueError):verify_wire(changed)
         self.assertEqual(lines[0],'FROZEN_GRID_ENVELOPE_V1')
         g=geometry();phases=g['by_street'].values()
         expected=(1105,sum(x['decision_action_slots'] for x in phases),sum(x['reveals'] for x in phases),
@@ -77,6 +86,7 @@ class NativeEnvelopeTests(unittest.TestCase):
             law=int(law);values=list(map(int,words));board=tuple(values[:5]);values=values[5:]
             self.assertEqual((law,board),next(expected_boards))
             self.assertEqual(len(values),21)
+            self.assertEqual(tuple(values),envelope(board))
             rows,slots,reads,state,history,chance,reach,scale,mix,average,stage,walk,work,entries,payload,output,staged_payload,physical,feasible,admitted,bits=values
             independent=census(board)
             self.assertEqual((rows,slots,reads),(independent['supported_rows'],independent['supported_action_slots'],24420+2*rows))
