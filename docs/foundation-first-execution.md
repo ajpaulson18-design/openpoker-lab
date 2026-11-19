@@ -1,5 +1,19 @@
 # Foundation-first execution record
 
+## Proposed native Q52 update schedule (November 18)
+
+[PR330](https://github.com/ajpaulson18-design/openpoker-lab/pull/330) derives a
+[complete provisional update envelope](frozen-grid-update-envelope.md) after
+immutable policy import. Native and independent rank-free equations match all
+5,040 board/proposal cases; corrected V2 reserves eight prefix-marginal queries
+that the superseded V1 design omitted. Both original versions and the omission
+are retained. Normal/optimized controls, zero-candidate-call archive replay and
+Windows/Linux/sanitizer CI pass. The proposed maximum is 312,947,940 modeled work
+units within the unchanged 500-million cap. This justifies implementing and
+metering the exact native raw walk; it grants no update admission, training,
+speedup, quality or larger-game capability. Eleven-card State/quantizer/parent
+failures remain unresolved.
+
 ## Immutable native policy boundary (November 18)
 
 [PR329](https://github.com/ajpaulson18-design/openpoker-lab/pull/329) connects

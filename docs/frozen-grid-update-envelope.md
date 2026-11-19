@@ -114,6 +114,32 @@ corruptions. The executable SHA256 is
 There were no native policy imports, ranks, contractions, updates or training
 iterations; only the forecast program itself executed.
 
+The [immutable V2 packet](../benchmarks/results/frozen-grid-update-envelope-v2/manifest.json)
+has 262 members and 4,081,505 bytes, SHA256
+`dce1e6d5f59773d3e540c1f365664af88e1bf43edd7e44ebb6db4cc42392f4ac`.
+It retains both original V1 and V2 source/build closures, binaries, observed
+exits, complete forecast text, source-cleanliness refusal and equation reports.
+Every member and CRC was verified. The earlier PR329 Windows compiler failure
+artifact is also retained; its same-source paired job and isolated retry passed.
+
+Run `python -B -m scripts.replay_frozen_grid_envelope_packet` to authenticate
+the complete archive and replay both extracted V2 records using current frozen
+math sources. Normal and optimized
+[archive replay records](../benchmarks/results/frozen-grid-update-envelope-v2/archive-replay-normal.json)
+pass with zero candidate calls; archived source is never executed. The generic
+archive-reader change also passed the original PR329 policy packet regression.
+Source and observed stream corruption checks remain separate from execution
+attestation: saved command/exit records are controller observations.
+
+At [PR330](https://github.com/ajpaulson18-design/openpoker-lab/pull/330) source
+`30214c30a932d56a940d4eb490a2ad644221838b`, dedicated
+[Windows](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44448469872/job/135306278479),
+[Linux](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44448469872/job/135306278762)
+and [sanitizer](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/44448469872/job/135306278277)
+jobs passed both complete control suites and saved replay. Decoded job logs
+are stored beside the archive with line endings converted to LF. The immutable
+archive itself is unchanged by later job records or source repairs.
+
 The V1 design omitted the eight prefix-marginal queries and their retained
 results. Its original compiled observations, source copies and successful
 equation checks remain superseded development evidence: agreement between two
