@@ -140,6 +140,12 @@ TARGETS["virtual-frozen-grid-update-preflight"] = (
     ("tests/native/virtual_frozen_grid_preflight.cpp", "native/virtual_frozen_grid_update_forecast.hpp", "native/virtual_frozen_proposal.hpp",
      *TARGETS["virtual-dyadic-training"][1][1:]),
 )
+TARGETS["virtual-frozen-grid-raw-update"] = (
+    "native-virtual-frozen-grid-raw-update",
+    ("tests/native/virtual_frozen_grid_raw_probe.cpp", "native/virtual_frozen_grid_raw.hpp",
+     "native/virtual_frozen_policy_snapshot.hpp", "native/virtual_frozen_grid_update_forecast.hpp",
+     "native/virtual_frozen_proposal.hpp", *TARGETS["virtual-dyadic-training"][1][1:]),
+)
 
 
 def _hash(raw):
@@ -327,7 +333,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-dyadic-history-controls" else "Persistent exact dyadic state and staged sweep controls only; whole poker training and quality remain open."
                   if target == "virtual-dyadic-state-controls" else "Frozen Q52 policy import/read conformance only; no update, training, solver or capacity acceptance."
                   if target == "virtual-frozen-policy-state-controls" else "Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission."
-                  if target == "virtual-frozen-grid-update-preflight" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-frozen-grid-update-preflight" else "Fixed-policy Q52 per-board raw values/regrets/averages study only; no clipping, State update, sampled training, quality or wider capacity acceptance."
+                  if target == "virtual-frozen-grid-raw-update" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
