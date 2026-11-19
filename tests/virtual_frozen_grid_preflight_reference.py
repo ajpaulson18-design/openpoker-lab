@@ -43,14 +43,15 @@ def _prefix_support(prefix):
     for actor in (0, 1):
         opponent_hands = _HAND_SETS[1 - actor]
         actor_support = []
-        for own_hand in _HAND_SETS[actor]:
+        for hand_index, own_hand in enumerate(_HAND_SETS[actor]):
             mass = 0
             if not (blocked & own_hand):
                 for opponent, (_opponent_ids, weight) in zip(opponent_hands, _RANGES[1 - actor]):
                     if not (blocked & opponent) and not (own_hand & opponent):
-                        # All source weights are positive; sum exact masses so
-                        # support follows the joint compatible-pair law.
-                        mass += weight
+                        # Sum exact joint pair mass; both range weights are
+                        # positive, so this is the joint law's support test.
+                        own_weight = _RANGES[actor][hand_index][1]
+                        mass += own_weight * weight
             actor_support.append(mass > 0)
         supported.append(tuple(actor_support))
     return tuple(supported)
@@ -210,4 +211,97 @@ def census(board):
         "zero_full_board_positive_prefix_holdings": tuple(zero_full_positive_prefix),
         "zero_full_target_with_positive_prefix": (
             not any(any(side) for side in full_support) and bool(zero_full_positive_prefix)),
+    }
+
+
+def dense_public_census():
+    """Return the independent rank-free dense public catalog shape.
+
+    Proposal outcomes are grouped by their visible card prefix. Support is
+    computed from exact compatible private-pair mass; this never enumerates
+    physical worlds or evaluates card ranks/payoffs.
+    """
+    prefix_groups = {length: set() for length in (0, 3, 4, 5)}
+    prefix_groups[0].add(())
+    for board in boards():
+        prefix_groups[3].add(board[:3])
+        prefix_groups[4].add(board[:4])
+        prefix_groups[5].add(board)
+
+    supported_prefix_counts = {length: 0 for length in (0, 3, 4, 5)}
+    supported_hands = {
+        length: [[0] * len(_HAND_SETS[actor]) for actor in (0, 1)]
+        for length in (0, 3, 4, 5)
+    }
+    for length, prefixes in prefix_groups.items():
+        for prefix in prefixes:
+            support = _prefix_support(prefix)
+            if any(any(side) for side in support):
+                supported_prefix_counts[length] += 1
+            for actor in (0, 1):
+                for hand_index, positive in enumerate(support[actor]):
+                    supported_hands[length][actor][hand_index] += int(positive)
+
+    prefixes_by_street = {length: len(prefix_groups[length])
+                          for length in (0, 3, 4, 5)}
+    if prefixes_by_street != {0: 1, 3: 84, 4: 504, 5: 2520}:
+        raise ArithmeticError("proposal prefix grouping differs from the fixed PROOF9 geometry")
+
+    template = build_reference_template(_template_case())
+    shape = Counter()
+    visible_phase = {
+        street: Counter() for street in (0, 3, 4, 5)
+    }
+
+    def visit(node_id):
+        node = template.nodes[node_id]
+        street = node.street
+        prefix_count = supported_prefix_counts[street]
+        shape["visits"] += prefix_count
+        visible_phase[street][node.phase] += prefix_count
+        if node.phase == "decision":
+            actor = node.state.player
+            menu = len(node.edges)
+            shape["actions"] += prefix_count * menu
+            rows = sum(supported_hands[street][actor])
+            shape["rows"] += rows
+            shape["slots"] += rows * menu
+        elif node.phase == "reveal":
+            next_street = node.state.board_length
+            shape["reveals"] += supported_prefix_counts[next_street]
+            candidates = {0: 84, 3: 6, 4: 5}.get(street)
+            if candidates is None:
+                raise ArithmeticError("unexpected visible street at reveal")
+            shape["candidates"] += prefix_count * candidates
+        elif node.phase == "fold":
+            shape["folds"] += prefix_count
+        elif node.phase == "showdown":
+            shape["showdowns"] += prefix_count
+        else:
+            raise ArithmeticError("unknown numeric-template phase")
+        for edge in node.edges:
+            visit(edge.child)
+
+    visit(template.root)
+    expected = {
+        "visits": 61099, "actions": 57363, "reveals": 3735,
+        "candidates": 15662, "folds": 16631, "showdowns": 17356,
+        "rows": 24420, "slots": 58164,
+    }
+    result_shape = {key: shape[key] for key in expected}
+    if result_shape != expected:
+        raise ArithmeticError("independent dense public census differs from the pinned catalog geometry")
+    return {
+        "shape": result_shape,
+        "prefix_counts": prefixes_by_street,
+        "positive_joint_mass_prefix_counts": dict(supported_prefix_counts),
+        "positive_own_holding_prefix_counts": {
+            length: tuple(tuple(side) for side in supported_hands[length])
+            for length in (0, 3, 4, 5)
+        },
+        "by_visible_street": {
+            street: dict(counts) for street, counts in visible_phase.items()
+        },
+        "literal_occurrences": template.receipt["logical_occurrences"],
+        "scope": "rank-free dense public catalog geometry; no native forecast or physical world enumeration",
     }
