@@ -100,6 +100,8 @@ def save_sources(directory,identity):
 
 def authenticate_sources(directory,native):
     saved=read_json(directory/'source-identity.json')
+    require(type(saved['head']) is str and len(saved['head'])==40 and all(c in '0123456789abcdef' for c in saved['head']),
+            'captured source commit grammar')
     require(saved['version']=='native-frozen-policy-sources-v1' and len(saved['raw_sha256'])<=128,'saved source identity')
     expected=set(native['source_sha256'])|set(PYTHON_SOURCES)|{'.github/workflows/native-frozen-policy-state.yml'}
     require(set(saved['raw_sha256'])==set(saved['committed_blobs'])==expected,'saved source closure membership')

@@ -7,13 +7,22 @@ import shutil
 import struct
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import patch
 
-from scripts.replay_native_frozen_policy_state import relative_name,replay
+from scripts.replay_native_frozen_policy_state import authenticate_sources,relative_name,replay
 
 ENV='OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR'
 
 
 class SourcePathTests(unittest.TestCase):
+    def test_source_commit_is_validated_before_git(self):
+        for head in ('--output=foreign','HEAD','0'*39,None,['a']):
+            with self.subTest(head=head),TemporaryDirectory() as temporary:
+                directory=Path(temporary)
+                (directory/'source-identity.json').write_text(json.dumps({'head':head}))
+                with patch('scripts.replay_native_frozen_policy_state.git',side_effect=AssertionError('git entered')):
+                    with self.assertRaisesRegex(ValueError,'commit grammar'):authenticate_sources(directory,{})
+
     def test_only_canonical_relative_source_paths(self):
         self.assertEqual(relative_name('native/example.hpp'),'native/example.hpp')
         for name in ('','../x','/x','C:/x','a\\b','a//b','a/./b',None):

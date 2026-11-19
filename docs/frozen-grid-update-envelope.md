@@ -105,6 +105,15 @@ independent census addition was still uncommitted; that refusal is retained.
 Formal source-frozen normal/optimized controls and cross-platform CI are recorded
 separately as they complete.
 
+V2 source `510576a56fc0ef077d7ac22034ea29d5d2ffb4dc` subsequently passed both
+source-frozen normal and optimized two-test suites. Each suite observed one
+native preflight exit, verified all 5,040 reservations against the independent
+geometry and operator equations, and rejected outcome-order, framing and scope
+corruptions. The executable SHA256 is
+`7bc08329cecd655dc71f17be63b34d1c89a802c2cddfecd0bb28cd765979f3d7`.
+There were no native policy imports, ranks, contractions, updates or training
+iterations; only the forecast program itself executed.
+
 The V1 design omitted the eight prefix-marginal queries and their retained
 results. Its original compiled observations, source copies and successful
 equation checks remain superseded development evidence: agreement between two

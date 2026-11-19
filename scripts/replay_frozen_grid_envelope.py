@@ -23,6 +23,8 @@ def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT,text=True).
 
 def source_identity(directory,native):
     saved=read_json(directory/'source-identity.json')
+    require(type(saved['head']) is str and len(saved['head'])==40 and all(c in '0123456789abcdef' for c in saved['head']),
+            'captured envelope source commit grammar')
     require(saved['version']=='frozen-grid-envelope-source-v1','envelope source identity version')
     names=set(native['source_sha256'])|set(MATH)|set(CONTROLLER)
     require(len(names)<=128 and set(saved['raw_sha256'])==set(saved['committed_blobs'])==names,'envelope complete source closure')
