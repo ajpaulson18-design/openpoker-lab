@@ -90,21 +90,25 @@ Forecast forecast(const Geometry& g,const std::array<std::uint8_t,5>& board,f::P
     // One complete-board plane is sufficient. Reserve all four rank calls,
     // both range sorts, fill and all input/cache inspections regardless of mass.
     result.chance+=4*4096+512+64+4*64;
+    // Four visible prefixes, both actors: unit-reach fold contractions own
+    // the raw marginal masses/divisors needed by averages. Reuse the full
+    // two-by-two 365-bit query bound, conservatively also covering e=0.
+    result.chance+=8*contraction_cost(false,2,2);
     result.reach=2*g.actions*(24+2*(t::mul_cost(365,53)+t::copy_cost(365)));
     result.scale=4*(g.folds+g.showdowns)*(32+t::mul_cost(378,4)+t::mul_cost(382,14)+t::copy_cost(647)+2*t::words(699));
     result.mix=4*g.actions*(8+t::mul_cost(647,53)+t::add_cost(699)+t::copy_cost(699))+
         result.slots*(8+t::add_cost(648)+t::copy_cost(648))+4*g.decisions*(t::copy_cost(699)+t::copy_cost(648));
     result.average=result.rows*(64+t::mul_cost(5,14)+t::mul_cost(313,19)+t::copy_cost(381)+t::copy_cost(383))+
         result.slots*(16+t::mul_cost(332,53)+t::copy_cost(383));
-    result.stage=512+64*result.rows+16*result.slots;
+    result.stage=1024+64*result.rows+16*result.slots; // includes marginal copy/identity validation
     result.walk=512+256*g.visits;
     const auto catalog=3000000+8*dense.visits+64*dense.candidates+16*dense.rows+4*dense.slots;
     const auto parent=catalog+result.reach+result.scale+result.mix+result.average+result.stage+result.walk;
     result.work=t::template_cap+result.chance+result.history+result.state+1+parent+16*input_cap+16*output_cap;
     const auto storage=s::State::storage_forecast(sf,{388,410,false});
     result.entries=storage.entries+131072+(32*t::literal_count+1)+t::chance_entries+t::parent_entries+
-        8*result.rows+2*result.slots+64*19;
-    result.stage_payload=result.rows*(2*(383+58)+512)+result.slots*((648+58)+(383+58))+64*19*(704+58);
+        8*result.rows+2*result.slots+64*19+64;
+    result.stage_payload=result.rows*(2*(383+58)+512)+result.slots*((648+58)+(383+58))+64*19*(704+58)+16*(5+58)+4096;
     result.payload=storage.payload_bits+t::chance_payload+8*t::history_bytes+t::parent_payload+32*181+8*16384+result.stage_payload;
     // Candidate fixed-width row image: 5 words, mass/denominator 48 bytes
     // each, signed two's-complement regret 88 and average numerator 48 per
@@ -129,7 +133,7 @@ int main() {
         auto append=[&](const std::string& line) {
             t::require(line.size()<=2048 && line.size()<=output_cap-output.size(),"bounded preflight output");output+=line;
         };
-        append("FROZEN_GRID_ENVELOPE_V1\n");
+        append("FROZEN_GRID_ENVELOPE_V2\n");
         std::ostringstream header;
         header<<"GEOMETRY "<<geometry.visits<<' '<<geometry.actions<<' '<<geometry.reveals<<' '<<geometry.folds<<' '<<geometry.showdowns<<' '
             <<geometry.decisions<<" 6 7 12 11\n";

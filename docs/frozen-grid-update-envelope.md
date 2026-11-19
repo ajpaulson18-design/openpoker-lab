@@ -46,6 +46,12 @@ weighted products, bucket initialization, compatible masses, copies, full old
 sorts are reserved. No sampled payoff or private-pair world table is retained.
 Proposal, money, signs and the common denominator remain parent responsibilities.
 
+Eight additional unit-reach fold queries derive prefix marginal masses and
+divisors at four visible lengths for both actors. They reserve 5,040 work units
+using the existing conservative two-by-two query bound, plus 512 parent units
+for copies/identity checks, 64 entries and 5,104 payload bits for retained
+masses and metadata. These queries are separate from complete-board terminals.
+
 The word ledger independently reserves every reach advance, terminal scale,
 child mixture, exact Q52 division/check, signed regret, prefix mass/denominator,
 average slot, row staging and traversal. Magnitude bounds remain 648 bits for
@@ -65,21 +71,23 @@ measurement.
 
 ## Results and limits
 
-An initial source-built native preflight and independent saved-wire calculation
-agree on every field of all 5,040 board/proposal cases. Uniform and weighted
-proposals deliberately share the conservative weighted-width envelope.
+The initial V1 native preflight and independent saved-wire calculation agreed
+on every field of all 5,040 cases, but the lifecycle audit identified the missing
+prefix queries described below. The corrected V2 maxima below are source-derived;
+its executed controls are recorded separately. Uniform and weighted proposals
+deliberately share the conservative weighted-width envelope.
 
 | Complete request quantity | Maximum across all cases | Unchanged ceiling |
 | --- | ---: | ---: |
-| Modeled work | 312,942,388 | 500,000,000 |
+| Modeled work | 312,947,940 | 500,000,000 |
 | State work | 54,600,636 | 75,000,000 |
 | History work | 39,631,840 | 42,000,000 |
-| Chance work | 1,317,477 | 110,000,000 |
-| Logical entries | 1,176,221 | 2,000,000 |
-| Payload bits | 260,019,554 | 1,073,741,824 |
+| Chance work | 1,322,517 | 110,000,000 |
+| Logical entries | 1,176,285 | 2,000,000 |
+| Payload bits | 260,024,658 | 1,073,741,824 |
 | Candidate output bytes | 1,689,272 | 2,100,000 |
 
-The largest whole reservation is only 3,339,551 above the retained import/read
+The largest whole reservation is only 3,345,103 above the retained import/read
 request. This identifies startup/catalog/I/O reservation as the dominant part
 of this proposed one-board request; it says nothing about CPU shares or the
 number of samples needed for useful strategy quality. Ceiling-byte I/O charges
@@ -96,6 +104,13 @@ controller source-cleanliness check rejected before native launch while the
 independent census addition was still uncommitted; that refusal is retained.
 Formal source-frozen normal/optimized controls and cross-platform CI are recorded
 separately as they complete.
+
+The V1 design omitted the eight prefix-marginal queries and their retained
+results. Its original compiled observations, source copies and successful
+equation checks remain superseded development evidence: agreement between two
+implementations of an incomplete ledger was not complete admission. V2 includes
+these named costs. Both versions keep update admission false. V1 is not silently
+accepted by the maintained V2 verifier.
 
 Next implement the declared schedule with cumulative meters and bind actual
 operations, storage and wire bytes to these terms before granting update

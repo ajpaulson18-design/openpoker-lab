@@ -73,7 +73,7 @@ class NativeEnvelopeTests(unittest.TestCase):
             # Recomputed transport hashes would not hide these semantic edits.
             for changed in (raw.replace(b'F 0 ',b'F 1 ',1),raw[:-1],raw.replace(b'END 5040 0 0 0 0 0',b'END 5040 0 0 0 1 0')):
                 with self.assertRaises(ValueError):verify_wire(changed)
-        self.assertEqual(lines[0],'FROZEN_GRID_ENVELOPE_V1')
+        self.assertEqual(lines[0],'FROZEN_GRID_ENVELOPE_V2')
         g=geometry();phases=g['by_street'].values()
         expected=(1105,sum(x['decision_action_slots'] for x in phases),sum(x['reveals'] for x in phases),
                   sum(x['folds'] for x in phases),sum(x['showdowns'] for x in phases),
