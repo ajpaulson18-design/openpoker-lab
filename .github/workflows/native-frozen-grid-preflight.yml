@@ -1,0 +1,59 @@
+name: Provisional native frozen-grid update envelope
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  frozen-grid-envelope:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build explicit forecast-only target
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-frozen-grid-update-preflight --output-dir "$RUNNER_TEMP/grid-envelope" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_FROZEN_GRID_PREFLIGHT_EXE=$RUNNER_TEMP/grid-envelope/native-virtual-frozen-grid-update-preflight$suffix" >> "$GITHUB_ENV"
+      - name: Independent complete geometry and word ledger
+        env:
+          OPENPOKER_NATIVE_FROZEN_GRID_PREFLIGHT_DIR: ${{ runner.temp }}/grid-envelope-normal
+        run: python -B -m unittest tests.test_native_frozen_grid_preflight -v
+      - name: Optimized complete controls
+        env:
+          OPENPOKER_NATIVE_FROZEN_GRID_PREFLIGHT_DIR: ${{ runner.temp }}/grid-envelope-optimized
+        run: python -O -B -m unittest tests.test_native_frozen_grid_preflight -v
+      - name: Saved-only independent replay
+        shell: bash
+        run: |
+          python -B -m scripts.replay_frozen_grid_envelope "$RUNNER_TEMP/grid-envelope-normal" > "$RUNNER_TEMP/grid-envelope-normal/replay.json"
+          python -O -B -m scripts.replay_frozen_grid_envelope "$RUNNER_TEMP/grid-envelope-optimized" > "$RUNNER_TEMP/grid-envelope-optimized/replay.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-grid-envelope-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/grid-envelope/build.log
+            ${{ runner.temp }}/grid-envelope/build-failure.json
+            ${{ runner.temp }}/grid-envelope/native-exact-build-manifest.json
+            ${{ runner.temp }}/grid-envelope/native-virtual-frozen-grid-update-preflight*
+            ${{ runner.temp }}/grid-envelope-normal/**
+            ${{ runner.temp }}/grid-envelope-optimized/**
+          if-no-files-found: warn

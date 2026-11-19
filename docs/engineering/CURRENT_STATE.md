@@ -2,6 +2,13 @@
 
 ## Unified solver foundation in development
 
+The [provisional native Q52 update envelope](../frozen-grid-update-envelope.md)
+matches independent rank-free geometry and word-ledger equations for all 2,520
+boards under two proposal laws. Its largest proposed V2 request is 312,947,940
+modeled work units under the unchanged 500-million cap. Update admission remains
+false: the raw-update producer, its actual meters and numeric row replay are
+still required. This does not resolve the eleven-card State/quantizer failures.
+
 The opt-in [native immutable policy State boundary](../native-frozen-policy-state.md)
 adds complete external Q52 import and bounded read lifetime through the existing
 History/State owners. It is resident-only conformance work, with no raw update,

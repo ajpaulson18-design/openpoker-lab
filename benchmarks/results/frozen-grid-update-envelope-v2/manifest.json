@@ -1,0 +1,54 @@
+{
+  "version": "frozen-grid-update-envelope-v2-evidence",
+  "native_v2_source_head": "510576a56fc0ef077d7ac22034ea29d5d2ffb4dc",
+  "maintained_replay_head": "30214c30a932d56a940d4eb490a2ad644221838b",
+  "scope": "provisional architecture envelope; raw-update producer not implemented or admitted",
+  "native_v2_executable_sha256": "7bc08329cecd655dc71f17be63b34d1c89a802c2cddfecd0bb28cd765979f3d7",
+  "formal_modes": [
+    "normal",
+    "optimized"
+  ],
+  "tests_per_mode": 2,
+  "native_preflight_calls_per_mode": 1,
+  "forecasts_per_mode": 5040,
+  "native_policy_imports": 0,
+  "native_rank_calls": 0,
+  "native_contractions": 0,
+  "native_updates": 0,
+  "training_iterations": 0,
+  "update_admitted": false,
+  "saved_replay_candidate_calls": 0,
+  "archived_source_executed": false,
+  "retained_v1": "Superseded incomplete design omitted eight prefix marginal queries and retained results; equation agreement did not establish completeness",
+  "v2_correction": {
+    "prepared_prefix_fold_queries": 8,
+    "chance_work": 5040,
+    "parent_work": 512,
+    "entries": 64,
+    "payload_bits": 5104
+  },
+  "retained_refusal": "source-cleanliness guard stopped before child launch while independent census was uncommitted",
+  "retained_pr329_compiler_failure": {
+    "job_id": 135227084973,
+    "artifact_id": 14484101575,
+    "archive_sha256": "e3bd78507b1a1cb210c4235c4e2c292b6be7fbd08438169b1062ec5b514932d4",
+    "compiler_exit": 3221225725,
+    "paired_success_job": 135227062893,
+    "isolated_retry_success_job": 135231850843,
+    "note": "MSVC stack-overflow exit, original build.log contains only translation-unit name; no source change or full-workflow rerun"
+  },
+  "maximum": {
+    "work": 312947940,
+    "chance": 1322517,
+    "state": 54600636,
+    "history": 39631840,
+    "entries": 1176285,
+    "payload_bits": 260024658,
+    "output_bytes": 1689272
+  },
+  "system_build_inputs": "SDK/runtime/standard headers are environmental, not exhaustively attested; no bit reproducibility claim",
+  "archive_bytes": 4081505,
+  "archive_sha256": "dce1e6d5f59773d3e540c1f365664af88e1bf43edd7e44ebb6db4cc42392f4ac",
+  "archive_members": 262,
+  "archive_expanded_bytes": 11498269
+}

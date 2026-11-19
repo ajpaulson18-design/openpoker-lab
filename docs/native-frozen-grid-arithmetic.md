@@ -45,9 +45,12 @@ A prepared raw contraction `C` at opposite reach exponent e is scaled to
 `C*s*d << (625-e+p)` on `D_B`. No binary64 probability or decimal rounding is
 introduced. Both utility signs remain global SB/BB signs.
 
-At a target decision, the opposite past decisions and target future decisions
-in each child action value are disjoint and exclude the current target move.
-Their total is at most eleven. Every child common numerator therefore retains
+At a target decision, each terminal monomial in a child action value contains
+all opponent decisions along its complete route and the target's decisions
+strictly after the current move. Equivalently, count opponent decisions before
+the current move plus all future decisions. Future opponent decisions must be
+included. This excludes the current target move and its own past; the independent
+literal-route census gives a maximum of eleven. Every child common numerator retains
 at least 52 powers of two for the current target mixture. Multiplying by the
 Q52 units, summing and dividing by `2^52` is exact. Opponent decisions sum child
 values, without a target-policy division. Native code must check divisibility
