@@ -1,12 +1,17 @@
 """Rank-free independent geometry checks for a provisional architecture envelope."""
 import os
+import hashlib
+import json
 from pathlib import Path
+import subprocess
+import sys
 from tempfile import TemporaryDirectory
 import unittest
 
 from tests.test_native_exact_reach import authenticate
 from tests.virtual_frozen_run_control import run_bounded_child
 from tests.virtual_frozen_grid_preflight_reference import boards,census,geometry
+from scripts.replay_native_frozen_policy_state import ORACLE_SOURCES
 
 ROOT=Path(__file__).resolve().parents[1]
 ENV='OPENPOKER_NATIVE_FROZEN_GRID_PREFLIGHT_EXE'
@@ -31,9 +36,31 @@ class NativeEnvelopeTests(unittest.TestCase):
     def test_all_outcomes_have_independent_geometry_and_no_update_admission(self):
         exe=Path(os.environ[ENV]).resolve();identity=authenticate(exe,ROOT,'virtual-frozen-grid-update-preflight')
         self.assertEqual(identity[1]['scope'],'Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission.')
+        names=sorted(set(identity[1]['source_sha256'])|set(ORACLE_SOURCES)|{
+            'scripts/replay_native_frozen_policy_state.py','tests/test_native_frozen_grid_preflight.py',
+            'tests/virtual_frozen_grid_preflight_reference.py'})
+        self.assertLessEqual(len(names),128)
+        self.assertFalse(subprocess.check_output(['git','status','--porcelain','--untracked-files=all','--',*names],cwd=ROOT))
+        head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+        source={name:(ROOT/name).read_bytes() for name in names}
+        self.assertLessEqual(sum(map(len,source.values())),64<<20)
+        raw_hashes={name:hashlib.sha256(raw).hexdigest() for name,raw in source.items()}
+        tree={}
+        for line in subprocess.check_output(['git','ls-tree','-r',head],cwd=ROOT,text=True).splitlines():
+            metadata,name=line.split('\t',1)
+            if name in names:tree[name]=metadata.split()[2]
+        self.assertEqual(set(tree),set(names))
         with TemporaryDirectory(dir=ROOT.parent) as temporary:
             directory=Path(os.environ.get(OUT,str(Path(temporary)/'observed')))
             observed=run_bounded_child([str(exe)],b'',directory,stdout_limit=2_100_000,timeout=180)
+            for name,raw in source.items():
+                self.assertEqual((ROOT/name).read_bytes(),raw)
+                path=directory/'source'/name;path.parent.mkdir(parents=True,exist_ok=True)
+                with path.open('xb') as output:output.write(raw)
+            (directory/'source-identity.json').write_text(json.dumps({'head':head,'raw_sha256':raw_hashes,'committed_blobs':tree,
+                'python_version':sys.version,'python_executable_sha256':hashlib.sha256(Path(sys.executable).read_bytes()).hexdigest()},indent=2)+'\n')
+            (directory/'native-build-manifest.json').write_bytes(identity[0])
+            (directory/'command.json').write_text(json.dumps([str(exe)])+'\n')
             self.assertEqual((observed['status'],observed['returncode'],observed['actual_exit_observed']),('exited',0,True))
             self.assertEqual((directory/'stderr.bin').read_bytes(),b'')
             lines=(directory/'stdout.bin').read_text(encoding='ascii').splitlines()
