@@ -1065,6 +1065,29 @@ public:
 };
 
 struct Reach { Values numerators{1,1}; std::size_t exponent=0; };
+// Internal arithmetic primitive; callers provide State-validated row units and
+// charge the unchanged reach ledger before calling. No binary64 conversion.
+inline Reach advanced_exact_reach(const Reach& previous,
+        const std::array<std::span<const std::uint64_t>,2>& policy,std::size_t action,unsigned support) {
+    unsigned common=grid_bits;
+    bool nonzero=false;
+    std::array<std::uint64_t,2> units{};
+    for (std::size_t holding=0;holding<2;++holding) if (support&(1U<<holding)) {
+        units[holding]=policy[holding][action];
+        if (units[holding]) {
+            common=std::min(common,static_cast<unsigned>(std::countr_zero(units[holding])));
+            nonzero=true;
+        }
+    }
+    Reach next{{0,0},0};
+    if (nonzero) {
+        next.exponent=previous.exponent+grid_bits-common;
+        require(next.exponent<reach_operand_bits,"sequence reach depth exceeds forecast");
+        for (std::size_t holding=0;holding<2;++holding)
+            next.numerators[holding]=previous.numerators[holding]*(units[holding]>>common);
+    }
+    return next;
+}
 struct Marginal { Values numerators{}; std::uint64_t scale=0; };
 
 template<bool Paired,bool Factored=false> class Walk final {
@@ -1224,27 +1247,8 @@ template<bool Paired,bool Factored=false> class Walk final {
     }
     Reach advance(const Reach& previous,const std::array<std::span<const std::uint64_t>,2>& policy,
                   std::size_t action,unsigned support) {
-        // The pinned source has at most seven actions by any one actor.
-        // Each reduced numerator is at most 2^exponent, independently of D.
         meter_.charge(Work::reach,24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
-        unsigned common=grid_bits;
-        bool nonzero=false;
-        std::array<std::uint64_t,2> units{};
-        for (std::size_t holding=0;holding<2;++holding) if (support&(1U<<holding)) {
-            units[holding]=policy[holding][action];
-            if (units[holding]) {
-                common=std::min(common,static_cast<unsigned>(std::countr_zero(units[holding])));
-                nonzero=true;
-            }
-        }
-        Reach next{{0,0},0};
-        if (nonzero) {
-            next.exponent=previous.exponent+grid_bits-common;
-            require(next.exponent<reach_operand_bits,"sequence reach depth exceeds forecast");
-            for (std::size_t holding=0;holding<2;++holding)
-                next.numerators[holding]=previous.numerators[holding]*(units[holding]>>common);
-        }
-        return next;
+        return advanced_exact_reach(previous,policy,action,support);
     }
     void stage_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
                        const Marginal& prior,const Reach& own,std::size_t holding) {

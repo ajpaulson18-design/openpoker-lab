@@ -2,6 +2,12 @@
 
 ## Unified solver foundation in development
 
+The [shared native snapshot, forecast and exact-reach contracts](../native-frozen-grid-shared-owners.md)
+preserve complete output parity while moving the validated code into reusable
+headers. A complete existing ten-card training wire and checkpoint regression
+also passes after reach extraction. The per-board raw-update owner remains
+unimplemented; this is integration preparation, with no new capacity or speed claim.
+
 The [provisional native Q52 update envelope](../frozen-grid-update-envelope.md)
 matches independent rank-free geometry and word-ledger equations for all 2,520
 boards under two proposal laws. Its largest proposed V2 request is 312,947,940
