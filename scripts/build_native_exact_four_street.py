@@ -134,6 +134,11 @@ TARGETS["virtual-frozen-policy-state-controls"] = (
     "native-virtual-frozen-policy-state-controls",
     ("tests/native/virtual_frozen_policy_state_controls.cpp", *TARGETS["virtual-dyadic-training"][1][1:]),
 )
+TARGETS["virtual-frozen-grid-update-preflight"] = (
+    "native-virtual-frozen-grid-update-preflight",
+    ("tests/native/virtual_frozen_grid_preflight.cpp", "native/virtual_frozen_proposal.hpp",
+     *TARGETS["virtual-dyadic-training"][1][1:]),
+)
 
 
 def _hash(raw):
@@ -320,7 +325,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "prepared-public-chance-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
                   if target == "virtual-dyadic-history-controls" else "Persistent exact dyadic state and staged sweep controls only; whole poker training and quality remain open."
                   if target == "virtual-dyadic-state-controls" else "Frozen Q52 policy import/read conformance only; no update, training, solver or capacity acceptance."
-                  if target == "virtual-frozen-policy-state-controls" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-frozen-policy-state-controls" else "Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission."
+                  if target == "virtual-frozen-grid-update-preflight" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
