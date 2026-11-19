@@ -1,0 +1,76 @@
+{
+  "version": "native-frozen-grid-shared-owners-v1",
+  "scope": "mechanical shared contracts and exact reach extraction; no raw-update producer, speedup or larger-game acceptance",
+  "snapshot_forecast_source_head": "53370bfd67745e704ce03299b6eeae2123dfa449",
+  "reach_source_head": "d72aff458b9e115498d47bb176194e129a44a7f4",
+  "snapshot_tests": 5,
+  "envelope_tests": 2,
+  "byte_parity": [
+    {
+      "case": "uniform",
+      "bytes": 1442320,
+      "sha256": "a0281877334a4e20faafe0a95757749e324ce108ebd3e187d3cb3c923d4b7ebb",
+      "exact": true
+    },
+    {
+      "case": "zero-skew",
+      "bytes": 1442320,
+      "sha256": "86be8ccd6a8ce458fa73e356ba78560bfc67d6769c292ec6afe147f3970af3f8",
+      "exact": true
+    },
+    {
+      "case": "guards",
+      "bytes": 1009,
+      "sha256": "b04cacdb82f7e71d6bbe9e192f921d197385ef9d91f3ba987ecf5d8e2c47125e",
+      "exact": true
+    },
+    {
+      "case": "envelope-v2",
+      "bytes": 752190,
+      "sha256": "5d789b186dc052c036a05d5d04fa84f99409ec72ca78295ee174fc382eaa1ab4",
+      "exact": true
+    }
+  ],
+  "default_training": {
+    "target": "virtual-dyadic-training",
+    "complete_wire_sha256": "7fde396c4c2e645087d9fd8abdc373a97a485265bf157e537e3cfd181c538945",
+    "wire_bytes": 50507464,
+    "checkpoint_frames": [
+      {
+        "sweep": 1,
+        "slot": 1,
+        "bytes": 23701776,
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+      },
+      {
+        "sweep": 2,
+        "slot": 0,
+        "bytes": 23701776,
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e"
+      }
+    ],
+    "historical_owner_sidecars_equal": true,
+    "source_head": "d72aff458b9e115498d47bb176194e129a44a7f4",
+    "scope": "one complete preserved ten-card regression after exact reach extraction; no timing, sampler, raw-update or wider-capacity claim"
+  },
+  "canonical_checkpoint_references": {
+    "page-images/committed.bin": {
+      "bytes": 23701776,
+      "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+      "reason": "identical canonical checkpoint bytes already preserved in ten-card evidence; full emitted stream hash was verified"
+    },
+    "page-images/staged.bin": {
+      "bytes": 23701776,
+      "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a",
+      "reason": "identical canonical checkpoint bytes already preserved in ten-card evidence; full emitted stream hash was verified"
+    }
+  },
+  "baseline_policy_packet_sha256": "ecb72cd2bcbcdb1fb7089da6401ae558a4d71855daefdda86828b7c3817fbdd5",
+  "baseline_envelope_packet_sha256": "dce1e6d5f59773d3e540c1f365664af88e1bf43edd7e44ebb6db4cc42392f4ac",
+  "archived_source_executed": false,
+  "system_build_inputs": "SDK/runtime/standard headers not exhaustively attested; bit reproducibility unproven",
+  "archive_bytes": 5938835,
+  "archive_sha256": "e34d62021b526e0e52d3c291310b579f48c54b6cdc018e8c3564c8087803a2f9",
+  "archive_members": 215,
+  "expanded_bytes": 45978001
+}

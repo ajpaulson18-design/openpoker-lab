@@ -16,7 +16,8 @@ PACKET=ROOT/'benchmarks/results/native-frozen-policy-state-v1/verification.zip'
 ARCHIVE_SHA='ecb72cd2bcbcdb1fb7089da6401ae558a4d71855daefdda86828b7c3817fbdd5'
 
 
-def replay_packet(*,packet=PACKET,archive_sha=ARCHIVE_SHA,archive_bytes=7_733_361,member_count=408,case_replay=replay):
+def replay_packet(*,packet=PACKET,archive_sha=ARCHIVE_SHA,archive_bytes=7_733_361,member_count=408,case_replay=replay,
+                  extract_prefixes=('formal/',),case_directories=('formal/normal','formal/optimized')):
     """Trusted callers supply immutable archive pins and a current verifier."""
     raw=bounded(packet,8<<20)
     require(len(raw)==archive_bytes and sha256(raw).hexdigest()==archive_sha,'immutable native policy archive drift')
@@ -35,10 +36,10 @@ def replay_packet(*,packet=PACKET,archive_sha=ARCHIVE_SHA,archive_bytes=7_733_36
             require(len(body)<=8<<20,'native packet member byte ceiling')
             if name in index:
                 require(index[name]=={'bytes':len(body),'sha256':sha256(body).hexdigest()},'native packet member drift')
-            if name.startswith('formal/'):
+            if name.startswith(extract_prefixes):
                 target=destination/name;target.parent.mkdir(parents=True,exist_ok=True)
                 with target.open('xb') as output:output.write(body)
-        results=[case_replay(destination/'formal'/mode) for mode in ('normal','optimized')]
+        results=[case_replay(destination/name) for name in case_directories]
     require(sha256(bounded(packet,8<<20)).hexdigest()==archive_sha,'native packet changed during replay')
     return {'status':'exact','archive_sha256':archive_sha,'members_authenticated':member_count,
             'candidate_calls':0,'archived_source_executed':False,'results':results}
