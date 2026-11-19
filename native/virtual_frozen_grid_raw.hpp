@@ -32,8 +32,9 @@ inline std::size_t magnitude_bits(const Integer& value) {
     // cpp_int is signed magnitude. Inspect the normalized top limb without
     // constructing an absolute-value copy at each intermediate check.
     const auto& backend=value.backend();const auto n=backend.size();
-    static_assert(std::numeric_limits<boost::multiprecision::limb_type>::digits==64);
-    return n?64*(static_cast<std::size_t>(n)-1)+std::bit_width(backend.limbs()[n-1]):0;
+    constexpr auto limb_bits=std::numeric_limits<boost::multiprecision::limb_type>::digits;
+    static_assert(limb_bits==32 || limb_bits==64);
+    return n?limb_bits*(static_cast<std::size_t>(n)-1)+std::bit_width(backend.limbs()[n-1]):0;
 }
 struct Row {
     std::uint64_t actor=0,holding=0,ordinal=0,offset=0,actions=0;

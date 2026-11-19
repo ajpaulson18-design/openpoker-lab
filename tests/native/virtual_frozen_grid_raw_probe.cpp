@@ -23,9 +23,16 @@ void integer(snap::Output& output,const t::Integer& value,std::size_t words,bool
     const auto bits=raw::magnitude_bits(value);
     t::require((signed_value || value>=0) && bits<=(signed_value?words*64-1:words*64),"raw wire integer width");
     const auto& backend=value.backend();const bool negative=value<0;
+    constexpr auto limb_bits=std::numeric_limits<boost::multiprecision::limb_type>::digits;
+    static_assert(limb_bits==32 || limb_bits==64);
+    constexpr auto parts=64/limb_bits;
     std::uint64_t carry=negative?1:0;
     for (std::size_t i=0;i<words;++i) {
-        std::uint64_t limb=i<backend.size()?backend.limbs()[i]:0;
+        std::uint64_t limb=0;
+        for (std::size_t part=0;part<parts;++part) {
+            const auto index=i*parts+part;
+            if (index<backend.size()) limb|=static_cast<std::uint64_t>(backend.limbs()[index])<<(part*limb_bits);
+        }
         if (negative) {const auto sum=(~limb)+carry;carry=static_cast<std::uint64_t>(carry && sum==0);limb=sum;}
         output.word(limb);
     }
