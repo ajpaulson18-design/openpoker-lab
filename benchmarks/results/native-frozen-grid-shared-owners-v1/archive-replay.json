@@ -1,0 +1,141 @@
+{
+  "status": "exact",
+  "archive_sha256": "e34d62021b526e0e52d3c291310b579f48c54b6cdc018e8c3564c8087803a2f9",
+  "members_authenticated": 215,
+  "candidate_calls": 0,
+  "archived_source_executed": false,
+  "results": [
+    {
+      "status": "exact",
+      "candidate_calls": 0,
+      "archived_code_executed": false,
+      "source_head": "53370bfd67745e704ce03299b6eeae2123dfa449",
+      "active_replay_head": "8c56db0d02a9d7954d26d5d1310f497a3d1257fa",
+      "active_replay_sha256": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990",
+      "native_executable_sha256": "0931f30e20a3399a0f9742a8625066e91ee37a9e68e8e09972ba84647d473a2a",
+      "invocation_receipt": "captured controller command and observed exit; not an independent execution attestation",
+      "introduced_sources_authenticated": 40,
+      "current_python_sources_authenticated": 17,
+      "results": [
+        {
+          "case": "uniform",
+          "rows": 24420,
+          "slots": 58164,
+          "work_forecast": 309602837,
+          "work_actual": 209671033,
+          "entries_forecast": 1168201,
+          "payload_bits_forecast": 256883688,
+          "history_work_forecast": 39479280,
+          "history_work_actual": 31606488,
+          "state_work_forecast": 54125756,
+          "state_work_actual": 52404808,
+          "input_bytes": 3545022,
+          "output_bytes": 1442320,
+          "native_rank_calls": 0,
+          "native_contractions": 0,
+          "training_iterations": 0,
+          "quantizer_work": 0,
+          "all_policy_units_exact": true
+        },
+        {
+          "case": "zero-skew",
+          "rows": 24420,
+          "slots": 58164,
+          "work_forecast": 309602837,
+          "work_actual": 209671033,
+          "entries_forecast": 1168201,
+          "payload_bits_forecast": 256883688,
+          "history_work_forecast": 39479280,
+          "history_work_actual": 31606488,
+          "state_work_forecast": 54125756,
+          "state_work_actual": 52404808,
+          "input_bytes": 3545022,
+          "output_bytes": 1442320,
+          "native_rank_calls": 0,
+          "native_contractions": 0,
+          "training_iterations": 0,
+          "quantizer_work": 0,
+          "all_policy_units_exact": true
+        }
+      ],
+      "scope": "saved read-only import conformance; no raw update, training or quality acceptance"
+    },
+    {
+      "status": "provisional-envelope-equations-exact",
+      "forecasts": 5040,
+      "maximum": {
+        "work": 312947940,
+        "chance": 1322517,
+        "state": 54600636,
+        "history": 39631840,
+        "entries": 1176285,
+        "payload_bits": 260024658,
+        "output_bytes": 1689272
+      },
+      "minimum": {
+        "work": 311352847,
+        "chance": 406548,
+        "state": 54136508,
+        "history": 39590400,
+        "entries": 1169637,
+        "payload_bits": 257866522,
+        "output_bytes": 1448552
+      },
+      "update_admitted": false,
+      "policy_imports": 0,
+      "native_rank_calls": 0,
+      "native_contractions": 0,
+      "native_updates": 0,
+      "training_iterations": 0,
+      "scope": "proposed logical ledger only; implementing and metering the raw-update producer remains required",
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "observed_source_head": "53370bfd67745e704ce03299b6eeae2123dfa449",
+      "active_replay_head": "8c56db0d02a9d7954d26d5d1310f497a3d1257fa",
+      "active_source_sha256": {
+        "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+        "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+        "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+        "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+        "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+        "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+        "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+        "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+        "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+        "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+        "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+        "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+        "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+        "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+        "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+        "scripts/replay_frozen_grid_envelope.py": "45e0c5b1f8b11f8901db1141267fc14711f2256dc4960acfad07a7e65335d845",
+        "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+      },
+      "native_executable_sha256": "e460d3eb247a81280a60bfc2189e065379580fea53494911bbefc46bc96c0597",
+      "invocation_receipt": "captured controller command/exit; not an independent execution attestation"
+    },
+    {
+      "target": "virtual-dyadic-training",
+      "complete_wire_sha256": "7fde396c4c2e645087d9fd8abdc373a97a485265bf157e537e3cfd181c538945",
+      "wire_bytes": 50507464,
+      "checkpoint_frames": [
+        {
+          "bytes": 23701776,
+          "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a",
+          "slot": 1,
+          "sweep": 1
+        },
+        {
+          "bytes": 23701776,
+          "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+          "slot": 0,
+          "sweep": 2
+        }
+      ],
+      "canonical_checkpoint_references_authenticated": 2,
+      "candidate_calls": 0,
+      "scope": "existing ten-card complete-wire/owner parity only; no speed, raw-update or wider-capacity acceptance"
+    }
+  ],
+  "scope": "shared contract/reach parity only; raw-update producer remains unimplemented"
+}

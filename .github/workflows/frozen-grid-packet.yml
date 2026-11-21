@@ -19,11 +19,16 @@ jobs:
           python-version: '3.13'
       - run: python -B -m unittest tests.test_frozen_grid_packet_replay -v
       - run: python -O -B -m unittest tests.test_frozen_grid_packet_replay -v
+      - run: python -B -m unittest tests.test_native_grid_raw_saved_controls -v
+      - run: python -O -B -m unittest tests.test_native_grid_raw_saved_controls -v
       - run: python -B -m scripts.replay_frozen_grid_packet > saved-grid-replay.json
       - run: python -B -m scripts.replay_native_policy_packet > saved-native-policy-replay.json
       - run: python -O -B -m scripts.replay_native_policy_packet > saved-native-policy-replay-optimized.json
       - run: python -B -m scripts.replay_frozen_grid_envelope_packet > saved-grid-envelope-replay.json
       - run: python -O -B -m scripts.replay_frozen_grid_envelope_packet > saved-grid-envelope-replay-optimized.json
+      - run: python -B -m scripts.replay_shared_grid_owners_packet > saved-shared-grid-owners-replay.json
+      - run: python -B -m scripts.replay_native_grid_raw_packet > saved-native-grid-raw-replay.json
+      - run: python -O -B -m scripts.replay_native_grid_raw_packet > saved-native-grid-raw-replay-optimized.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -34,4 +39,7 @@ jobs:
             saved-native-policy-replay-optimized.json
             saved-grid-envelope-replay.json
             saved-grid-envelope-replay-optimized.json
+            saved-shared-grid-owners-replay.json
+            saved-native-grid-raw-replay.json
+            saved-native-grid-raw-replay-optimized.json
           if-no-files-found: ignore
