@@ -189,7 +189,8 @@ int main() {
                     }
                 }
             };
-            recursive_call(check,ordered.root(),{}, {0,1,2,3,4});
+            recursive_call(check,ordered.root(),std::vector<std::uint8_t>{},
+                           std::vector<std::size_t>{0,1,2,3,4});
             if (checked<1000) throw std::runtime_error("decision path coverage incomplete");
         }
         rejected("raised_work",[&]{h::Limits l;l.work=500000001;h::History x(source,physical,l);});
