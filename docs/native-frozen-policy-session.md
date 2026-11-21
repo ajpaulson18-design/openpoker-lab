@@ -77,9 +77,19 @@ one import/echo and exact output bytes also match.
 Seven further requests reject malformed second proposal/board, arity, extra
 selector and late invalid policy partition with no stdout. Saved root-bit and
 truncation corruptions reject independently of stream hashes. Maximum observed
-modeled work is 223,700,123 and output is 1,936,776 bytes. Optimized conformance,
-cross-platform CI, immutable packaging and matched elapsed comparison are
-separate pending checks; no speed acceptance is claimed from these counts.
+modeled work is 223,700,123 and output is 1,936,776 bytes. Optimized conformance
+also passes; all nineteen native stdout streams match exactly between modes.
+The first source capture omitted the imported raw-reader metadata module.
+Its successful numerical observations remain retained, and complete-source
+normal/optimized matrices at `09a6309` pass after adding that dependency.
+Cross-platform CI, immutable packaging and matched elapsed comparison remain
+separate checks; no speed acceptance is claimed from these counts.
+
+The session's `domain_*` component values describe the independently proven
+axis maxima. Runtime admission enforces its cumulative component forecasts and
+original global caps, with additional domain checks for whole work, entries,
+payload and output. Neither diagnostic maxima nor per-board reference header
+fields reset a shared owner or extend its lifetime allowance.
 
 ## Next architectural gate
 

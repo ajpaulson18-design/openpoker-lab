@@ -43,6 +43,7 @@ def replay(directory):
         require(policy==profile(fixture,name),'session named immutable policy');inputs[name]=body;policies[name]=policy
     results=[];forecast_sum=0;stream_hashes={}
     for label,name,selectors in expected:
+        selectors=tuple((tuple(board),law) for board,law in selectors)
         f=session_forecast(*selectors[0],*selectors[1]);forecast_sum+=f['work']
         require(f['feasible'] and f['work']<=plan['per_request_work_ceiling'],'session independently admitted request')
         args=read_json(directory/(label+'.command.json'))
