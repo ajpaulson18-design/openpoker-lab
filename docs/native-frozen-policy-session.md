@@ -82,8 +82,9 @@ also passes; all nineteen native stdout streams match exactly between modes.
 The first source capture omitted the imported raw-reader metadata module.
 Its successful numerical observations remain retained, and complete-source
 normal/optimized matrices at `09a6309` pass after adding that dependency.
-Cross-platform CI, immutable packaging and matched elapsed comparison remain
-separate checks; no speed acceptance is claimed from these counts.
+Both complete-source matrices also pass saved-only numerical replay, with
+zero native calls. Cross-platform CI and immutable packaging remain separate
+checks; no speed acceptance is inferred from logical resource counts.
 
 The session's `domain_*` component values describe the independently proven
 axis maxima. Runtime admission enforces its cumulative component forecasts and
@@ -91,10 +92,39 @@ original global caps, with additional domain checks for whole work, entries,
 payload and output. Neither diagnostic maxima nor per-board reference header
 fields reset a shared owner or extend its lifetime allowance.
 
+## Matched cold-setup comparison
+
+The committed operator `scripts.benchmark_native_policy_session` at source
+`49b989d1ff90bf62b28d0d6d8c9653998530132f` compared the `zero-skew` profile
+on the fixed different-private-pairs selector pair: first uniform, second
+weighted river. Its protocol was written before warmup: one warmup group,
+eight alternating-order pairs, median ratio at most 0.96 and at least six
+faster pairs, zero retries. Baseline time sums two independent existing raw
+children; candidate time measures one complete session child. Independent
+numerical replay is outside timing. This compares the same two raw results,
+including complete native setup and captured output, with one policy echo
+instead of two duplicate echoes.
+
+| Observed named workload | Cold pair | Shared session |
+| --- | ---: | ---: |
+| Actual logical work | 432,087,356 | 221,426,179 |
+| Output bytes | 3,292,048 | 1,850,280 |
+| Median paired elapsed ratio | 1 | 0.5105145 |
+| Pairs faster | | 8 of 8 |
+
+All 27 child exits were observed. Warmups match independent Fraction/rules/rank
+replay; every timed complete wire is byte-identical to its verified warmup.
+Both old raw payloads and shared policy bytes also match directly across the
+two wire layouts. All pairs, including misses if any, are retained. The timing
+gate passes on this host/workload. This is cold setup amortization, not a
+training-throughput, allocator/RSS, unrestricted-game or universal speed claim.
+The two baseline children have separate existing request budgets; their sum
+is not presented as one admission. The session has one cumulative admission.
+
 ## Next architectural gate
 
-Measure complete cold two-call versus shared-session work before accepting an
-amortization benefit. Then replace repeated dense immutable import with a
+The scoped amortization measurement justifies continuing beyond cold import.
+Replace repeated dense immutable import with a
 validated changing-policy epoch and sparse/paged numerical ownership. Keep
 raw importance-weighted regret estimation distinct from nonlinear CFR+
 clipping: unbiased raw updates alone do not prove sampled CFR+ correctness.

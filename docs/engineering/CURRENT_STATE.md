@@ -2,6 +2,14 @@
 
 ## Unified solver foundation in development
 
+The [immutable two-board policy session](../native-frozen-policy-session.md)
+shares native template/catalog/import/readback under one cumulative request.
+Normal/optimized conformance checks both raw results independently, including
+order changes, replacement and zero-target prefix averages. Its complete
+request stays within the existing caps. A matched cold-setup comparison and
+cross-platform evidence are separate from evolving-policy training and the
+unresolved eleven-card State/quantizer/storage barriers.
+
 The [native fixed-policy raw operator](../native-frozen-grid-raw.md) now passes
 twenty complete raw cases and six rejection controls normally and optimized,
 with exact independent regrets/averages/root replay. It reuses the same History,
