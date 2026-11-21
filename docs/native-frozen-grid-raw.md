@@ -133,7 +133,12 @@ build. No failed record is replaced by its successor.
 `python -B -m scripts.replay_native_grid_raw_packet` authenticates every member
 and the saved executable bytes, then replays both matrices with current
 independent math and zero native calls. The same entrypoint under `-O` remains
-a required saved-replay check. The development packet is historical evidence,
+a required saved-replay check. Both [normal](../benchmarks/results/native-frozen-grid-raw-v1/archive-replay-normal.json)
+and [optimized](../benchmarks/results/native-frozen-grid-raw-v1/archive-replay-optimized.json)
+archive replays pass. Saved-evidence controls also reject malformed commit
+identity, missing source, forged blob/source bytes (including a self-consistent
+replacement digest), unobserved/retried exits and altered stream bytes before
+numerical replay; both interpreter modes pass. The development packet is historical evidence,
 not an additional numerical acceptance claim.
 
 This proves fixed-policy raw arithmetic only. Evolving policies,

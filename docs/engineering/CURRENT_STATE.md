@@ -13,15 +13,17 @@ persistent sparse/paged learning lifetimes remain the scaling gates.
 The [shared native snapshot, forecast and exact-reach contracts](../native-frozen-grid-shared-owners.md)
 preserve complete output parity while moving the validated code into reusable
 headers. A complete existing ten-card training wire and checkpoint regression
-also passes after reach extraction. The per-board raw-update owner remains
-unimplemented; this is integration preparation, with no new capacity or speed claim.
+also passes after reach extraction. That shared-owner packet establishes parity;
+the separate raw-operator packet above establishes fixed-policy raw arithmetic.
+Neither establishes new capacity or a speed improvement.
 
 The [provisional native Q52 update envelope](../frozen-grid-update-envelope.md)
 matches independent rank-free geometry and word-ledger equations for all 2,520
 boards under two proposal laws. Its largest proposed V2 request is 312,947,940
-modeled work units under the unchanged 500-million cap. Update admission remains
-false: the raw-update producer, its actual meters and numeric row replay are
-still required. This does not resolve the eleven-card State/quantizer failures.
+modeled work units under the unchanged 500-million cap. The preflight itself
+keeps update admission false. The separate producer above now executes and
+meters the schedule with independent raw-row replay for twenty cases; it does
+not establish evolving-policy training or resolve eleven-card State/quantizer failures.
 
 The opt-in [native immutable policy State boundary](../native-frozen-policy-state.md)
 adds complete external Q52 import and bounded read lifetime through the existing
@@ -33,9 +35,10 @@ The [frozen Q52 update reference](../frozen-grid-update-reference.md) connects
 the accepted trainer's policy representation to independent whole-game raw
 regret/average expectation checks. Two profiles under two proposal laws match
 all 24,420 rows exactly, with saved-only replay. A 421-bit per-board witness
-exceeds the old frozen probe's 384-bit cap, so native input/arithmetic admission
-must precede sampled-traversal benchmarks. No sampled learner, larger native
-capacity or new quality result is claimed.
+exceeds the old frozen probe's 384-bit cap. The separate State boundary and
+raw operator above now validate native input and raw arithmetic using the
+existing wider carrier; the old refusal remains preserved. No sampled learner,
+larger native capacity or new quality result is claimed.
 
 The explicit [two-sweep native trainer](../native-dyadic-two-sweep.md)
 now connects exact chance, reach and payoff operators to changing-policy

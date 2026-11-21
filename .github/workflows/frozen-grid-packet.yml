@@ -19,6 +19,8 @@ jobs:
           python-version: '3.13'
       - run: python -B -m unittest tests.test_frozen_grid_packet_replay -v
       - run: python -O -B -m unittest tests.test_frozen_grid_packet_replay -v
+      - run: python -B -m unittest tests.test_native_grid_raw_saved_controls -v
+      - run: python -O -B -m unittest tests.test_native_grid_raw_saved_controls -v
       - run: python -B -m scripts.replay_frozen_grid_packet > saved-grid-replay.json
       - run: python -B -m scripts.replay_native_policy_packet > saved-native-policy-replay.json
       - run: python -O -B -m scripts.replay_native_policy_packet > saved-native-policy-replay-optimized.json

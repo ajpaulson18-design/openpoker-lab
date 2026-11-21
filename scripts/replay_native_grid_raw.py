@@ -100,6 +100,7 @@ def replay(directory):
         label,name,law,cards=case;relative_name(label)
         require('/' not in label and label not in labels and name in policies and law in ('uniform','river_weighted'),'raw unique case/profile/law')
         labels.add(label);board=tuple(cards);e=envelope(board);forecast_sum+=e[12]
+        require(e[18]==1 and e[12]<=plan['per_request_work_ceiling'],'raw independently feasible per-request envelope')
         prefix=name+'-'+law+'-'
         require(label.startswith(prefix) and label[len(prefix):] in {'positive-0','positive-1','positive-2','zero-shared-turn','zero-at-flop'},
                 'raw named matrix selector')
@@ -115,7 +116,8 @@ def replay(directory):
                 'raw input byte identity')
         raw=process(child,0)
         results.append({'case':label,**verify_raw_wire(fixture,context,policies[name],board,law,raw)})
-    require(forecast_sum==plan['sum_case_request_forecasts'],'raw complete study work reservation')
+    require(forecast_sum==plan['sum_case_request_forecasts'] and
+            forecast_sum<=20*plan['per_request_work_ceiling'],'raw complete study work reservation')
     for name in policies:
         for law in ('uniform','river_weighted'):
             require(coverage[name,law]==5 and len(pairs.get((name,law),()))==3 and zero_types.get((name,law))=={'preflop-only','later-prefix'},

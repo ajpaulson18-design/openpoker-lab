@@ -1,5 +1,26 @@
 # Foundation-first execution record
 
+## Native fixed-policy raw walk (November 21)
+
+[PR331](https://github.com/ajpaulson18-design/openpoker-lab/pull/331) implements
+the [four-street raw schedule](native-frozen-grid-raw.md) through the existing
+History, immutable policy State and Prepared Chance owners. Twenty cases in
+each normal/optimized run match every raw regret, prefix average and root
+against independent rules, Fraction arithmetic and ranking. Six requests per
+mode reject malformed input without partial output. The dedicated Windows,
+Linux and sanitizer jobs pass; the broader Windows History-control compiler
+failure and unsuccessful isolated retry remain separate unresolved evidence.
+
+The immutable packet preserves complete source, input/output, actual exits,
+the initial refused build and both successful directory replays. Maintained
+archive replay enters no native producer or archived source. Maximum observed
+modeled work is 217,037,204; the unchanged global forecast is 312,947,940 under
+500 million. These figures are logical resource counts, not elapsed-time gains.
+There is no numerical State update, clipping, sampled training, quality result
+or eleven-card admission. The next architectural gate is sharing policy/setup
+lifetimes under cumulative request bounds, then independently validated
+changing-policy sparse/paged learning. Realistic heads-up NLHE remains the goal.
+
 ## Proposed native Q52 update schedule (November 18)
 
 [PR330](https://github.com/ajpaulson18-design/openpoker-lab/pull/330) derives a
