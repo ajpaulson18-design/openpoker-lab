@@ -2,6 +2,14 @@
 
 ## Unified solver foundation in development
 
+The [native fixed-policy raw operator](../native-frozen-grid-raw.md) now passes
+twenty complete raw cases and six rejection controls normally and optimized,
+with exact independent regrets/averages/root replay. It reuses the same History,
+immutable State and Prepared owners; State numerical values are not updated.
+This is raw arithmetic conformance, without sampled training, quality, timing
+acceptance or eleven-card capability. Repeated full-policy preparation and
+persistent sparse/paged learning lifetimes remain the scaling gates.
+
 The [shared native snapshot, forecast and exact-reach contracts](../native-frozen-grid-shared-owners.md)
 preserve complete output parity while moving the validated code into reusable
 headers. A complete existing ten-card training wire and checkpoint regression
