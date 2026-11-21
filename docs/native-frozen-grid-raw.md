@@ -133,12 +133,19 @@ build. No failed record is replaced by its successor.
 `python -B -m scripts.replay_native_grid_raw_packet` authenticates every member
 and the saved executable bytes, then replays both matrices with current
 independent math and zero native calls. The same entrypoint under `-O` remains
-a required saved-replay check. Both [normal](../benchmarks/results/native-frozen-grid-raw-v1/archive-replay-normal.json)
-and [optimized](../benchmarks/results/native-frozen-grid-raw-v1/archive-replay-optimized.json)
+a required saved-replay check. Both [normal](../benchmarks/results/native-frozen-grid-raw-v1/archive-replay-v2-normal.json)
+and [optimized](../benchmarks/results/native-frozen-grid-raw-v1/archive-replay-v2-optimized.json)
 archive replays pass. Saved-evidence controls also reject malformed commit
 identity, missing source, forged blob/source bytes (including a self-consistent
 replacement digest), unobserved/retried exits and altered stream bytes before
-numerical replay; both interpreter modes pass. The development packet is historical evidence,
+numerical replay; both interpreter modes pass. Review found the first archive
+wrapper did not authenticate its current outer helpers. The maintained V2
+entrypoint now checks its own committed bytes and all outer helpers before
+project imports, rechecks them after replay, and reports their hashes. V2 also
+checks each independently feasible request and all 26 cross-mode stream hashes.
+The earlier replay records remain retained. Dedicated platform job/step results
+are pinned in the [CI receipt](../benchmarks/results/native-frozen-grid-raw-v1/ci-296836f.json).
+The development packet is historical evidence,
 not an additional numerical acceptance claim.
 
 This proves fixed-policy raw arithmetic only. Evolving policies,
