@@ -1,0 +1,17 @@
+{
+  "archive": "evidence.zip",
+  "archive_bytes": 850101,
+  "archive_sha256": "dc7d014eb00185d7b031d6f76605cde9e69d69acbab95557b975a9007f2de35d",
+  "format": "native-history-control-evidence-bundle-v1",
+  "included_ci_archives": {
+    "raw-history-failure-14728114104.zip": "ea297145203b1e955904b368ebb1792dcd47eb1049ae23d4bcf7ace7eee5353d",
+    "raw-history-failure-14728481266.zip": "5c398804a0df5a1e47ddf2bfd377cbb75d7f438883aeea5738dffc3e286ac9d0",
+    "raw-history-failure-14728730771.zip": "58f9a001814ce3c4f9cddbf7128f889a71a120d9ab9af899b009704adcebd8c0"
+  },
+  "manifest": "manifest.json",
+  "manifest_bytes": 7696,
+  "manifest_sha256": "ca0adf2752bf3802a7f3b3387a3d5dcccde232a31e279ee304660d59a6252448",
+  "scope": "Bounded test-compiler hypothesis evidence only; no production source, performance, capacity, or MSVC 14.52 pass claim.",
+  "source_branch": "foundation/history-control-call-boundary",
+  "source_head": "0baab8a1df93d80205eb7b6f419ed708e52c5edb"
+}
