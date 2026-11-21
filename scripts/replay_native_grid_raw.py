@@ -25,11 +25,13 @@ SCOPE='Fixed-policy Q52 per-board raw values/regrets/averages study only; no cli
 def git(*args):return subprocess.check_output(['git',*args],cwd=ROOT,text=True).strip()
 
 
-def sources(directory,native):
+def sources(directory,native,*,math_sources=MATH,controllers=CONTROLLERS,
+            version='native-frozen-grid-raw-sources-v1',
+            bootstrap=('scripts/replay_native_grid_raw.py','scripts/replay_native_frozen_policy_state.py')):
     saved=read_json(directory/'source-identity.json');head=saved['head']
     require(type(head) is str and len(head)==40 and all(c in '0123456789abcdef' for c in head),'raw captured source commit grammar')
-    expected=set(native['source_sha256'])|set(MATH)|set(CONTROLLERS)
-    require(saved['version']=='native-frozen-grid-raw-sources-v1' and len(expected)<=128 and
+    expected=set(native['source_sha256'])|set(math_sources)|set(controllers)
+    require(saved['version']==version and len(expected)<=128 and
             set(saved['raw_sha256'])==set(saved['committed_blobs'])==expected,'raw complete introduced-source closure')
     tree={}
     for line in git('ls-tree','-r',head).splitlines():
@@ -44,12 +46,12 @@ def sources(directory,native):
                 HISTORICAL_MIXED.get(name)==(digest,tree[name]),'raw archived committed-byte mismatch')
     require(all(saved['raw_sha256'][n]==digest for n,digest in native['source_sha256'].items()),'raw native build/source link')
     current={}
-    for name in MATH:
+    for name in math_sources:
         canonical=subprocess.check_output(['git','show',head+':'+name],cwd=ROOT)
         digest=sha256(bounded(ROOT/name,2<<20)).hexdigest()
         require(digest in source_checkout_hashes(saved['raw_sha256'][name],canonical),'current raw oracle drift')
         current[name]=digest
-    for name in ('scripts/replay_native_grid_raw.py','scripts/replay_native_frozen_policy_state.py'):
+    for name in bootstrap:
         require(not git('status','--porcelain','--',name),'uncommitted active raw replay bootstrap')
         canonical=subprocess.check_output(['git','show','HEAD:'+name],cwd=ROOT)
         digest=sha256(bounded(ROOT/name,2<<20)).hexdigest()

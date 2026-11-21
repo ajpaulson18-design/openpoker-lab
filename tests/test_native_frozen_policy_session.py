@@ -23,7 +23,8 @@ ROOT=Path(__file__).resolve().parents[1]
 ENV='OPENPOKER_NATIVE_POLICY_SESSION_EXE';OUT='OPENPOKER_NATIVE_POLICY_SESSION_DIR'
 SCOPE='Two-board immutable Q52 session only; no policy transition, clipping, training, quality or wider capacity acceptance.'
 NEW_SOURCES=('tests/virtual_frozen_policy_session_reference.py','tests/virtual_native_policy_session_reference.py',
-    'tests/test_native_frozen_policy_session.py','tests/test_native_frozen_grid_raw.py')
+    'tests/test_native_frozen_policy_session.py','tests/test_native_frozen_grid_raw.py',
+    'scripts/replay_native_grid_raw.py')
 
 
 def pair_selectors(fixture,context):
