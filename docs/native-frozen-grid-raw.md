@@ -110,8 +110,33 @@ actual process exits, private-pair/prefix coverage and all raw rows with zero
 candidate calls. Archived source is never executed. The Windows/Linux/sanitizer
 workflow performs both conformance modes and saved replay.
 
-Cross-platform results and immutable matrix packaging are recorded as they
-complete. This proves fixed-policy raw arithmetic only. Evolving policies,
+The dedicated raw-operator jobs at source `296836f25b38810c30f27b2fc3aadd7ae58fea2d`
+passed on Windows, Linux and sanitized Linux, for both push and PR events.
+This is separate from the broader component Windows History-control build:
+jobs 137009031447 and 137009021643 failed with compiler exit `0xc00000fd`;
+isolated retry 137011053813 failed too. The History sources are unchanged from
+PR #330. Those failures are not numerical passes and remain under investigation.
+
+The [immutable packet manifest](../benchmarks/results/native-frozen-grid-raw-v1/manifest.json)
+pins separate normal/optimized archives to preserve the existing per-archive
+byte ceilings. Each contains all twenty successes, six rejections, original
+source/build/input/output/exit receipts and the successful directory replay.
+The development archive retains the first positive case and refused 64-bit-only
+build. No failed record is replaced by its successor.
+
+| Archive | Bytes | Members | SHA256 |
+| --- | ---: | ---: | --- |
+| normal.zip | 4,606,322 | 234 | `527f77a5bbce5faf365b16c89006a865ea792f2289534907b2a23aed1df3d9b2` |
+| optimized.zip | 4,606,418 | 234 | `6039823ffa32b1f1c930895d94f5d0eb5bb2fe8c69e6fa5519e8d576b012199b` |
+| development.zip | 1,020,556 | 63 | `c17c6c8f17b98d7892730f2f889049b4c1b7288dad2c0c4c7c60281210246e2c` |
+
+`python -B -m scripts.replay_native_grid_raw_packet` authenticates every member
+and the saved executable bytes, then replays both matrices with current
+independent math and zero native calls. The same entrypoint under `-O` remains
+a required saved-replay check. The development packet is historical evidence,
+not an additional numerical acceptance claim.
+
+This proves fixed-policy raw arithmetic only. Evolving policies,
 sampled learning/clipping, sparse/paged State lifetimes, independent quality,
 eleven-card admission and realistic heads-up NLHE remain unresolved. The next
 architectural gate must address repeated full-policy setup and storage instead
