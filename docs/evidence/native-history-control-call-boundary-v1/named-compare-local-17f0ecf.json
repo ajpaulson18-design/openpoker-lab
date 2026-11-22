@@ -1,0 +1,12 @@
+{
+  "archive": "named-compare-local-17f0ecf.zip",
+  "archive_bytes": 405753,
+  "archive_sha256": "731c690bceeb7480f87df732865b469396d574107f0ea0dcf9a7ca2c4b73969b",
+  "format": "native-history-named-compare-local-bundle-v1",
+  "manifest": "manifest.json",
+  "manifest_sha256": "6e4f9a36fb3e85f5277678559778df518cbdd724ee4419bdf7d8cf3da90b0d78",
+  "retained_baseline_match": true,
+  "source_commit": "17f0ecf9f932e46cc960870b23de4fc6c4eb5939",
+  "stdout_bytes": 600954,
+  "stdout_sha256": "74de3b1babcd916b152b15a60fe6373d5595fd420b71dc8db377a28a82b8e5ec"
+}

@@ -1,0 +1,55 @@
+{
+  "format": "native-history-msvc-phase-diagnostic-record-v1",
+  "artifact": "history-msvc1452-phase-diagnostic-14731366057.zip",
+  "artifact_bytes": 2672267,
+  "artifact_sha256": "06b27dc19778f8af7d627933b2aa965079c48d3cd0d305167769522a7f012f01",
+  "workflow_run_id": 44964469183,
+  "job_id": 137030266672,
+  "artifact_id": 14731366057,
+  "head": "ed11a2a126272e8b962bf095788e80a8d6b36bb7",
+  "source_snapshot_sha256": "ec92e92afe00fa15c100c4bfcbeceeb47a4ab9515c9147ca4ae572bb5a9c7274",
+  "compiler_version": "MSVC 19.52.37029 x64, toolset 14.52.37025",
+  "compiler_sha256": "87b094e4fb3c646247b8eb515b5daa4fd73f991fe7cc42e98c0c9e3d3805d6fb",
+  "phases": [
+    {
+      "phase": "syntax-only",
+      "returncode_decimal": 3221225725,
+      "returncode_hex": "0xc00000fd",
+      "actual_exit_observed": true,
+      "duration_seconds": 9.077999999999975,
+      "source_closure_unchanged": true,
+      "compiler_unchanged": true,
+      "stdout_sha256": "cf8487652b48b265388a1c227593efbc4bd8704cadaeb965197a940403b1fce4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 37,
+      "stderr_bytes": 0
+    },
+    {
+      "phase": "compile-o2",
+      "returncode_decimal": 3221225725,
+      "returncode_hex": "0xc00000fd",
+      "actual_exit_observed": true,
+      "duration_seconds": 4.3279999999999745,
+      "source_closure_unchanged": true,
+      "compiler_unchanged": true,
+      "stdout_sha256": "cf8487652b48b265388a1c227593efbc4bd8704cadaeb965197a940403b1fce4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 37,
+      "stderr_bytes": 0
+    },
+    {
+      "phase": "compile-od",
+      "returncode_decimal": 3221225725,
+      "returncode_hex": "0xc00000fd",
+      "actual_exit_observed": true,
+      "duration_seconds": 4.328000000000031,
+      "source_closure_unchanged": true,
+      "compiler_unchanged": true,
+      "stdout_sha256": "cf8487652b48b265388a1c227593efbc4bd8704cadaeb965197a940403b1fce4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 37,
+      "stderr_bytes": 0
+    }
+  ],
+  "interpretation": "All three phases exited 0xc00000fd with unchanged source/compiler hashes. This falsifies the optimizer-only/noinline explanation; it does not establish the actual failure cause."
+}

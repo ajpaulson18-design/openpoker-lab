@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string_view>
 #include <type_traits>
+#include <span>
 
 namespace h=openpoker::virtual_dyadic_history;
 namespace c=openpoker::full_deck_public_chance;
@@ -26,6 +27,36 @@ b::Config configuration() {
 template<class F> void rejected(std::string_view label,F&& attempt) {
     try {attempt();} catch(const h::Error&) {std::cout<<"REJECT "<<label<<'\n';return;}
     throw std::runtime_error("expected compact history rejection");
+}
+void compare_visits(const b::Template& source,h::History& visited,
+                    std::span<const std::uint8_t> board,h::History::Cursor cursor) {
+    const auto id=visited.source_node(cursor);
+    const auto visible=visited.visible_size(cursor);
+    const auto& node=source.nodes().at(id);
+    const auto before=visited.receipt().work;
+    std::size_t key=0;
+    const auto active=visited.enter_visit(cursor,id,visible,key);
+    if (visited.receipt().work-before!=8 ||
+        key!=(node.state.phase==b::Phase::decision?visited.ordinal(cursor):0))
+        throw std::runtime_error("visit entry work or ordinal differs");
+    if (node.state.phase==b::Phase::reveal) {
+        const std::span<const std::uint8_t> prefix(board.data(),node.state.next_street);
+        const auto legacy=visited.append_reveal(cursor,prefix);
+        const auto edge_work=visited.receipt().work;
+        const auto next=visited.visit_reveal(active,prefix);
+        if (visited.receipt().work-edge_work!=48 ||
+            visited.ordinal(legacy)!=visited.ordinal(next))
+            throw std::runtime_error("visit reveal work or ordinal differs");
+        compare_visits(source,visited,board,next);
+    } else for (std::size_t j=0;j<node.edges.size();++j) {
+        const auto legacy=visited.append_action(cursor,j);
+        const auto edge_work=visited.receipt().work;
+        const auto next=visited.visit_action(active,j);
+        if (visited.receipt().work-edge_work!=16 ||
+            visited.ordinal(legacy)!=visited.ordinal(next))
+            throw std::runtime_error("visit action work or ordinal differs");
+        compare_visits(source,visited,board,next);
+    }
 }
 }
 int main() {
@@ -51,36 +82,7 @@ int main() {
         {
             h::History visited(source,physical);
             for (const auto& board:boards) {
-                const auto compare=[&](auto&& self,auto cursor)->void {
-                    const auto id=visited.source_node(cursor);
-                    const auto visible=visited.visible_size(cursor);
-                    const auto& node=source.nodes().at(id);
-                    const auto before=visited.receipt().work;
-                    std::size_t key=0;
-                    const auto active=visited.enter_visit(cursor,id,visible,key);
-                    if (visited.receipt().work-before!=8 ||
-                        key!=(node.state.phase==b::Phase::decision?visited.ordinal(cursor):0))
-                        throw std::runtime_error("visit entry work or ordinal differs");
-                    if (node.state.phase==b::Phase::reveal) {
-                        const std::span<const std::uint8_t> prefix(board.data(),node.state.next_street);
-                        const auto legacy=visited.append_reveal(cursor,prefix);
-                        const auto edge_work=visited.receipt().work;
-                        const auto next=visited.visit_reveal(active,prefix);
-                        if (visited.receipt().work-edge_work!=48 ||
-                            visited.ordinal(legacy)!=visited.ordinal(next))
-                            throw std::runtime_error("visit reveal work or ordinal differs");
-                        self(self,next);
-                    } else for (std::size_t j=0;j<node.edges.size();++j) {
-                        const auto legacy=visited.append_action(cursor,j);
-                        const auto edge_work=visited.receipt().work;
-                        const auto next=visited.visit_action(active,j);
-                        if (visited.receipt().work-edge_work!=16 ||
-                            visited.ordinal(legacy)!=visited.ordinal(next))
-                            throw std::runtime_error("visit action work or ordinal differs");
-                        self(self,next);
-                    }
-                };
-                compare(compare,visited.root());
+                compare_visits(source,visited,std::span<const std::uint8_t>(board),visited.root());
             }
             const auto check_reject=[](auto&& call) {
                 try { call(); } catch (const h::Error&) { return; }
