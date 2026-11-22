@@ -1,0 +1,7 @@
+{
+  "bytes": 319951,
+  "sha256": "1d6e5c35ff7377a00a895fe4089fccbec1f6318c061fc3560b8599ecb9c7e2fb",
+  "members": 29,
+  "scope": "whitespace-only compiler portability bridge; no new timing acceptance",
+  "canonical_streams": "31488c428c628b90d0055050774551a1cb92b98fbd7a004319229b803ab65d14"
+}

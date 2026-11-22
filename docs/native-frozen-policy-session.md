@@ -121,6 +121,40 @@ training-throughput, allocator/RSS, unrestricted-game or universal speed claim.
 The two baseline children have separate existing request budgets; their sum
 is not presented as one admission. The session has one cumulative admission.
 
+## Immutable evidence and portability
+
+The [packet manifest](../benchmarks/results/native-frozen-policy-session-v1/manifest.json)
+pins separate normal, optimized and benchmark archives, plus both superseded
+development captures. Each archive stays within the existing 8 MiB compressed
+and 80 MiB expanded reader limits. The benchmark archive is 8,339,732 bytes;
+no archive limit was increased. Both
+[normal](../benchmarks/results/native-frozen-policy-session-v1/archive-replay-normal.json)
+and [optimized](../benchmarks/results/native-frozen-policy-session-v1/archive-replay-optimized.json)
+maintained packet replays pass: every policy/raw row and all 27 timing-child
+streams and durations are checked/recounted with zero candidate calls.
+`python -B -m scripts.replay_native_policy_session_packet` authenticates current
+bootstrap/helper source before project imports and uses a fresh empty bytecode
+cache prefix. Archived source and executables are evidence only.
+
+At source `392cc8bc1ba74c808dfd134ef032dde17d1a8a69`, dedicated Windows,
+Linux and sanitizer jobs pass both full conformance modes and saved-file replay.
+Windows/Linux immutable packet jobs also pass both modes. The
+[job and step receipt](../benchmarks/results/native-frozen-policy-session-v1/ci-392cc8b.json)
+records these separately from the broader Windows History-control compiler
+failure; this is not a claim that all repository checks pass.
+
+The first Linux/sanitizer builds rejected one misleadingly laid-out footer
+loop/check line under the existing warnings-as-errors configuration. Original
+[failure artifacts and whitespace-only source comparison](../benchmarks/results/native-frozen-policy-session-v1/portability-repair.json)
+are preserved. Splitting the statements changes no tokens or checks.
+The repaired local executable has identical `.text`, `.data`, `.pdata`,
+`.fptable` and `.reloc` sections; `.rdata` differs, so this is not full binary
+reproducibility. All nineteen stdout/stderr pairs match the canonical normal
+matrix exactly. The bounded [portability regression record](../benchmarks/results/native-frozen-policy-session-v1/portability-regression.json)
+references those already preserved canonical streams and retains the new
+binary/build/exit evidence. Historical timing acceptance remains pinned to
+its measured source rather than being silently relabeled.
+
 ## Next architectural gate
 
 The scoped amortization measurement justifies continuing beyond cold import.
