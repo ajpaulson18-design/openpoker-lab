@@ -35,8 +35,8 @@ inline c::Limits catalog_limits() {
     c::Limits l;
     l.max_public_blocks=1060;l.max_information_rows_seen=1060;l.max_action_slots_seen=2564;
     l.max_menus=434;l.max_holding_count=2;l.max_lookups=7950;
-    l.max_work=c::work_forecast(l);
-    l.max_metadata_entries=c::metadata_word_forecast(l);
+    l.max_work=c::Catalog::work_forecast(l);
+    l.max_metadata_entries=c::Catalog::metadata_word_forecast(l);
     l.max_metadata_payload_bits=64*l.max_metadata_entries;
     return l;
 }
