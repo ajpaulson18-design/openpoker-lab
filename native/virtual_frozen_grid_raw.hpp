@@ -49,10 +49,11 @@ struct Result {
     std::size_t peak_bits=0;
 };
 
-class Walk final {
+template<class PolicyOwner>
+class BasicWalk final {
     const b::Template& source_;
     h::History& history_;
-    s::State& state_;
+    PolicyOwner& state_;
     t::prepared::PreparedPublicChance& chance_;
     const p::Geometry& geometry_;
     const p::Forecast& forecast_;
@@ -106,7 +107,8 @@ class Walk final {
         }
         return output;
     }
-    Row average_row(const s::FrozenPolicyView& view,std::size_t holding,std::size_t street,const Reach& own) {
+    template<class PolicyView>
+    Row average_row(const PolicyView& view,std::size_t holding,std::size_t street,const Reach& own) {
         const auto count=view.row.actions.size();const auto k=t::street_index(street);const auto q=law_.prefix[k];
         t::require(own.exponent<=312 && own.numerators[holding]>=0,"raw average own reach");
         ledger_.charge(Family::average,64+t::mul_cost(5,14)+t::mul_cost(313,19)+t::copy_cost(381)+t::copy_cost(383));
@@ -187,12 +189,16 @@ class Walk final {
         return mixed;
     }
 public:
-    Walk(const b::Template& source,h::History& history,s::State& state,t::prepared::PreparedPublicChance& chance,
+    BasicWalk(const b::Template& source,h::History& history,PolicyOwner& state,t::prepared::PreparedPublicChance& chance,
          const p::Geometry& geometry,const p::Forecast& forecast,std::array<std::uint8_t,5> board,proposal::ProposalKind law)
       :source_(source),history_(history),state_(state),chance_(chance),geometry_(geometry),forecast_(forecast),board_(board),
        law_(proposal::proposal_for(t::chance::DeckDefinition::reduced(t::deck_cards),board,law)),ledger_(forecast) {
         t::require(forecast.feasible && geometry.mix_route==11 && geometry.route==12 && geometry.depth==std::array<std::size_t,2>{6,7},"raw fixed route admission");
-        t::require(state.frozen_policy_receipt().ready && state.regrets().empty() && state.averages().empty(),"raw update needs immutable policy-only State");
+        if constexpr(std::is_same_v<PolicyOwner,s::State>) {
+            t::require(state.frozen_policy_receipt().ready && state.regrets().empty() && state.averages().empty(),"raw update needs immutable policy-only State");
+        } else {
+            t::require(state.raw_policy_ready(),"raw update needs a leased immutable policy epoch");
+        }
         result_.rows.reserve(static_cast<std::size_t>(forecast.rows));
         ledger_.charge(Family::stage,512);
         result_.denominator=Integer(580)*law_.board.numerator;result_.denominator<<=625;check(result_.denominator,638);
@@ -213,4 +219,7 @@ public:
     [[nodiscard]] const Ledger& ledger() const noexcept {return ledger_;}
     [[nodiscard]] bool complete() const noexcept {return complete_;}
 };
+// The existing imported-State path keeps its exact implementation and ledger.
+// Other providers must own immutable views for the entire raw-walk lifetime.
+using Walk=BasicWalk<s::State>;
 } // namespace openpoker::virtual_frozen_grid_raw
