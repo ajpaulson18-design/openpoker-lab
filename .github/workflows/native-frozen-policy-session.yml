@@ -58,6 +58,7 @@ jobs:
           path: |
             ${{ runner.temp }}/policy-session-build/build.log
             ${{ runner.temp }}/policy-session-build/build-failure.json
+            ${{ runner.temp }}/policy-session-build/compiler-version.log
             ${{ runner.temp }}/policy-session-build/native-exact-build-manifest.json
             ${{ runner.temp }}/policy-session-build/native-virtual-frozen-policy-session*
             ${{ runner.temp }}/policy-session-normal/**

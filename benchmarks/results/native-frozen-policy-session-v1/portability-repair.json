@@ -1,0 +1,17 @@
+{
+  "scope": "C++ whitespace-only footer layout repair; no tokens/checks/flags/caps changed",
+  "source_before": "5aae3f8",
+  "old_git_bytes_sha256": "247778575f2231bfe30273d3b64f54444b4a877285593597cd31f82b41dea918",
+  "new_worktree_bytes_sha256": "2728313a8cc607468dd34678ba8424d08ad42205532aa8654917977dae55b713",
+  "non_whitespace_sha256": "30c9a3a97f7645ada1d350993e3194100aa5222422faf001309ffeed0ac4b1e8",
+  "failures": [
+    {
+      "file": "linux-first-build-failure.zip",
+      "sha256": "f8a66eda3ab96f33a4768e04868869fad0a39926d99b35a9ae3513237a801187"
+    },
+    {
+      "file": "sanitized-first-build-failure.zip",
+      "sha256": "01123667ca1c50c98e44cb94bf31f39b31ffa032b737bb94b29540465cd8f973"
+    }
+  ]
+}

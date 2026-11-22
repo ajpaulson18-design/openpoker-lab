@@ -138,7 +138,9 @@ int run(const std::filesystem::path& path,const std::array<session::Selector,2>&
         history.receipt().work,chance.receipt().modeled_work,parent,input.used(),f.output,peak,
         chance.receipt().rank_calls,chance.receipt().completed_contractions,0,0,0,policy.imported_rows,policy.read_calls,
         4420,4156,260,4,1};
-    for(const auto value:footer)output.word(value);t::require(output.written()==f.output,"session wire byte census");return 0;
+    for(const auto value:footer)output.word(value);
+    t::require(output.written()==f.output,"session wire byte census");
+    return 0;
 }
 }
 int main(int argc,char** argv) {
