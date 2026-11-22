@@ -140,6 +140,9 @@ def read_archive(name,pin,manifest):
 
 
 def verify_git_closure(files,prefix,closure):
+    # Preserve the two previously authenticated mixed-newline header pairs;
+    # this is an exact raw-digest/blob exception, not source normalization.
+    from scripts.replay_native_frozen_policy_state import HISTORICAL_MIXED
     head=closure['head'];expected=closure['files']
     require(len(expected)==closure['file_count']<=128,'source closure count')
     git_tree={}
@@ -155,7 +158,8 @@ def verify_git_closure(files,prefix,closure):
         require(len(body)==row['bytes'] and digest(body)==row['sha256'] and
                 git_tree.get(name)==row['blob'],'captured source raw/blob identity mismatch: '+name)
         canonical=git('show',head+':'+name)
-        require(body==canonical or (b'\r' not in canonical and body==canonical.replace(b'\n',b'\r\n')),
+        require(body==canonical or (b'\r' not in canonical and body==canonical.replace(b'\n',b'\r\n')) or
+                HISTORICAL_MIXED.get(name)==(digest(body),git_tree[name]),
                 'captured source bytes differ from pinned committed source: '+name)
     require(total==closure['bytes'] and total<=MAX_SOURCE_TOTAL,'source closure byte total')
     return seen
