@@ -60,7 +60,7 @@ def git(*args):
 
 
 def git_file(head,name,limit=MAX_SOURCE_FILE):
-    size_raw=git('cat-file','-s',head+':'+name)
+    size_raw=git('cat-file','-s',head+':'+name).strip()
     require(size_raw.isdigit() and int(size_raw)<=limit,'committed source file byte ceiling: '+name)
     body=git('show',head+':'+name)
     require(len(body)==int(size_raw),'committed source file changed while reading: '+name)
