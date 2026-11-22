@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string_view>
 #include <type_traits>
-#include <utility>
+#include <span>
 
 namespace h=openpoker::virtual_dyadic_history;
 namespace c=openpoker::full_deck_public_chance;
@@ -14,22 +14,6 @@ static_assert(!std::is_copy_constructible_v<h::History> && !std::is_copy_assigna
 static_assert(!std::is_move_constructible_v<h::History> && !std::is_move_assignable_v<h::History>);
 static_assert(sizeof(h::History::Cursor)<=48,"cached board identity must retain the bounded cursor footprint");
 namespace {
-#if defined(_MSC_VER)
-#define HISTORY_CONTROL_NOINLINE __declspec(noinline)
-#elif defined(__clang__) || defined(__GNUC__)
-#define HISTORY_CONTROL_NOINLINE __attribute__((noinline))
-#else
-#define HISTORY_CONTROL_NOINLINE
-#endif
-
-// Recursive call boundaries are a compiler-expansion mitigation hypothesis
-// after MSVC 14.52 returned 0xc00000fd; the cause is not proven. This wrapper
-// changes neither fixture traversal nor its checks, wire, or accounting.
-template<class F,class... Args>
-HISTORY_CONTROL_NOINLINE decltype(auto) recursive_call(F&& function,Args&&... args) {
-    return std::invoke(std::forward<F>(function),std::forward<Args>(args)...);
-}
-
 constexpr std::array<std::uint8_t,9> deck{16,17,24,32,33,35,37,43,48};
 constexpr std::array<std::array<std::uint8_t,5>,5> boards{{
     {16,17,24,32,33},{16,17,24,32,35},{16,17,24,33,32},
@@ -43,6 +27,36 @@ b::Config configuration() {
 template<class F> void rejected(std::string_view label,F&& attempt) {
     try {attempt();} catch(const h::Error&) {std::cout<<"REJECT "<<label<<'\n';return;}
     throw std::runtime_error("expected compact history rejection");
+}
+void compare_visits(const b::Template& source,h::History& visited,
+                    std::span<const std::uint8_t> board,h::History::Cursor cursor) {
+    const auto id=visited.source_node(cursor);
+    const auto visible=visited.visible_size(cursor);
+    const auto& node=source.nodes().at(id);
+    const auto before=visited.receipt().work;
+    std::size_t key=0;
+    const auto active=visited.enter_visit(cursor,id,visible,key);
+    if (visited.receipt().work-before!=8 ||
+        key!=(node.state.phase==b::Phase::decision?visited.ordinal(cursor):0))
+        throw std::runtime_error("visit entry work or ordinal differs");
+    if (node.state.phase==b::Phase::reveal) {
+        const std::span<const std::uint8_t> prefix(board.data(),node.state.next_street);
+        const auto legacy=visited.append_reveal(cursor,prefix);
+        const auto edge_work=visited.receipt().work;
+        const auto next=visited.visit_reveal(active,prefix);
+        if (visited.receipt().work-edge_work!=48 ||
+            visited.ordinal(legacy)!=visited.ordinal(next))
+            throw std::runtime_error("visit reveal work or ordinal differs");
+        compare_visits(source,visited,board,next);
+    } else for (std::size_t j=0;j<node.edges.size();++j) {
+        const auto legacy=visited.append_action(cursor,j);
+        const auto edge_work=visited.receipt().work;
+        const auto next=visited.visit_action(active,j);
+        if (visited.receipt().work-edge_work!=16 ||
+            visited.ordinal(legacy)!=visited.ordinal(next))
+            throw std::runtime_error("visit action work or ordinal differs");
+        compare_visits(source,visited,board,next);
+    }
 }
 }
 int main() {
@@ -68,36 +82,7 @@ int main() {
         {
             h::History visited(source,physical);
             for (const auto& board:boards) {
-                const auto compare=[&](auto&& self,auto cursor)->void {
-                    const auto id=visited.source_node(cursor);
-                    const auto visible=visited.visible_size(cursor);
-                    const auto& node=source.nodes().at(id);
-                    const auto before=visited.receipt().work;
-                    std::size_t key=0;
-                    const auto active=visited.enter_visit(cursor,id,visible,key);
-                    if (visited.receipt().work-before!=8 ||
-                        key!=(node.state.phase==b::Phase::decision?visited.ordinal(cursor):0))
-                        throw std::runtime_error("visit entry work or ordinal differs");
-                    if (node.state.phase==b::Phase::reveal) {
-                        const std::span<const std::uint8_t> prefix(board.data(),node.state.next_street);
-                        const auto legacy=visited.append_reveal(cursor,prefix);
-                        const auto edge_work=visited.receipt().work;
-                        const auto next=visited.visit_reveal(active,prefix);
-                        if (visited.receipt().work-edge_work!=48 ||
-                            visited.ordinal(legacy)!=visited.ordinal(next))
-                            throw std::runtime_error("visit reveal work or ordinal differs");
-                        recursive_call(self,self,next);
-                    } else for (std::size_t j=0;j<node.edges.size();++j) {
-                        const auto legacy=visited.append_action(cursor,j);
-                        const auto edge_work=visited.receipt().work;
-                        const auto next=visited.visit_action(active,j);
-                        if (visited.receipt().work-edge_work!=16 ||
-                            visited.ordinal(legacy)!=visited.ordinal(next))
-                            throw std::runtime_error("visit action work or ordinal differs");
-                        recursive_call(self,self,next);
-                    }
-                };
-                recursive_call(compare,compare,visited.root());
+                compare_visits(source,visited,std::span<const std::uint8_t>(board),visited.root());
             }
             const auto check_reject=[](auto&& call) {
                 try { call(); } catch (const h::Error&) { return; }
@@ -129,13 +114,12 @@ int main() {
                 for (const auto& token:tokens) std::cout<<' '<<token;
                 std::cout<<'\n';
                 if (node.state.phase==b::Phase::reveal) {
-                    recursive_call(walk,history.append_reveal(cursor,{board.data(),node.state.next_street}));
+                    walk(history.append_reveal(cursor,{board.data(),node.state.next_street}));
                 } else {
-                    for (std::size_t j=0;j<node.edges.size();++j)
-                        recursive_call(walk,history.append_action(cursor,j));
+                    for (std::size_t j=0;j<node.edges.size();++j) walk(history.append_action(cursor,j));
                 }
             };
-            recursive_call(walk,history.root());
+            walk(history.root());
         }
         const auto& rec=history.receipt();
         std::cout<<"RECEIPT "<<rec.work<<' '<<rec.nodes<<' '<<rec.entries<<' '<<rec.owned_bytes
@@ -168,7 +152,7 @@ int main() {
                     previous=actual;have_previous=true;++checked;
                     for (std::size_t j=0;j<node.edges.size();++j) {
                         auto next=expected;next.push_back(static_cast<std::uint8_t>(1+j));
-                        recursive_call(check,ordered.append_action(cursor,j),std::move(next),selected);
+                        check(ordered.append_action(cursor,j),std::move(next),selected);
                     }
                 } else if (node.state.phase==b::Phase::reveal) {
                     const auto prior=ordered.visible_size(cursor);
@@ -183,14 +167,13 @@ int main() {
                                std::equal(boards[chosen].begin(),boards[chosen].begin()+next,boards[selected[end]].begin())) ++end;
                         auto path=expected;
                         for (auto k=prior;k<next;++k) path.push_back(static_cast<std::uint8_t>(1+boards[chosen][k]));
-                        recursive_call(check,ordered.append_reveal(cursor,{boards[chosen].data(),next}),std::move(path),
-                                       std::vector<std::size_t>(selected.begin()+i,selected.begin()+end));
+                        check(ordered.append_reveal(cursor,{boards[chosen].data(),next}),std::move(path),
+                              std::vector<std::size_t>(selected.begin()+i,selected.begin()+end));
                         i=end;
                     }
                 }
             };
-            recursive_call(check,ordered.root(),std::vector<std::uint8_t>{},
-                           std::vector<std::size_t>{0,1,2,3,4});
+            check(ordered.root(),{}, {0,1,2,3,4});
             if (checked<1000) throw std::runtime_error("decision path coverage incomplete");
         }
         rejected("raised_work",[&]{h::Limits l;l.work=500000001;h::History x(source,physical,l);});
@@ -217,11 +200,11 @@ int main() {
                     if (child_node.state.phase==b::Phase::reveal) return child;
                     // Search only nonterminal children. The fixed first viable
                     // branch reaches flop before any later-street reveal.
-                    if (child_node.state.phase==b::Phase::decision) return recursive_call(seek,child);
+                    if (child_node.state.phase==b::Phase::decision) return seek(child);
                 }
                 throw std::runtime_error("no fixture reveal found");
             };
-            return recursive_call(seek,owner.root());
+            return seek(owner.root());
         };
         const auto later_reveal=[&](h::History& owner,h::History::Cursor start,std::size_t street) {
             bool matched=false;
@@ -230,12 +213,12 @@ int main() {
                 if (node.state.phase==b::Phase::reveal && node.state.next_street==street) {matched=true;return cursor;}
                 if (node.state.phase!=b::Phase::decision) return {};
                 for (std::size_t j=0;j<node.edges.size();++j) {
-                    auto found=recursive_call(seek,owner.append_action(cursor,j));
+                    auto found=seek(owner.append_action(cursor,j));
                     if (matched) return found;
                 }
                 return {};
             };
-            auto result=recursive_call(seek,start);
+            auto result=seek(start);
             if (!matched) throw std::runtime_error("fixture later reveal missing");
             return result;
         };
