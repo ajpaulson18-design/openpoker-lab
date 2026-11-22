@@ -232,6 +232,7 @@ private:
     Receipt receipt_{};
     std::uint64_t generation_ = 0;
     std::size_t committed_epochs_ = 0;
+    std::size_t last_exported_epoch_ = 0;
     std::size_t epoch_stage_rows_ = 0;
     std::size_t epoch_stage_slots_ = 0;
     std::size_t current_payload_bits_ = 0;
@@ -494,13 +495,13 @@ public:
     [[nodiscard]] std::size_t committed_epochs() const noexcept { return committed_epochs_; }
     [[nodiscard]] bool failed() const noexcept { return poisoned_ || catalog_->failed() || quantizer_.failed(); }
     [[nodiscard]] bool raw_policy_ready() const noexcept { return active_ && !failed(); }
-    // One read-only export after each commit. Spans are callback-scoped; the
+    // Optional read-only export, at most once per committed epoch. Spans are callback-scoped; the
     // callback cost is owned by its caller and must be metered there.
     template<class Callback>
     void visit_committed(Callback&& callback) {
         healthy();
         if (active_ || visitor_active_ || pending_ready_ || !committed_epochs_ ||
-            receipt_.export_calls + 1 != committed_epochs_)
+            last_exported_epoch_ >= committed_epochs_)
             reject(ErrorKind::active_lease, "sparse committed image export is out of phase");
         const auto rows = current_.size();
         const auto slots = current_slots_;
@@ -510,6 +511,7 @@ public:
         const auto work = 128 + rows * 256 + slots * (copy_cost(649) + copy_cost(382) + 8);
         charge(work);
         ++receipt_.export_calls;
+        last_exported_epoch_ = committed_epochs_;
         receipt_.export_rows += rows;
         receipt_.export_slots += slots;
         visitor_active_ = true;
@@ -525,8 +527,7 @@ public:
         if (law != ProposalLaw::uniform_public)
             reject(ErrorKind::invalid_limits, "sparse epoch accepts the uniform proposal only");
         if (active_ || visitor_active_) reject(ErrorKind::active_lease, "one sparse epoch owner operation is already active");
-        if (committed_epochs_ >= epoch_limit || pending_ready_ ||
-            receipt_.export_calls != committed_epochs_)
+        if (committed_epochs_ >= epoch_limit || pending_ready_)
             reject(ErrorKind::epoch_limit, "sparse strategy epoch transition unavailable");
         charge(128);
         if (++generation_ == 0) reject(ErrorKind::lease_generation, "sparse epoch generation exhausted");
@@ -538,12 +539,13 @@ public:
     void commit() { healthy(); if (active_ || visitor_active_) reject(ErrorKind::active_lease, "cannot commit while sparse epoch owner is active"); commit_impl(); }
 private:
     friend class EpochLease;
-    void check_epoch(const EpochLease& lease) {
-        healthy();
-        if (!lease.live_ || lease.owner_ != this || !active_ || lease.generation_ != generation_)
-            reject(ErrorKind::lease_generation, "stale or foreign sparse epoch lease");
-    }
 };
+
+inline void Store::check_epoch(const EpochLease& lease) {
+    healthy();
+    if (!lease.live_ || lease.owner_ != this || !active_ || lease.generation_ != generation_)
+        reject(ErrorKind::lease_generation, "stale or foreign sparse epoch lease");
+}
 
 inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integer> raw_regrets,
                               std::span<const Integer> raw_averages, const Integer& raw_average_denominator,

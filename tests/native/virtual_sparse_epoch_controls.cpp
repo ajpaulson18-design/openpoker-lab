@@ -88,6 +88,14 @@ void controls() {
             "average-only stage quantized an unchanged regret row");
     std::cout<<"CONTROL average-only-no-quantization PASS\n";
 
+    Fixture optional_export;
+    step(optional_export,{5,-3,0,-2},{1,2,3,4},e::Integer(29)<<52,uniform);
+    step(optional_export,{-7,4,2,-1},{7,0,9,0},e::average_denominator,{e::grid,0,0,0});
+    require(optional_export.store.receipt().export_calls==0,"sparse transition required an image export");
+    observe("no-intermediate-export-E2",optional_export);
+    require(optional_export.store.receipt().export_calls==1,"optional final export count");
+    std::cout<<"CONTROL no-intermediate-export PASS\n";
+
     Fixture active;
     {
         auto lease=active.store.begin_epoch(e::ProposalLaw::uniform_public);

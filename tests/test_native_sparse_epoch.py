@@ -67,7 +67,7 @@ class NativeSparseEpochTests(unittest.TestCase):
             self.assertEqual(len(values),3*count)
             values=list(map(int,values))
             result[label]=(values[::3],values[1::3],values[2::3])
-        self.assertEqual(set(result),{'signed-E1','signed-E2','averages-E1','averages-E2'})
+        self.assertEqual(set(result),{'signed-E1','signed-E2','averages-E1','averages-E2','no-intermediate-export-E2'})
         return result
 
     def test_observed_process_and_rejected_lifecycle(self):
@@ -85,6 +85,8 @@ class NativeSparseEpochTests(unittest.TestCase):
         self.assertEqual(rows['signed-E2'][2],allocation(second)[0])
         clipped=[max(0,a)+b for a,b in zip(first,[-7,4,2,-1])]
         self.assertNotEqual(rows['signed-E2'][2],allocation(clipped)[0])
+        self.assertEqual(rows['no-intermediate-export-E2'],rows['signed-E2'])
+        self.assertIn('CONTROL no-intermediate-export PASS',self.lines)
 
     def test_exact_average_scales_and_no_quantization_for_average_only_updates(self):
         rows=self.rows();factor=20<<312
