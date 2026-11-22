@@ -11,7 +11,7 @@ PACKET = ROOT / 'benchmarks/results/sparse-two-epoch-v1'
 PINS = {
     'normal': ('0f8fb2ebc6a707346996ee7bf9ba73799ba5873c2961e4821bc4969c3fd4d269', 1017982, 146),
     'optimized': ('7250a203c4946f969f70df2e039808044fcdd3171737db988227d9ee211dc1d5', 1017991, 146),
-    'development': ('025cb20f121e009db2bf049987147d28f7c3651b09e7029dbcb91c1a1a8a1c0d', 671057, 35),
+    'development': ('025cb20f121e009bf2bf049987147d28f7c3651b09e7029dbcb91c1a1a8a1c0d', 671057, 35),
 }
 MANIFEST_SHA = '000cd25bded51cf9bccb66a13fed6405b5bd69d3084baaeb551d110b2a7e0b02'
 BOOTSTRAP = ('scripts/replay_sparse_two_epoch_packet.py', 'scripts/replay_sparse_two_epoch.py',
@@ -56,6 +56,14 @@ def replay_packets():
             require(manifest['matrix_source_capture_head'] == '41ae6727523abec3044bd32ae93b321d8d2b5bed' and
                     manifest['candidate_build_commit'] == 'b4240aa3f0797426e28f18342e47fb3f864a8f98',
                     'sparse whole captured source pins')
+            for name, (digest, size, count) in PINS.items():
+                record = manifest['archives'][name + '.zip']
+                require(len(digest) == 64 and all(c in '0123456789abcdef' for c in digest) and
+                        (record['sha256'], record['bytes'], record['member_count']) == (digest, size, count),
+                        'sparse whole manifest/archive pin agreement')
+                body = bounded(PACKET / (name + '.zip'), 8 << 20)
+                require(len(body) == size and sha256(body).hexdigest() == digest,
+                        'sparse whole archive bytes before numerical replay')
 
             def whole_case(directory):
                 native = bounded(directory / 'native-build-manifest.json', 1 << 20)
@@ -88,9 +96,6 @@ def replay_packets():
 
             results = {}
             for name, (digest, size, count) in PINS.items():
-                record = manifest['archives'][name + '.zip']
-                require((record['sha256'], record['bytes'], record['member_count']) == (digest, size, count),
-                        'sparse whole manifest/archive pin agreement')
                 development = name == 'development'
                 results[name] = replay_packet(packet=PACKET / (name + '.zip'), archive_sha=digest,
                                              archive_bytes=size, member_count=count,
