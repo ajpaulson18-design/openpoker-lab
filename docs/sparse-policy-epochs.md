@@ -170,8 +170,11 @@ execution; the logs are `../sparse-two-epoch-replay1-normal.log` and
 The first compile at `ef1601a` failed because two static Catalog methods were
 qualified at namespace scope. Its build failure and source remain preserved;
 the correction changes the method qualification. It was not a numerical test
-failure. Windows/Linux/sanitized CI and immutable whole-game packaging remain
-separate publication gates.
+failure. Dedicated Windows, Linux and sanitized epoch CI pass at source
+`8652d5d2c5f929f18ee363d40f7ec20a03748a6b`; the catalog packet also replays
+normally and optimized on both Windows and Linux. Immutable whole-game
+packaging remains a separate publication gate. The broader Windows History
+control compilation failure is preserved separately.
 
 The independent reference uses literal numeric betting rules, Fraction raw
 updates and an independent ranker. It may materialize the complete policy for

@@ -2,14 +2,20 @@
 
 ## Unified solver foundation in development
 
-The [sparse catalog and epoch reference](../sparse-policy-epochs.md) separate
+The [sparse catalog and policy epochs](../sparse-policy-epochs.md) separate
 full-history identity from numerical policy storage. The native catalog keeps
 encountered public blocks and declared seen holding indices; its local controls
 and the legacy State/complete-training regressions pass. The independent
 reference checks two signed vanilla-regret transitions and exact average
-scales. A native changing-policy store and its complete resource/quality gates
-remain unaccepted; generic holding indices do not imply realistic-range
-physical support or eleven-card admission.
+scales. The native Store now couples to the exact four-street walk for two
+selected uniform PROOF9 observations. Six normal/optimized requests agree with
+independent cumulative R/A, roots and all-row policy reconstruction; seven
+invalid requests reject without output. Source-frozen saved replay passes,
+and the complete request stays within existing modeled caps. Windows, Linux
+and sanitized epoch CI pass at `8652d5d`.
+Longer learning, sampling, quality and realistic-range resource gates remain
+open. Generic holding indices do not imply physical support or eleven-card
+admission.
 
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
