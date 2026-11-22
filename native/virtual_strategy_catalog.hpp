@@ -181,6 +181,10 @@ public:
     Catalog(const Catalog&)=delete; Catalog& operator=(const Catalog&)=delete;
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
     [[nodiscard]] bool failed() const noexcept { return failed_; }
+    [[nodiscard]] const Limits& admitted_limits() const noexcept { return limits_; }
+    [[nodiscard]] bool owns_identity(const History& owner,std::array<std::size_t,2> hands) const noexcept {
+        return history_owner_==&owner && hand_counts_==hands;
+    }
 
     RowId resolve(const History& history,History::Cursor cursor,std::size_t actor,
                   std::size_t holding,std::size_t hand_count,std::size_t source_menu_ref,
