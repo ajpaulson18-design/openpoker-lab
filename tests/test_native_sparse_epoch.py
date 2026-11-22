@@ -76,23 +76,25 @@ class NativeSparseEpochTests(unittest.TestCase):
         self.assertEqual((self.lines[0],self.lines[-1]),('VIRTUAL_SPARSE_EPOCH_COMPONENT_V1','END'))
         guards=[line.split()[1:] for line in self.lines if line.startswith('GUARD ')]
         self.assertEqual(guards,[[name,'PASS'] for name in ('third-epoch','commit-during-lease','weighted-law',
-            'incomplete-two-seat-read','duplicate-stage','nonmember-denominator','incomplete-stage-set')])
+            'incomplete-two-seat-read','duplicate-stage','nonmember-denominator','incomplete-stage-set',
+            'uncentered-regret','wrong-average-proportions')])
 
     def test_signed_regret_persists_and_next_policy_uses_positive_parts(self):
-        rows=self.rows();first=[5,-3,0,-2];second=[a+b for a,b in zip(first,[-7,4,2,-1])]
+        rows=self.rows();first=[5,-3,0,-2];second=[a+b for a,b in zip(first,[0,4,2,-1])]
         self.assertEqual(rows['signed-E1'][0],first);self.assertEqual(rows['signed-E2'][0],second)
         self.assertEqual(rows['signed-E1'][2],allocation(first)[0])
         self.assertEqual(rows['signed-E2'][2],allocation(second)[0])
-        clipped=[max(0,a)+b for a,b in zip(first,[-7,4,2,-1])]
+        clipped=[max(0,a)+b for a,b in zip(first,[0,4,2,-1])]
         self.assertNotEqual(rows['signed-E2'][2],allocation(clipped)[0])
         self.assertEqual(rows['no-intermediate-export-E2'],rows['signed-E2'])
         self.assertIn('CONTROL no-intermediate-export PASS',self.lines)
 
     def test_exact_average_scales_and_no_quantization_for_average_only_updates(self):
         rows=self.rows();factor=20<<312
-        first=[n*factor for n in (1,2,3,4)]
-        second=[a+b for a,b in zip(first,(7,0,9,0))]
-        for label,expected in (('signed-E1',first),('signed-E2',second),('averages-E1',first),('averages-E2',second)):
+        first=[(Q//4)*factor]*4
+        second=[a+b for a,b in zip(first,(7*Q,0,0,0))]
+        average_only=[a+7*(Q//4) for a in first]
+        for label,expected in (('signed-E1',first),('signed-E2',second),('averages-E1',first),('averages-E2',average_only)):
             self.assertEqual(rows[label][1],expected,label)
         for label in ('averages-E1','averages-E2'):
             self.assertEqual(rows[label][0],[0]*4);self.assertEqual(rows[label][2],[Q//4]*4)

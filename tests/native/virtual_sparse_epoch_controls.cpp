@@ -67,9 +67,9 @@ void controls() {
     std::cout<<"VIRTUAL_SPARSE_EPOCH_COMPONENT_V1\n";
     const std::array<std::uint64_t,4> uniform{e::grid/4,e::grid/4,e::grid/4,e::grid/4};
     Fixture fixture;
-    step(fixture,{5,-3,0,-2},{1,2,3,4},e::Integer(29)<<52,uniform);
+    step(fixture,{5,-3,0,-2},{e::grid/4,e::grid/4,e::grid/4,e::grid/4},e::Integer(29)<<52,uniform);
     observe("signed-E1",fixture);
-    step(fixture,{-7,4,2,-1},{7,0,9,0},e::average_denominator,{e::grid,0,0,0});
+    step(fixture,{0,4,2,-1},{7*e::grid,0,0,0},e::average_denominator,{e::grid,0,0,0});
     observe("signed-E2",fixture);
     const auto receipt=fixture.store.receipt();
     require(receipt.commits==2 && receipt.quantized_rows==2 && receipt.current_rows==1 && receipt.current_slots==4,
@@ -81,17 +81,17 @@ void controls() {
     rejected("third-epoch",[&]{(void)fixture.store.begin_epoch(e::ProposalLaw::uniform_public);});
 
     Fixture averages;
-    step(averages,{0,0,0,0},{1,2,3,4},e::Integer(29)<<52,uniform);
+    step(averages,{0,0,0,0},{e::grid/4,e::grid/4,e::grid/4,e::grid/4},e::Integer(29)<<52,uniform);
     observe("averages-E1",averages);
-    step(averages,{0,0,0,0},{7,0,9,0},e::average_denominator,uniform);
+    step(averages,{0,0,0,0},{7*e::grid/4,7*e::grid/4,7*e::grid/4,7*e::grid/4},e::average_denominator,uniform);
     observe("averages-E2",averages);
     require(averages.store.receipt().quantized_rows==0 && averages.store.receipt().quantizer_work==0,
             "average-only stage quantized an unchanged regret row");
     std::cout<<"CONTROL average-only-no-quantization PASS\n";
 
     Fixture optional_export;
-    step(optional_export,{5,-3,0,-2},{1,2,3,4},e::Integer(29)<<52,uniform);
-    step(optional_export,{-7,4,2,-1},{7,0,9,0},e::average_denominator,{e::grid,0,0,0});
+    step(optional_export,{5,-3,0,-2},{e::grid/4,e::grid/4,e::grid/4,e::grid/4},e::Integer(29)<<52,uniform);
+    step(optional_export,{0,4,2,-1},{7*e::grid,0,0,0},e::average_denominator,{e::grid,0,0,0});
     require(optional_export.store.receipt().export_calls==0,"sparse transition required an image export");
     observe("no-intermediate-export-E2",optional_export);
     require(optional_export.store.receipt().export_calls==1,"optional final export count");
@@ -116,7 +116,7 @@ void controls() {
         auto lease=duplicate.store.begin_epoch(e::ProposalLaw::uniform_public);
         const auto view=lease.frozen_policy(duplicate.history.root(),0,0);
         (void)lease.frozen_policy(duplicate.history.root(),0,0);lease.seal_raw_walk(1,4,2);
-        const std::array<e::Integer,4> r{5,-3,0,-2},a{1,2,3,4};
+        const std::array<e::Integer,4> r{5,-3,0,-2},a{e::grid/4,e::grid/4,e::grid/4,e::grid/4};
         lease.stage(view.id,r,a,e::Integer(29)<<52);
         rejected("duplicate-stage",[&]{lease.stage(view.id,r,a,e::Integer(29)<<52);});
     }
@@ -125,7 +125,7 @@ void controls() {
         auto lease=invalid.store.begin_epoch(e::ProposalLaw::uniform_public);
         const auto view=lease.frozen_policy(invalid.history.root(),0,0);
         (void)lease.frozen_policy(invalid.history.root(),0,0);lease.seal_raw_walk(1,4,2);
-        const std::array<e::Integer,4> r{5,-3,0,-2},a{1,2,3,4};
+        const std::array<e::Integer,4> r{5,-3,0,-2},a{e::grid/4,e::grid/4,e::grid/4,e::grid/4};
         rejected("nonmember-denominator",[&]{lease.stage(view.id,r,a,3);});
     }
     auto two_rows=epoch_limits();two_rows.max_rows_touched=4;two_rows.max_slots_touched=16;
@@ -138,12 +138,28 @@ void controls() {
         (void)lease.frozen_policy(omitted.history.root(),0,0);
         (void)lease.frozen_policy(omitted.history.root(),0,1);
         lease.seal_raw_walk(2,8,4);
-        const std::array<e::Integer,4> r{5,-3,0,-2},a{1,2,3,4};
+        const std::array<e::Integer,4> r{5,-3,0,-2},a{e::grid/4,e::grid/4,e::grid/4,e::grid/4};
         lease.stage(row0.id,r,a,e::Integer(29)<<52);
     }
     require(omitted.store.failed() && omitted.store.receipt().commits==0,
             "incomplete stage set changed the committed image");
     rejected("incomplete-stage-set",[&]{omitted.store.commit();});
+    Fixture bad_regret;
+    {
+        auto lease=bad_regret.store.begin_epoch(e::ProposalLaw::uniform_public);
+        const auto view=lease.frozen_policy(bad_regret.history.root(),0,0);
+        (void)lease.frozen_policy(bad_regret.history.root(),0,0);lease.seal_raw_walk(1,4,2);
+        const std::array<e::Integer,4> r{1,0,0,0},a{e::grid/4,e::grid/4,e::grid/4,e::grid/4};
+        rejected("uncentered-regret",[&]{lease.stage(view.id,r,a,e::Integer(29)<<52);});
+    }
+    Fixture bad_average;
+    {
+        auto lease=bad_average.store.begin_epoch(e::ProposalLaw::uniform_public);
+        const auto view=lease.frozen_policy(bad_average.history.root(),0,0);
+        (void)lease.frozen_policy(bad_average.history.root(),0,0);lease.seal_raw_walk(1,4,2);
+        const std::array<e::Integer,4> r{5,-3,0,-2},a{1,2,3,4};
+        rejected("wrong-average-proportions",[&]{lease.stage(view.id,r,a,e::Integer(29)<<52);});
+    }
     std::cout<<"END\n";
 }
 }

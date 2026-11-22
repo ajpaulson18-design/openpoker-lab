@@ -112,7 +112,9 @@ inline constexpr std::uint64_t multiply_cost(std::size_t a, std::size_t b) {
     return 2 + 2 * (words(a) + words(b)) + words(a) * words(b);
 }
 inline constexpr std::uint64_t stage_slot_work() {
-    return 48 + copy_cost(649) + add_cost(649) + multiply_cost(383, 317) + add_cost(382) + 64;
+    return 48 + copy_cost(649) + add_cost(649) + multiply_cost(383, 317) + add_cost(382) + 64 +
+        multiply_cost(648,53) + add_cost(703) + 2*multiply_cost(383,53) +
+        add_cost(383) + 2*copy_cost(436) + 32;
 }
 inline constexpr std::uint64_t row_map_work(std::size_t rows) {
     return 128 + 32 * std::bit_width(rows + 1);
@@ -248,7 +250,7 @@ private:
         const auto f = forecast(limits);
         if (f.work > limits.max_work) throw Error(ErrorKind::invalid_limits, "no work remains for quantizer owner");
         policy::Limits q;
-        q.work = limits.max_work - (f.work - f.quantizer_work);
+        q.work = f.quantizer_work;
         q.integer_bits = 704;
         q.entries = limits.max_entries;
         q.integer_payload_bits = limits.max_payload_bits;
@@ -560,6 +562,13 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
         if (!lease.raw_complete_ || committed_epochs_ >= epoch_limit || raw_regrets.empty() ||
             raw_regrets.size() != raw_averages.size() || raw_regrets.size() > action_limit)
             reject(ErrorKind::incomplete_walk, "sparse stage requires a complete walk and bounded row");
+        const auto actions=raw_regrets.size();
+        if (epoch_stage_rows_+1>limits_.max_stage_rows || epoch_stage_slots_+actions>limits_.max_stage_slots ||
+            receipt_.staged_rows+1>limits_.max_rows_touched || receipt_.staged_slots+actions>limits_.max_slots_touched)
+            reject(ErrorKind::resource_limit,"sparse stage row/slot limit exceeded before work");
+        charge((epoch_stage_rows_ == 0 ? 1'024 : 0) + 512 +
+            2 * row_map_work(limits_.max_stage_rows) +
+            2 * row_map_work(limits_.max_rows_touched) + stage_slot_work() * actions);
         const auto seen = lease.observed_.find(id);
         if (seen == lease.observed_.end() || seen->second.reads != 2 || seen->second.actions != raw_regrets.size())
             reject(ErrorKind::row_or_menu, "sparse stage row was not read in both target passes");
@@ -578,12 +587,6 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
         const Integer average_factor = Integer(average_denominator) / raw_average_denominator;
         if (magnitude_bits(average_factor) > 317)
             reject(ErrorKind::arithmetic, "sparse average scale bound");
-        const auto actions = raw_regrets.size();
-        if (epoch_stage_rows_ + 1 > limits_.max_stage_rows ||
-            epoch_stage_slots_ + actions > limits_.max_stage_slots ||
-            receipt_.staged_rows + 1 > limits_.max_rows_touched ||
-            receipt_.staged_slots + actions > limits_.max_slots_touched)
-            reject(ErrorKind::resource_limit, "sparse stage row/slot limit exceeded before allocation");
         const auto predicted_entries = current_.size() + pending_.size() + staged_ids_.size() +
             lease.observed_.size() + 2;
         const auto predicted_payload = current_payload_bits_ + pending_payload_bits_ +
@@ -592,11 +595,21 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
         if (predicted_entries > forecast_.entries || predicted_entries > limits_.max_entries ||
             predicted_payload > limits_.max_payload_bits)
             reject(ErrorKind::resource_limit, "sparse stage temporary allocation exceeds its reservation");
-        charge((epoch_stage_rows_ == 0 ? 1'024 : 0) + 512 +
-            2 * row_map_work(limits_.max_stage_rows) +
-            2 * row_map_work(limits_.max_rows_touched) + stage_slot_work() * raw_regrets.size());
         const auto old = current_.find(id);
         Entry next = old == current_.end() ? default_entry(raw_regrets.size()) : old->second;
+        Integer regret_dot=0,raw_mass=0;
+        for(std::size_t i=0;i<actions;++i) {
+            if(magnitude_bits(raw_regrets[i])>648 || raw_averages[i]<0 || magnitude_bits(raw_averages[i])>383)
+                reject(ErrorKind::arithmetic,"sparse raw integer exceeds source bound");
+            regret_dot+=raw_regrets[i]*next.units[i];
+            raw_mass+=raw_averages[i];
+            if(magnitude_bits(regret_dot)>703 || magnitude_bits(raw_mass)>383)
+                reject(ErrorKind::arithmetic,"sparse raw row accumulation bound");
+        }
+        if(regret_dot!=0)reject(ErrorKind::arithmetic,"raw regret does not center on the leased policy");
+        for(std::size_t i=0;i<actions;++i)
+            if(raw_averages[i]*grid!=raw_mass*next.units[i])
+                reject(ErrorKind::arithmetic,"raw averages do not follow the leased policy");
         const bool regret_changed = std::any_of(raw_regrets.begin(), raw_regrets.end(),
                                                 [](const Integer& x) { return x != 0; });
         for (std::size_t i = 0; i < raw_regrets.size(); ++i) {
