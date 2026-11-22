@@ -164,6 +164,11 @@ TARGETS["virtual-sparse-epoch-controls"] = (
     ("tests/native/virtual_sparse_epoch_controls.cpp", "native/virtual_sparse_strategy_epoch.hpp",
      "native/virtual_strategy_catalog.hpp", *TARGETS["virtual-frozen-grid-raw-update"][1][1:]),
 )
+TARGETS["virtual-sparse-two-epoch"] = (
+    "native-virtual-sparse-two-epoch",
+    ("tests/native/virtual_sparse_two_epoch_probe.cpp", "native/virtual_sparse_two_epoch_forecast.hpp",
+     *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
+)
 for _target, (_helper, _sources) in tuple(TARGETS.items()):
     if "native/virtual_dyadic_state.hpp" in _sources:
         TARGETS[_target] = (_helper, tuple(dict.fromkeys((*_sources, "native/virtual_information_identity.hpp"))))
@@ -358,7 +363,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-frozen-grid-raw-update" else "Two-board immutable Q52 session only; no policy transition, clipping, training, quality or wider capacity acceptance."
                   if target == "virtual-frozen-policy-session" else "Sparse full-history strategy catalog identity/menu controls only; no policies, numerical state, training or wider physical support."
                   if target == "virtual-strategy-catalog-controls" else "Synthetic sparse vanilla epoch component controls only; no whole-game changing-policy run, sampled trainer, quality or wider admission."
-                  if target == "virtual-sparse-epoch-controls" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-sparse-epoch-controls" else "Uniform PROOF9 two-board sparse signed-regret epochs only; no RNG, convergence, solved quality or wider capacity acceptance."
+                  if target == "virtual-sparse-two-epoch" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."

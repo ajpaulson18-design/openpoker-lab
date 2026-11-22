@@ -1,0 +1,56 @@
+name: Native sparse policy epochs
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  sparse-epochs:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build sparse state controls
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-sparse-epoch-controls --output-dir "$RUNNER_TEMP/sparse-component-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_SPARSE_EPOCH_EXE=$RUNNER_TEMP/sparse-component-build/native-virtual-sparse-epoch-controls$suffix" >> "$GITHUB_ENV"
+      - name: Independent sparse state controls
+        env:
+          OPENPOKER_NATIVE_SPARSE_EPOCH_DIR: ${{ runner.temp }}/sparse-component-normal
+        run: python -B -m unittest tests.test_native_sparse_epoch -v
+      - name: Optimized sparse state controls
+        env:
+          OPENPOKER_NATIVE_SPARSE_EPOCH_DIR: ${{ runner.temp }}/sparse-component-optimized
+        run: python -O -B -m unittest tests.test_native_sparse_epoch -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-sparse-epochs-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/sparse-component-build/build.log
+            ${{ runner.temp }}/sparse-component-build/build-failure.json
+            ${{ runner.temp }}/sparse-component-build/compiler-version.log
+            ${{ runner.temp }}/sparse-component-build/native-exact-build-manifest.json
+            ${{ runner.temp }}/sparse-component-normal/**
+            ${{ runner.temp }}/sparse-component-optimized/**
+          if-no-files-found: warn

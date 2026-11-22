@@ -64,7 +64,10 @@ owner. The existing State uses the same ordinal/depth identity helper with
 the original query order, error meanings and History charges.
 
 At source `847afaff09aa40c2c0b1f52e374cc424f50d31d9`, local compiled Catalog
-controls pass three independent checks normally and optimized. Declaring
+controls pass three core C++ control claims normally and optimized. The
+introduced catalog-control source is pinned at
+`436108a8d9775dd112454298fcc4dffe059bfd52`; four independent Python catalog
+checks pass normally and optimized at that source. Declaring
 1,326 holding indices but resolving only endpoints 0 and 1325 creates one
 public block and two seen information rows. Further action/ordered-flop
 controls end with four public blocks, five seen rows, nineteen seen action
@@ -81,6 +84,47 @@ and all historical owner sidecars. The earlier generic raw-walk policy-provider
 extraction also preserves all nineteen complete session outputs and independent
 row checks. These are regression/parity gates, with no new speed or capacity
 claim. Platform CI and immutable source-inclusive packaging remain separate.
+
+The maintained immutable packet set is recorded in
+[`benchmarks/results/sparse-strategy-catalog-v1/manifest.json`](../benchmarks/results/sparse-strategy-catalog-v1/manifest.json).
+It pins native Catalog source `847afaff09aa40c2c0b1f52e374cc424f50d31d9`,
+introduced packet source `436108a8d9775dd112454298fcc4dffe059bfd52`, and
+maintained replay source `03e7fa42eacb561539fda26a41de091c8955710c`. The
+catalog archive is 2,463,508 bytes / 305 members
+(`8bc5891ea688a7622f24e89d419e4b2d05ef924344e3f720e04e4ce8743b060a`);
+legacy regression is 7,494,245 bytes / 687 members
+(`32f4e332320d0e1c622d5bfc81b0562d4cdf2eb6140967547756503346acfc7e`);
+provider parity is 4,638,454 bytes / 386 members
+(`3c1181eadfdec6569e575777956a32e02fa26ed7a0895222d190eed1f4cefac9`); and
+the retained weak-transition witness is 332,141 bytes / 6 members
+(`07fa828c8c7d106257accef5c2320a4cb39c737f8362609ed34b94f7d1d5f809`).
+
+Local packet replay completed exactly in normal and optimized Python. The
+captured logs are `../sparse-catalog-packet1-normal.log` and
+`../sparse-catalog-packet1-optimized.log` outside the checkout. Each run
+replayed the catalog, legacy regression and provider-parity archives; catalog
+normal/optimized archived results matched, the historical 50,507,464-byte
+State wire output and SHA256 remained exact, and all nineteen provider session
+outputs matched. The replay records zero candidate calls and does not execute
+archived source. The new
+[`sparse-strategy-catalog-packet.yml`](../.github/workflows/sparse-strategy-catalog-packet.yml)
+repeats normal and optimized replay on Windows and Linux with full Git history
+and retains both reports as CI artifacts. Local success is not a claim that
+these new CI jobs have already run.
+
+At component source `388234c57c1c105cfc9262a3eae20082be1a8ea4`, the bounded
+native Store component passes four independent Python controls in both normal
+and optimized modes. The local process records are in
+`../sparse-epoch-component4-normal` and
+`../sparse-epoch-component4-optimized`. They exercise synthetic cumulative
+signed regrets, next-policy quantization from positive parts, exact average
+scales, average-only updates without intermediate quantization, and lifecycle,
+menu and raw-centering rejection guards. This establishes component semantics
+only: the Store is not yet coupled to the complete sampled PROOF9 traversal for
+two changing-policy epochs, and this record admits no whole-game resource
+ceiling or saved-policy result. It establishes no scale, runtime, speed or
+solution-quality result. The separate sparse epoch reference artifact has not
+been packaged in the maintained packet set.
 
 The independent reference uses literal numeric betting rules, Fraction raw
 updates and an independent ranker. It may materialize the complete policy for
@@ -99,8 +143,9 @@ B2 against E0, and preserves untouched uniform rows. This establishes the
 selected transition semantics, not a claim that every observation changes
 policy.
 
-Native sparse epoch ownership, complete cumulative resource admission,
-changing-policy provider validation, saved-state replay and cross-platform
-controls are separate unfinished gates. No RNG sampler, native changing-policy run, quality result,
+Whole-game coupling of the Store to the sampled traversal, complete cumulative
+resource admission, changing-policy provider validation, saved-state replay and
+cross-platform native epoch controls remain unfinished gates. No RNG sampler,
+native changing-policy run, quality result,
 eleven-card admission, realistic-range capacity or unrestricted NLHE readiness
 follows from the reference. All existing solver defaults and limits remain.
