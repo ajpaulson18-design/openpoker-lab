@@ -31,6 +31,7 @@ struct Fixture {
     h::History history{source,t::chance::DeckDefinition::reduced(t::deck_cards)};
     c::Catalog catalog{history,{2,2},catalog_limits()};
     e::Store store{catalog,history,{2,2},epoch_limits()};
+    explicit Fixture(e::Limits limits=epoch_limits()) : store(catalog,history,{2,2},limits) {}
 };
 template<class F> void rejected(const char* label,F&& call) {
     try {call();} catch(const e::Error&) {std::cout<<"GUARD "<<label<<" PASS\n";return;}
@@ -127,6 +128,22 @@ void controls() {
         const std::array<e::Integer,4> r{5,-3,0,-2},a{1,2,3,4};
         rejected("nonmember-denominator",[&]{lease.stage(view.id,r,a,3);});
     }
+    auto two_rows=epoch_limits();two_rows.max_rows_touched=4;two_rows.max_slots_touched=16;
+    two_rows.max_stage_rows=2;two_rows.max_stage_slots=8;two_rows.max_reads=8;
+    Fixture omitted(two_rows);
+    {
+        auto lease=omitted.store.begin_epoch(e::ProposalLaw::uniform_public);
+        const auto row0=lease.frozen_policy(omitted.history.root(),0,0);
+        (void)lease.frozen_policy(omitted.history.root(),0,1);
+        (void)lease.frozen_policy(omitted.history.root(),0,0);
+        (void)lease.frozen_policy(omitted.history.root(),0,1);
+        lease.seal_raw_walk(2,8,4);
+        const std::array<e::Integer,4> r{5,-3,0,-2},a{1,2,3,4};
+        lease.stage(row0.id,r,a,e::Integer(29)<<52);
+    }
+    require(omitted.store.failed() && omitted.store.receipt().commits==0,
+            "incomplete stage set changed the committed image");
+    rejected("incomplete-stage-set",[&]{omitted.store.commit();});
     std::cout<<"END\n";
 }
 }

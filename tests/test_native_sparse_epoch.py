@@ -76,7 +76,7 @@ class NativeSparseEpochTests(unittest.TestCase):
         self.assertEqual((self.lines[0],self.lines[-1]),('VIRTUAL_SPARSE_EPOCH_COMPONENT_V1','END'))
         guards=[line.split()[1:] for line in self.lines if line.startswith('GUARD ')]
         self.assertEqual(guards,[[name,'PASS'] for name in ('third-epoch','commit-during-lease','weighted-law',
-            'incomplete-two-seat-read','duplicate-stage','nonmember-denominator')])
+            'incomplete-two-seat-read','duplicate-stage','nonmember-denominator','incomplete-stage-set')])
 
     def test_signed_regret_persists_and_next_policy_uses_positive_parts(self):
         rows=self.rows();first=[5,-3,0,-2];second=[a+b for a,b in zip(first,[-7,4,2,-1])]

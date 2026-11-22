@@ -348,6 +348,11 @@ public:
             if (!owner_) throw Error(ErrorKind::lease_generation, "moved-from sparse epoch lease");
             owner_->check_epoch(*this);
         }
+        [[nodiscard]] bool staged_complete() const noexcept {
+            return owner_ && raw_complete_ && owner_->pending_ready_ &&
+                owner_->epoch_stage_rows_==observed_.size() &&
+                owner_->epoch_stage_slots_==slots_;
+        }
     public:
         EpochLease() = default;
         EpochLease(const EpochLease&) = delete;
@@ -360,7 +365,7 @@ public:
               live_(std::exchange(other.live_, false)) {}
         EpochLease& operator=(EpochLease&& other) noexcept {
             if (this != &other) {
-                if (live_ && owner_) owner_->release(generation_, raw_complete_ && owner_->pending_ready_);
+                if (live_ && owner_) owner_->release(generation_, staged_complete());
                 owner_ = std::exchange(other.owner_, nullptr); generation_ = other.generation_;
                 observed_ = std::move(other.observed_); slots_ = other.slots_; reads_ = other.reads_;
                 complete_rows_ = other.complete_rows_; observed_rows_consumed_ = other.observed_rows_consumed_;
@@ -369,7 +374,7 @@ public:
             }
             return *this;
         }
-        ~EpochLease() { if (live_ && owner_) owner_->release(generation_, raw_complete_ && owner_->pending_ready_); }
+        ~EpochLease() { if (live_ && owner_) owner_->release(generation_, staged_complete()); }
 
         [[nodiscard]] bool raw_policy_ready() const noexcept {
             return owner_ && live_ && owner_->active_ && owner_->generation_ == generation_ &&
