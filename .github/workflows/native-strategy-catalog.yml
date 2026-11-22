@@ -1,0 +1,61 @@
+name: Native sparse information catalog
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  catalog-conformance:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build explicit catalog control
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-strategy-catalog-controls --output-dir "$RUNNER_TEMP/catalog-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_STRATEGY_CATALOG_EXE=$RUNNER_TEMP/catalog-build/native-virtual-strategy-catalog-controls$suffix" >> "$GITHUB_ENV"
+      - name: Independent catalog controls
+        env:
+          OPENPOKER_NATIVE_STRATEGY_CATALOG_DIR: ${{ runner.temp }}/catalog-normal
+        run: python -B -m unittest tests.test_native_strategy_catalog -v
+      - name: Optimized catalog controls
+        env:
+          OPENPOKER_NATIVE_STRATEGY_CATALOG_DIR: ${{ runner.temp }}/catalog-optimized
+        run: python -O -B -m unittest tests.test_native_strategy_catalog -v
+      - name: Independent uniform epoch reference
+        run: |
+          python -B -m unittest tests.test_sparse_epoch_reference -v
+          python -O -B -m unittest tests.test_sparse_epoch_reference -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-strategy-catalog-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/catalog-build/build.log
+            ${{ runner.temp }}/catalog-build/build-failure.json
+            ${{ runner.temp }}/catalog-build/compiler-version.log
+            ${{ runner.temp }}/catalog-build/native-exact-build-manifest.json
+            ${{ runner.temp }}/catalog-build/native-virtual-strategy-catalog-controls*
+            ${{ runner.temp }}/catalog-normal/**
+            ${{ runner.temp }}/catalog-optimized/**
+          if-no-files-found: warn

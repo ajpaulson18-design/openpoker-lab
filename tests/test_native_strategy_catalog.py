@@ -2,12 +2,16 @@
 import json
 import os
 from pathlib import Path
+import subprocess
+import sys
+from hashlib import sha256
 from tempfile import TemporaryDirectory
 import unittest
 
 from tests.test_native_exact_reach import authenticate, sha
 from tests.virtual_dyadic_training_reference import Fixture
 from tests.virtual_frozen_run_control import run_bounded_child
+from scripts.replay_native_frozen_policy_state import ORACLE_SOURCES
 from tests.virtual_frozen_value_reference import _reveal_token
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -47,12 +51,29 @@ class NativeStrategyCatalogTests(unittest.TestCase):
     def setUpClass(cls):
         cls.exe=Path(os.environ[ENV]).resolve()
         cls.identity=authenticate(cls.exe,ROOT,TARGET)
-        cls.source_before={name:sha(ROOT/name) for name in cls.identity[1]['source_sha256']}
+        names=sorted(set(cls.identity[1]['source_sha256'])|set(ORACLE_SOURCES)|{'tests/test_native_strategy_catalog.py'})
+        if len(names)>128 or subprocess.check_output(['git','status','--porcelain','--untracked-files=all','--',*names],cwd=ROOT):
+            raise ValueError('catalog introduced source must be committed and clean')
+        head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+        cls.source_before={name:sha(ROOT/name) for name in names}
+        tree={}
+        for line in subprocess.check_output(['git','ls-tree','-r',head],cwd=ROOT,text=True).splitlines():
+            metadata,name=line.split('\t',1)
+            if name in names:tree[name]=metadata.split()[2]
+        if set(tree)!=set(names):raise ValueError('catalog introduced source tree incomplete')
         target=os.environ.get(OUT)
         if target is None:
             temp=TemporaryDirectory(dir=ROOT.parent);cls.addClassCleanup(temp.cleanup)
             target=Path(temp.name)/'catalog-controls'
         cls.output=Path(target);cls.output.mkdir(parents=True,exist_ok=False)
+        total=0
+        for name in names:
+            body=(ROOT/name).read_bytes();total+=len(body)
+            if len(body)>32<<20 or total>64<<20:raise ValueError('catalog source byte ceiling')
+            path=cls.output/'source'/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(body)
+        (cls.output/'source-identity.json').write_text(json.dumps({'version':'native-strategy-catalog-sources-v1',
+            'head':head,'raw_sha256':cls.source_before,'committed_blobs':tree,'python_version':sys.version,
+            'python_executable_sha256':sha256(Path(sys.executable).read_bytes()).hexdigest()},indent=2)+'\n')
         command=[str(cls.exe)]
         (cls.output/'command.json').write_text(json.dumps(command)+'\n')
         cls.observed=run_bounded_child(command,b'',cls.output/'process',stdout_limit=65536,timeout=180)

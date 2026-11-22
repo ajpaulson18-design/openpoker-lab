@@ -54,6 +54,34 @@ mixed proposals require a separate denominator/width proof and are rejected.
 
 ## Evidence and open gates
 
+The native Catalog component binds one History owner and declared actor holding
+counts before allocation. It stores only encountered public-history blocks,
+per-block seen-holding bitmaps and verified shared source menus. Opaque,
+owner-qualified row handles remain stable across append-only growth. Both
+resolve and borrowed-view reads consume the cumulative lifetime allowance;
+foreign/default handles, wrong actor/menu and exhausted budgets poison the
+owner. The existing State uses the same ordinal/depth identity helper with
+the original query order, error meanings and History charges.
+
+At source `847afaff09aa40c2c0b1f52e374cc424f50d31d9`, local compiled Catalog
+controls pass three independent checks normally and optimized. Declaring
+1,326 holding indices but resolving only endpoints 0 and 1325 creates one
+public block and two seen information rows. Further action/ordered-flop
+controls end with four public blocks, five seen rows, nineteen seen action
+slots and three shared menus. Sixteen cumulative accesses charge 96,000
+modeled work; the reserved metadata is 4,008 logical words/256,512 bits under
+the existing caps. These are not allocator/RSS observations or full-range
+physical support. Thirteen real ownership/resource rejection controls pass.
+
+The existing State suite passes eleven checks in each interpreter mode after
+the helper extraction. A complete existing ten-card bounded-division training
+run preserves all 50,507,464 wire bytes (SHA256
+`7fde396c4c2e645087d9fd8abdc373a97a485265bf157e537e3cfd181c538945`)
+and all historical owner sidecars. The earlier generic raw-walk policy-provider
+extraction also preserves all nineteen complete session outputs and independent
+row checks. These are regression/parity gates, with no new speed or capacity
+claim. Platform CI and immutable source-inclusive packaging remain separate.
+
 The independent reference uses literal numeric betting rules, Fraction raw
 updates and an independent ranker. It may materialize the complete policy for
 oracle evaluation; that is not a native storage claim. Five focused controls
@@ -62,8 +90,17 @@ untouched uniform defaults, retained negative regret, exact denominator/width
 bounds, stable tie order and weighted-law rejection. A zero-full-target witness
 leaves regret/policy unchanged while earlier-prefix averages change.
 
-Native Catalog/epoch ownership, complete cumulative resource admission,
-provider parity, saved-state replay and cross-platform controls are separate
-unfinished gates. No RNG sampler, native changing-policy run, quality result,
+The stronger transition control initially failed on two boards with the same
+five cards and swapped turn/river: the second observation changed raw state
+without changing the quantized policy. That failed control is retained at
+`c2ad165`. The accepted witness selects the first board of two different
+compatible private pairs, checks that E2 differs from E1 and from evaluating
+B2 against E0, and preserves untouched uniform rows. This establishes the
+selected transition semantics, not a claim that every observation changes
+policy.
+
+Native sparse epoch ownership, complete cumulative resource admission,
+changing-policy provider validation, saved-state replay and cross-platform
+controls are separate unfinished gates. No RNG sampler, native changing-policy run, quality result,
 eleven-card admission, realistic-range capacity or unrestricted NLHE readiness
 follows from the reference. All existing solver defaults and limits remain.

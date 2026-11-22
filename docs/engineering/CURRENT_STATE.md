@@ -2,6 +2,15 @@
 
 ## Unified solver foundation in development
 
+The [sparse catalog and epoch reference](../sparse-policy-epochs.md) separate
+full-history identity from numerical policy storage. The native catalog keeps
+encountered public blocks and declared seen holding indices; its local controls
+and the legacy State/complete-training regressions pass. The independent
+reference checks two signed vanilla-regret transitions and exact average
+scales. A native changing-policy store and its complete resource/quality gates
+remain unaccepted; generic holding indices do not imply realistic-range
+physical support or eleven-card admission.
+
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
 Normal/optimized conformance checks both raw results independently, including
