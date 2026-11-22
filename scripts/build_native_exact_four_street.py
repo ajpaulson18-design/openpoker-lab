@@ -152,6 +152,17 @@ TARGETS["virtual-frozen-policy-session"] = (
      *TARGETS["virtual-frozen-grid-raw-update"][1][1:]),
 )
 
+# One shared full-history identity contract is included by every State owner.
+# Extend complete source manifests explicitly; old archived manifests stay frozen.
+TARGETS["virtual-strategy-catalog-controls"] = (
+    "native-virtual-strategy-catalog-controls",
+    ("tests/native/virtual_strategy_catalog_controls.cpp", "native/virtual_strategy_catalog.hpp",
+     *TARGETS["virtual-dyadic-training"][1][1:]),
+)
+for _target, (_helper, _sources) in tuple(TARGETS.items()):
+    if "native/virtual_dyadic_state.hpp" in _sources:
+        TARGETS[_target] = (_helper, tuple(dict.fromkeys((*_sources, "native/virtual_information_identity.hpp"))))
+
 
 def _hash(raw):
     return hashlib.sha256(raw).hexdigest()
@@ -340,7 +351,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-frozen-policy-state-controls" else "Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission."
                   if target == "virtual-frozen-grid-update-preflight" else "Fixed-policy Q52 per-board raw values/regrets/averages study only; no clipping, State update, sampled training, quality or wider capacity acceptance."
                   if target == "virtual-frozen-grid-raw-update" else "Two-board immutable Q52 session only; no policy transition, clipping, training, quality or wider capacity acceptance."
-                  if target == "virtual-frozen-policy-session" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-frozen-policy-session" else "Sparse full-history strategy catalog identity/menu controls only; no policies, numerical state, training or wider physical support."
+                  if target == "virtual-strategy-catalog-controls" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."

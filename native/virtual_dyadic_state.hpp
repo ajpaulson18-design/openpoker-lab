@@ -5,6 +5,7 @@
 #include "factored_execution.hpp"
 #include "packed_signed_update.hpp"
 #include "virtual_dyadic_history.hpp"
+#include "virtual_information_identity.hpp"
 #include "virtual_dyadic_paged_image.hpp"
 #include <algorithm>
 #include <array>
@@ -850,11 +851,14 @@ class State final {
         receipt_.peak_arithmetic_bits=std::max(receipt_.peak_arithmetic_bits,bits);
     }
     Key key(History::Cursor cursor,std::size_t actor,std::size_t holding) {
-        if (actor>1 || holding>=hand_counts_[actor]) fail(ErrorCode::invalid_row,"state actor or original holding index");
-        // These validate the exact live history owner and its generation.
-        const auto ordinal=history_->ordinal(cursor);
-        if (history_->depth(cursor)>forecast_.max_history_depth) fail(ErrorCode::invalid_row,"state history depth exceeds forecast");
-        return {ordinal,actor,holding};
+        try {
+            return virtual_information_identity::key(*history_,cursor,actor,holding,
+                hand_counts_.data(),forecast_.max_history_depth);
+        } catch(const virtual_information_identity::Error& error) {
+            if (error.kind()==virtual_information_identity::ErrorKind::actor_holding)
+                fail(ErrorCode::invalid_row,"state actor or original holding index");
+            fail(ErrorCode::invalid_row,"state history depth exceeds forecast");
+        }
     }
     void index_bound(std::size_t row) const {
         if (row>=receipt_.rows) fail(ErrorCode::invalid_row,"state row index");

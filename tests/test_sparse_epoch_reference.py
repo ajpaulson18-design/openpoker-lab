@@ -17,7 +17,11 @@ class SparseEpochReferenceTests(unittest.TestCase):
     def setUpClass(cls):
         cls.fixture = Fixture()
         cls.context = build_sampled_reference_context()
-        cls.positive_boards = tuple(dict.fromkeys(world.board for world in cls.fixture.worlds))
+        by_private_pair = {}
+        for world in cls.fixture.worlds:
+            by_private_pair.setdefault(world.holdings, world.board)
+        cls.positive_pairs = tuple(by_private_pair.items())
+        cls.positive_boards = tuple(board for _, board in cls.positive_pairs)
         cls.zero_boards = tuple(board for board in cls.context.physical.proposals
             if not admit_sampled_board(cls.context, board, 'uniform').compatible_pairs)
 
@@ -35,6 +39,11 @@ class SparseEpochReferenceTests(unittest.TestCase):
         self.assertTrue(all(sum(units) == Q for units in second.policy.values()))
         self.assertNotEqual(first.policy, initial.policy)
         self.assertNotEqual(second.policy, first.policy)
+        frozen_second = apply_epoch(self.fixture, self.context, initial, self.positive_boards[1])
+        self.assertNotEqual(second.policy, frozen_second.policy,
+                            'epoch two must consume the epoch-one frozen policy')
+        self.assertTrue(any(second.regrets[key] != first.regrets[key] for key in self.fixture.menus),
+                        'second board must add a distinct raw regret update')
         untouched = [key for key, menu in self.fixture.menus.items()
                      if not any(second.regrets[key]) and not any(second.averages[key])]
         self.assertTrue(untouched)
