@@ -1,0 +1,66 @@
+name: Native immutable two-board policy session
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  policy-session-conformance:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Independent complete pair-domain equations
+        run: |
+          python -B -m unittest tests.test_frozen_policy_session_forecast -v
+          python -O -B -m unittest tests.test_frozen_policy_session_forecast -v
+      - name: Build explicit immutable-session target
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-frozen-policy-session --output-dir "$RUNNER_TEMP/policy-session-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_POLICY_SESSION_EXE=$RUNNER_TEMP/policy-session-build/native-virtual-frozen-policy-session$suffix" >> "$GITHUB_ENV"
+      - name: Twelve independent sessions and seven rejection controls
+        env:
+          OPENPOKER_NATIVE_POLICY_SESSION_DIR: ${{ runner.temp }}/policy-session-normal
+        run: python -B -m unittest tests.test_native_frozen_policy_session -v
+      - name: Optimized independent conformance
+        env:
+          OPENPOKER_NATIVE_POLICY_SESSION_DIR: ${{ runner.temp }}/policy-session-optimized
+        run: python -O -B -m unittest tests.test_native_frozen_policy_session -v
+      - name: Saved-file replay without candidate calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_native_policy_session "$RUNNER_TEMP/policy-session-normal" > "$RUNNER_TEMP/policy-session-normal/replay.json"
+          python -O -B -m scripts.replay_native_policy_session "$RUNNER_TEMP/policy-session-optimized" > "$RUNNER_TEMP/policy-session-optimized/replay.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-policy-session-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/policy-session-build/build.log
+            ${{ runner.temp }}/policy-session-build/build-failure.json
+            ${{ runner.temp }}/policy-session-build/compiler-version.log
+            ${{ runner.temp }}/policy-session-build/native-exact-build-manifest.json
+            ${{ runner.temp }}/policy-session-build/native-virtual-frozen-policy-session*
+            ${{ runner.temp }}/policy-session-normal/**
+            ${{ runner.temp }}/policy-session-optimized/**
+          if-no-files-found: warn

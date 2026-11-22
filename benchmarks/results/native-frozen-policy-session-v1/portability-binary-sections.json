@@ -1,0 +1,95 @@
+{
+  "scope": "same MSVC compiler/flags, whitespace-only C++ layout repair; section comparison is not a general binary reproducibility claim",
+  "before": {
+    "sha256": "b1080580c5e13df4f72311c7dd14a517e719aab6a72dc7009ca63fe8f29b5666",
+    "sections": {
+      ".text": {
+        "virtual_bytes": 426840,
+        "rva": 4096,
+        "raw_bytes": 427008,
+        "sha256": "c2640e976f8d3c3757896c0e4133a3026be2307cfe7dccbce36083738db8ccf5"
+      },
+      ".rdata": {
+        "virtual_bytes": 122998,
+        "rva": 434176,
+        "raw_bytes": 123392,
+        "sha256": "8236ad2d0a671cb5afffd4e53d9bfc6d4be4c6065ac525bab56abdff4664921a"
+      },
+      ".data": {
+        "virtual_bytes": 11936,
+        "rva": 561152,
+        "raw_bytes": 6144,
+        "sha256": "f16764517da9be50f525b17846b3f3e47da5352b4691d82bbc6d0f3dde5aa2f0"
+      },
+      ".pdata": {
+        "virtual_bytes": 18672,
+        "rva": 573440,
+        "raw_bytes": 18944,
+        "sha256": "5db53e927cf273616c2bbbfa3aca494b6170e4b0357510d2b9bc12ff6e947c65"
+      },
+      ".fptable": {
+        "virtual_bytes": 256,
+        "rva": 593920,
+        "raw_bytes": 512,
+        "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+      },
+      ".reloc": {
+        "virtual_bytes": 2644,
+        "rva": 598016,
+        "raw_bytes": 3072,
+        "sha256": "d66f9500bb321ab1274b64c6c7007de8992a6e5e56ec3b7d52040c5ec4f6631e"
+      }
+    }
+  },
+  "after": {
+    "sha256": "e858e4931fb36f04d65d595ee5a11b33cd83760a31424d61cae0204a8f3016be",
+    "sections": {
+      ".text": {
+        "virtual_bytes": 426840,
+        "rva": 4096,
+        "raw_bytes": 427008,
+        "sha256": "c2640e976f8d3c3757896c0e4133a3026be2307cfe7dccbce36083738db8ccf5"
+      },
+      ".rdata": {
+        "virtual_bytes": 122998,
+        "rva": 434176,
+        "raw_bytes": 123392,
+        "sha256": "14803b196cfb279651634c6a67052187575e7363efadd8e00eaf577646cd5247"
+      },
+      ".data": {
+        "virtual_bytes": 11936,
+        "rva": 561152,
+        "raw_bytes": 6144,
+        "sha256": "f16764517da9be50f525b17846b3f3e47da5352b4691d82bbc6d0f3dde5aa2f0"
+      },
+      ".pdata": {
+        "virtual_bytes": 18672,
+        "rva": 573440,
+        "raw_bytes": 18944,
+        "sha256": "5db53e927cf273616c2bbbfa3aca494b6170e4b0357510d2b9bc12ff6e947c65"
+      },
+      ".fptable": {
+        "virtual_bytes": 256,
+        "rva": 593920,
+        "raw_bytes": 512,
+        "sha256": "076a27c79e5ace2a3d47f9dd2e83e4ff6ea8872b3c2218f66c92b89b55f36560"
+      },
+      ".reloc": {
+        "virtual_bytes": 2644,
+        "rva": 598016,
+        "raw_bytes": 3072,
+        "sha256": "d66f9500bb321ab1274b64c6c7007de8992a6e5e56ec3b7d52040c5ec4f6631e"
+      }
+    }
+  },
+  "text_section_identical": true,
+  "sections_identical": {
+    ".text": true,
+    ".rdata": false,
+    ".data": true,
+    ".pdata": true,
+    ".fptable": true,
+    ".reloc": true
+  },
+  "operator_sha256": "1297b4f4c13fd8d7badffddc7ff8fb9db7e40a24f68ab2dc3769a065bcadf25a"
+}
