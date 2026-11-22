@@ -15,8 +15,8 @@ matching uses their positive parts and an independently implemented stable
 largest-remainder apportionment. This is a deterministic two-observation
 vanilla regret transition, not a sampled CFR+ or convergence claim.
 
-The initial default is implicit uniform Q52. A native implementation should
-store numeric rows only when touched and quantize only changed rows. A public
+The initial default is implicit uniform Q52. The experimental native Store
+keeps nonzero numeric rows only when touched and quantizes changed regret rows. A public
 history block may share its immutable legal menu across declared holdings;
 information identity still includes the original holding index. Catalog row
 identifiers must come from the owned full visible History, actor and holding,
@@ -26,7 +26,7 @@ betting continuation. Generic holding capacity is not physical chance support.
 
 The existing imported State remains immutable for its entire lifetime. Its
 borrowed policy views cannot be repurposed to change a policy behind a running
-walk. A future epoch lease freezes all views until both seats finish, then
+walk. The sparse epoch lease freezes all views until both seats finish, then
 publishes the next policy atomically. The ordinary CFR+ State has a separate
 all-row/clipping lifecycle and is not silently relabeled as sparse vanilla CFR.
 
@@ -120,11 +120,58 @@ and optimized modes. The local process records are in
 signed regrets, next-policy quantization from positive parts, exact average
 scales, average-only updates without intermediate quantization, and lifecycle,
 menu and raw-centering rejection guards. This establishes component semantics
-only: the Store is not yet coupled to the complete sampled PROOF9 traversal for
-two changing-policy epochs, and this record admits no whole-game resource
-ceiling or saved-policy result. It establishes no scale, runtime, speed or
-solution-quality result. The separate sparse epoch reference artifact has not
-been packaged in the maintained packet set.
+only; whole-game execution is recorded separately below. It establishes no
+scale, runtime, speed or solution-quality result.
+
+## Executed two-epoch native coupling
+
+Native build source `b4240aa` couples the existing exact raw walk to a leased
+sparse Store, with no dense imported State or full-policy input/echo. The
+complete independent controller and oracle were frozen at
+`41ae6727523abec3044bd32ae93b321d8d2b5bed` before candidate execution. Both
+seats use one frozen policy per observation; every supported raw row is staged
+before the walk and lease are destroyed and the next epoch is committed.
+Only one raw image is live at a time. E1 is serialized privately and no stdout
+is published until E2 and the whole-request checks pass.
+
+The independent rank-free forecast examines all 2,520 legal uniform board
+selectors and bounds 6,350,400 ordered pairs with replacement. It reserves
+136,367,150 modeled work, 1,095,241 entries, 55,627,714 payload bits and
+619,152 output bytes, within the unchanged ceilings. Its work partition is
+43,000,000 source allowance, 47,649,376 Catalog, 6,036,640 History,
+2,579,498 Chance, 22,514,624 Store plus quantizer, 4,680,580 parent numeric
+work and 9,906,432 serialization. Borrowed owner charges are counted once.
+The source allocation reservation is not a complete allocator census, and
+payload bits are not RSS. Scalar whole-domain admission precedes Template,
+private chance preparation, History, Catalog and Store construction.
+
+Six complete requests pass normally and with optimized Python: different
+positive private-pair boards, reversed order, repeated board, positive then
+zero-full-target with a shared turn, zero-target flop first, and maximum raw
+stage. Seven invalid CLI requests reject with observed exit 2 and empty
+stdout. All thirteen output streams are byte-identical between modes.
+Independent replay compares every exported cumulative signed R, exact A and
+Q52 unit, both roots against each epoch's input policy, and all 24,420 policy
+rows including implicit defaults. Repeated and zero-target observations need
+not change the policy. There is no RNG sampler in this request.
+
+For the pinned different-pair sequence, E1 has 440 numeric rows and E2 has
+868; policy overlays number 434 and 674. The request performs 1,760 policy
+reads, stages 880 rows and quantizes 677 changed-regret rows. It charges
+108,096,909 modeled work and emits 505,056 bytes. The largest actual work in
+the six-case matrix is 112,604,231. These are bounded operation counters,
+not runtime or throughput measurements. Local records are
+`../sparse-two-epoch1-normal`, `../sparse-two-epoch1-optimized`, and
+`../sparse-two-epoch1-parity.log`. Current saved-result replay also passes
+normally and optimized with zero candidate calls and no archived-source
+execution; the logs are `../sparse-two-epoch-replay1-normal.log` and
+`../sparse-two-epoch-replay1-optimized.log`.
+
+The first compile at `ef1601a` failed because two static Catalog methods were
+qualified at namespace scope. Its build failure and source remain preserved;
+the correction changes the method qualification. It was not a numerical test
+failure. Windows/Linux/sanitized CI and immutable whole-game packaging remain
+separate publication gates.
 
 The independent reference uses literal numeric betting rules, Fraction raw
 updates and an independent ranker. It may materialize the complete policy for
@@ -143,9 +190,9 @@ B2 against E0, and preserves untouched uniform rows. This establishes the
 selected transition semantics, not a claim that every observation changes
 policy.
 
-Whole-game coupling of the Store to the sampled traversal, complete cumulative
-resource admission, changing-policy provider validation, saved-state replay and
-cross-platform native epoch controls remain unfinished gates. No RNG sampler,
-native changing-policy run, quality result,
-eleven-card admission, realistic-range capacity or unrestricted NLHE readiness
-follows from the reference. All existing solver defaults and limits remain.
+Cross-platform execution, maintained immutable whole-game packaging, a bounded
+sampler and longer learning lifecycle, saved-policy quality, and realistic-range
+resource forecasts remain unfinished gates. The old eleven-card State and
+quantizer rejections still stand. Two selected PROOF9 observations do not
+establish convergence, eleven-card admission, realistic-range capacity or
+unrestricted NLHE readiness. All existing solver defaults and limits remain.
