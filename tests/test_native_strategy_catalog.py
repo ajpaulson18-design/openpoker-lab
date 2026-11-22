@@ -12,6 +12,7 @@ from tests.test_native_exact_reach import authenticate, sha
 from tests.virtual_dyadic_training_reference import Fixture
 from tests.virtual_frozen_run_control import run_bounded_child
 from scripts.replay_native_frozen_policy_state import ORACLE_SOURCES
+from tests.virtual_strategy_catalog_reference import parse_catalog_wire
 from tests.virtual_frozen_value_reference import _reveal_token
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -51,7 +52,8 @@ class NativeStrategyCatalogTests(unittest.TestCase):
     def setUpClass(cls):
         cls.exe=Path(os.environ[ENV]).resolve()
         cls.identity=authenticate(cls.exe,ROOT,TARGET)
-        names=sorted(set(cls.identity[1]['source_sha256'])|set(ORACLE_SOURCES)|{'tests/test_native_strategy_catalog.py'})
+        names=sorted(set(cls.identity[1]['source_sha256'])|set(ORACLE_SOURCES)|{
+            'tests/test_native_strategy_catalog.py','tests/virtual_strategy_catalog_reference.py'})
         if len(names)>128 or subprocess.check_output(['git','status','--porcelain','--untracked-files=all','--',*names],cwd=ROOT):
             raise ValueError('catalog introduced source must be committed and clean')
         head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
@@ -114,6 +116,17 @@ class NativeStrategyCatalogTests(unittest.TestCase):
         self.assertNotEqual(rows['flop-a'][0],rows['flop-b'][0])
         self.assertEqual(rows['flop-a'][3],rows['flop-b'][3])
         self.assertEqual(rows['flop-a'][4],rows['flop-b'][4])
+
+    def test_complete_saved_frame_and_corruption_controls(self):
+        fixture=Fixture()
+        result=parse_catalog_wire(self.stdout,fixture)
+        (self.output/'independent-replay.json').write_text(json.dumps(result,indent=2)+'\n')
+        corruptions=(self.stdout[:-1],self.stdout.replace(b'raise@3',b'raise@9',1),
+            self.stdout.replace(b'RECEIPT 96000 ',b'RECEIPT 96001 ',1),
+            self.stdout+b'EXTRA\n')
+        for index,corrupt in enumerate(corruptions):
+            with self.subTest(corruption=index):
+                with self.assertRaises(ValueError):parse_catalog_wire(corrupt,fixture)
 
     def test_receipt_counts_only_seen_rows_and_shared_source_menus(self):
         line=next(line for line in self.stdout.decode('ascii').splitlines() if line.startswith('RECEIPT '))
