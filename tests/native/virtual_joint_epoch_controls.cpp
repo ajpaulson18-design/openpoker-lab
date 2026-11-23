@@ -26,8 +26,9 @@ struct Fixture {
     h::History history{source,t::chance::DeckDefinition::reduced(t::deck_cards)};
     c::Catalog catalog{history,{2,2},catalog_limits()};
     e::Store store;
-    explicit Fixture(e::ArithmeticContract arithmetic=e::ArithmeticContract::true_joint_proof9)
-        :store(catalog,history,{2,2},epoch_limits(),arithmetic) {}
+    explicit Fixture(e::ArithmeticContract arithmetic=e::ArithmeticContract::true_joint_proof9,
+                     e::Limits limits=epoch_limits())
+        :store(catalog,history,{2,2},limits,arithmetic) {}
 };
 template<class F> void rejected(const char* label,e::ErrorKind expected,F&& operation) {
     try {operation();}
@@ -148,7 +149,9 @@ void controls() {
     }
     require(missing.store.failed() && missing.store.receipt().commits==0,"joint abandoned stage image");
     rejected("joint-missing-stage",e::ErrorKind::failed_owner,[&]{missing.store.commit();});
-    Fixture duplicate;
+    auto duplicate_limits=epoch_limits();
+    duplicate_limits.max_stage_rows=2;duplicate_limits.max_stage_slots=8;
+    Fixture duplicate(e::ArithmeticContract::true_joint_proof9,duplicate_limits);
     {
         auto lease=duplicate.store.begin_epoch(e::ProposalLaw::true_joint);
         const auto view=read_twice(duplicate,lease);lease.seal_raw_walk(1,4,2);
