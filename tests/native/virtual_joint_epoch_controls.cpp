@@ -151,6 +151,8 @@ void controls() {
     rejected("joint-missing-stage",e::ErrorKind::failed_owner,[&]{missing.store.commit();});
     auto duplicate_limits=epoch_limits();
     duplicate_limits.max_stage_rows=2;duplicate_limits.max_stage_slots=8;
+    duplicate_limits.max_rows_touched=4;duplicate_limits.max_slots_touched=16;
+    duplicate_limits.max_reads=8;
     Fixture duplicate(e::ArithmeticContract::true_joint_proof9,duplicate_limits);
     {
         auto lease=duplicate.store.begin_epoch(e::ProposalLaw::true_joint);
