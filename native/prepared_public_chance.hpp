@@ -38,13 +38,18 @@ struct ReachInput {
 struct Receipt {
     std::uint64_t modeled_work = 0, prior_work = 0, setup_work = 0,
         input_work = 0, cache_lookup_work = 0, rank_work = 0,
-        sort_work = 0, contraction_work = 0;
+        sort_work = 0, contraction_work = 0,
+        joint_ticket_work = 0, joint_ticket_setup_work = 0,
+        joint_ticket_decode_work = 0, joint_ticket_board_work = 0,
+        joint_ticket_rank_work = 0, joint_ticket_margin_work = 0;
     std::size_t retained_entries = 0, peak_scratch_entries = 0,
         peak_live_entries = 0, retained_integer_payload_bits = 0,
         peak_integer_payload_bits = 0, peak_integer_bits = 0,
         rank_calls = 0, cache_hits = 0, cache_misses = 0, cache_evictions = 0,
         completed_contractions = 0, query_array_admissions = 0, sparse_pair_visits = 0,
-        weighted_families = 0, weighted_showdowns = 0;
+        weighted_families = 0, weighted_showdowns = 0,
+        joint_ticket_queries = 0, joint_ticket_decodes = 0,
+        joint_ticket_board_unranks = 0;
 };
 
 struct RankIndexReceipt {
@@ -53,6 +58,46 @@ struct RankIndexReceipt {
 };
 
 class PreparedPublicChance final {
+public:
+    // Borrowed certificate for one exact ticket/rank pair. It is intentionally
+    // noncopyable and valid only during the callback that receives it.
+    class JointTicketCertificate final {
+        friend class PreparedPublicChance;
+        PreparedPublicChance* owner_ = nullptr;
+        std::uint64_t generation_ = 0;
+        std::uint64_t private_ticket_ = 0, board_rank_ = 0;
+        std::array<std::size_t,2> holding_indices_{};
+        std::array<Hand,2> holdings_{};
+        std::array<std::uint8_t,5> board_{};
+        int showdown_sign_ = 0;
+        JointTicketCertificate(PreparedPublicChance* owner,std::uint64_t generation,
+                std::uint64_t ticket,std::uint64_t rank,std::array<std::size_t,2> indices,
+                std::array<Hand,2> holdings,std::array<std::uint8_t,5> board,int sign)
+            :owner_(owner),generation_(generation),private_ticket_(ticket),board_rank_(rank),
+             holding_indices_(indices),holdings_(holdings),board_(board),showdown_sign_(sign) {}
+    public:
+        JointTicketCertificate(const JointTicketCertificate&)=delete;
+        JointTicketCertificate& operator=(const JointTicketCertificate&)=delete;
+        JointTicketCertificate(JointTicketCertificate&&)=delete;
+        JointTicketCertificate& operator=(JointTicketCertificate&&)=delete;
+        void require_active() const {
+            if (!owner_) throw KernelError(ErrorCode::invalid_query,"empty joint ticket certificate");
+            owner_->require_active_joint_certificate(*this);
+        }
+        [[nodiscard]] const std::array<std::size_t,2>& holding_indices() const {
+            require_active(); return holding_indices_;
+        }
+        [[nodiscard]] const std::array<Hand,2>& holdings() const {
+            require_active(); return holdings_;
+        }
+        [[nodiscard]] const std::array<std::uint8_t,5>& board() const {
+            require_active(); return board_;
+        }
+        [[nodiscard]] int showdown_sign() const { require_active(); return showdown_sign_; }
+        [[nodiscard]] std::uint64_t private_ticket() const { require_active(); return private_ticket_; }
+        [[nodiscard]] std::uint64_t board_rank() const { require_active(); return board_rank_; }
+    };
+private:
     struct Bucket { Integer total = 0; std::array<Integer,52> cards{}; };
     struct WeightedMass { Integer value=0; std::size_t bits=0; };
     struct WeightedLane {
@@ -87,6 +132,18 @@ class PreparedPublicChance final {
     static constexpr std::size_t index_fixed_entries=32;
     static constexpr std::size_t index_entry_words=(sizeof(IndexEntry)+7)/8;
     static constexpr std::size_t missing = std::numeric_limits<std::size_t>::max();
+    static constexpr std::uint64_t joint_ticket_max_work=16'384;
+    // The linear inclusion/exclusion CDF keeps the 53-cell aggregate bucket
+    // live alongside the ticket and certificate scalars. Every bucket cell is
+    // at most 11 (four magnitude bits); the 1,024-bit reserve covers those 53
+    // cells plus bounded CDF temporaries and certificate integers.
+    static constexpr std::size_t joint_ticket_max_entries=128;
+    static constexpr std::size_t joint_ticket_max_payload_bits=1'024;
+    static constexpr std::uint64_t joint_ticket_setup_reserve=512;
+    static constexpr std::uint64_t joint_ticket_decode_reserve=2'048;
+    static constexpr std::uint64_t joint_ticket_board_reserve=2'048;
+    static constexpr std::uint64_t joint_ticket_rank_reserve=8'192;
+    static constexpr std::uint64_t joint_ticket_margin_reserve=3'584;
     [[noreturn]] static void fail(ErrorCode code,const char* text) { throw KernelError(code,text); }
     static std::uint64_t add(std::uint64_t a,std::uint64_t b) { return detail::checked_add_count(a,b); }
     static std::uint64_t mul(std::uint64_t a,std::uint64_t b) { return detail::checked_mul_count(a,b); }
@@ -142,6 +199,66 @@ class PreparedPublicChance final {
             result|=std::uint64_t{1}<<c;
         }
         return result;
+    }
+    [[nodiscard]] bool fixed_joint_ticket_domain() const {
+        constexpr std::array<std::uint8_t,9> cards{16,17,24,32,33,35,37,43,48};
+        if (deck_.mode!=chance::DeckMode::reduced_proof || deck_.count!=cards.size() ||
+            !std::equal(cards.begin(),cards.end(),deck_.cards.begin()) ||
+            source_[0].size()!=2 || source_[1].size()!=2 || normalizer_!=29)
+            return false;
+        const auto hand_is=[](Hand hand,std::uint8_t a,std::uint8_t b) {
+            return hand.first==a && hand.second==b;
+        };
+        return hand_is(source_[0][0].hand,43,48) && hand_is(source_[0][1].hand,32,43) &&
+            hand_is(source_[1][0].hand,24,37) && hand_is(source_[1][1].hand,16,32) &&
+            weights_[0][0]==1 && weights_[0][1]==6 &&
+            weights_[1][0]==3 && weights_[1][1]==8;
+    }
+    [[nodiscard]] static std::uint64_t choose_small(std::size_t n,std::size_t k) noexcept {
+        if (k>n) return 0;
+        if (k==0 || k==n) return 1;
+        if (k==1 || k+1==n) return n;
+        if (k==2 || k+2==n) return n*(n-1)/2;
+        return 0;
+    }
+    [[nodiscard]] std::array<std::uint8_t,5> unrank_joint_board(
+            const std::array<Hand,2>& holdings,std::uint64_t rank) const {
+        std::array<std::uint8_t,5> left{};
+        std::size_t left_count=0;
+        const auto private_mask=hand_mask(holdings[0])|hand_mask(holdings[1]);
+        for (std::size_t i=0;i<deck_.count;++i) {
+            const auto card=deck_.cards[i];
+            if (!(private_mask&(std::uint64_t{1}<<card))) left[left_count++]=card;
+        }
+        if (left_count!=5) fail(ErrorCode::invalid_query,"joint ticket private pair leaves non-five board cards");
+        auto flop_rank=rank/2;
+        const auto tail=static_cast<std::size_t>(rank%2);
+        std::array<std::uint8_t,3> flop{};
+        std::size_t start=0;
+        for (std::size_t position=0;position<3;++position) {
+            bool selected=false;
+            for (std::size_t index=start;index<left_count-(2-position);++index) {
+                const auto count=choose_small(left_count-index-1,2-position);
+                if (flop_rank<count) {
+                    flop[position]=left[index]; start=index+1; selected=true; break;
+                }
+                flop_rank-=count;
+            }
+            if (!selected) fail(ErrorCode::invalid_query,"joint ticket flop unranking incomplete");
+        }
+        std::array<std::uint8_t,2> rest{};
+        std::size_t rest_count=0;
+        for (std::size_t i=0;i<left_count;++i)
+            if (left[i]!=flop[0] && left[i]!=flop[1] && left[i]!=flop[2]) rest[rest_count++]=left[i];
+        if (rest_count!=2 || tail>1) fail(ErrorCode::invalid_query,"joint ticket board suffix invalid");
+        return {flop[0],flop[1],flop[2],rest[tail],rest[1-tail]};
+    }
+    void require_active_joint_certificate(const JointTicketCertificate& certificate) {
+        if (failed_ || !active_joint_ticket_ || certificate.owner_!=this ||
+            certificate.generation_!=joint_ticket_generation_) {
+            failed_=true;
+            fail(ErrorCode::invalid_query,"joint ticket certificate is stale or foreign");
+        }
     }
     std::uint64_t divisor(std::size_t n) const {
         if (n==0) return 1;
@@ -610,6 +727,15 @@ private:
         return {own_rows+18,bits};
     }
 public:
+    [[nodiscard]] static constexpr std::uint64_t joint_ticket_work_bound() noexcept {
+        return joint_ticket_max_work;
+    }
+    [[nodiscard]] static constexpr std::size_t joint_ticket_entries_bound() noexcept {
+        return joint_ticket_max_entries;
+    }
+    [[nodiscard]] static constexpr std::size_t joint_ticket_payload_bound() noexcept {
+        return joint_ticket_max_payload_bits;
+    }
     PreparedPublicChance(std::span<const WeightedHand> sb,std::span<const WeightedHand> bb,
                          DeckDefinition deck=DeckDefinition::full52(),Limits limits={},
                          std::size_t cache_capacity=64,RankCacheKey rank_cache_key=RankCacheKey::ordered_prefix,
@@ -707,10 +833,105 @@ public:
     PreparedPublicChance& operator=(const PreparedPublicChance&)=delete;
     PreparedPublicChance(PreparedPublicChance&&)=delete;
     PreparedPublicChance& operator=(PreparedPublicChance&&)=delete;
+    // Decode one deterministic joint private-pair ticket and one independent
+    // full-board rank. This is fixed to the original ordered PROOF9 range
+    // owner; it adds no new owner, pair table, weighted contraction, or cache.
+    // The callback must not retain the borrowed certificate or call another
+    // mutating query on this owner. Its own work is accounted by its caller.
+    template<class Callback>
+    void with_joint_ticket(std::uint64_t private_ticket,std::uint64_t board_rank,Callback&& callback) {
+        if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
+        if (active_family_ || active_joint_ticket_) {
+            failed_=true;
+            fail(ErrorCode::invalid_query,"nested or conflicting prepared owner operation");
+        }
+        try {
+            if (!fixed_joint_ticket_domain())
+                fail(ErrorCode::invalid_query,"joint tickets require the fixed ordered PROOF9 ranges and deck");
+            if (private_ticket>=29 || board_rank>=20)
+                fail(ErrorCode::invalid_query,"joint private ticket or board rank is out of range");
+            if (joint_ticket_generation_==std::numeric_limits<std::uint64_t>::max() ||
+                receipt_.joint_ticket_queries==std::numeric_limits<std::size_t>::max() ||
+                receipt_.rank_calls>std::numeric_limits<std::size_t>::max()-2)
+                fail(ErrorCode::invalid_query,"joint ticket generation or receipt exhausted");
+            static_assert(joint_ticket_setup_reserve+joint_ticket_decode_reserve+
+                joint_ticket_board_reserve+joint_ticket_rank_reserve+
+                joint_ticket_margin_reserve==joint_ticket_max_work);
+            admit(0,0,joint_ticket_max_entries,joint_ticket_max_payload_bits,5);
+            charge(joint_ticket_max_work,receipt_.joint_ticket_work);
+            receipt_.joint_ticket_setup_work=add(receipt_.joint_ticket_setup_work,joint_ticket_setup_reserve);
+            receipt_.joint_ticket_decode_work=add(receipt_.joint_ticket_decode_work,joint_ticket_decode_reserve);
+            receipt_.joint_ticket_board_work=add(receipt_.joint_ticket_board_work,joint_ticket_board_reserve);
+            receipt_.joint_ticket_rank_work=add(receipt_.joint_ticket_rank_work,joint_ticket_rank_reserve);
+            receipt_.joint_ticket_margin_work=add(receipt_.joint_ticket_margin_work,joint_ticket_margin_reserve);
+            ++receipt_.joint_ticket_queries;
+
+            Bucket opposite_all;
+            for (std::size_t j=0;j<source_[1].size();++j)
+                bucket_add(opposite_all,source_[1][j].hand,weights_[1][j]);
+            const Integer zero_mass=0;
+            std::array<std::uint64_t,2> owner_spans{};
+            for (std::size_t i=0;i<2;++i) {
+                const auto same=same_[0][i];
+                const auto& exact_same=same==missing ? zero_mass : weights_[1][same];
+                const Integer compatible_mass=compatible(opposite_all,source_[0][i].hand,exact_same);
+                const auto expected_mass=i==0?11U:3U;
+                if (compatible_mass!=expected_mass)
+                    fail(ErrorCode::invalid_query,"joint ticket compatible mass changed");
+                const Integer span=weights_[0][i]*compatible_mass;
+                if (width(span)>6) fail(ErrorCode::invalid_query,"joint ticket owner span width changed");
+                owner_spans[i]=span.convert_to<std::uint64_t>();
+            }
+            if (owner_spans[0]!=11 || owner_spans[1]!=18 || owner_spans[0]+owner_spans[1]!=29)
+                fail(ErrorCode::invalid_query,"joint ticket exact 3/8/18 CDF changed");
+            std::size_t own_index=missing,opposite_index=missing;
+            std::uint64_t local_ticket=private_ticket;
+            for (std::size_t i=0;i<2;++i) {
+                if (local_ticket<owner_spans[i]) { own_index=i; break; }
+                local_ticket-=owner_spans[i];
+            }
+            if (own_index==missing)
+                fail(ErrorCode::invalid_query,"joint ticket escaped compatible first-seat CDF");
+            const auto own_weight=weights_[0][own_index].convert_to<std::uint64_t>();
+            if (!own_weight) fail(ErrorCode::invalid_query,"joint ticket has zero first-seat weight");
+            auto opposite_ticket=local_ticket/own_weight;
+            for (std::size_t j=0;j<2;++j) if (!(masks_[0][own_index]&masks_[1][j])) {
+                const auto amount=weights_[1][j].convert_to<std::uint64_t>();
+                if (opposite_ticket<amount) { opposite_index=j; break; }
+                opposite_ticket-=amount;
+            }
+            if (opposite_index==missing)
+                fail(ErrorCode::invalid_query,"joint ticket escaped compatible second-seat CDF");
+            ++receipt_.joint_ticket_decodes;
+
+            const std::array<std::size_t,2> indices{own_index,opposite_index};
+            const std::array<Hand,2> holdings{source_[0][own_index].hand,source_[1][opposite_index].hand};
+            const auto board=unrank_joint_board(holdings,board_rank);
+            ++receipt_.joint_ticket_board_unranks;
+            const std::array<std::uint8_t,7> first_cards{holdings[0].first,holdings[0].second,
+                board[0],board[1],board[2],board[3],board[4]};
+            const std::array<std::uint8_t,7> second_cards{holdings[1].first,holdings[1].second,
+                board[0],board[1],board[2],board[3],board[4]};
+            const auto first_rank=detail::rank_seven(first_cards);
+            const auto second_rank=detail::rank_seven(second_cards);
+            const int sign=second_rank<first_rank?1:(first_rank<second_rank?-1:0);
+            receipt_.rank_calls+=2;
+            ++joint_ticket_generation_;
+            active_joint_ticket_=true;
+            JointTicketCertificate certificate(this,joint_ticket_generation_,private_ticket,board_rank,
+                indices,holdings,board,sign);
+            std::invoke(std::forward<Callback>(callback),
+                        static_cast<const JointTicketCertificate&>(certificate));
+            if (failed_ || !active_joint_ticket_ || joint_ticket_generation_!=certificate.generation_)
+                fail(ErrorCode::invalid_query,"joint ticket callback invalidated its borrowed certificate");
+            active_joint_ticket_=false;
+        } catch (...) { active_joint_ticket_=false; failed_=true; throw; }
+    }
     [[nodiscard]] Contraction contraction(std::size_t player,std::span<const std::uint8_t> prefix,
             TerminalKind kind,std::span<const Integer> opposite_numerators,std::size_t reach_exponent) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
         try {
+            if (active_joint_ticket_) fail(ErrorCode::invalid_query,"contraction inside joint ticket callback");
             if (active_family_) fail(ErrorCode::invalid_query,"unscoped query inside prepared reach family");
             Contraction result;
             const auto scale=contract(player,prefix,kind,opposite_numerators,reach_exponent,{},&result.numerators);
@@ -726,6 +947,7 @@ public:
             std::span<Integer> output) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
         try {
+            if (active_joint_ticket_) fail(ErrorCode::invalid_query,"contraction inside joint ticket callback");
             if (active_family_) fail(ErrorCode::invalid_query,"unscoped query inside prepared reach family");
             return contract(player,prefix,kind,opposite_numerators,reach_exponent,output,nullptr);
         } catch (...) { failed_=true; throw; }
@@ -736,9 +958,9 @@ public:
     template<class VisitBoards>
     void with_showdown_reaches(std::array<ReachInput,2> input,VisitBoards&& visit_boards) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
-        if (active_family_) {
+        if (active_family_ || active_joint_ticket_) {
             failed_=true;
-            fail(ErrorCode::invalid_query,"nested prepared reach family");
+            fail(ErrorCode::invalid_query,"nested prepared query scope");
         }
         try {
             WeightedFamily family;
@@ -754,6 +976,7 @@ public:
     [[nodiscard]] Contraction family_showdown(std::size_t player,std::span<const std::uint8_t> board) {
         if (failed_) fail(ErrorCode::invalid_query,"prepared owner is poisoned");
         try {
+            if (active_joint_ticket_) fail(ErrorCode::invalid_query,"showdown inside joint ticket callback");
             if (!active_family_) fail(ErrorCode::invalid_query,"showdown requires a prepared reach family");
             Contraction result;
             const auto scale=contract<true>(player,board,TerminalKind::showdown,{},0,{},&result.numerators);
@@ -776,7 +999,8 @@ private:
     Limits limits_{}; DeckDefinition deck_{};
     const RankCacheKey rank_cache_key_;
     const ContractionKernel contraction_kernel_;
-    Receipt receipt_{}; bool failed_=false;
+    Receipt receipt_{}; bool failed_=false,active_joint_ticket_=false;
+    std::uint64_t joint_ticket_generation_=0;
     const WeightedFamily* active_family_=nullptr;
     std::uint64_t deck_mask_=0,clock_=0;
     std::array<std::vector<WeightedHand>,2> source_;

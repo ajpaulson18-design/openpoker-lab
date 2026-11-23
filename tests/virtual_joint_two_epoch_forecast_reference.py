@@ -60,7 +60,7 @@ def forecast():
     parent = 1040000 + 4096 + 512 * rows + 2 * sum(raw.values())
     output = 336 + 2 * 600 + 40 * (3 * max_rows) + 144 * (3 * max_slots) + 256
     raw_stage_entries = 8 * max_rows + 2 * max_slots + 64 * 19 + 64
-    entries = (131072 + catalog_words + store_entries + 12000 + 32 + (32 * 1105 + 1) +
+    entries = (131072 + catalog_words + store_entries + 12000 + 128 + (32 * 1105 + 1) +
                16384 + raw_stage_entries + output + 4096)
     payload = (131072 * 64 + 64 * catalog_words + store_payload + (1 << 20) + 1024 +
                (8 << 20) + (1 << 22) + 3140970 + 8 * output + 4096 * 64 + 32 * 181)

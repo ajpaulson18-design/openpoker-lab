@@ -1,5 +1,5 @@
 #pragma once
-// Sparse fixed-Q52 vanilla strategy rows for two sequential uniform epochs.
+// Sparse fixed-Q52 vanilla strategy rows for two sequential PROOF9 epochs.
 // This is a component contract, not a trainer or admission for other games.
 #include "dyadic_policy.hpp"
 #include "virtual_dyadic_history.hpp"
@@ -40,7 +40,8 @@ inline constexpr std::size_t payload_bits_cap = std::size_t{1} << 30;
 enum class ErrorKind { invalid_limits, owner_mismatch, failed_owner, active_lease,
                        lease_generation, incomplete_walk, row_or_menu, duplicate_stage,
                        epoch_limit, arithmetic, resource_limit, quantizer };
-enum class ProposalLaw { uniform_public, weighted_river };
+enum class ArithmeticContract { uniform_public_proof9, true_joint_proof9 };
+enum class ProposalLaw { uniform_public, weighted_river, true_joint };
 class Error final : public std::runtime_error {
     ErrorKind kind_;
 public:
@@ -223,6 +224,7 @@ private:
     };
     Limits limits_;
     Forecast forecast_;
+    const ArithmeticContract arithmetic_;
     History* history_;
     Catalog* catalog_;
     std::array<std::size_t, 2> hand_counts_;
@@ -246,6 +248,12 @@ private:
     bool pending_ready_ = false;
     bool poisoned_ = false;
 
+    static ArithmeticContract admit_arithmetic(ArithmeticContract arithmetic) {
+        if (arithmetic!=ArithmeticContract::uniform_public_proof9 &&
+            arithmetic!=ArithmeticContract::true_joint_proof9)
+            throw Error(ErrorKind::invalid_limits,"unknown sparse arithmetic contract");
+        return arithmetic;
+    }
     static policy::Limits quantizer_limits(const Limits& limits) {
         const auto f = forecast(limits);
         if (f.work > limits.max_work) throw Error(ErrorKind::invalid_limits, "no work remains for quantizer owner");
@@ -382,6 +390,10 @@ public:
             return owner_ && live_ && owner_->active_ && owner_->generation_ == generation_ &&
                    !owner_->poisoned_ && !owner_->catalog_->failed() && !raw_complete_;
         }
+        [[nodiscard]] ArithmeticContract arithmetic_contract() const {
+            check();
+            return owner_->arithmetic_contract();
+        }
         [[nodiscard]] FrozenPolicyView frozen_policy(Cursor cursor, std::size_t actor, std::size_t holding) {
             check();
             try {
@@ -469,16 +481,23 @@ public:
         }
         void stage(RowId id, std::span<const Integer> raw_regrets,
                    std::span<const Integer> raw_averages, const Integer& raw_average_denominator,
-                   const Integer& raw_regret_denominator = Integer(regret_denominator)) {
+                   const Integer& raw_regret_denominator) {
             if (!owner_) throw Error(ErrorKind::lease_generation, "moved-from sparse epoch lease");
             owner_->stage_impl(*this, id, raw_regrets, raw_averages,
                                raw_average_denominator, raw_regret_denominator);
         }
+        void stage(RowId id, std::span<const Integer> raw_regrets,
+                   std::span<const Integer> raw_averages, const Integer& raw_average_denominator) {
+            if (!owner_) throw Error(ErrorKind::lease_generation, "moved-from sparse epoch lease");
+            owner_->stage_impl(*this, id, raw_regrets, raw_averages,
+                               raw_average_denominator, owner_->regret_denominator_value());
+        }
     };
 
     Store(Catalog& catalog_owner, History& history_owner, std::array<std::size_t, 2> declared_hand_counts,
-          Limits limits = {})
-        : limits_(limits), forecast_(forecast(limits)), history_(&history_owner), catalog_(&catalog_owner),
+          Limits limits = {},ArithmeticContract arithmetic=ArithmeticContract::uniform_public_proof9)
+        : limits_(limits), forecast_(forecast(limits)), arithmetic_(admit_arithmetic(arithmetic)),
+          history_(&history_owner), catalog_(&catalog_owner),
           hand_counts_(declared_hand_counts), quantizer_(quantizer_limits(limits)),
           uniform_defaults_(make_uniform_defaults()) {
         const auto& catalog_limits = catalog_owner.admitted_limits();
@@ -499,6 +518,19 @@ public:
     Store& operator=(const Store&) = delete;
     [[nodiscard]] const Receipt& receipt() const noexcept { return receipt_; }
     [[nodiscard]] const Forecast& admitted_forecast() const noexcept { return forecast_; }
+    [[nodiscard]] ArithmeticContract arithmetic_contract() const noexcept { return arithmetic_; }
+    [[nodiscard]] const Integer& regret_denominator_value() const {
+        if (arithmetic_==ArithmeticContract::uniform_public_proof9) return regret_denominator;
+        // Immutable scalar constants fit the existing fixed scratch/metadata
+        // envelope. Legacy construction never initializes these joint values.
+        static const Integer joint=Integer(1)<<625;
+        return joint;
+    }
+    [[nodiscard]] const Integer& average_denominator_value() const {
+        if (arithmetic_==ArithmeticContract::uniform_public_proof9) return average_denominator;
+        static const Integer joint=Integer(1)<<364;
+        return joint;
+    }
     [[nodiscard]] std::size_t committed_epochs() const noexcept { return committed_epochs_; }
     [[nodiscard]] bool failed() const noexcept { return poisoned_ || catalog_->failed() || quantizer_.failed(); }
     [[nodiscard]] bool raw_policy_ready() const noexcept { return active_ && !failed(); }
@@ -531,8 +563,10 @@ public:
     }
     [[nodiscard]] EpochLease begin_epoch(ProposalLaw law) {
         healthy();
-        if (law != ProposalLaw::uniform_public)
-            reject(ErrorKind::invalid_limits, "sparse epoch accepts the uniform proposal only");
+        const auto expected=arithmetic_==ArithmeticContract::uniform_public_proof9?
+            ProposalLaw::uniform_public:ProposalLaw::true_joint;
+        if (law != expected)
+            reject(ErrorKind::invalid_limits, "sparse proposal law differs from constructor-bound arithmetic");
         if (active_ || visitor_active_) reject(ErrorKind::active_lease, "one sparse epoch owner operation is already active");
         if (committed_epochs_ >= epoch_limit || pending_ready_)
             reject(ErrorKind::epoch_limit, "sparse strategy epoch transition unavailable");
@@ -580,11 +614,13 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
             row.actions.size() != raw_regrets.size())
             reject(ErrorKind::row_or_menu, "sparse stage catalog identity/menu mismatch");
         if (magnitude_bits(raw_regret_denominator) > 638 || raw_regret_denominator <= 0 ||
-            raw_regret_denominator != regret_denominator ||
+            raw_regret_denominator != regret_denominator_value() ||
             magnitude_bits(raw_average_denominator) > 381 || raw_average_denominator <= 0 ||
-            Integer(average_denominator) % raw_average_denominator != 0)
+            (arithmetic_==ArithmeticContract::true_joint_proof9?
+                raw_average_denominator!=average_denominator_value():
+                Integer(average_denominator) % raw_average_denominator != 0))
             reject(ErrorKind::arithmetic, "sparse raw denominator outside exact fixed contract");
-        const Integer average_factor = Integer(average_denominator) / raw_average_denominator;
+        const Integer average_factor = average_denominator_value() / raw_average_denominator;
         if (magnitude_bits(average_factor) > 317)
             reject(ErrorKind::arithmetic, "sparse average scale bound");
         const auto predicted_entries = current_.size() + pending_.size() + staged_ids_.size() +

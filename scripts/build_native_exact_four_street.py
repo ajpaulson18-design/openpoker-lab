@@ -169,6 +169,19 @@ TARGETS["virtual-sparse-two-epoch"] = (
     ("tests/native/virtual_sparse_two_epoch_probe.cpp", "native/virtual_sparse_two_epoch_forecast.hpp",
      *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
 )
+TARGETS["virtual-joint-epoch-controls"] = (
+    "native-virtual-joint-epoch-controls",
+    ("tests/native/virtual_joint_epoch_controls.cpp", *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
+)
+TARGETS["virtual-joint-chance-controls"] = (
+    "native-virtual-joint-chance-controls",
+    ("tests/native/virtual_joint_chance_controls.cpp", *TARGETS["prepared-public-chance-controls"][1][1:]),
+)
+TARGETS["virtual-joint-two-epoch"] = (
+    "native-virtual-joint-two-epoch",
+    ("tests/native/virtual_joint_two_epoch_probe.cpp", "native/virtual_joint_sample_raw.hpp",
+     "native/virtual_joint_two_epoch_forecast.hpp", *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
+)
 for _target, (_helper, _sources) in tuple(TARGETS.items()):
     if "native/virtual_dyadic_state.hpp" in _sources:
         TARGETS[_target] = (_helper, tuple(dict.fromkeys((*_sources, "native/virtual_information_identity.hpp"))))
@@ -364,7 +377,10 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-frozen-policy-session" else "Sparse full-history strategy catalog identity/menu controls only; no policies, numerical state, training or wider physical support."
                   if target == "virtual-strategy-catalog-controls" else "Synthetic sparse vanilla epoch component controls only; no whole-game changing-policy run, sampled trainer, quality or wider admission."
                   if target == "virtual-sparse-epoch-controls" else "Uniform PROOF9 two-board sparse signed-regret epochs only; no RNG, convergence, solved quality or wider capacity acceptance."
-                  if target == "virtual-sparse-two-epoch" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-sparse-two-epoch" else "Synthetic true-joint arithmetic epoch controls only; no whole-game training, RNG, quality or wider admission."
+                  if target == "virtual-joint-epoch-controls" else "Fixed PROOF9 exact joint-ticket and selected-pair chance controls only; no RNG, trainer, quality or wider admission."
+                  if target == "virtual-joint-chance-controls" else "Deterministic PROOF9 two-joint-observation sparse signed-regret epochs only; no RNG, convergence, solved quality or full-range admission."
+                  if target == "virtual-joint-two-epoch" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."

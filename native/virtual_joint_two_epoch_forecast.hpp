@@ -1,0 +1,86 @@
+#pragma once
+// Fixed N9 true-joint ticket domain: two deterministic observations, no RNG.
+// Scalar resource equations run before Template/range/rank preparation.
+#include "virtual_frozen_grid_update_forecast.hpp"
+#include "virtual_sparse_strategy_epoch.hpp"
+
+namespace openpoker::virtual_joint_two_epoch {
+namespace t=virtual_dyadic_training;
+namespace p=virtual_frozen_grid_update_forecast;
+namespace e=virtual_sparse_strategy_epoch;
+namespace c=virtual_strategy_catalog;
+using Board=std::array<std::uint8_t,5>;
+inline constexpr std::uint64_t ticket_count=580,ordered_ticket_pairs=ticket_count*ticket_count;
+inline constexpr std::uint64_t output_upper=502720,setup_work=1040000,raw_stage_payload=3140970;
+
+struct Forecast {
+    p::Forecast raw{};
+    c::Limits catalog{};
+    e::Limits epoch{};
+    e::Forecast epoch_cost{};
+    std::uint64_t history=0,chance=0,parent=0,work=0,entries=0,payload=0,output=0,setup=0;
+};
+inline std::uint64_t raw_work(const p::Forecast& f) {
+    return f.reach+f.scale+f.mix+f.average+f.stage+f.walk;
+}
+inline e::Limits epoch_limits() {
+    e::Limits l;
+    l.max_rows_touched=868;l.max_slots_touched=2078;l.max_stage_rows=434;l.max_stage_slots=1039;
+    l.max_reads=1736;l.catalog_max_public_blocks=868;l.max_work=e::work_cap;
+    l.max_entries=t::entries_cap;l.max_payload_bits=t::payload_cap;l.max_epochs=2;return l;
+}
+inline c::Limits catalog_limits() {
+    c::Limits l;
+    l.max_public_blocks=868;l.max_information_rows_seen=868;l.max_action_slots_seen=2078;
+    l.max_menus=434;l.max_holding_count=2;l.max_lookups=6510;
+    l.max_work=c::Catalog::work_forecast(l);
+    l.max_metadata_entries=c::Catalog::metadata_word_forecast(l);
+    l.max_metadata_payload_bits=64*l.max_metadata_entries;return l;
+}
+inline void check_geometry(const p::Geometry& g) {
+    t::require(g.visits==1105 && g.actions==1039 && g.decisions==434 && g.reveals==65 &&
+        g.folds==303 && g.showdowns==303 && g.route==12 && g.mix_route==11 &&
+        g.depth==std::array<std::size_t,2>{6,7},"joint two-epoch fixed source geometry changed");
+}
+inline Forecast domain_forecast() {
+    Forecast f;f.epoch=epoch_limits();f.epoch_cost=e::forecast(f.epoch);f.catalog=catalog_limits();
+    f.setup=setup_work;f.output=output_upper;
+    auto& r=f.raw;r.rows=434;r.slots=1039;r.reads=868;r.stage_payload=raw_stage_payload;
+    r.reach=2*1039*(24+t::mul_cost(365,53)+t::copy_cost(365));
+    r.scale=2*606*(32+t::copy_cost(629));
+    r.mix=2*1039*(8+t::mul_cost(629,53)+t::add_cost(683)+t::copy_cost(683))+
+        2*434*(32+t::copy_cost(683)+t::copy_cost(629))+
+        1039*(64+t::add_cost(630)+t::copy_cost(630)+t::mul_cost(630,365)+t::copy_cost(630));
+    r.average=434*(64+t::copy_cost(365))+
+        1039*(32+t::mul_cost(313,53)+t::copy_cost(365)+2*t::words(365));
+    r.stage=1024+64*434+16*1039;r.walk=512+256*1105;
+    r.work=raw_work(r);r.feasible=true;
+    f.history=4096*1105+1280+4*(48*1039+80*65+8)+1736*288+868*640;
+    f.chance=t::chance_setup_bound+2*t::prepared::PreparedPublicChance::joint_ticket_work_bound();
+    f.parent=f.setup+4096+512*868+2*r.work;
+    f.work=t::template_cap+f.catalog.max_work+f.history+f.chance+f.epoch_cost.component_work+f.parent+16*f.output;
+    const auto cat_words=f.catalog.max_metadata_entries;
+    const auto joint_entries=t::prepared::PreparedPublicChance::joint_ticket_entries_bound();
+    const auto joint_payload=t::prepared::PreparedPublicChance::joint_ticket_payload_bound();
+    // One raw result at a time and a private byte buffer covering both committed
+    // snapshots. Existing 12k/1MiB chance owner reservation excludes the scoped
+    // certificate's explicitly added 128 entries/1024 bits. Source allowance is
+    // a logical reservation, not a complete allocator or RSS measurement.
+    f.entries=131072+cat_words+f.epoch_cost.entries+12000+joint_entries+(32*1105+1)+16384+
+        (8*434+2*1039+64*19+64)+output_upper+4096;
+    f.payload=131072*64+64*cat_words+f.epoch_cost.payload_bits+(1ULL<<20)+joint_payload+
+        8*(1ULL<<20)+(1ULL<<22)+raw_stage_payload+8*output_upper+4096*64+32*181;
+    t::require(f.catalog.max_work<=c::work_cap && f.epoch_cost.work<=e::work_cap &&
+        f.epoch_cost.component_work<=e::work_cap && f.history<=t::history_cap && f.chance<=t::chance_cap &&
+        f.parent<=t::parent_cap && f.work<=t::work_cap && f.entries<=t::entries_cap &&
+        f.payload<=t::payload_cap && f.output<=p::output_cap,"joint two-epoch whole request exceeds unchanged caps");
+    return f;
+}
+inline Forecast forecast(const t::betting::Template& source,const p::Geometry& geometry) {
+    check_geometry(geometry);const auto& receipt=source.receipt();
+    t::require(receipt.nodes==388 && receipt.edges==410 && receipt.logical_occurrences==1105 &&
+        receipt.max_depth==15 && !receipt.history_suffix_only && receipt.work<=t::template_cap &&
+        receipt.entries+receipt.peak_scratch_entries<=131072,"joint two-epoch source receipt changed");
+    return domain_forecast();
+}
+} // namespace openpoker::virtual_joint_two_epoch
