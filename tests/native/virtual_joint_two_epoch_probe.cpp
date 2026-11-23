@@ -247,7 +247,7 @@ int main(int argc,char** argv) {
             const auto text=argument(argv[1+2*epoch+field],2);unsigned value=0;
             const auto parsed=std::from_chars(text.data(),text.data()+text.size(),value);
             t::require(!text.empty() && parsed.ec==std::errc{} && parsed.ptr==text.data()+text.size() &&
-                value<(field?20:29),"joint selector outside exact fixed ticket domain");
+                value<(field?20U:29U),"joint selector outside exact fixed ticket domain");
             selectors[epoch][field]=value;
         }
         return run(selectors);
