@@ -175,10 +175,11 @@ def build_target_board_law(context, budget: Budget) -> TargetBoardLaw:
     frozen_mass_counts = MappingProxyType(mass_counts)
     frozen_prefix_counts = MappingProxyType({k: MappingProxyType(v)
                                              for k, v in prefix_mass_counts.items()})
+    frozen_positive = tuple(positive)
     origin = (frozen_board_masses, frozen_board_q, frozen_prefix_masses,
-              frozen_prefix_q, tuple(positive), frozen_mass_counts, frozen_prefix_counts)
+              frozen_prefix_q, frozen_positive, frozen_mass_counts, frozen_prefix_counts)
     return TargetBoardLaw(frozen_board_masses, frozen_board_q, frozen_prefix_masses,
-                          frozen_prefix_q, tuple(positive), frozen_mass_counts,
+                          frozen_prefix_q, frozen_positive, frozen_mass_counts,
                           frozen_prefix_counts, SECOND_MOMENT_RATIO_BOUND,
                           context._seal, origin)
 
