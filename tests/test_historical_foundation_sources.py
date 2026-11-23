@@ -267,6 +267,31 @@ print(json.dumps({
             self.assertEqual(actual_count, count)
             self.assertNotEqual(actual, bridge._synthetic_test_ast(source + b"\nextra = 1\n", strip=True)[0])
 
+    def test_windows_temp_fixture_transition_is_exact_and_preserves_assertions(self):
+        name = "tests/test_benchmark_river_direct_tail.py"
+        path = bridge.ROOT / name
+        archive_name, middle_pin, current_pin = bridge.WINDOWS_FIXTURE_TRANSITION[name]
+        intermediate_path = bridge.ROOT / archive_name
+        self.assertIn(intermediate_path, bridge.BRIDGE_INPUTS)
+        old_path = bridge.ROOT / "tests/fixtures/test_benchmark_river_direct_tail.py.before_synthetic_bridge.txt"
+        versions = (old_path.read_bytes(), intermediate_path.read_bytes(), path.read_bytes())
+        self.assertEqual(bridge._sha(bridge._lf(versions[1])), middle_pin)
+        self.assertEqual(bridge._sha(bridge._lf(versions[2])), current_pin)
+        for raw in versions:
+            for digest in bridge._line_ending_hashes(raw):
+                self.assertTrue(bridge.historical_foundation_source_matches(path, digest))
+
+        current = versions[2]
+        assertion = b'self.assertEqual(targets["report"].read_bytes(), foreign)'
+        self.assertIn(assertion, current)
+        changed_assertion = current.replace(
+            assertion, b'self.assertEqual(targets["report"].read_bytes(), b"forged")', 1)
+        added_operation = current + b"\nextra_fixture_operation = True\n"
+        for changed in (changed_assertion, added_operation):
+            with self.assertRaisesRegex(ValueError, "exact transition pin"):
+                bridge._windows_fixture_transition_ast(changed, source_version="current")
+            self.assertFalse(bridge._synthetic_test_matches(path, bridge._sha(bridge._lf(changed))))
+
     def test_rank_dependencies_detect_changes(self):
         source = bridge.PREFLOP_SOURCE.read_bytes()
         reference = bridge._rank_asts(source)

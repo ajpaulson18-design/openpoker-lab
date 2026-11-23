@@ -358,7 +358,7 @@ def _turn_verifier_matches(path, digest):
 # These exact changes patch only synthetic equality plumbing contexts. The
 # normalized AST must reproduce the complete archived test file.
 SYNTHETIC_TEST_TRANSITIONS = {
-    "tests/test_benchmark_river_direct_tail.py": ("5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71", "2656d22814fa63cdc143c5f667527c93aad424158b1f98b0567b83931cc0261f", 3),
+    "tests/test_benchmark_river_direct_tail.py": ("5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71", "99459c7a39e9b57ba14a4b7db35e9fc7d8b6daff6fc9b84717a490022ab71f78", 3),
     "tests/test_benchmark_river_direct_long_tail.py": ("9aa292830ba25d2d39f84bfec2737e8198c1774866c83e0338cd97d6f010bf75", "a2a4a0c9fe30c00504c2fe11f5d92907f04fc944b0afc8c1687194388db29b9a", 3),
     "tests/test_benchmark_turn_three_hand_tail.py": ("9bd0168502fa43ee7c09a1ed3a54c7599593626aa1d8888b00cd1ac637ec9eb8", "c9ae3f7307f50252735941e071b29ceda61a11228df94474a4201e7850cc1550", 2),
     "tests/test_benchmark_turn_three_hand_tail_adversarial.py": ("10372f01d917e8bd0654bb1f1dd598a9fb931557fb1a97582f0ba2f188f6199d", "375cbf5c15ac2ee01355a48e4e5ec38a5758cd03dd1f732d9ffc08009ab8dfc0", 4),
@@ -366,6 +366,15 @@ SYNTHETIC_TEST_TRANSITIONS = {
 BRIDGE_INPUTS = BRIDGE_INPUTS + tuple(
     ROOT / "tests/fixtures" / (Path(name).name + ".before_synthetic_bridge.txt")
     for name in SYNTHETIC_TEST_TRANSITIONS)
+WINDOWS_FIXTURE_TRANSITION = {
+    "tests/test_benchmark_river_direct_tail.py": (
+        "tests/fixtures/test_benchmark_river_direct_tail.py.before_windows_fixture.txt",
+        "2656d22814fa63cdc143c5f667527c93aad424158b1f98b0567b83931cc0261f",
+        "99459c7a39e9b57ba14a4b7db35e9fc7d8b6daff6fc9b84717a490022ab71f78",
+    )
+}
+BRIDGE_INPUTS = BRIDGE_INPUTS + tuple(ROOT / archive for archive, _middle, _current
+                                     in WINDOWS_FIXTURE_TRANSITION.values())
 _SYNTHETIC_PATCH_AST = ast.dump(ast.parse(
     'patch.object(runner, "compatible_exact_source_maps", side_effect=lambda saved, current, root: saved == current)',
     mode="eval").body, include_attributes=False)
@@ -388,6 +397,64 @@ def _synthetic_test_ast(raw, *, strip):
     return ast.dump(tree, include_attributes=False), count
 
 
+def _windows_fixture_transition_ast(raw, *, source_version):
+    """Normalize only the pinned Windows temp-directory fixture refactor."""
+    name = "tests/test_benchmark_river_direct_tail.py"
+    archive, middle_pin, current_pin = WINDOWS_FIXTURE_TRANSITION[name]
+    expected_pin = {"intermediate": middle_pin, "current": current_pin}.get(source_version)
+    if expected_pin is None or _sha(_lf(raw)) != expected_pin:
+        raise ValueError("Windows fixture source differs from its exact transition pin")
+
+    tree = ast.parse(raw.decode("utf-8"))
+    if source_version == "current":
+        temp_imports = [node for node in tree.body
+                        if isinstance(node, ast.ImportFrom) and node.module == "tempfile" and
+                        [(item.name, item.asname) for item in node.names] ==
+                        [("TemporaryDirectory", None)]]
+        if len(temp_imports) != 1:
+            raise ValueError("Windows fixture tempfile import differs")
+        tree.body.remove(temp_imports[0])
+    elif any(isinstance(node, ast.ImportFrom) and node.module == "tempfile"
+             for node in tree.body):
+        raise ValueError("Intermediate Windows fixture unexpectedly imports tempfile")
+
+    classes = [node for node in tree.body
+               if isinstance(node, ast.ClassDef) and node.name == "RiverDirectTailEvidenceTests"]
+    if len(classes) != 1:
+        raise ValueError("Windows fixture test class differs")
+    methods = [node for node in classes[0].body
+               if isinstance(node, ast.FunctionDef) and
+               node.name == "test_post_link_foreign_replacement_survives_bundle_rollback"]
+    if len(methods) != 1:
+        raise ValueError("Windows fixture test method differs")
+    method = methods[0]
+    if source_version == "intermediate":
+        expected_setup = ast.parse(
+            'TEST_TMP.mkdir(exist_ok=True)\n'
+            'root = TEST_TMP / f"direct-tail-post-link-foreign-{uuid.uuid4().hex}"').body
+        if (len(method.body) < 3 or
+                [ast.dump(node, include_attributes=False) for node in method.body[:2]] !=
+                [ast.dump(node, include_attributes=False) for node in expected_setup] or
+                not isinstance(method.body[-1], ast.Try) or method.body[-1].finalbody == []):
+            raise ValueError("Intermediate Windows fixture setup or cleanup differs")
+        method.body = method.body[2:-1] + method.body[-1].body
+    else:
+        if len(method.body) != 1 or not isinstance(method.body[0], ast.With):
+            raise ValueError("Current Windows fixture lifetime wrapper differs")
+        wrapper = method.body[0]
+        expected_context = ast.parse(
+            'with TemporaryDirectory(prefix="opl-river-foreign-") as temporary: pass').body[0]
+        if (len(wrapper.items) != 1 or
+                ast.dump(wrapper.items[0], include_attributes=False) !=
+                ast.dump(expected_context.items[0], include_attributes=False) or
+                not wrapper.body or
+                ast.dump(wrapper.body[0], include_attributes=False) !=
+                ast.dump(ast.parse('root = Path(temporary)').body[0], include_attributes=False)):
+            raise ValueError("Current Windows fixture directory setup differs")
+        method.body = wrapper.body[1:]
+    return ast.dump(tree, include_attributes=False)
+
+
 def _synthetic_test_matches(path, digest):
     try:
         name = Path(path).resolve().relative_to(ROOT.resolve()).as_posix()
@@ -396,6 +463,20 @@ def _synthetic_test_matches(path, digest):
         old, current = _lf(archived.read_bytes()), _lf((ROOT / name).read_bytes())
         old_ast, old_count = _synthetic_test_ast(old, strip=True)
         current_ast, current_count = _synthetic_test_ast(current, strip=True)
+        if name in WINDOWS_FIXTURE_TRANSITION:
+            archive_name, middle_pin, current_pin = WINDOWS_FIXTURE_TRANSITION[name]
+            intermediate = _lf((ROOT / archive_name).read_bytes())
+            intermediate_ast, intermediate_count = _synthetic_test_ast(intermediate, strip=True)
+            same_fixture_logic = (
+                _sha(intermediate) == middle_pin and old_count == 0 and
+                intermediate_count == expected_count and current_count == expected_count and
+                old_ast == intermediate_ast and
+                _windows_fixture_transition_ast(intermediate, source_version="intermediate") ==
+                _windows_fixture_transition_ast(current, source_version="current"))
+            accepted_hashes = (_line_ending_hashes(old) | _line_ending_hashes(intermediate) |
+                               _line_ending_hashes(current))
+            return (_sha(old) == old_pin and _sha(current) == current_pin and
+                    same_fixture_logic and digest in accepted_hashes)
         return (_sha(old) == old_pin and _sha(current) == current_pin and
                 old_count == 0 and current_count == expected_count and old_ast == current_ast and
                 digest in (_line_ending_hashes(old) | _line_ending_hashes(current)))
