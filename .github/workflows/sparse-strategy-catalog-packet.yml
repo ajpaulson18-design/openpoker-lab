@@ -21,6 +21,14 @@ jobs:
         run: python -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay.json
       - name: Replay immutable packets with optimized Python
         run: python -O -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay-optimized.json
+      - name: Replay sparse state and independent reference packets
+        run: python -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay.json
+      - name: Replay sparse state packets with optimized Python
+        run: python -O -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay-optimized.json
+      - name: Replay immutable changing-policy observations
+        run: python -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay.json
+      - name: Replay changing-policy observations with optimized Python
+        run: python -O -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay-optimized.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -28,4 +36,8 @@ jobs:
           path: |
             sparse-catalog-packet-replay.json
             sparse-catalog-packet-replay-optimized.json
+            sparse-component-packet-replay.json
+            sparse-component-packet-replay-optimized.json
+            sparse-whole-packet-replay.json
+            sparse-whole-packet-replay-optimized.json
           if-no-files-found: warn

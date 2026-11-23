@@ -1119,3 +1119,21 @@ tests pass normally and optimized, including compiled controls and adversarial
 subprocesses; mechanical conversion of three validators preserves complete AST
 predicates/messages. Local full-suite execution was interrupted after source-drift
 guards fired during ongoing edits; final clean-head CI remains a separate gate.
+
+D054 (2026-11-22, America/New_York): under the owner's continuing scalable
+foundation priority, separate stable information identity from mutable policy
+epochs. Reuse the existing exact native raw walk, owned History and prepared
+Chance; Catalog row handles are the only numerical strategy key. The initial
+Q52 uniform policy is implicit, signed cumulative regrets remain unclipped,
+and only changed regret rows are quantized after both seats complete a frozen
+epoch. This experimental vanilla transition has a separate contract from the
+existing CFR+ trainer. No solver default or resource ceiling changes.
+
+The bounded two-observation PROOF9 path passes independent complete numerical
+reconstruction, normal/optimized byte parity, saved replay, and dedicated
+Windows/Linux/sanitizer checks at `8652d5d`. Preserve the failed compile,
+weaker historical witness and immutable component/reference packets. These
+results establish a shared changing-policy path; longer learning, a sampler,
+solution quality and realistic-range feasibility require further evidence.
+The older eleven-card rejections remain valid. See the
+[epoch contract and executed evidence](../sparse-policy-epochs.md).

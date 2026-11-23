@@ -172,9 +172,28 @@ qualified at namespace scope. Its build failure and source remain preserved;
 the correction changes the method qualification. It was not a numerical test
 failure. Dedicated Windows, Linux and sanitized epoch CI pass at source
 `8652d5d2c5f929f18ee363d40f7ec20a03748a6b`; the catalog packet also replays
-normally and optimized on both Windows and Linux. Immutable whole-game
-packaging remains a separate publication gate. The broader Windows History
+normally and optimized on both Windows and Linux. The broader Windows History
 control compilation failure is preserved separately.
+
+The source-inclusive immutable whole-game packets are recorded in
+[`sparse-two-epoch-v1/manifest.json`](../benchmarks/results/sparse-two-epoch-v1/manifest.json).
+Normal and optimized archives each contain 146 members and are 1,017,982 and
+1,017,991 bytes (SHA256
+`0f8fb2ebc6a707346996ee7bf9ba73799ba5873c2961e4821bc4969c3fd4d269`
+and `7250a203c4946f969f70df2e039808044fcdd3171737db988227d9ee211dc1d5`).
+The 671,057-byte development archive retains the failed first compilation and
+explicitly labels its reconstructed committed inputs as distinct from an
+original raw-checkout attestation. Executable bytes are omitted; build/source
+manifests and the observed executable hashes are retained.
+
+The maintained `scripts.replay_sparse_two_epoch_packet` reader passes normally
+and optimized, authenticates all three archives before mathematical replay,
+reconstructs both complete matrices with zero candidate calls, and never
+executes archived source. Its initial development-digest transcription refusal
+is retained separately; the archive bytes were unchanged. Normal/optimized
+component and independent-reference packets also replay exactly through
+`scripts.replay_sparse_epoch_component_packet`. Windows/Linux CI now includes
+these maintained packet readers; their new job results remain a separate gate.
 
 The independent reference uses literal numeric betting rules, Fraction raw
 updates and an independent ranker. It may materialize the complete policy for

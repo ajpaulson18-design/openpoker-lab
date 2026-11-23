@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 426, in <module>
+    if __name__=='__main__':print(json.dumps(replay_packets(),indent=2,sort_keys=True))
+                                             ^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 398, in replay_packets
+    bootstrap=authenticate_bootstrap()
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 91, in authenticate_bootstrap
+    canonical=git_file(head,name)
+              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 64, in git_file
+    require(size_raw.isdigit() and int(size_raw)<=limit,'committed source file byte ceiling: '+name)
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 52, in require
+    if not value:raise ValueError(message)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: committed source file byte ceiling: scripts/replay_sparse_epoch_component_packet.py

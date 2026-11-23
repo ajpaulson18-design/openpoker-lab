@@ -1,0 +1,139 @@
+{
+  "active_bootstrap": {
+    "head": "07a044825265207d90e895b54c5f1b182583b22b",
+    "raw_sha256": {
+      "scripts/freeze_sparse_epoch_reference.py": "8657794a6a00d1716d5a9fe811b4155f693d608a7ca5c1295cf96ce9b792e32d",
+      "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990",
+      "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+      "scripts/replay_native_policy_packet.py": "de47a3fe586b0b1323fda524d2efac0d1077deff4b8d85ecb67215002c0b1e6b",
+      "scripts/replay_sparse_epoch_component_packet.py": "0c6aa8a2e840637be66bf29f36c543374501368ed7d1b1393d93bb533478d4e9",
+      "tests/test_native_sparse_epoch.py": "2893fe3a8ac26deb6cc82e5bf30e86df433adb338c763ae6109867343dc20aec",
+      "tests/test_sparse_epoch_reference.py": "98103e46b186c6cf115306820ad59275d377f930bc7c1ce598ec8038ee03d842",
+      "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239"
+    }
+  },
+  "active_source_sha256": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/freeze_sparse_epoch_reference.py": "8657794a6a00d1716d5a9fe811b4155f693d608a7ca5c1295cf96ce9b792e32d",
+    "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+    "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990",
+    "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+    "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+    "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+    "tests/test_native_sparse_epoch.py": "2893fe3a8ac26deb6cc82e5bf30e86df433adb338c763ae6109867343dc20aec",
+    "tests/test_sparse_epoch_reference.py": "98103e46b186c6cf115306820ad59275d377f930bc7c1ce598ec8038ee03d842",
+    "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+    "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+    "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+    "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+    "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+    "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+    "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+    "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239"
+  },
+  "archived_source_executed": false,
+  "archives": {
+    "component": {
+      "archive": "component.zip",
+      "bytes": 1454836,
+      "expanded_bytes": 2874694,
+      "members": 104,
+      "sha256": "4333f62c353f251da41f68c48f97530e95a7b1f90ac3b22d475f0443f6e50df7"
+    },
+    "development": {
+      "archive": "development.zip",
+      "bytes": 765233,
+      "expanded_bytes": 1569211,
+      "members": 66,
+      "sha256": "be6e460dd0b6a8c3d3d1662b7b98861848635ad6b86491c1aa0531eba7156974"
+    },
+    "reference": {
+      "archive": "reference.zip",
+      "bytes": 285959,
+      "expanded_bytes": 1612062,
+      "members": 27,
+      "sha256": "05963144a58137bf43b7dc395fa730045de691b3c970d663fd37952103d4b0f5"
+    }
+  },
+  "candidate_calls": 0,
+  "manifest": {
+    "bytes": 81661,
+    "sha256": "ce73046f44c76fd587e9a8928c094d4114188ff99c58de03340840c5f585aaee"
+  },
+  "python_imports": "fresh process and isolated bytecode-cache prefix",
+  "results": {
+    "component": {
+      "candidate_calls": 0,
+      "current_checks": [
+        "normal:test_cumulative_component_receipts",
+        "normal:test_exact_average_scales_and_no_quantization_for_average_only_updates",
+        "normal:test_observed_process_and_rejected_lifecycle",
+        "normal:test_signed_regret_persists_and_next_policy_uses_positive_parts",
+        "optimized:test_cumulative_component_receipts",
+        "optimized:test_exact_average_scales_and_no_quantization_for_average_only_updates",
+        "optimized:test_observed_process_and_rejected_lifecycle",
+        "optimized:test_signed_regret_persists_and_next_policy_uses_positive_parts"
+      ],
+      "outputs": [
+        {
+          "current_numerical_methods": 4,
+          "mode": "normal",
+          "saved_stderr_bytes": 0,
+          "saved_stdout_bytes": 3130,
+          "saved_stdout_sha256": "1331d8a2a92b44212328ce7c8990b0cff747b53dd08a77772249e3002855323f"
+        },
+        {
+          "current_numerical_methods": 4,
+          "mode": "optimized",
+          "saved_stderr_bytes": 0,
+          "saved_stdout_bytes": 3130,
+          "saved_stdout_sha256": "1331d8a2a92b44212328ce7c8990b0cff747b53dd08a77772249e3002855323f"
+        }
+      ],
+      "status": "saved-component-controls-exact"
+    },
+    "development": {
+      "compile_failure_returncode": 2,
+      "component2_centering_guard": "absent",
+      "component2_saved_exit": 0,
+      "interim_full_scan_executed": false,
+      "numerical_pass_claimed": false,
+      "status": "development-evidence-authenticated"
+    },
+    "reference": {
+      "candidate_calls": 0,
+      "epochs": [
+        {
+          "canonical_policy_sha256": "ca537cd86a9111a0a7ab8ebd3815dcc191bdbbf002bf2140ae3080ea2c2cfcdd",
+          "epoch": 1,
+          "epoch_json_sha256": "5ce0b5f4bdcbd83ddf713d2aa145dd47557f447c6876b60a77b6ac15917fa38c",
+          "policy_overlays": 434,
+          "sparse_rows": 440
+        },
+        {
+          "canonical_policy_sha256": "6ffe92429251aa9b3a958c14dc97ca8a43f9b3539f4f607d2cfc2466cd3ca89d",
+          "epoch": 2,
+          "epoch_json_sha256": "5b5291ae596c986e5e4bb8adb2d46bd1c1b9d5081c1fe3a53b2c6ddb69bcfa98",
+          "policy_overlays": 674,
+          "sparse_rows": 868
+        }
+      ],
+      "policy_comparison": {
+        "E0_to_E1_changed_rows": 434,
+        "E0_uniform_sha256": "90c6284cfffd76e0f2138e52752ab1cafb700e7f9bd7c52af76dc7a5e8db5d33",
+        "E1_sha256": "ca537cd86a9111a0a7ab8ebd3815dcc191bdbbf002bf2140ae3080ea2c2cfcdd",
+        "E1_to_E2_changed_rows": 243,
+        "E2_sha256": "6ffe92429251aa9b3a958c14dc97ca8a43f9b3539f4f607d2cfc2466cd3ca89d",
+        "E2_vs_frozen_E0_plus_B2_changed_rows": 625,
+        "all_rows_compared": 24420,
+        "frozen_E0_plus_B2_sha256": "80692436f2be83ebff37131c02e691a76b2f5c69e28a5e0d9d2dba88332238cd"
+      },
+      "status": "independent-two-epoch-reference-exact"
+    }
+  },
+  "scope": "saved synthetic component and independent two-epoch reference only; no whole-game learning, quality, convergence, or scale claim",
+  "status": "sparse-epoch-component-reference-packets-exact"
+}
