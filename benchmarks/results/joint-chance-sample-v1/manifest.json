@@ -1,0 +1,184 @@
+{
+  "checks": {
+    "normal": {
+      "observed_python_exit": 0,
+      "tests": 7,
+      "tool_session": 70589
+    },
+    "optimized": {
+      "observed_python_exit": 0,
+      "tests": 7,
+      "tool_session": 5327
+    },
+    "target_packet_normal": {
+      "observed_python_exit": 0,
+      "tool_session": 47316
+    },
+    "target_packet_optimized": {
+      "observed_python_exit": 0,
+      "tool_session": 9747
+    }
+  },
+  "format": "joint-chance-reference-checks-v1",
+  "math_source_first_freeze": "d11fc29",
+  "members": {
+    "capture-script.py.txt": {
+      "bytes": 5400,
+      "sha256": "1653ab559b405b82903bb9b1fd16f7c5b4275fe1da9a8a9c76f3def79c2dc2e0"
+    },
+    "joint-sample-reference1-normal.log": {
+      "bytes": 1558,
+      "sha256": "472c23527070e40752a2f620ff4d0d0c060a07f696c326b10d5aaa90212cf2b7"
+    },
+    "joint-sample-reference1-optimized.log": {
+      "bytes": 1558,
+      "sha256": "a189df9b54206ce08d0af6f76c69266c21c3718e6153144a4488829f313e191b"
+    },
+    "source.zip": {
+      "bytes": 407435,
+      "sha256": "14467504e98b75c76a686e6d18a647b7a06e0133105389206d64bee9c0ef42d3"
+    },
+    "target-board-packet1-normal.log": {
+      "bytes": 3803,
+      "sha256": "92aac5690adeb2d06931957ae4f7b2028ff42fd8c2a3c398dbd926d6e7f40398"
+    },
+    "target-board-packet1-optimized.log": {
+      "bytes": 3803,
+      "sha256": "92aac5690adeb2d06931957ae4f7b2028ff42fd8c2a3c398dbd926d6e7f40398"
+    }
+  },
+  "policies": "Complete unchanged uniform and zero-skew Q52 inputs are retained in target-board-reference-v1/source-and-policies.zip; their factory and source closure are authenticated here.",
+  "runtime": {
+    "executable_sha256": "5699bdfd4b6924c69d0a1f6b1d75d7760698567ce81b92d4fcc8bb2af4eeba84",
+    "version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "sample_tables_retained": false,
+  "scope": "Deterministic fixed-PROOF9 full-coordinate raw expectation checks. No RNG, native execution, evolving-policy training, quality or full52 admission. Concurrent test durations are not benchmark comparisons.",
+  "source_capture": "Post-run raw closure capture matches the committed source frozen before execution; not a separate pre-run raw-checkout attestation.",
+  "source_file_count": 24,
+  "source_files": {
+    "pokerlab/__init__.py": {
+      "bytes": 79,
+      "git_blob": "f40c7195c7a6873baf952d8508ab89d1c05df654",
+      "sha256": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c"
+    },
+    "pokerlab/cards.py": {
+      "bytes": 5216,
+      "git_blob": "44d86c7222042b05c33d9a3a85010a2d74b623fe",
+      "sha256": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074"
+    },
+    "scripts/freeze_target_board_reference.py": {
+      "bytes": 15876,
+      "git_blob": "f572d2b94eaaf554686b5dedb342f011042308ef",
+      "sha256": "11be2b4981dbfef75187eaa484386a88fa9d1b65c5fde185b701ba04b0b8e040"
+    },
+    "scripts/matrix_free_certificate_budget.py": {
+      "bytes": 5349,
+      "git_blob": "0ffb320304c4cd20d5742251607cc0b9aeb1ced8",
+      "sha256": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b"
+    },
+    "scripts/matrix_free_four_street_rules.py": {
+      "bytes": 36054,
+      "git_blob": "01a84cd70bd773285e4fb1b5b5a20fea6308c424",
+      "sha256": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479"
+    },
+    "scripts/preflop_validation.py": {
+      "bytes": 24943,
+      "git_blob": "5ea928a0e1cb5e349f13070be99ab67c6a0d7d0c",
+      "sha256": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878"
+    },
+    "scripts/replay_native_frozen_policy_state.py": {
+      "bytes": 11178,
+      "git_blob": "82133b02f350fa82094f8c6f39c9f5fb34c42380",
+      "sha256": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+    },
+    "scripts/replay_target_board_reference.py": {
+      "bytes": 22414,
+      "git_blob": "b18835c6de2f0c3115c6f2fc669b941c4877c24f",
+      "sha256": "61959e3b1555fe49edbcbb7d9ec0a8103312814f7e302a592b383e896a795599"
+    },
+    "scripts/replay_target_board_reference_packet.py": {
+      "bytes": 25325,
+      "git_blob": "64842a4281e319b63c77bc1d20382ae55236f133",
+      "sha256": "ab8eefe6ee199a7067d84710aa79b4fefba6a0b5c74acd37c10a75ca14dd6477"
+    },
+    "tests/full_deck_public_chance_reference.py": {
+      "bytes": 4769,
+      "git_blob": "ea7c87d52855ab9b40b60a54f8a169063824d857",
+      "sha256": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69"
+    },
+    "tests/test_joint_sample_reference.py": {
+      "bytes": 9687,
+      "git_blob": "36d4884d47a9b4f4b79549be87e18a50b4de60ab",
+      "sha256": "9cd05bce700f4582f643f0f0210e056cf7d6dfad4ea0e9682d36a4ff6b650dbb"
+    },
+    "tests/test_native_dyadic_policy.py": {
+      "bytes": 9495,
+      "git_blob": "64d14210fba016cf556e47d02ffd6bffef235ce6",
+      "sha256": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36"
+    },
+    "tests/test_native_exact_reach.py": {
+      "bytes": 14687,
+      "git_blob": "2c3b9cf401af57c4857779eed9b184d6b08f8ae4",
+      "sha256": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce"
+    },
+    "tests/test_target_board_reference.py": {
+      "bytes": 6852,
+      "git_blob": "f194b8304c4754494d617678aca13862cbf0010a",
+      "sha256": "63538ed1be5e0ab93f86fec8baff9678a16b397521be5ccaa8afaf786eb28141"
+    },
+    "tests/virtual_betting_template_reference.py": {
+      "bytes": 24563,
+      "git_blob": "e2cc5ce6958d41844ba13bc3702a38a24d65322f",
+      "sha256": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119"
+    },
+    "tests/virtual_dyadic_training_reference.py": {
+      "bytes": 13230,
+      "git_blob": "1b853e016b265e70b844e2e3d0c4103943b1e320",
+      "sha256": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011"
+    },
+    "tests/virtual_frozen_policy_input_reference.py": {
+      "bytes": 7953,
+      "git_blob": "8abb4012ad72778929278946dda28a486979d57d",
+      "sha256": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5"
+    },
+    "tests/virtual_frozen_run_control.py": {
+      "bytes": 17832,
+      "git_blob": "040816918739068e7ce0c5b1b3496b6972d8ebf7",
+      "sha256": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039"
+    },
+    "tests/virtual_frozen_sample_reference.py": {
+      "bytes": 32741,
+      "git_blob": "db85dda4f0e05ea13f9071b8e40fb095d9ffe03e",
+      "sha256": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613"
+    },
+    "tests/virtual_frozen_update_reference.py": {
+      "bytes": 32551,
+      "git_blob": "37f6d764e5080eafb6295f288d2349a72388c1a0",
+      "sha256": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add"
+    },
+    "tests/virtual_frozen_value_reference.py": {
+      "bytes": 22710,
+      "git_blob": "1cdc045c22b3ec581d8eb649bfdd82c11318b4dc",
+      "sha256": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288"
+    },
+    "tests/virtual_grid_update_reference.py": {
+      "bytes": 15294,
+      "git_blob": "426dce5b72520b20b1a846a72d25e436b1373253",
+      "sha256": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24"
+    },
+    "tests/virtual_joint_sample_reference.py": {
+      "bytes": 23336,
+      "git_blob": "81a0375ecd02d000ed625f0f83507c64bc4f251e",
+      "sha256": "271906f11d8acc2c72bc7e2cb4e5836cb60b9ea237e8e15f7457d99119c6c936"
+    },
+    "tests/virtual_target_board_reference.py": {
+      "bytes": 21321,
+      "git_blob": "035b1a7d5f6815d265601aa6e792f0faef3075ef",
+      "sha256": "aa31b50d3f7c1c25eb0f1ab22bb2e35512cdda4cf74a1436056f63afb01bd6c4"
+    }
+  },
+  "source_head": "4e54249e4d02190539b156503a3a9175e190abe5",
+  "target_packet_manifest_sha256": "9cd993bb460224bdfca83e7d43b22bdca0a0cce9e615385fd64150e5b47addcc",
+  "validation": "Tests recompute and compare every R/A coordinate internally; this packet retains source and observed checks, not the per-world raw tables."
+}

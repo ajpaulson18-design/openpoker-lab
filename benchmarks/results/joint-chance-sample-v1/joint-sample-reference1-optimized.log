@@ -1,0 +1,12 @@
+test_all_private_and_board_tickets_have_exact_nonuniform_joint_law (tests.test_joint_sample_reference.JointSampleReferenceTests.test_all_private_and_board_tickets_have_exact_nonuniform_joint_law) ... ok
+test_board_unranking_matches_separate_combination_and_permutation_order (tests.test_joint_sample_reference.JointSampleReferenceTests.test_board_unranking_matches_separate_combination_and_permutation_order) ... ok
+test_both_full_q52_profiles_match_all_literal_regret_and_average_coordinates (tests.test_joint_sample_reference.JointSampleReferenceTests.test_both_full_q52_profiles_match_all_literal_regret_and_average_coordinates) ... ok
+test_forged_or_foreign_sample_rejects_before_rank_or_walk (tests.test_joint_sample_reference.JointSampleReferenceTests.test_forged_or_foreign_sample_rejects_before_rank_or_walk) ... ok
+test_hidden_opponent_and_future_cards_cannot_change_earlier_policy_or_average (tests.test_joint_sample_reference.JointSampleReferenceTests.test_hidden_opponent_and_future_cards_cannot_change_earlier_policy_or_average) ... ok
+test_request_limits_reject_before_source_or_private_preparation (tests.test_joint_sample_reference.JointSampleReferenceTests.test_request_limits_reject_before_source_or_private_preparation) ... ok
+test_ticket_prefix_marginal_has_correct_original_holding_identity (tests.test_joint_sample_reference.JointSampleReferenceTests.test_ticket_prefix_marginal_has_correct_original_holding_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 30.478s
+
+OK

@@ -260,14 +260,23 @@ console output.
 A fresh Windows checkout reproduced newline conversion of the component and
 whole-game packet manifests, changing their pinned hashes before replay. The
 packet directories now preserve exact bytes through `.gitattributes`; the
-archives and expected hashes are unchanged. This fixes the demonstrated checkout
-problem, while a new hosted Windows replay remains a separate verification gate.
+archives and expected hashes are unchanged. At `f127f09`, the combined Catalog,
+component/reference and whole-game packet workflow passes on Windows and Linux.
+Native sparse epochs also pass Windows/Linux/sanitizer. The older Windows
+History component compilation failure remains unresolved; the broader unit
+suite is a separate gate.
+
+The published target-board packet also reconstructs and independently replays
+normally and optimized at `4e54249`, matching all four retained earlier reports.
+The dedicated Windows/Linux workflow preserves stdout and error diagnostics;
+its hosted results remain a separate gate.
 
 This proposal proof also exposes a limitation: its support concentration is
 specific to narrow N9 ranges. A full-range board still has hundreds of thousands
 of supported rows. The next [joint chance-sampling gate](joint-chance-sampling-foundation.md)
-tests an estimator that updates only selected own holdings, while preserving
-the same literal raw targets and frozen-policy boundaries.
+now verifies an estimator that updates only selected own holdings, while
+preserving the same literal raw targets and frozen-policy boundaries. Its seven
+normal/optimized controls pass; native integration remains unfinished.
 
 A bounded native sampler, longer learning lifecycle, saved-policy quality, and
 realistic-range admission remain unfinished gates. The old eleven-card State and

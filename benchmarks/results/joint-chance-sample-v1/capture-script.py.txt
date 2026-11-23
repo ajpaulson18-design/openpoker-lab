@@ -1,0 +1,97 @@
+"""Capture observed checks and committed source bytes; run no project math."""
+import ast
+import hashlib
+import io
+import json
+from pathlib import Path
+import subprocess
+import sys
+import zipfile
+
+WORK = Path(__file__).resolve().parent
+ROOT = WORK / 'dyprofile-repo'
+OUT = ROOT / 'benchmarks/results/joint-chance-sample-v1'
+HEAD = '4e54249e4d02190539b156503a3a9175e190abe5'
+
+def git(*args):
+    return subprocess.check_output(['git', *args], cwd=ROOT)
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def encode(value):
+    return (json.dumps(value, sort_keys=True, indent=2) + '\n').encode()
+
+def main():
+    if OUT.exists() or git('rev-parse', 'HEAD').decode().strip() != HEAD:
+        raise ValueError('fresh destination and frozen HEAD required')
+    bootstrap = ROOT / 'scripts/replay_target_board_reference_packet.py'
+    tree = ast.parse(bootstrap.read_text(encoding='utf-8'))
+    names = next(ast.literal_eval(node.value) for node in tree.body
+                 if isinstance(node, ast.Assign) and
+                 any(isinstance(t, ast.Name) and t.id == 'SOURCE_NAMES' for t in node.targets))
+    names = (*names, 'tests/virtual_joint_sample_reference.py',
+             'tests/test_joint_sample_reference.py', 'scripts/replay_target_board_reference.py',
+             'scripts/replay_target_board_reference_packet.py')
+    if len(names) != len(set(names)) or len(names) != 24:
+        raise ValueError('exact source closure')
+    if git('status', '--porcelain', '--untracked-files=all', '--', *names).strip():
+        raise ValueError('source closure must be committed and clean')
+    source = {}; identity = {}
+    for name in names:
+        raw = (ROOT / name).read_bytes()
+        canonical = git('show', HEAD + ':' + name)
+        if len(raw) > 2 << 20 or not (raw == canonical or
+                (b'\r' not in canonical and raw == canonical.replace(b'\n', b'\r\n'))):
+            raise ValueError('source byte or size mismatch: ' + name)
+        source['source/' + name] = raw
+        identity[name] = {'bytes': len(raw), 'sha256': sha(raw),
+                          'git_blob': git('rev-parse', HEAD + ':' + name).decode().strip()}
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_STORED) as archive:
+        for name, raw in sorted(source.items()):
+            info = zipfile.ZipInfo(name, (2026, 11, 23, 0, 0, 0))
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, raw)
+    archive_bytes = buffer.getvalue()
+    if len(archive_bytes) > 8 << 20:
+        raise ValueError('source archive limit')
+    retained = {'source.zip': archive_bytes, 'capture-script.py.txt': Path(__file__).read_bytes()}
+    checks = {}
+    for mode, session in (('normal', 70589), ('optimized', 5327)):
+        name = 'joint-sample-reference1-' + mode + '.log'
+        raw = (WORK / name).read_bytes()
+        if b'Ran 7 tests' not in raw or not raw.rstrip().endswith(b'OK'):
+            raise ValueError('joint gate did not pass: ' + mode)
+        retained[name] = raw
+        checks[mode] = {'tool_session': session, 'observed_python_exit': 0, 'tests': 7}
+    for mode, session in (('normal', 47316), ('optimized', 9747)):
+        name = 'target-board-packet1-' + mode + '.log'
+        raw = (WORK / name).read_bytes(); report = json.loads(raw)
+        if report['status'] != 'authenticated-target-board-packet-replayed-exactly' or report['active_checkout_head'] != HEAD:
+            raise ValueError('packet replay receipt')
+        retained[name] = raw
+        checks['target_packet_' + mode] = {'tool_session': session, 'observed_python_exit': 0}
+    manifest = {
+        'format': 'joint-chance-reference-checks-v1', 'source_head': HEAD,
+        'math_source_first_freeze': 'd11fc29', 'checks': checks,
+        'source_capture': 'Post-run raw closure capture matches the committed source frozen before execution; not a separate pre-run raw-checkout attestation.',
+        'source_files': identity, 'source_file_count': len(identity),
+        'policies': 'Complete unchanged uniform and zero-skew Q52 inputs are retained in target-board-reference-v1/source-and-policies.zip; their factory and source closure are authenticated here.',
+        'target_packet_manifest_sha256': '9cd993bb460224bdfca83e7d43b22bdca0a0cce9e615385fd64150e5b47addcc',
+        'scope': 'Deterministic fixed-PROOF9 full-coordinate raw expectation checks. No RNG, native execution, evolving-policy training, quality or full52 admission. Concurrent test durations are not benchmark comparisons.',
+        'sample_tables_retained': False,
+        'validation': 'Tests recompute and compare every R/A coordinate internally; this packet retains source and observed checks, not the per-world raw tables.',
+        'runtime': {'version': sys.version, 'executable_sha256': sha(Path(sys.executable).read_bytes())},
+        'members': {name: {'bytes': len(raw), 'sha256': sha(raw)} for name, raw in sorted(retained.items())},
+    }
+    if git('rev-parse', 'HEAD').decode().strip() != HEAD:
+        raise ValueError('HEAD changed during capture')
+    OUT.mkdir()
+    for name, raw in retained.items():
+        (OUT / name).write_bytes(raw)
+    body = encode(manifest); (OUT / 'manifest.json').write_bytes(body)
+    print(json.dumps({'files': len(retained) + 1, 'manifest_sha256': sha(body), 'source_files': len(identity)}))
+
+if __name__ == '__main__':
+    main()

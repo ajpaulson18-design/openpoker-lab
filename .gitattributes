@@ -260,3 +260,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/sparse-epoch-component-v1/** -text
 /benchmarks/results/sparse-two-epoch-v1/** -text
 /benchmarks/results/target-board-reference-v1/** -text
+/benchmarks/results/joint-chance-sample-v1/** -text

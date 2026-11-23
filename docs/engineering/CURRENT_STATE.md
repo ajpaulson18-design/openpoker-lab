@@ -23,8 +23,10 @@ slot, with normal/optimized saved-table replay. It proves a fixture-specific
 regret second-moment bound, without a native sampler or learning-quality claim.
 The [next architecture gate](../joint-chance-sampling-foundation.md) samples a
 private pair together with a board, aiming to remove the full-hand per-board
-update cost while keeping the same raw mathematical targets. That deterministic
-joint-sample reference remains under development; full-range admission is open.
+update cost while keeping the same raw mathematical targets. The deterministic
+joint-sample reference now passes seven normal/optimized controls, including
+full-coordinate expectations for two frozen Q52 policies. Native coupling,
+longer learning, RNG, saved-policy quality and full-range admission remain open.
 
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.

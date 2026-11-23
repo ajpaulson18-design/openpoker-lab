@@ -1,6 +1,7 @@
 # Joint chance sampling: the next architecture gate
 
-This is a mathematical design, not native admission or a training result. It
+This records a mathematical design and its independent deterministic gate. It
+does not establish native admission or a training result. It
 continues the [sparse epoch foundation](sparse-policy-epochs.md) toward realistic
 heads-up ranges. The existing eleven-card resource rejection remains binding.
 
@@ -88,11 +89,11 @@ For one sampled world the unchanged betting skeleton has 434 decision rows and
 1,039 slots, independent of the number of supported private holdings. Under
 the existing route/stake proof, sufficient sample denominators are `2^625` for
 R and `2^364` for A. Two observations require at most 631 regret magnitude bits
-and 366 average bits. These are design bounds to be checked by an independently
-executed reference; they do not describe a native implementation. The retained
+and 366 average bits. The executed reference checks the corresponding one-sample
+bounds; these do not describe a native implementation. The retained
 union still grows with newly sampled holdings and visible histories.
 
-The next acceptance gate is a deterministic full expectation over all 60 worlds
+The first acceptance gate is a deterministic full expectation over all 60 worlds
 for complete frozen Q52 profiles, including zero-policy branches. It must
 compare every raw R/A slot and both roots with the separate literal joint
 reference, verify all 580 tickets, and group prefix marginals independently.
@@ -101,3 +102,34 @@ despite different opponent holdings or future cards. Source must be frozen
 before execution, with complete policies, failures and resource receipts kept.
 Native coupling, a longer bounded lifecycle, RNG and independently replayed
 saved-policy quality follow as separate gates. No resource limit is raised.
+
+## Executed independent gate
+
+Reference source `d11fc29` was committed before execution. At execution head
+`4e54249e4d02190539b156503a3a9175e190abe5`, all seven controls pass normally
+and with optimized Python. Each complete expectation checks 60 worlds and
+all 580 tickets for both uniform and zero-skew full Q52 profiles. Every one of
+the 24,420 rows and 58,164 slots, and the root, matches the separate literal
+joint update. A separate grouping of literal worlds verifies physical
+own-hand/prefix marginals against ticket counts. Shared visible flop rows retain
+identical policy and average increments when hidden opponents or future cards
+change. Zero-own-reach and zero-policy branches can still have nonzero regrets.
+
+The complete request preflight reserves 250-million modeled work, seven-million
+logical entries and 15,405,760,000 cumulatively created bits under the unchanged
+500-million/eight-million/sixteen-billion limits. Its 2,048-bit intermediate
+forecast is below the unchanged 4,096-bit ceiling. The explicit entry partition
+totals 6,909,632 and covers up to 64 retained scalar results; the full expectation
+streams one at a time. These are conservative source-derived logical bounds,
+not allocation/RSS or throughput measurements. Concurrent test durations are
+not performance comparisons.
+
+The [source and check receipts](../benchmarks/results/joint-chance-sample-v1/manifest.json)
+retain all 24 source files, both original test logs, and the normal/optimized
+published target-proposal packet replay reports. This is a post-run raw-source
+capture matched to the previously frozen commit, with that timing disclosed.
+Per-world sample tables are not retained in this check packet; the tests
+recompute and compare them internally. The complete input policies remain in
+the separately authenticated target-board packet. Native coupling and longer
+learning remain the next gates, followed by an admitted RNG and independent
+saved-policy quality checks.
