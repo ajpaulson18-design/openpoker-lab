@@ -1,0 +1,31 @@
+name: Target board exact expectation packet
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  target-board-packet:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Replay complete expectation packet
+        run: python -B -X "pycache_prefix=${{ runner.temp }}/target-packet-normal" -m scripts.replay_target_board_reference_packet > target-packet-normal.json 2> target-packet-normal.stderr.log
+      - name: Replay with optimized Python
+        run: python -O -B -X "pycache_prefix=${{ runner.temp }}/target-packet-optimized" -m scripts.replay_target_board_reference_packet > target-packet-optimized.json 2> target-packet-optimized.stderr.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: target-board-packet-${{ matrix.os }}
+          path: |
+            target-packet-*.json
+            target-packet-*.stderr.log
+          if-no-files-found: warn
