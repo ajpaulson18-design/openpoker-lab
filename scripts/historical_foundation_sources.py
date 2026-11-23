@@ -7,6 +7,7 @@ this only when their sole dependency is the independently unchanged rank pair.
 """
 import ast
 import hashlib
+import os
 from pathlib import Path
 import subprocess
 
@@ -169,13 +170,16 @@ RAISED_TRANSITIONS = {
 
 def require_committed_bridge():
     """Return a raw bridge snapshot only after binding every input to HEAD."""
+    git_env = os.environ.copy()
     try:
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
-                              check=True, capture_output=True, text=True).stdout.strip()
+                              check=True, capture_output=True, text=True,
+                              env=git_env).stdout.strip()
         names = sorted({path.relative_to(ROOT).as_posix() for path in BRIDGE_INPUTS})
         requests = "".join(f"{head}:{name}\n" for name in names).encode("utf-8")
         committed = subprocess.run(["git", "cat-file", "--batch"], cwd=ROOT,
-                                   input=requests, check=True, capture_output=True).stdout
+                                   input=requests, check=True, capture_output=True,
+                                   env=git_env).stdout
     except (OSError, subprocess.CalledProcessError) as error:
         raise ValueError("Cannot authenticate committed bridge source closure") from error
     offset = 0
@@ -199,7 +203,8 @@ def require_committed_bridge():
         raise ValueError("Unexpected committed bridge source response")
     try:
         final_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT,
-                                    check=True, capture_output=True, text=True).stdout.strip()
+                                    check=True, capture_output=True, text=True,
+                                    env=git_env).stdout.strip()
     except (OSError, subprocess.CalledProcessError) as error:
         raise ValueError("Cannot recheck committed bridge HEAD") from error
     if final_head != head:
