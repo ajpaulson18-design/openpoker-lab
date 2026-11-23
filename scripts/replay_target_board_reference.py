@@ -174,9 +174,11 @@ def authenticate_sources(directory, result, proof):
         require(name in active_tree and active_tree[name] == captured_oid,
                 'active math source Git blob differs from artifact source: ' + name)
         active = read_bounded(ROOT / name, MAX_SOURCE_FILE)
-        require(sha(active) == entry['raw_sha256'] and active == saved,
-                'active math source bytes differ from authenticated artifact copy: ' + name)
-        source_receipt[name] = {'bytes': len(saved), 'raw_sha256': sha(saved), 'git_blob': captured_oid}
+        require(active == canonical or
+                (b'\r' not in canonical and active == canonical.replace(b'\n', b'\r\n')),
+                'active math source bytes differ from authenticated Git blob: ' + name)
+        source_receipt[name] = {'bytes': len(saved), 'raw_sha256': sha(saved),
+                                'git_blob': captured_oid, 'active_raw_sha256': sha(active)}
 
     # The active replay entrypoint is itself a clean, committed stdlib bootstrap.
     reader = 'scripts/replay_target_board_reference.py'
@@ -404,6 +406,9 @@ def replay(directory):
             tuple(report['rows'] for report in reports) == (24_420, 24_420) and
             tuple(report['slots'] for report in reports) == (58_164, 58_164),
             'complete exact replay census')
+    require(authenticate_sources(directory, result, proof) ==
+            (active_head, source_receipt, reader_receipt),
+            'active source closure or replay bootstrap changed during mathematical replay')
     return {
         'status': 'all-target-board-expectations-exact',
         'artifact_source_head': result['source_head'], 'active_replay_head': active_head,
