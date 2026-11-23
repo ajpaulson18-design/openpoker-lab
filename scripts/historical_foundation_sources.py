@@ -358,7 +358,7 @@ def _turn_verifier_matches(path, digest):
 # These exact changes patch only synthetic equality plumbing contexts. The
 # normalized AST must reproduce the complete archived test file.
 SYNTHETIC_TEST_TRANSITIONS = {
-    "tests/test_benchmark_river_direct_tail.py": ("5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71", "99459c7a39e9b57ba14a4b7db35e9fc7d8b6daff6fc9b84717a490022ab71f78", 3),
+    "tests/test_benchmark_river_direct_tail.py": ("5eae3ab6511d76f35d3a95a1789f4e6ef1642142229853891aca6320a76abb71", "33b86b5dfc05a13fe9582e4ef0cb6b9115ed3d5f09cd9366fda10e43f40eb20d", 3),
     "tests/test_benchmark_river_direct_long_tail.py": ("9aa292830ba25d2d39f84bfec2737e8198c1774866c83e0338cd97d6f010bf75", "a2a4a0c9fe30c00504c2fe11f5d92907f04fc944b0afc8c1687194388db29b9a", 3),
     "tests/test_benchmark_turn_three_hand_tail.py": ("9bd0168502fa43ee7c09a1ed3a54c7599593626aa1d8888b00cd1ac637ec9eb8", "c9ae3f7307f50252735941e071b29ceda61a11228df94474a4201e7850cc1550", 2),
     "tests/test_benchmark_turn_three_hand_tail_adversarial.py": ("10372f01d917e8bd0654bb1f1dd598a9fb931557fb1a97582f0ba2f188f6199d", "375cbf5c15ac2ee01355a48e4e5ec38a5758cd03dd1f732d9ffc08009ab8dfc0", 4),
@@ -370,7 +370,7 @@ WINDOWS_FIXTURE_TRANSITION = {
     "tests/test_benchmark_river_direct_tail.py": (
         "tests/fixtures/test_benchmark_river_direct_tail.py.before_windows_fixture.txt",
         "2656d22814fa63cdc143c5f667527c93aad424158b1f98b0567b83931cc0261f",
-        "99459c7a39e9b57ba14a4b7db35e9fc7d8b6daff6fc9b84717a490022ab71f78",
+        "33b86b5dfc05a13fe9582e4ef0cb6b9115ed3d5f09cd9366fda10e43f40eb20d",
     )
 }
 BRIDGE_INPUTS = BRIDGE_INPUTS + tuple(ROOT / archive for archive, _middle, _current
