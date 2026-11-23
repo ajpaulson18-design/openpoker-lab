@@ -212,9 +212,65 @@ B2 against E0, and preserves untouched uniform rows. This establishes the
 selected transition semantics, not a claim that every observation changes
 policy.
 
-Cross-platform execution, maintained immutable whole-game packaging, a bounded
-sampler and longer learning lifecycle, saved-policy quality, and realistic-range
-resource forecasts remain unfinished gates. The old eleven-card State and
+## Target-public-board proposal proof
+
+The independent target-board reference at `0e10c69` replaces the uniform public
+proposal with a fixed PROOF9 law: select a compatible private pair with integer
+weights 3, 8 and 18, then one of its twenty boards. This gives sixty positive
+boards, with probabilities `mass/580`. It excludes the 2,460 zero-full-target
+boards in the uniform proposal. Prefix probabilities are computed separately;
+their mass normalizers are 29, 290, 580 and 580 by street.
+
+Five controls pass normally and optimized. Complete expectation summation for
+uniform and zero-skew frozen Q52 profiles matches all 24,420 rows and 58,164
+slots, plus the root, against the separate literal joint reference. The
+componentwise regret second-moment bound is proved algebraically:
+`q_uniform/q_target <= 29/378` on every positive board. This is a regret
+estimator result for this fixture; prefix-average variance need not improve.
+It is not a native speed, convergence or full-range result.
+
+Sufficient sample denominators are `72 * 2^625` for raw regret and
+`14,616 * 2^364` for averages. The weighted means instead use the literal
+denominators `580 * 2^625` and `580 * 2^364`; these are separate contracts.
+The earlier attempts hit the existing entry/created-bit limits while retaining
+or squaring moment data. They remain preserved. The accepted proof uses an
+algebraic moment certificate and unchanged 500-million work, eight-million
+entry, sixteen-billion created-bit and 4,096-bit integer ceilings.
+
+Artifact generation frozen at `3564e4c` saves both complete input policies,
+complete expectation tables, twenty source files and runtime/resource receipts.
+The [immutable package inventory](../benchmarks/results/target-board-reference-v1/manifest.json)
+retains all 26 original artifact members across four bounded archives, with
+reference failures and complete normal/optimized replay reports kept separately.
+The 26-member artifact is 23,513,442 bytes. Each expected table is 8,032,788
+bytes; every value is replayed through an independent binary decoder, normally
+and optimized, at reader `efffb41`. Replay runs no native code, RNG or training
+and never executes archived source. Captured raw bytes and committed Git blobs
+are authenticated before current math imports, and current source identity is
+checked again after replay. Exact Git LF/CRLF checkout forms are distinguished
+from the saved raw-byte identity.
+
+The successful generator exit was observed. A repeated command against the
+same destination was refused before mathematical execution and overwrote the
+original console log. The saved policies, source, tables and result hashes are
+intact. A separate execution receipt records that the original console is
+unavailable; the refusal log is not presented as the successful invocation's
+console output.
+
+A fresh Windows checkout reproduced newline conversion of the component and
+whole-game packet manifests, changing their pinned hashes before replay. The
+packet directories now preserve exact bytes through `.gitattributes`; the
+archives and expected hashes are unchanged. This fixes the demonstrated checkout
+problem, while a new hosted Windows replay remains a separate verification gate.
+
+This proposal proof also exposes a limitation: its support concentration is
+specific to narrow N9 ranges. A full-range board still has hundreds of thousands
+of supported rows. The next [joint chance-sampling gate](joint-chance-sampling-foundation.md)
+tests an estimator that updates only selected own holdings, while preserving
+the same literal raw targets and frozen-policy boundaries.
+
+A bounded native sampler, longer learning lifecycle, saved-policy quality, and
+realistic-range admission remain unfinished gates. The old eleven-card State and
 quantizer rejections still stand. Two selected PROOF9 observations do not
 establish convergence, eleven-card admission, realistic-range capacity or
 unrestricted NLHE readiness. All existing solver defaults and limits remain.

@@ -1137,3 +1137,17 @@ results establish a shared changing-policy path; longer learning, a sampler,
 solution quality and realistic-range feasibility require further evidence.
 The older eleven-card rejections remain valid. See the
 [epoch contract and executed evidence](../sparse-policy-epochs.md).
+
+D055 (2026-11-23, America/New_York): prioritize a deterministic joint private-pair
+and public-board chance-sampling proof before further native storage changes.
+The full-range one-board row census shows that compressing numeric values alone
+does not remove the current row, validation and quantization barriers. Sample
+the true globally conditioned joint law, preserve actor/own-holding/visible
+history identities, exhaust betting actions under one frozen Q52 policy, and
+compare complete raw expectations with the independent literal joint reference.
+The design cancels the physical/proposal ratio in each observation; it must not
+inherit the public-board estimator's prefix correction. This is a proposed
+implementation gate, not executed native capacity, convergence or quality.
+Retain the earlier public-proposal proof and failed resource experiments. Keep
+all existing limits, defaults and eleven-card rejections. See the
+[design and acceptance requirements](../joint-chance-sampling-foundation.md).

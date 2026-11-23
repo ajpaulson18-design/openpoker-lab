@@ -18,17 +18,17 @@ jobs:
         with:
           python-version: '3.13'
       - name: Replay immutable packets normally
-        run: python -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay.json
+        run: python -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay.json 2> sparse-catalog-packet-replay.stderr.log
       - name: Replay immutable packets with optimized Python
-        run: python -O -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay-optimized.json
+        run: python -O -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay-optimized.json 2> sparse-catalog-packet-replay-optimized.stderr.log
       - name: Replay sparse state and independent reference packets
-        run: python -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay.json
+        run: python -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay.json 2> sparse-component-packet-replay.stderr.log
       - name: Replay sparse state packets with optimized Python
-        run: python -O -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay-optimized.json
+        run: python -O -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay-optimized.json 2> sparse-component-packet-replay-optimized.stderr.log
       - name: Replay immutable changing-policy observations
-        run: python -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay.json
+        run: python -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay.json 2> sparse-whole-packet-replay.stderr.log
       - name: Replay changing-policy observations with optimized Python
-        run: python -O -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay-optimized.json
+        run: python -O -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay-optimized.json 2> sparse-whole-packet-replay-optimized.stderr.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -40,4 +40,5 @@ jobs:
             sparse-component-packet-replay-optimized.json
             sparse-whole-packet-replay.json
             sparse-whole-packet-replay-optimized.json
+            sparse-*.stderr.log
           if-no-files-found: warn

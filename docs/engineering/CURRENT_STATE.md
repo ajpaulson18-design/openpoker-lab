@@ -17,6 +17,15 @@ Longer learning, sampling, quality and realistic-range resource gates remain
 open. Generic holding indices do not imply physical support or eleven-card
 admission.
 
+The same epoch work now has a separate exact target-public-board proposal proof:
+two full frozen Q52 policies match the literal joint raw expectation in every
+slot, with normal/optimized saved-table replay. It proves a fixture-specific
+regret second-moment bound, without a native sampler or learning-quality claim.
+The [next architecture gate](../joint-chance-sampling-foundation.md) samples a
+private pair together with a board, aiming to remove the full-hand per-board
+update cost while keeping the same raw mathematical targets. That deterministic
+joint-sample reference remains under development; full-range admission is open.
+
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
 Normal/optimized conformance checks both raw results independently, including
