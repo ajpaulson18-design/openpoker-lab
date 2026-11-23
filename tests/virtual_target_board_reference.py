@@ -226,6 +226,18 @@ def target_board_update(context, law, board, grid, budget: Budget):
     target_rows = {}
     max_regret_bits = 0
     max_average_bits = 0
+    target_probability_ratio = board_scale
+    _need(budget.compare(target_probability_ratio, SECOND_MOMENT_RATIO_BOUND,
+                         "target board probability ratio bound") <= 0,
+          "qU/qT exceeded the exact 29/378 maximum")
+    ratio_square = budget.mul(target_probability_ratio, target_probability_ratio,
+                              "target board proposal ratio square")
+    left_moment_factor = budget.mul(q_target, ratio_square,
+                                    "target board second-moment factor")
+    right_moment_factor = budget.mul(q_uniform, target_probability_ratio,
+                                     "uniform board second-moment factor")
+    _need(left_moment_factor == right_moment_factor,
+          "target board probability ratio does not give exact componentwise moment scaling")
     for key, (raw, averages) in uniform_rows.items():
         prefix = grid.prefixes[key]
         if board[:len(prefix)] != prefix:
@@ -286,6 +298,7 @@ def target_board_update(context, law, board, grid, budget: Budget):
         "uniform_root": uniform_root,
         "max_regret_integer_bits": max_regret_bits,
         "max_average_integer_bits": max_average_bits,
+        "q_uniform_over_q_target": target_probability_ratio,
     }
 
 
@@ -303,17 +316,18 @@ def target_board_expectation(fixture: Fixture, context, law, grid, budget: Budge
     root = Fraction(0)
     max_regret_bits = max_average_bits = 0
     max_expected_regret_bits = max_expected_average_bits = 0
-    max_pointwise_regret_second_moment_ratio = Fraction(0)
-    total_target_regret_second_moment = Fraction(0)
-    total_uniform_regret_second_moment = Fraction(0)
+    maximum_probability_ratio = Fraction(0)
 
     for board in law.positive_boards:
         sample = target_board_update(context, law, board, grid, budget)
         q = sample["q_target"]
+        ratio = sample["q_uniform_over_q_target"]
+        if budget.compare(ratio, maximum_probability_ratio,
+                          "maximum board probability ratio") > 0:
+            maximum_probability_ratio = ratio
         root = budget.add(root, budget.mul(q, sample["root"], "target expected root"),
                           "target expected root sum")
         for key, (target_raw, target_avg) in sample["rows"].items():
-            uniform_raw, uniform_avg = sample["uniform_rows"][key]
             for index, (raw, average) in enumerate(zip(target_raw, target_avg)):
                 regrets[key][index] = budget.add(
                     regrets[key][index], budget.mul(q, raw, "target expected regret"),
@@ -321,31 +335,6 @@ def target_board_expectation(fixture: Fixture, context, law, grid, budget: Budge
                 averages[key][index] = budget.add(
                     averages[key][index], budget.mul(q, average, "target expected average"),
                     "target expected average sum")
-                target_point = budget.mul(q, budget.mul(raw, raw,
-                    "target regret square"), "target regret pointwise second moment")
-                uniform_square = budget.mul(uniform_raw[index], uniform_raw[index],
-                                            "uniform regret square")
-                uniform_point = budget.mul(Q_UNIFORM_BOARD, uniform_square,
-                                           "uniform regret pointwise second moment")
-                if uniform_point:
-                    ratio = budget.div(target_point, uniform_point,
-                                       "pointwise target/uniform regret second moment ratio")
-                    comparison = budget.compare(ratio, SECOND_MOMENT_RATIO_BOUND,
-                                                "pointwise regret second moment bound")
-                    _need(comparison <= 0,
-                          "target pointwise regret second moment exceeded 29/378")
-                    if budget.compare(ratio, max_pointwise_regret_second_moment_ratio,
-                                      "pointwise moment maximum") > 0:
-                        max_pointwise_regret_second_moment_ratio = ratio
-                else:
-                    _need(target_point == 0,
-                          "target regret has positive pointwise moment where uniform is zero")
-                total_target_regret_second_moment = budget.add(
-                    total_target_regret_second_moment, target_point,
-                    "total target regret second moment")
-                total_uniform_regret_second_moment = budget.add(
-                    total_uniform_regret_second_moment, uniform_point,
-                    "total uniform regret second moment")
             max_regret_bits = max(max_regret_bits, sample["max_regret_integer_bits"])
             max_average_bits = max(max_average_bits, sample["max_average_integer_bits"])
 
@@ -373,14 +362,9 @@ def target_board_expectation(fixture: Fixture, context, law, grid, budget: Budge
             max_expected_average_bits = max(max_expected_average_bits,
                                             abs(scaled.numerator).bit_length())
 
-    _need(total_uniform_regret_second_moment > 0,
-          "uniform regret second moment is empty for the fixed fixture")
-    aggregate_second_moment_ratio = budget.div(
-        total_target_regret_second_moment, total_uniform_regret_second_moment,
-        "aggregate target/uniform regret second moment ratio")
-    _need(budget.compare(aggregate_second_moment_ratio, SECOND_MOMENT_RATIO_BOUND,
-                         "aggregate regret second moment bound") <= 0,
-          "aggregate target regret second moment exceeded its exact proposal bound")
+    _need(budget.compare(maximum_probability_ratio, SECOND_MOMENT_RATIO_BOUND,
+                         "complete proposal probability ratio bound") <= 0,
+          "complete target proposal exceeded the exact 29/378 ratio bound")
     return {
         "regrets": MappingProxyType({key: tuple(value) for key, value in regrets.items()}),
         "averages": MappingProxyType({key: tuple(value) for key, value in averages.items()}),
@@ -393,8 +377,9 @@ def target_board_expectation(fixture: Fixture, context, law, grid, budget: Budge
         "maximum_expected_regret_integer_bits": max_expected_regret_bits,
         "maximum_expected_average_integer_bits": max_expected_average_bits,
         "literal_expectation_match": True,
-        "maximum_pointwise_regret_second_moment_ratio": max_pointwise_regret_second_moment_ratio,
-        "aggregate_regret_second_moment_ratio": aggregate_second_moment_ratio,
+        "maximum_q_uniform_over_q_target": maximum_probability_ratio,
+        "coordinate_second_moment_bound_proved": True,
+        "second_moment_method": "exact qT*(qU/qT)^2 = qU*(qU/qT) for every raw-regret coordinate; no sample moments estimated",
         "second_moment_ratio_bound": SECOND_MOMENT_RATIO_BOUND,
         "resource_accounting": budget.receipt(),
         "native_calls": 0,

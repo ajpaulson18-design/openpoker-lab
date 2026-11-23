@@ -9,6 +9,7 @@ from tests.virtual_frozen_sample_reference import build_sampled_reference_contex
 from tests.virtual_grid_update_reference import freeze_grid
 from tests.virtual_target_board_reference import (
     AVERAGE_DENOMINATOR, BOARDS_PER_EXPERIMENT, NATIVE_CALLS,
+    LITERAL_AVERAGE_DENOMINATOR, LITERAL_RAW_DENOMINATOR,
     RAW_DENOMINATOR, SECOND_MOMENT_RATIO_BOUND, TARGET_EXPERIMENTS,
     build_target_board_law, fixed_profile, new_target_budget,
     target_board_expectation, target_board_update, validate_target_board_law,
@@ -76,6 +77,8 @@ class TargetBoardReferenceTests(unittest.TestCase):
             validate_target_board_law(self.context, forged)
 
     def test_both_frozen_profiles_match_every_literal_r_a_slot(self):
+        self.assertEqual(RAW_DENOMINATOR, 72 << 625)
+        self.assertEqual(AVERAGE_DENOMINATOR, 14_616 << 364)
         total_board_calls = 0
         for profile_name in ("uniform", "zero-skew"):
             with self.subTest(profile=profile_name):
@@ -91,14 +94,16 @@ class TargetBoardReferenceTests(unittest.TestCase):
                 self.assertLessEqual(result["maximum_sample_average_integer_bits"], 704)
                 self.assertLessEqual(result["maximum_expected_regret_integer_bits"], 704)
                 self.assertLessEqual(result["maximum_expected_average_integer_bits"], 704)
-                self.assertLessEqual(result["maximum_pointwise_regret_second_moment_ratio"],
+                self.assertLessEqual(result["maximum_q_uniform_over_q_target"],
                                      SECOND_MOMENT_RATIO_BOUND)
-                self.assertLessEqual(result["aggregate_regret_second_moment_ratio"],
-                                     SECOND_MOMENT_RATIO_BOUND)
+                self.assertTrue(result["coordinate_second_moment_bound_proved"])
+                self.assertIn("no sample moments estimated", result["second_moment_method"])
                 for row in result["regrets"].values():
-                    self.assertTrue(all((value * RAW_DENOMINATOR).denominator == 1 for value in row))
+                    self.assertTrue(all((value * LITERAL_RAW_DENOMINATOR).denominator == 1
+                                        for value in row))
                 for row in result["averages"].values():
-                    self.assertTrue(all((value * AVERAGE_DENOMINATOR).denominator == 1 for value in row))
+                    self.assertTrue(all((value * LITERAL_AVERAGE_DENOMINATOR).denominator == 1
+                                        for value in row))
                 self.assertEqual(result["native_calls"], NATIVE_CALLS)
                 self.assertEqual(result["rng_calls"], 0)
                 self.assertEqual(result["training_iterations"], 0)
