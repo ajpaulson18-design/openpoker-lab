@@ -91,7 +91,9 @@ class TargetBoardReferenceTests(unittest.TestCase):
                 self.assertLessEqual(result["maximum_sample_average_integer_bits"], 704)
                 self.assertLessEqual(result["maximum_expected_regret_integer_bits"], 704)
                 self.assertLessEqual(result["maximum_expected_average_integer_bits"], 704)
-                self.assertLessEqual(result["maximum_observed_regret_second_moment_ratio"],
+                self.assertLessEqual(result["maximum_pointwise_regret_second_moment_ratio"],
+                                     SECOND_MOMENT_RATIO_BOUND)
+                self.assertLessEqual(result["aggregate_regret_second_moment_ratio"],
                                      SECOND_MOMENT_RATIO_BOUND)
                 for row in result["regrets"].values():
                     self.assertTrue(all((value * RAW_DENOMINATOR).denominator == 1 for value in row))
