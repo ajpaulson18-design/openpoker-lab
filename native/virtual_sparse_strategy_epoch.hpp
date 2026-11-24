@@ -64,6 +64,7 @@ struct Limits {
     // Borrowed Catalog bitmap cost, not a numerical row allocation.
     std::size_t catalog_max_holding_count = 2;
     std::size_t policy_reads_per_row = 2;
+    catalog::Limits::SeenStorage catalog_seen_storage = catalog::Limits::SeenStorage::eager_bitmap;
 };
 
 struct Forecast {
@@ -142,6 +143,8 @@ inline Forecast forecast(const Limits& limits) {
         2 * limits.max_stage_rows > limits.max_rows_touched ||
         2 * limits.max_stage_slots > limits.max_slots_touched ||
         (limits.policy_reads_per_row!=1 && limits.policy_reads_per_row!=2) ||
+        (limits.catalog_seen_storage!=catalog::Limits::SeenStorage::eager_bitmap &&
+         limits.catalog_seen_storage!=catalog::Limits::SeenStorage::first_holding_inline) ||
         limits.max_reads < limits.policy_reads_per_row * limits.max_rows_touched || limits.max_reads > 2'136 ||
         !limits.catalog_max_public_blocks || limits.catalog_max_public_blocks > 24'420 ||
         !limits.max_work || limits.max_work > work_cap || !limits.max_entries || limits.max_entries > entries_cap ||
@@ -180,7 +183,8 @@ inline Forecast forecast(const Limits& limits) {
         f.commit_work + f.enumeration_work + f.export_work;
     const auto catalog_map_steps = std::bit_width(limits.catalog_max_public_blocks + 1);
     const auto catalog_access = 512 + 256 * catalog::maximum_actions + 32 * catalog_map_steps +
-        8 * ((limits.catalog_max_holding_count + 63) / 64);
+        8 * ((limits.catalog_max_holding_count + 63) / 64) +
+        (limits.catalog_seen_storage==catalog::Limits::SeenStorage::first_holding_inline?32:0);
     f.catalog_read_work = (limits.max_reads * 2 + limits.max_epochs * limits.max_stage_rows) * catalog_access;
     // resolve + view per policy read, and one validating view per staged row.
     // History decision key/actions, Catalog's full history identity, and the
@@ -511,9 +515,18 @@ public:
         }
     };
 
+private:
+    static Limits admit_catalog_storage(const Catalog& owner,Limits limits) {
+        if ((limits.catalog_seen_storage!=catalog::Limits::SeenStorage::eager_bitmap &&
+             limits.catalog_seen_storage!=catalog::Limits::SeenStorage::first_holding_inline) ||
+            owner.admitted_limits().seen_storage!=limits.catalog_seen_storage)
+            throw Error(ErrorKind::invalid_limits,"sparse strategy Catalog storage contract mismatch");
+        return limits;
+    }
+public:
     Store(Catalog& catalog_owner, History& history_owner, std::array<std::size_t, 2> declared_hand_counts,
           Limits limits = {},ArithmeticContract arithmetic=ArithmeticContract::uniform_public_proof9)
-        : limits_(limits), forecast_(forecast(limits)), arithmetic_(admit_arithmetic(arithmetic,limits)),
+        : limits_(admit_catalog_storage(catalog_owner,limits)), forecast_(forecast(limits)), arithmetic_(admit_arithmetic(arithmetic,limits)),
           history_(&history_owner), catalog_(&catalog_owner),
           hand_counts_(declared_hand_counts), quantizer_(quantizer_limits(limits)),
           uniform_defaults_(make_uniform_defaults()) {

@@ -36,6 +36,12 @@ inline constexpr bool single_pass_mode=true;
 inline constexpr bool single_pass_mode=false;
 #endif
 static_assert(!single_pass_mode || weighted_mode);
+#ifdef OPENPOKER_JOINT_LAZY_CATALOG
+inline constexpr bool lazy_catalog_mode=true;
+#else
+inline constexpr bool lazy_catalog_mode=false;
+#endif
+static_assert(!lazy_catalog_mode || single_pass_mode);
 using ActiveWalk=std::conditional_t<single_pass_mode,joint::SinglePassWalk,joint::Walk>;
 
 
@@ -119,7 +125,7 @@ void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_
               const t::prepared::PreparedPublicChance& chance,std::array<std::size_t,2> counts) {
     const auto begin=output.written();const auto before=store.receipt();
     const auto record_bytes=600+40*before.current_rows+144*before.current_slots;
-    output.bytes(single_pass_mode?"OPLSGB01":weighted_mode?"OPLWEB01":"OPLJEB01",8);
+    output.bytes(lazy_catalog_mode?"OPLLGB01":single_pass_mode?"OPLSGB01":weighted_mode?"OPLWEB01":"OPLJEB01",8);
     output.words(std::array<std::uint64_t,20>{1,epoch,ticket,rank,holdings[0],holdings[1],
         board[0],board[1],board[2],board[3],board[4],
         before.current_rows,before.current_slots,observation.rows,observation.slots,observation.reads,
@@ -157,7 +163,8 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     // This evaluates only scalar resource equations, without a policy image.
     const std::array<std::size_t,2> counts=weighted_mode?std::array<std::size_t,2>{1326,1326}:
         std::array<std::size_t,2>{2,2};
-    const auto domain=single_pass_mode?whole::single_pass_domain_forecast(counts):
+    const auto domain=lazy_catalog_mode?whole::single_pass_lazy_domain_forecast(counts):
+        single_pass_mode?whole::single_pass_domain_forecast(counts):
         weighted_mode?whole::weighted_domain_forecast(counts):whole::domain_forecast();
     const auto deck=weighted_mode?t::chance::DeckDefinition::full52():t::chance::DeckDefinition::reduced(t::deck_cards);
     t::require(!weighted_mode || profile<=1,"weighted range profile");
@@ -189,7 +196,8 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     const t::betting::Template source(t::configuration(),t::template_limits());
     p::Geometry geometry;p::census(source,source.root(),{},geometry);
     const auto checked=whole::forecast(source,geometry);
-    const auto f=single_pass_mode?whole::single_pass_domain_forecast(counts):
+    const auto f=lazy_catalog_mode?whole::single_pass_lazy_domain_forecast(counts):
+        single_pass_mode?whole::single_pass_domain_forecast(counts):
         weighted_mode?whole::weighted_domain_forecast(counts):checked;
     t::require(f.work<=domain.work && f.entries<=domain.entries && f.payload<=domain.payload &&
         source.receipt().nodes==388 && source.receipt().edges==410 && !source.receipt().history_suffix_only,
@@ -218,10 +226,10 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         weighted_mode?e::ArithmeticContract::weighted_joint_fixed_tree:e::ArithmeticContract::true_joint_proof9);
     JOINT_MARK("owners",0);
     Buffer output(static_cast<std::size_t>(f.output));
-    output.bytes(single_pass_mode?"OPLSGP01":weighted_mode?"OPLWEP01":"OPLJEP01",8);
+    output.bytes(lazy_catalog_mode?"OPLLGP01":single_pass_mode?"OPLSGP01":weighted_mode?"OPLWEP01":"OPLJEP01",8);
     output.words(std::array<std::uint64_t,24>{1,2,weighted_mode?0U:24420U,weighted_mode?0U:58164U,t::grid,f.work,f.entries,f.payload,f.output,
         f.catalog.max_work,f.history,f.chance,f.epoch_cost.component_work,f.parent,f.catalog.max_lookups,
-        1105,388,410,12,11,704,weighted_mode?181U:384U,0,single_pass_mode?2U:1U});
+        1105,388,410,12,11,704,weighted_mode?181U:384U,0,lazy_catalog_mode?3U:single_pass_mode?2U:1U});
     if constexpr (weighted_mode) output.words(std::array<std::uint64_t,4>{52,profile,counts[0],counts[1]});
     integer(output,store.regret_denominator_value(),11,false);integer(output,store.average_denominator_value(),6,false);
     t::require(output.written()==(weighted_mode?368U:336U),"sparse epoch global header size");
@@ -285,7 +293,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         JOINT_MARK("snapshot",i+1);
     }
     const auto& er=store.receipt();const auto& cr=catalog.receipt();const auto& pr=chance.receipt();
-    const auto final_bytes=output.written()+256;
+    const auto final_bytes=output.written()+256+(lazy_catalog_mode?16:0);
     t::require(final_bytes<=f.output && er.commits==2 && store.committed_epochs()==2 && er.export_calls==2 &&
         er.export_rows<=1302 && er.export_slots<=3117 && er.reads==2*f.raw.reads &&
         staged_rows==2*f.raw.rows && staged_slots==2*f.raw.slots &&
@@ -305,6 +313,8 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         er.quantized_rows,er.current_rows,er.current_slots,er.export_calls,er.export_rows,er.export_slots,
         cr.public_blocks,cr.information_rows_seen,cr.action_slots_seen,cr.menus,cr.lookups,pr.rank_calls,
         pr.completed_contractions,raw_visits,raw_actions,raw_reveals,1,pr.joint_ticket_queries});
+    if constexpr (lazy_catalog_mode) output.words(std::array<std::uint64_t,2>{
+        cr.allocated_bitmap_words,cr.peak_occupied_metadata_entries});
     t::require(output.written()==final_bytes,"sparse epoch final wire byte count");
     JOINT_MARK("footer",0);
     output.publish();

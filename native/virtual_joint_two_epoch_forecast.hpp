@@ -146,4 +146,24 @@ inline Forecast single_pass_domain_forecast(std::array<std::size_t,2> counts) {
         f.payload<=t::payload_cap && f.output<=p::output_cap,"single-pass joint request exceeds unchanged caps");
     return f;
 }
+inline Forecast single_pass_lazy_domain_forecast(std::array<std::size_t,2> counts) {
+    auto f=single_pass_domain_forecast(counts);
+    const auto old_words=f.catalog.max_metadata_entries;
+    f.catalog.seen_storage=c::Limits::SeenStorage::first_holding_inline;
+    f.catalog.max_work=c::Catalog::work_forecast(f.catalog);
+    f.catalog.max_metadata_entries=c::Catalog::metadata_word_forecast(f.catalog);
+    f.catalog.max_metadata_payload_bits=64*f.catalog.max_metadata_entries;
+    f.epoch.catalog_seen_storage=f.catalog.seen_storage;
+    f.epoch_cost=e::forecast(f.epoch);
+    t::require(f.catalog.max_metadata_entries<=old_words,"lazy Catalog metadata reservation increased");
+    const auto removed_words=old_words-f.catalog.max_metadata_entries;
+    // Two trailing words preserve observed bitmap and occupied-ledger peaks.
+    f.output+=16;f.entries=f.entries-removed_words+16;f.payload=f.payload-64*removed_words+128;
+    f.work=t::template_cap+f.catalog.max_work+f.history+f.chance+f.epoch_cost.component_work+f.parent+16*f.output;
+    t::require(f.catalog.max_work<=c::work_cap && f.epoch_cost.work<=e::work_cap &&
+        f.history<=t::history_cap && f.chance<=t::chance_cap && f.parent<=t::parent_cap &&
+        f.work<=t::work_cap && f.entries<=t::entries_cap && f.payload<=t::payload_cap && f.output<=p::output_cap,
+        "lazy Catalog single-pass request exceeds unchanged caps");
+    return f;
+}
 } // namespace openpoker::virtual_joint_two_epoch
