@@ -78,3 +78,12 @@ The next source revision moves the same bounded recorder off the core stack
 and keeps clock/formatting bodies out of its inlining budget. It retains the
 same request, call count, output identities, recorder allowance and overhead
 threshold. This change is a diagnostic-layout experiment, not a solver speedup.
+
+The second attempt completed all 132 calls and exact wires but also missed:
+median ratio `1.0798650063384851`. The two standard targets have identical
+`.text` bytes, extent and RVA, so the standard solver did not change between
+these attempts. Their observations remain unaccepted. Source inspection then
+identified fragmented `std::cerr` formatting: the unit-buffered stream flushed
+each insertion. The next diagnostic formats one fixed 1,280-byte record and
+writes it once. Its 24-event recorder plus overlapping JSON scratch still fit
+the same 2,048-byte/256-word metadata reserve; no allowance or gate is raised.
