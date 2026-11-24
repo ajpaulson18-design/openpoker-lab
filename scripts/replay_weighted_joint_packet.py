@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKET = ROOT / 'benchmarks/results/weighted-joint-foundation-v1'
 MANIFEST_PIN = (459415, '4aa3f0406a5b8cf422f1739ea78fa59b9d50f6e32b650f02ed4a0dc684f1eb64')
 OBSERVATION_PIN = (1789, '6cbbc741f4f87da133364633b7d54fa63171d981a8e75468d00d21f812b2fe28')
+INTRODUCED_HEAD = '3eb31c68ad2d432d876cdce946cc5571d7d37af4'
 MAX_MEMBER = MAX_ARCHIVE = 8 << 20
 MAX_EXPANDED = 80 << 20
 BOOTSTRAP = ('scripts/replay_weighted_joint_packet.py', 'scripts/replay_joint_two_epoch_packet.py')
@@ -215,7 +216,7 @@ def authenticate(loaded, manifest, helper):
     require(failure['returncode'] == 2 and b'C2371' in dev['weighted-joint2-build/build.log'], 'weighted first file-wire compile failure')
     for name, raw in loaded['introduced-source'].items():
         prefix = 'historical/source/' if name.startswith('historical/source/') else 'source/'
-        require(name.startswith(prefix) and raw == objects.body('3eb31c6', name[len(prefix):]),
+        require(name.startswith(prefix) and raw == objects.body(INTRODUCED_HEAD, name[len(prefix):]),
                 'weighted introduced canonical source evidence')
     for number in (1, 2, 3):
         label = f'phase-{number}'; members = loaded[label]; protocol = decode(members['protocol.json']); head = protocol['head']
@@ -264,7 +265,7 @@ def current_math(objects, identities, helper):
     hashes = {}
     for name in names:
         # The phase parser was introduced after the primary arithmetic capture.
-        origin = '3eb31c6' if name == 'scripts/benchmark_joint_phase_profile.py' else head
+        origin = INTRODUCED_HEAD if name == 'scripts/benchmark_joint_phase_profile.py' else head
         canonical = objects.body(origin, name); raw = bounded(ROOT / name, 2 << 20)
         require(digest(raw) in variants(canonical), 'weighted current independent math drift: ' + name)
         if origin == head:
