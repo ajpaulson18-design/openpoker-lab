@@ -199,7 +199,20 @@ and the original 3,130-byte synthetic Store stream remain byte-identical.
 The independent full unit suite at the earlier isolated `f127f09` revision
 passes 3,259 tests with 174 skips and observed exit 0. It does not certify the
 later native changes. Dedicated Windows/Linux/sanitizer checks for the new
-joint path remain a separate gate until their hosted results are verified.
+joint path pass at `2920bdc`, including complete current-math saved replay
+([hosted run](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/45295713233)).
+The older standalone Windows History compiler failure remains separate and
+unresolved; the repository is not presented as globally green.
+
+The [immutable native joint evidence](../benchmarks/results/joint-two-epoch-v1/manifest.json)
+retains both full matrices, component streams, legacy regressions, build and
+source identities, and the original compile/test-fixture failures. Eight
+archives each stay below the existing eight-MiB compressed/member ceilings.
+The first packaging attempt refused an oversized combined legacy archive
+before creating output. Splitting the legacy evidence retained all data and
+kept those ceilings unchanged. Reconstructed Git source is explicitly labelled
+where original raw checkout capture was unavailable. The packet also keeps
+the earlier full-suite result under its own revision scope.
 
 Realistic weighted-range preparation, longer bounded learning, RNG and saved
 policy quality remain open. The older eleven-card rejection is unchanged.

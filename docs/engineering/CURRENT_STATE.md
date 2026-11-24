@@ -29,9 +29,11 @@ full-coordinate expectations for two frozen Q52 policies. Native coupling now
 also passes six complete two-observation requests and seven real selector
 rejections, normally and optimized, with all-row independent saved replay.
 The path ranks only selected holdings and performs no weighted contractions.
-Legacy shared-owner numerical streams remain exact. Cross-platform checks for
-this new path, realistic-range preparation, longer learning, RNG and saved-policy
-quality remain open.
+Legacy shared-owner numerical streams remain exact. The new path passes
+Windows, Linux and sanitizer checks at `2920bdc`; its source-inclusive immutable
+evidence is published separately. Realistic-range preparation, longer learning,
+RNG and saved-policy quality remain open. The older Windows standalone History
+compiler failure is still unresolved.
 
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
