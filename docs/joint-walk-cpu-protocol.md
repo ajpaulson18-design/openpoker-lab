@@ -69,3 +69,12 @@ ratio must be at most 1.05 before phase wall-time observations are accepted.
 All pairs and misses remain evidence. Recorder/source/compiler identities must
 stay unchanged. This is wall time on one host and named finite-tree request;
 it cannot attribute inclusive/exclusive CPU costs inside the walk.
+
+The first coarse attempt at `3eb31c6` completed all 132 actual native calls
+with exact full output parity. Its median paired elapsed ratio was
+`1.064411483346797`, missing the unchanged `1.05` gate. Its phase percentages
+are retained as unaccepted observations and must not drive a CPU optimization.
+The next source revision moves the same bounded recorder off the core stack
+and keeps clock/formatting bodies out of its inlining budget. It retains the
+same request, call count, output identities, recorder allowance and overhead
+threshold. This change is a diagnostic-layout experiment, not a solver speedup.

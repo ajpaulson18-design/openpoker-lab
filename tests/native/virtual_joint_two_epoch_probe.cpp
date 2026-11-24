@@ -7,7 +7,7 @@
 #include <iostream>
 #ifdef OPENPOKER_JOINT_PHASE_PROFILE
 #include "../../native/joint_phase_recorder.hpp"
-#define JOINT_MARK(name,epoch) diagnostics.mark(name,epoch)
+#define JOINT_MARK(name,epoch) diagnostics->mark(name,epoch)
 #else
 #define JOINT_MARK(name,epoch) static_cast<void>(0)
 #endif
@@ -159,7 +159,9 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     namespace diagnostic=openpoker::joint_phase_profile;
     t::require(domain.work+diagnostic::extra_work<=t::work_cap && domain.entries+diagnostic::entries<=t::entries_cap &&
         domain.payload+diagnostic::payload_bits<=t::payload_cap,"joint diagnostic extra resource admission");
-    diagnostic::Recorder diagnostics;
+    // Keep the bounded recorder out of the core call's stack layout and
+    // isolate its clock/formatting bodies from the compiler's inlining budget.
+    auto diagnostics=std::make_unique<diagnostic::Recorder>();
 #endif
     JOINT_MARK("begin",0);
     std::array<std::vector<t::chance::WeightedHand>,2> explicit_ranges;
@@ -298,7 +300,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
 #ifdef OPENPOKER_JOINT_PHASE_PROFILE
     std::cout.flush();
     JOINT_MARK("publish",0);
-    diagnostics.write(std::cerr);
+    diagnostics->write(std::cerr);
 #endif
     return 0;
 }
