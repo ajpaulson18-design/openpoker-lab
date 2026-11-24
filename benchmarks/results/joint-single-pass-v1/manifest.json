@@ -1,0 +1,63 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 2928893,
+      "expanded_bytes": 12974130,
+      "file": "candidate-normal.zip",
+      "manifest_sha256": "a7ba14cae88d77747ca8806354d5d39e0564fb1759fcb8130d3738891babb1e3",
+      "members": 276,
+      "sha256": "000cb834ad44db49f5c9eff2286f270ade6bf284b1a55ffa0dbc200761b6b079"
+    },
+    {
+      "bytes": 2928608,
+      "expanded_bytes": 12973866,
+      "file": "candidate-optimized.zip",
+      "manifest_sha256": "48c02f46163fb7c4d987acbccb6de9ecdf2a7e4de41991b98313f7f7d401f9b9",
+      "members": 275,
+      "sha256": "4c488800bb24cb61bfb0b7349b0daac559dde513557cf878858f8051a5eb4231"
+    },
+    {
+      "bytes": 2109311,
+      "expanded_bytes": 10323946,
+      "file": "baseline.zip",
+      "manifest_sha256": "3579b8a01ea7478ba16af1ec5bdd3a5e9e69b392fcf0b83d847481b26a8e8dde",
+      "members": 220,
+      "sha256": "1bbf04f8b61eaf5003146268e964cdec08c4ca827dcf792c2a09c04ccf2d38a9"
+    },
+    {
+      "bytes": 3688299,
+      "expanded_bytes": 13552746,
+      "file": "legacy.zip",
+      "manifest_sha256": "8e1c7aadf9526be23611cb18d2a00e4d1828897068b8f374b3ba19445ecc84cf",
+      "members": 383,
+      "sha256": "52dab3053e71b5d48270542752d71e0020e32ae83709d9a6063076f3bd1dfa26"
+    },
+    {
+      "bytes": 405156,
+      "expanded_bytes": 2438787,
+      "file": "timing.zip",
+      "manifest_sha256": "d5e7157be8dfbcc0d43d4a9c6a4bf96dc8449a63fbf6a99dce15229c9c84c8d2",
+      "members": 550,
+      "sha256": "5c9eb032c97caf2a24c138db08d7a215eb171b36651292d2172154c40bc2b06b"
+    },
+    {
+      "bytes": 721312,
+      "expanded_bytes": 1402613,
+      "file": "builds-and-first-failure.zip",
+      "manifest_sha256": "78af489ca11c5c80c272227ed52f0e7d97e72bc6b52a68b50db693b211b8d2be",
+      "members": 57,
+      "sha256": "0d11326d771cc23a4400f0d2cbb868d312a48882720ca8f6c485c483d489bf33"
+    }
+  ],
+  "expanded_bytes": 53666088,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls": 0,
+  "packager_sha256": "3f5c0db10dec9af5b5e250964b422028194b176c5db45cefd39300c8823aa744",
+  "scope": "Preserved original six-case and expanded ten-case matrices, typed guards, N9 regression, first build failure and all132 timing calls. Timing stdout uses exact content-addressed deduplication. No quality or longer-learning claim.",
+  "version": "joint-single-pass-package-v1"
+}
