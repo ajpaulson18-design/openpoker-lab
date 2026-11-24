@@ -56,16 +56,22 @@ measurements or an admission result.
 
 1. Freeze candidate, independent census/framing references and source closure
    before compilation or execution. Keep the baseline mode explicit.
-2. Recheck all six full52 named requests and real parser rejections in normal
+2. Recheck all ten full52 named requests and real parser rejections in normal
    and optimized Python, including every retained R/A/policy coordinate,
    untouched-default contract, signed negatives, zero-reach cases and both
-   root signs. Preserve baseline N9 conformance and error bytes.
+   root signs. Explicit independent tie/loss/win witnesses supplement the
+   earlier six endpoint requests, whose selected showdowns tied. Preserve
+   baseline N9 conformance and error bytes. Retain the original six-case
+   matrices separately instead of expanding their historical scope.
 3. Compare canonical numeric byte projections (roots, row descriptors and
    every R/A/policy unit) against baseline. Header/resource/read/visit fields
    may differ only by the independently derived single-pass contract.
 4. After correctness, freeze eight alternating pairs of eight complete
    standard/candidate calls, with two warmups each, on the named weighted
-   full52 same-world T2 request. Every actual exit and exact numeric projection
+   full52 T2 request mix. Cycle tie, SB-loss and SB-win worlds with index
+   `(8*block+call)%3`, identically for both modes. This coverage revision is
+   frozen before any timed single-pass comparison; no timing has been observed
+   for the earlier proposed tie-only comparison. Every actual exit and exact numeric projection
    must match. Require median candidate/baseline elapsed ratio at most 0.95
    and candidate faster in at least six of eight pairs. Keep all misses.
 

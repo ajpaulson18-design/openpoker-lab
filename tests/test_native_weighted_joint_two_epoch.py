@@ -18,13 +18,7 @@ OUT = 'OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR'
 TARGET = 'virtual-weighted-joint-two-epoch'
 
 
-def cases():
-    for profile, normalizer in enumerate((1624350, 25908876)):
-        for label, pair in (
-            ('same-world', ((0, 0), (0, 0))),
-            ('boundaries', ((normalizer - 1, 34246079), (0, 0))),
-            ('shared-flop-future', ((0, 0), (0, 1)))):
-            yield f'profile-{profile}-{label}', profile, pair
+from tests.virtual_joint_witness_cases import cases, validate_sign_witnesses
 
 
 @unittest.skipUnless(os.environ.get(ENV), 'explicit source-built weighted whole-game candidate required')
@@ -49,6 +43,8 @@ class NativeWeightedJointEpochTests(unittest.TestCase):
             'native_raw_sha256': {name: sha256(raw).hexdigest() for name, raw in native_source.items()}}, indent=2) + '\n')
         (output / 'native-build-manifest.json').write_bytes(identity[0])
         (output / 'whole-forecast.json').write_text(json.dumps(resource, indent=2) + '\n')
+        sign_witnesses = validate_sign_witnesses()
+        (output / 'independent-sign-witnesses.json').write_text(json.dumps(sign_witnesses, indent=2) + '\n')
         observations = []; images = {}; first = None
         def run(label, arguments, expected_exit):
             child = output / label
@@ -90,9 +86,9 @@ class NativeWeightedJointEpochTests(unittest.TestCase):
         self.assertEqual(subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), head)
         self.assertTrue(all(sha256((ROOT / name).read_bytes()).hexdigest() == before for name, before in python_hashes.items()))
         self.assertTrue(all((ROOT / name).read_bytes() == before for name, before in native_source.items()))
-        (output / 'matrix-result.json').write_text(json.dumps({'status': 'weighted-joint-six-complete-requests-exact',
-            'cases': observations, 'stdout_sha256': images, 'successful_requests': 6, 'rejected_requests': len(invalid),
-            'observed_native_invocations': 6 + len(invalid), 'rng_calls': 0, 'quality_gate': None,
+        (output / 'matrix-result.json').write_text(json.dumps({'status': 'weighted-joint-complete-requests-exact',
+            'cases': observations, 'stdout_sha256': images, 'successful_requests': len(observations), 'rejected_requests': len(invalid),
+            'observed_native_invocations': len(observations) + len(invalid), 'rng_calls': 0, 'quality_gate': None,
             'corruption_controls': 2,
             'scope': 'Named uniform/1..7 full52 finite-tree T2 witness only; no long learning, convergence or unrestricted NLHE.'}, indent=2) + '\n')
 
