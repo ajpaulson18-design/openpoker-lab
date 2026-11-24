@@ -152,3 +152,15 @@ avoiding a vector-empty test and a redundant singleton check. It also permits
 the eager singleton to use its already recorded first index. This is a source-
 based efficiency hypothesis, not a measured speedup. Freeze it before new
 execution; keep the original observations and the unchanged timing gates.
+
+At `67244f9`, all three focused component/epoch/whole tests pass in each Python
+mode without skips, including the twelve-case arithmetic/storage matrix. The
+second elapsed study again retains all 260 actual exits and exact wires, but
+also misses the unchanged gate. Ratios are 1.095718, 1.094894, 1.072043,
+1.174991, 0.965651, 0.886499, 0.964288 and 1.058200. Median 1.065121 exceeds
+1.05, while only one pair exceeds 1.10. Both studies remain evidence; neither
+is accepted runtime nonregression. The candidate remains explicit and opt-in.
+
+Pause further kernel tuning until a [bounded own-thread CPU investigation](joint-thread-cycles.md)
+distinguishes the cost families inside the walk. Neither logical metadata
+savings nor source-level simplification substitutes for that measurement.

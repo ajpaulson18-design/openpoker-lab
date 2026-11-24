@@ -201,6 +201,8 @@ TARGETS['virtual-single-pass-epoch-controls'] = (
 TARGETS['virtual-lazy-epoch-controls'] = (
     'native-virtual-lazy-epoch-controls',
     ('tests/native/virtual_lazy_epoch_controls.cpp', *TARGETS['virtual-single-pass-epoch-controls'][1]))
+TARGETS['current-thread-cycle-probe'] = (
+    'native-current-thread-cycle-probe', ('tests/native/current_thread_cycle_probe.cpp',))
 for _base in ('virtual-joint-two-epoch', 'virtual-weighted-joint-two-epoch'):
     TARGETS[_base + '-profile'] = ('native-' + _base + '-profile',
         (*TARGETS[_base][1], 'native/joint_phase_recorder.hpp'))
@@ -289,6 +291,8 @@ def _extract(directory, headers):
 def build(output_directory, *, target="converter", sanitize=False):
     _need(type(target) is str and target in TARGETS, "Unsupported native exact build target")
     _need(type(sanitize) is bool, "Native exact sanitize selection must be boolean")
+    _need(target != 'current-thread-cycle-probe' or os.name == 'nt',
+          'Current-thread cycle probe requires Windows; no alternate clock fallback')
     directory = Path(output_directory).resolve()
     _need(directory != ROOT and ROOT not in directory.parents, "Native exact builds must be outside the source checkout")
     if sanitize and os.name == "nt":
@@ -427,7 +431,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target in ('virtual-joint-two-epoch-profile', 'virtual-weighted-joint-two-epoch-profile') else "Opt-in full52 single-global-value walk T2 candidate; independent arithmetic/resource/performance acceptance required, no long learning or quality claim."
                   if target == 'virtual-weighted-joint-single-pass' else "Opt-in exact lazy Catalog single-global-pass full52 T2 candidate; no longer lifetime, universal performance or quality admission."
                   if target == 'virtual-weighted-joint-single-pass-lazy' else "Synthetic lazy Catalog/Store contract and exact single-row commit controls only; no whole-game or quality admission."
-                  if target == 'virtual-lazy-epoch-controls' else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
+                  if target == 'virtual-lazy-epoch-controls' else "Windows own-thread CPU-cycle API microprobe only; no solver, system profiler, timing acceptance or quality."
+                  if target == 'current-thread-cycle-probe' else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
                   if target == 'virtual-single-pass-epoch-controls' else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
