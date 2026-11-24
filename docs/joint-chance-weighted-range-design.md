@@ -75,6 +75,28 @@ request gates also pass after this coupling. This is a finite fixed-tree T2
 witness, not long learning, convergence, full-policy quality or unrestricted
 NLHE readiness. The old eleven-card exhaustive refusal remains unchanged.
 
+## Immutable evidence and maintained replay
+
+The [source-inclusive packet](../benchmarks/results/weighted-joint-foundation-v1/manifest.json)
+preserves law/raw reference logs, both native component and full52 matrices,
+legacy parity, compile/harness failures, the WPR refusal and all three coarse
+phase attempts. Its outer manifest SHA256 is
+`4aa3f0406a5b8cf422f1739ea78fa59b9d50f6e32b650f02ed4a0dc684f1eb64`.
+Repeated phase stdout is retained as exact content-addressed objects with a
+reference for every original process path; varying stderr and all process
+receipts remain separate. No executable or raw system trace is published.
+
+Run `python -B -m scripts.replay_weighted_joint_packet` from a clean full-history
+checkout, or repeat with `python -O -B`. The maintained reader authenticates
+every introduced native source closure, recorded Git context, process stream,
+deduplicated stdout and current numeric dependency before importing the
+independent math. It freshly replays both primary full52 matrices and all
+paired timing arithmetic. Component, legacy and law logs receive authentication,
+not a new numerical census. No native or archived source runs during replay.
+Corrupted manifest/archive controls reject before numerical imports in both
+Python modes. The reader preserves the older mixed-newline header through its
+already-pinned exact raw/Git bridge; the initial packaging refusal is retained.
+
 ## Contract and scope
 
 The new opt-in purpose, tentatively `Purpose::joint_tickets_v1`, owns a sealed
