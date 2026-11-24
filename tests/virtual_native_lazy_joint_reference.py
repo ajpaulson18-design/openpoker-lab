@@ -52,7 +52,7 @@ def verify(profile, selectors, raw):
         epochs.append((position, fields)); position += size
     require(position + 272 == len(raw), 'lazy exact final extent')
     final = list(struct.unpack_from('<32Q', raw, position)); bitmap_words, occupied_words = struct.unpack_from('<2Q', raw, position + 256)
-    require(final[:2] == (1, 2) and final[10] == len(raw) and final[24] <= 4774 and
+    require(tuple(final[:2]) == (1, 2) and final[10] == len(raw) and final[24] <= 4774 and
             final[2] == sum(final[3:10]) + 16 * final[10] and final[2] <= f['total_work'] and
             final[7] <= f['catalog_work'] and bitmap_words <= 21 * 434 and occupied_words <= f['catalog_words'],
             'lazy final actual work/storage admission')
