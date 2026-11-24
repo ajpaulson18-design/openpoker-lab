@@ -178,7 +178,11 @@ class Catalog final {
         return true;
     }
     static bool has_holding(const Block& block,std::size_t holding) {
-        return block.seen.empty() ? block.seen_count==1 && block.first_holding==holding :
+        // Every published block has at least one seen holding. A singleton's
+        // first_holding is authoritative in both purposes; count>1 implies a
+        // populated bitmap. Avoid loading/testing vector pointers merely to
+        // rediscover the singleton state on every frozen-policy read.
+        return block.seen_count==1 ? block.first_holding==holding :
             ((block.seen[holding/64]>>(holding%64))&1U)!=0;
     }
     void observe_metadata(std::size_t blocks,std::size_t menus,std::size_t bitmap_words) {

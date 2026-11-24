@@ -133,3 +133,22 @@ The corrected representation check is separate from mathematical acceptance;
 retain the first attempt's logs and process bytes. The additional shared-board
 promotion cases and four-case timing coverage were frozen before any elapsed
 comparison, rather than changing the meaning of that earlier attempt.
+
+## First elapsed miss and revised membership path
+
+The first complete elapsed comparison at `04e6c11` records all 260 native
+exits and exact full wires, but misses the adoption gate. Its eight lazy/eager
+ratios are 0.883524, 0.870562, 1.078457, 1.155831, 1.312665, 1.003771,
+1.139889 and 0.927811. Median 1.041114 is below 1.05, while three pairs
+exceed 1.10 instead of the allowed two. This is not accepted nonregression;
+the variation does not identify a CPU cause.
+
+The next source revision simplifies the membership predicate. Every published
+block has at least one seen holding. With exactly one, its inline original
+index identifies the sole member in both purposes. With more than one, both
+purposes have a populated bitmap. Checking `seen_count==1` directly therefore
+preserves membership, duplicate behavior and all ownership/menu guards while
+avoiding a vector-empty test and a redundant singleton check. It also permits
+the eager singleton to use its already recorded first index. This is a source-
+based efficiency hypothesis, not a measured speedup. Freeze it before new
+execution; keep the original observations and the unchanged timing gates.
