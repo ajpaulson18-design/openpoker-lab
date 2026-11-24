@@ -28,12 +28,13 @@ EXTRA = ('tests/virtual_weighted_joint_reference.py', 'tests/virtual_weighted_jo
          'tests/virtual_joint_numeric_projection.py', 'tests/virtual_joint_witness_cases.py')
 # Unrelated historical files in the broad before/after inventory. Their exact
 # original hashes and Git blobs remain pinned; none is imported as new math.
-HISTORICAL_PYTHON = {
+HISTORICAL_CHECKOUTS = {
     'scripts/benchmark_native_factored_average.py': ('51ab76a595e331cfa226ad163998aa163a85892e3d8f10fd8ac5689f6a6510f3', 'e2d10dac0dfca5553b080a7f00730591caabb024'),
     'scripts/census_virtual_dyadic_factored_average.py': ('ec4fe5d2f64a5f7bf282370dd1a0536fc862fce447484d496155cf63b7954269', '9d166965566b74218384ace9edde6e107d0de5a0'),
     'scripts/replay_native_walk_contexts.py': ('2f554702d3f8c38b7c4e7442c8651dc35b5b86f67eb3e213c3cab90e2ebc9caf', 'e6a04cf8be24b3289ae32e16db0d29a597f81642'),
     'tests/test_native_walk_contexts.py': ('265c264b1b38950e379d3d753876f96b74448ae136eea22aa1a2cd0ada6e0839', '98ad1af7232796d6db81364e92eb033491e023ef'),
     'tests/test_virtual_dyadic_factored_average_census.py': ('cd8e5b02f81b108186a9b9c506e06ed9dbcb9307d65372a4a21b4f5cd074ef16', 'a28e942cac2f5e7741e5e4c6e2f27973395784c5'),
+    'tests/native/training_phase_profile_controls.cpp': ('ac455015ddf17dacc40409072f528cee532e065667b43de647bfcea5f0b6227f', '2eed490ef13113627432e6e55573a0f0b69470c4'),
 }
 
 
@@ -149,7 +150,7 @@ def authenticate(loaded, helper, objects, origin):
             native_sources.setdefault(native['target'], []).append((native, source))
             for name, expected in saved.get('tracked_python_raw_sha256', {}).items():
                 require(expected in variants(objects.body(head, name)) or
-                        HISTORICAL_PYTHON.get(name) == (expected, objects.tree(head).get(name)),
+                        HISTORICAL_CHECKOUTS.get(name) == (expected, objects.tree(head).get(name)),
                         'single-pass captured complete Python inventory: ' + name)
             if label == 'candidate-normal' and prefix == 'whole-2/':
                 require(head == origin, 'single-pass primary frozen origin'); captured_python = saved['tracked_python_raw_sha256']
@@ -178,7 +179,7 @@ def authenticate(loaded, helper, objects, origin):
     for name, expected in protocol['source_raw_sha256'].items():
         canonical = objects.body(origin, name)
         require(expected in variants(canonical) or helper.HISTORICAL_MIXED.get(name) == (expected, objects.tree(origin).get(name)) or
-                HISTORICAL_PYTHON.get(name) == (expected, objects.tree(origin).get(name)), 'single-pass timing complete source inventory: ' + name)
+                HISTORICAL_CHECKOUTS.get(name) == (expected, objects.tree(origin).get(name)), 'single-pass timing complete source inventory: ' + name)
     for mode, target in (('baseline', 'virtual-weighted-joint-two-epoch'), ('candidate', 'virtual-weighted-joint-single-pass')):
         native = helper.decode(loaded['timing'][mode + '-build.json'])
         require(any(native == record for record, _source in native_sources[target]), 'single-pass timed native/build closure')
