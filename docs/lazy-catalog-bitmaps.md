@@ -1,7 +1,8 @@
 # Exact first-holding-inline Catalog candidate
 
-Status: local component gates pass normally and optimized at `0d14b07`;
-whole-walk coupling and cross-platform acceptance remain pending. The shared Catalog keeps
+Status: local component and whole-walk arithmetic/storage gates pass normally
+and optimized. Component Windows/Linux/sanitizer gates pass at `962c8c8`;
+whole-walk platform and timing acceptance remain pending. The shared Catalog keeps
 its eager-bitmap default. An explicit `first_holding_inline` storage contract
 keeps one original holding ID in the existing block descriptor, then creates
 the exact bitmap when a second distinct holding is encountered. Duplicate
@@ -116,3 +117,19 @@ observations without retries. For adoption, require median lazy/eager
 elapsed ratio at most 1.05 and at most two pairs above 1.10. This is a one-host
 nonregression gate for a storage optimization, not a required speedup or an
 RSS claim. Do not change these gates after observing timing.
+
+At `b5c0f97`, both Python modes pass twelve candidate requests, eight real
+parser rejections, twelve fresh eager baseline calls and five corruption
+refusals. Each matrix records32 actual native calls; the associated epoch
+guard records one additional call. All ten applicable eager outputs equal the
+published single-pass wires. Candidate normalization equals the eager wire
+hash after independent arithmetic and storage verification. The complete
+normal/optimized test module runs two tests per mode without skips.
+
+The first attempt at `3464791` preserved successful native exits but the new
+verifier refused its footer because it compared a Python list with a tuple.
+That refusal occurred before the unchanged numerical authority was called.
+The corrected representation check is separate from mathematical acceptance;
+retain the first attempt's logs and process bytes. The additional shared-board
+promotion cases and four-case timing coverage were frozen before any elapsed
+comparison, rather than changing the meaning of that earlier attempt.

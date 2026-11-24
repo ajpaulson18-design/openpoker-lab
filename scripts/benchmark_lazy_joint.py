@@ -69,7 +69,7 @@ def benchmark(baseline, candidate, expected, output):
         'automatic_retries': 0, 'median_lazy_eager_limit': 1.05, 'maximum_pairs_above_1_10': 2,
         'full_wire_sha256': {mode: [sha256(raw).hexdigest() for raw in images] for mode, images in wires.items()},
         'canonical_eager_sha256': canonical_hashes,
-        'scope': 'Named weighted full52 tie/loss/win fixed-tree T2 complete calls only. Storage nonregression gate, no universal performance, CPU, RSS, longer learning or quality claim.'})
+        'scope': 'Named weighted full52 four-case fixed-tree T2 mix, including postflop promotion. Storage nonregression gate, no universal performance, CPU, RSS, longer learning or quality claim.'})
     for mode, identity in identities.items():
         (output / (mode + '-build.json')).write_bytes(identity[0])
     def run(mode, label, index):
@@ -103,7 +103,7 @@ def benchmark(baseline, candidate, expected, output):
         'exact_full_wires_per_mode': True, 'independent_all_row_and_storage_goldens': True,
         'paired_elapsed_ratios': ratios, 'median_lazy_eager_ratio': median, 'pairs_above_1_10': above,
         'nonregression_gate_pass': median <= 1.05 and above <= 2,
-        'scope': 'One host and named weighted full52 tie/loss/win fixed-tree T2 mix. Every observation retained. No universal performance, CPU/RSS, longer learning or quality claim.'}
+        'scope': 'One host and named weighted full52 four-case fixed-tree T2 mix, including postflop promotion. Every observation retained. No universal performance, CPU/RSS, longer learning or quality claim.'}
     dump(output / 'result.json', result)
     return result
 

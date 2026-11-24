@@ -39,8 +39,9 @@ jobs:
           from pathlib import Path
           base = Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
           with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
-              for mode in ('normal', 'optimized'):
-                  output.write(f'LAZY_CATALOG_{mode.upper()}_PATH={base / ("lazy-catalog-" + mode)}\n')
+              for kind in ('catalog', 'joint', 'epoch'):
+                  for mode in ('normal', 'optimized'):
+                      output.write(f'LAZY_{kind.upper()}_{mode.upper()}_PATH={base / ("lazy-" + kind + "-" + mode)}\n')
           PY
       - name: Check feasible peak states and complete native frame
         env:
@@ -50,6 +51,26 @@ jobs:
         env:
           OPENPOKER_NATIVE_LAZY_CATALOG_DIR: ${{ env.LAZY_CATALOG_OPTIMIZED_PATH }}
         run: python -O -B -m unittest tests.test_lazy_catalog_reference tests.test_native_lazy_catalog -v
+      - name: Build both whole-walk storage contracts and binding guards
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-lazy --output-dir "$RUNNER_TEMP/lazy-whole-build" ${{ matrix.flags }}
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass --output-dir "$RUNNER_TEMP/eager-whole-build" ${{ matrix.flags }}
+          python -B -m scripts.build_native_exact_four_street --target virtual-lazy-epoch-controls --output-dir "$RUNNER_TEMP/lazy-epoch-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_LAZY_JOINT_EXE=$RUNNER_TEMP/lazy-whole-build/native-virtual-weighted-joint-single-pass-lazy$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_LAZY_JOINT_BASELINE_EXE=$RUNNER_TEMP/eager-whole-build/native-virtual-weighted-joint-single-pass$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_LAZY_EPOCH_EXE=$RUNNER_TEMP/lazy-epoch-build/native-virtual-lazy-epoch-controls$suffix" >> "$GITHUB_ENV"
+      - name: Check twelve whole-walk witnesses against independent arithmetic and storage
+        env:
+          OPENPOKER_NATIVE_LAZY_JOINT_DIR: ${{ env.LAZY_JOINT_NORMAL_PATH }}
+          OPENPOKER_NATIVE_LAZY_EPOCH_DIR: ${{ env.LAZY_EPOCH_NORMAL_PATH }}
+        run: python -B -m unittest tests.test_lazy_joint_forecast tests.test_native_lazy_joint -v
+      - name: Repeat complete whole-walk checks with optimized Python
+        env:
+          OPENPOKER_NATIVE_LAZY_JOINT_DIR: ${{ env.LAZY_JOINT_OPTIMIZED_PATH }}
+          OPENPOKER_NATIVE_LAZY_EPOCH_DIR: ${{ env.LAZY_EPOCH_OPTIMIZED_PATH }}
+        run: python -O -B -m unittest tests.test_lazy_joint_forecast tests.test_native_lazy_joint -v
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -57,6 +78,16 @@ jobs:
           path: |
             ${{ runner.temp }}/lazy-catalog-build/*.log
             ${{ runner.temp }}/lazy-catalog-build/*.json
+            ${{ runner.temp }}/lazy-whole-build/*.log
+            ${{ runner.temp }}/lazy-whole-build/*.json
+            ${{ runner.temp }}/eager-whole-build/*.log
+            ${{ runner.temp }}/eager-whole-build/*.json
+            ${{ runner.temp }}/lazy-epoch-build/*.log
+            ${{ runner.temp }}/lazy-epoch-build/*.json
             ${{ env.LAZY_CATALOG_NORMAL_PATH }}/**
             ${{ env.LAZY_CATALOG_OPTIMIZED_PATH }}/**
+            ${{ env.LAZY_JOINT_NORMAL_PATH }}/**
+            ${{ env.LAZY_JOINT_OPTIMIZED_PATH }}/**
+            ${{ env.LAZY_EPOCH_NORMAL_PATH }}/**
+            ${{ env.LAZY_EPOCH_OPTIMIZED_PATH }}/**
           if-no-files-found: warn
