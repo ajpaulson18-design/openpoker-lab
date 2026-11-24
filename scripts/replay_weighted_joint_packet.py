@@ -239,7 +239,7 @@ def authenticate(loaded, manifest, helper):
         reports[label] = {'head': head, 'actual_processes': 132, 'stdout_objects': 1}
     refusal = loaded['cpu-collector-refusal']; record = decode(refusal['collector-refusal.json'])
     require(record['observed_exit_code'] == 0xc5585011 and record['recording_owned'] is False and
-            record['native_calls_completed'] == 2 and b'Failed to enable the policy' in refusal['wpr-start-0.stdout.log'],
+            record['native_calls_completed'] == 2 and b'Failed to enable the policy' in refusal['wpr-start-0.stderr.log'],
             'weighted preserved WPR policy refusal')
     process, _ = helper.process_receipts(refusal)
     require(len(process) == 2 and all(row['exit'] == 0 for row in process.values()), 'weighted unprofiled collector warmups')
