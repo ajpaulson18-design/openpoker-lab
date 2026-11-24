@@ -61,7 +61,14 @@ class NativeWeightedJointChanceTests(unittest.TestCase):
 
         def run(label, data, expected_exit=0):
             directory = output / label
-            observation = run_bounded_child([str(executable)], data, directory, stdout_limit=131072, timeout=180)
+            self.assertLessEqual(len(data), 98304)
+            fixture = output / (label + '.input')
+            with fixture.open('xb') as stream:
+                stream.write(data)
+            observation = run_bounded_child([str(executable), str(fixture)], b'', directory, stdout_limit=131072, timeout=180)
+            self.assertEqual(fixture.read_bytes(), data)
+            (directory / 'range-input.json').write_text(json.dumps({'path': fixture.name, 'bytes': len(data),
+                'sha256': sha256(data).hexdigest(), 'stdin_bytes': 0}, indent=2) + '\n')
             process_records.append({'case': label, 'expected_exit': expected_exit, 'observation': observation})
             self.assertEqual(observation['failures'], [])
             self.assertEqual((observation['status'], observation['returncode'], observation['actual_exit_observed']),

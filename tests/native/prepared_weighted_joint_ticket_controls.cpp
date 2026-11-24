@@ -2,6 +2,8 @@
 // Exact input binary64 bits, original row order, no RNG or training.
 #include "../../native/prepared_public_chance.hpp"
 #include <charconv>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -9,9 +11,10 @@
 namespace p=openpoker::prepared_public_chance;
 using Owner=p::PreparedPublicChance;
 namespace {
+std::istream* input_stream=&std::cin;
 std::uint64_t word() {
     std::string token;
-    if (!(std::cin>>token) || token.empty() || token.size()>20 ||
+    if (!(*input_stream>>token) || token.empty() || token.size()>20 ||
         token.find_first_not_of("0123456789")!=std::string::npos)
         throw std::runtime_error("invalid bounded unsigned token");
     std::uint64_t value=0;
@@ -22,8 +25,17 @@ std::uint64_t word() {
 }
 void require(bool condition,const char* message) {if (!condition) throw std::runtime_error(message);}
 }
-int main() {
+int main(int argc,char** argv) {
     try {
+        // New range-bearing wire has a separate fixed file envelope. Keep the
+        // established short-stdin observer cap unchanged. At most2652 rows
+        // consume27 bytes each and512 selectors consume42 bytes each; header
+        // and whitespace fit the remaining space below98304 bytes.
+        require(argc==2,"one bounded input artifact path required");
+        const std::filesystem::path path(argv[1]);
+        require(std::filesystem::is_regular_file(path) && !std::filesystem::is_symlink(path) &&
+                std::filesystem::file_size(path)<=98'304,"probe input artifact byte bound");
+        std::ifstream input(path);require(input.good(),"probe input artifact unreadable");input_stream=&input;
         const auto n=word(),h0=word(),h1=word(),queries=word();
         require((n==9 || n==52) && h0>0 && h0<=1326 && h1>0 && h1<=1326 && queries>0 && queries<=512,
                 "probe request geometry");
@@ -70,7 +82,7 @@ int main() {
                 output<<' '<<sample.showdown_sign()<<'\n';
             });
         }
-        std::string extra;require(!(std::cin>>extra),"extra input token");
+        std::string extra;require(!(*input_stream>>extra),"extra input token");
         const auto& receipt=owner.receipt();
         require(!owner.failed() && receipt.completed_contractions==0 && receipt.prior_work==0 &&
                 receipt.joint_ticket_queries==queries && receipt.rank_calls==2*queries &&
