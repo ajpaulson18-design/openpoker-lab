@@ -26,13 +26,24 @@ jobs:
             if python -m "$module" --output-dir "$out" "$@"; then return 0; fi
             python - "$out" "$label" <<'PY'
           from pathlib import Path
-          import os, sys
+          import json, os, sys
           log = Path(sys.argv[1]) / 'build.log'
           details = 'No compiler log was created; inspect the build step.'
           if log.is_file():
               with log.open('rb') as source:
                   source.seek(max(0, log.stat().st_size - 6000), os.SEEK_SET)
                   details = source.read(6000).decode('utf-8', 'replace').strip() or details
+          failure = Path(sys.argv[1]) / 'build-failure.json'
+          if failure.is_file() and failure.stat().st_size <= 1048576:
+              try:
+                  record = json.loads(failure.read_text(encoding='utf-8'))
+                  code = record.get('returncode')
+                  command = record.get('command') or []
+                  compiler = command[0] if command else 'unknown compiler'
+                  hexadecimal = f' (0x{code & 0xffffffff:08X})' if type(code) is int else ''
+                  details += f'\nCompiler: {compiler}\nObserved compiler exit: {code}{hexadecimal}'
+              except (UnicodeDecodeError, ValueError, TypeError):
+                  details += '\nCompiler failure receipt could not be decoded.'
           details = details.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
           print(f'::error title=Native build failed ({sys.argv[2]})::{details}')
           PY

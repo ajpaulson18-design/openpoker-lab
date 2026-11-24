@@ -35,6 +35,14 @@ evidence is published separately. Realistic-range preparation, longer learning,
 RNG and saved-policy quality remain open. The older Windows standalone History
 compiler failure is still unresolved.
 
+The [weighted-range preparation design](../joint-chance-weighted-range-design.md)
+keeps the existing resource ceilings and proposes a compact ticket-only purpose
+on the same Prepared owner. It remains source-only. Full52 two-observation
+admission would leave a much larger lifetime-storage gate: the fixed template
+has approximately 15.9 trillion possible exact information rows with complete
+positive ranges. Measure retained sparse-union growth before longer learning;
+reassess validated compression or abstraction when that forecast fails.
+
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
 Normal/optimized conformance checks both raw results independently, including

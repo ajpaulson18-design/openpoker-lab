@@ -1,0 +1,30 @@
+{
+  "schema": "joint-packet-current-replay-observation-v1",
+  "scope": "Already-observed current-source normal/optimized primary all-row replay and corruption-before-import controls. No native or archived source execution. Component/legacy/development archives authenticated, not numerically replayed.",
+  "provenance": "Reports copied byte-for-byte after execution; exit codes were observed by the root tool process. This is a post-run packaging receipt, not an independently pre-run capture.",
+  "immutable_packet": "benchmarks/results/joint-two-epoch-v1",
+  "packet_manifest_sha256": "4befe99bbcf1074be6de579c19a23fab5626e1a40151edc9859d1794d44e6435",
+  "files": [
+    {
+      "path": "joint-packet-replay1-normal.log",
+      "bytes": 49604,
+      "sha256": "58e9a80014ba9b7d1310091016e853f9dbbfcdd2a0499e5c2712cd9ab9760ce4",
+      "source_commit_prefix": "ea267af",
+      "observed_exit_code": 0
+    },
+    {
+      "path": "joint-packet-replay1-optimized.log",
+      "bytes": 49604,
+      "sha256": "58e9a80014ba9b7d1310091016e853f9dbbfcdd2a0499e5c2712cd9ab9760ce4",
+      "source_commit_prefix": "ea267af",
+      "observed_exit_code": 0
+    },
+    {
+      "path": "joint-packet-admission1.log",
+      "bytes": 425,
+      "sha256": "3a0e47a7c3a6d14289091506bc96ce965a7416993a0bd9ea21127ef6214c3759",
+      "source_commit_prefix": "948bdef",
+      "observed_exit_code": 0
+    }
+  ]
+}
