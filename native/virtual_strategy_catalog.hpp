@@ -42,12 +42,15 @@ struct Limits {
                 max_action_slots_seen=0, max_menus=0, max_holding_count=0;
     std::uint64_t max_lookups=0, max_work=0;
     std::size_t max_metadata_entries=0, max_metadata_payload_bits=0;
+    enum class SeenStorage { eager_bitmap, first_holding_inline };
+    SeenStorage seen_storage=SeenStorage::eager_bitmap;
 };
 struct Receipt {
     std::uint64_t work=0, lookups=0;
     std::size_t public_blocks=0, information_rows_seen=0,
                 action_slots_seen=0, menus=0, metadata_entries=0,
                 metadata_payload_bits=0;
+    std::size_t allocated_bitmap_words=0, peak_occupied_metadata_entries=0;
 };
 
 // Owner-qualified stable two-coordinate handle. It contains no pointers and is
@@ -76,7 +79,9 @@ class Catalog final {
         std::size_t actor=0, source_ref=0, menu_index=0, hand_count=0;
         std::vector<std::uint64_t> seen;
         std::size_t seen_count=0;
+        std::size_t first_holding=maximum_holding_count;
     };
+    static_assert(sizeof(Block)<=32*sizeof(std::uint64_t));
     Limits limits_;
     const History* history_owner_;
     std::array<std::size_t,2> hand_counts_;
@@ -104,14 +109,28 @@ class Catalog final {
             !l.max_action_slots_seen || l.max_action_slots_seen>entries_cap ||
             !l.max_holding_count || l.max_holding_count>maximum_holding_count || !l.max_lookups)
             throw Error(ErrorKind::invalid_limits,"invalid strategy catalog geometry");
+        if ((l.seen_storage!=Limits::SeenStorage::eager_bitmap &&
+             l.seen_storage!=Limits::SeenStorage::first_holding_inline) ||
+            (l.seen_storage==Limits::SeenStorage::first_holding_inline &&
+             l.max_information_rows_seen<l.max_public_blocks))
+            throw Error(ErrorKind::invalid_limits,"invalid catalog seen-storage geometry");
     }
     static std::size_t words_for(const Limits& l) {
         validate_geometry(l);
         const auto bitmap_words=(l.max_holding_count+63)/64;
         // Logical descriptor/directory allowance, including stable block
         // ownership and map/vector bookkeeping; not an allocator/RSS metric.
+        auto bitmap_blocks=l.max_public_blocks;
+        if (l.seen_storage==Limits::SeenStorage::first_holding_inline) {
+            // b occupied blocks and d allocated bitmaps require at least b+d
+            // distinct rows. Since bitmap_words<=21<32, the maximum of
+            //32*b+bitmap_words*d occurs at b=B, d=min(B,R-B). Unused block
+            // descriptor allowance covers more bitmaps when b<B. The first
+            // holding fits the existing32-word per-block descriptor envelope.
+            bitmap_blocks=std::min(l.max_public_blocks,l.max_information_rows_seen-l.max_public_blocks);
+        }
         const auto words=checked_add(checked_add(1024,checked_add(checked_mul(32,l.max_public_blocks),
-                  checked_mul(320,l.max_menus))),checked_mul(l.max_public_blocks,bitmap_words));
+                  checked_mul(320,l.max_menus))),checked_mul(bitmap_blocks,bitmap_words));
         if (words>entries_cap) throw Error(ErrorKind::invalid_limits,"strategy catalog metadata entries exceed cap");
         return words;
     }
@@ -119,12 +138,17 @@ class Catalog final {
         validate_geometry(l);
         const auto map_steps=static_cast<std::uint64_t>(std::bit_width(l.max_public_blocks+1));
         const auto bitmap_words=(l.max_holding_count+63)/64;
-        return 512+256*maximum_actions+32*map_steps+8*bitmap_words;
+        return 512+256*maximum_actions+32*map_steps+8*bitmap_words+
+            (l.seen_storage==Limits::SeenStorage::first_holding_inline?32:0);
+    }
+    static std::uint64_t setup_bound(const Limits& l) {
+        return std::uint64_t{1024}+8*l.max_public_blocks+8*l.max_menus+
+            (l.seen_storage==Limits::SeenStorage::first_holding_inline?256:0);
     }
     static std::uint64_t lifetime_bound(const Limits& l) {
         validate_geometry(l);
         const auto per=operation_bound(l);
-        const auto fixed=std::uint64_t{1024}+8*l.max_public_blocks+8*l.max_menus;
+        const auto fixed=setup_bound(l);
         if (l.max_lookups>(std::numeric_limits<std::uint64_t>::max()-fixed)/per)
             throw Error(ErrorKind::invalid_limits,"catalog work forecast overflow");
         return fixed+l.max_lookups*per;
@@ -153,6 +177,17 @@ class Catalog final {
         for (std::size_t i=0;i<input.size();++i) if (owned[i]!=input[i]) return false;
         return true;
     }
+    static bool has_holding(const Block& block,std::size_t holding) {
+        return block.seen.empty() ? block.seen_count==1 && block.first_holding==holding :
+            ((block.seen[holding/64]>>(holding%64))&1U)!=0;
+    }
+    void observe_metadata(std::size_t blocks,std::size_t menus,std::size_t bitmap_words) {
+        const auto occupied=checked_add(1024,checked_add(checked_mul(32,blocks),
+            checked_add(checked_mul(320,menus),bitmap_words)));
+        if (occupied>receipt_.metadata_entries)
+            reject(ErrorKind::capacity,"catalog occupied metadata exceeds pre-admitted reservation");
+        receipt_.peak_occupied_metadata_entries=std::max(receipt_.peak_occupied_metadata_entries,occupied);
+    }
 public:
     [[nodiscard]] static std::size_t metadata_word_forecast(const Limits& limits) { return words_for(limits); }
     [[nodiscard]] static std::uint64_t work_forecast(const Limits& limits) { return lifetime_bound(limits); }
@@ -174,7 +209,7 @@ public:
             throw Error(ErrorKind::invalid_limits,"strategy catalog metadata reservation exceeds cap");
         receipt_.metadata_entries=entries;
         receipt_.metadata_payload_bits=payload;
-        receipt_.work=std::uint64_t{1024}+8*limits.max_public_blocks+8*limits.max_menus;
+        receipt_.work=setup_bound(limits);
         blocks_.reserve(limits.max_public_blocks);
         menus_.reserve(limits.max_menus);
     }
@@ -207,12 +242,21 @@ public:
                 const auto& menu=*menus_[block.menu_index];
                 if (!same_menu(menu.actions,actions)) reject(ErrorKind::changed_menu,"catalog source menu contents changed");
                 if (holding>=block.hand_count) reject(ErrorKind::unknown_holding,"unknown holding index");
-                const bool seen=(block.seen[holding/64]>>(holding%64))&1U;
+                const bool seen=has_holding(block,holding);
                 if (!seen) {
                     if (receipt_.information_rows_seen>=limits_.max_information_rows_seen ||
                         menu.actions.size()>limits_.max_action_slots_seen-receipt_.action_slots_seen)
                         reject(ErrorKind::capacity,"strategy catalog row or slot cap exceeded");
-                    block.seen[holding/64]|=std::uint64_t{1}<<(holding%64);
+                    if (block.seen.empty()) {
+                        const auto added_words=(block.hand_count+63)/64;
+                        observe_metadata(receipt_.public_blocks,receipt_.menus,
+                                         receipt_.allocated_bitmap_words+added_words);
+                        std::vector<std::uint64_t> prepared(added_words,0);
+                        prepared[block.first_holding/64]|=std::uint64_t{1}<<(block.first_holding%64);
+                        prepared[holding/64]|=std::uint64_t{1}<<(holding%64);
+                        block.seen.swap(prepared);
+                        receipt_.allocated_bitmap_words+=added_words;
+                    } else block.seen[holding/64]|=std::uint64_t{1}<<(holding%64);
                     ++block.seen_count; ++receipt_.information_rows_seen;
                     receipt_.action_slots_seen+=menu.actions.size();
                 }
@@ -233,6 +277,9 @@ public:
                 receipt_.information_rows_seen>=limits_.max_information_rows_seen ||
                 actions.size()>limits_.max_action_slots_seen-receipt_.action_slots_seen)
                 reject(ErrorKind::capacity,"strategy catalog block, menu, row, or slot cap exceeded");
+            const auto added_words=limits_.seen_storage==Limits::SeenStorage::eager_bitmap?(hand_count+63)/64:0;
+            observe_metadata(receipt_.public_blocks+1,receipt_.menus+(new_menu?1:0),
+                             receipt_.allocated_bitmap_words+added_words);
             std::size_t menu_index=0;
             if (!new_menu) {
                 menu_index=menu_found->second;
@@ -253,13 +300,17 @@ public:
             auto block=std::make_unique<Block>();
             block->ordinal=key.first; block->actor=actor; block->source_ref=source_menu_ref;
             block->menu_index=menu_index; block->hand_count=hand_count;
-            block->seen.assign((hand_count+63)/64,0);
-            block->seen[holding/64]|=std::uint64_t{1}<<(holding%64);
+            block->first_holding=holding;
+            if (added_words) {
+                block->seen.assign(added_words,0);
+                block->seen[holding/64]|=std::uint64_t{1}<<(holding%64);
+            }
             block->seen_count=1;
             const auto index=blocks_.size();
             blocks_.push_back(std::move(block));
             directory_.emplace(key,index);
             ++receipt_.public_blocks; if (new_menu) ++receipt_.menus; ++receipt_.information_rows_seen;
+            receipt_.allocated_bitmap_words+=added_words;
             receipt_.action_slots_seen+=actions.size();
             return RowId(owner_,index,holding);
         } catch (const virtual_information_identity::Error& e) {
@@ -280,7 +331,7 @@ public:
         if (id.owner_!=owner_) reject(ErrorKind::foreign_row,"foreign strategy catalog row id");
         if (id.block_>=blocks_.size()) reject(ErrorKind::foreign_row,"invalid strategy catalog row id");
         const auto& b=*blocks_[id.block_];
-        if (id.holding_>=b.hand_count || !((b.seen[id.holding_/64]>>(id.holding_%64))&1U))
+        if (id.holding_>=b.hand_count || !has_holding(b,id.holding_))
             reject(ErrorKind::unknown_holding,"unknown strategy catalog holding");
         const auto& m=*menus_[b.menu_index];
         return {b.ordinal,b.actor,m.source_ref,id.holding_,m.actions};

@@ -162,6 +162,10 @@ TARGETS["virtual-strategy-catalog-controls"] = (
     ("tests/native/virtual_strategy_catalog_controls.cpp", "native/virtual_strategy_catalog.hpp",
      *TARGETS["virtual-dyadic-training"][1][1:]),
 )
+TARGETS['virtual-lazy-catalog-controls'] = (
+    'native-virtual-lazy-catalog-controls',
+    ('tests/native/virtual_lazy_catalog_controls.cpp', *TARGETS['virtual-strategy-catalog-controls'][1]),
+)
 TARGETS["virtual-sparse-epoch-controls"] = (
     "native-virtual-sparse-epoch-controls",
     ("tests/native/virtual_sparse_epoch_controls.cpp", "native/virtual_sparse_strategy_epoch.hpp",
@@ -403,7 +407,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-frozen-grid-update-preflight" else "Fixed-policy Q52 per-board raw values/regrets/averages study only; no clipping, State update, sampled training, quality or wider capacity acceptance."
                   if target == "virtual-frozen-grid-raw-update" else "Two-board immutable Q52 session only; no policy transition, clipping, training, quality or wider capacity acceptance."
                   if target == "virtual-frozen-policy-session" else "Sparse full-history strategy catalog identity/menu controls only; no policies, numerical state, training or wider physical support."
-                  if target == "virtual-strategy-catalog-controls" else "Synthetic sparse vanilla epoch component controls only; no whole-game changing-policy run, sampled trainer, quality or wider admission."
+                  if target == "virtual-strategy-catalog-controls" else "Opt-in exact first-holding-inline Catalog identity and reservation controls only; no whole-game coupling, timing, lifetime or quality admission."
+                  if target == 'virtual-lazy-catalog-controls' else "Synthetic sparse vanilla epoch component controls only; no whole-game changing-policy run, sampled trainer, quality or wider admission."
                   if target == "virtual-sparse-epoch-controls" else "Uniform PROOF9 two-board sparse signed-regret epochs only; no RNG, convergence, solved quality or wider capacity acceptance."
                   if target == "virtual-sparse-two-epoch" else "Synthetic true-joint arithmetic epoch controls only; no whole-game training, RNG, quality or wider admission."
                   if target == "virtual-joint-epoch-controls" else "Fixed PROOF9 exact joint-ticket and selected-pair chance controls only; no RNG, trainer, quality or wider admission."
