@@ -25,8 +25,13 @@ The [next architecture gate](../joint-chance-sampling-foundation.md) samples a
 private pair together with a board, aiming to remove the full-hand per-board
 update cost while keeping the same raw mathematical targets. The deterministic
 joint-sample reference now passes seven normal/optimized controls, including
-full-coordinate expectations for two frozen Q52 policies. Native coupling,
-longer learning, RNG, saved-policy quality and full-range admission remain open.
+full-coordinate expectations for two frozen Q52 policies. Native coupling now
+also passes six complete two-observation requests and seven real selector
+rejections, normally and optimized, with all-row independent saved replay.
+The path ranks only selected holdings and performs no weighted contractions.
+Legacy shared-owner numerical streams remain exact. Cross-platform checks for
+this new path, realistic-range preparation, longer learning, RNG and saved-policy
+quality remain open.
 
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.

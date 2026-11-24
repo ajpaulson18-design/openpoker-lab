@@ -1151,3 +1151,16 @@ implementation gate, not executed native capacity, convergence or quality.
 Retain the earlier public-proposal proof and failed resource experiments. Keep
 all existing limits, defaults and eleven-card rejections. See the
 [design and acceptance requirements](../joint-chance-sampling-foundation.md).
+
+D056 (2026-11-23, America/New_York): integrate the independently proved
+true-joint estimator through the existing Prepared, Template, History, Catalog
+and sparse EpochLease owners. Preserve two genuine target passes and the
+existing two-read/complete-stage boundary. Bind the exact pure-power arithmetic
+contract when constructing the Store; legacy public-board modes remain exact.
+The N9 native matrix now passes complete independent cumulative R/A, root and
+all-row policy replay, including E2 reading E1, with no RNG or quality claim.
+Preserve the first compile refusal and both invalid test-fixture attempts.
+Use realistic-range preparation/storage evidence to determine the next step;
+do not raise limits or expand iterations as a substitute. Cross-platform
+acceptance and larger-range admission remain separate gates. See the
+[executed native path and limits](../joint-chance-sampling-foundation.md).

@@ -130,6 +130,76 @@ published target-proposal packet replay reports. This is a post-run raw-source
 capture matched to the previously frozen commit, with that timing disclosed.
 Per-world sample tables are not retained in this check packet; the tests
 recompute and compare them internally. The complete input policies remain in
-the separately authenticated target-board packet. Native coupling and longer
-learning remain the next gates, followed by an admitted RNG and independent
-saved-policy quality checks.
+the separately authenticated target-board packet. The next section records the
+subsequent native coupling. Longer learning, an admitted RNG and independent
+saved-policy quality remain separate gates.
+
+## Executed native coupling
+
+Native source was frozen at `b033782` before compilation. A signed/unsigned
+comparison warning stopped the first whole-game build under `/WX`; `ae88da4`
+corrected the selector constants. Independent controller source `8c42ee1`
+was committed before the six-request matrix ran. This path remains explicitly
+fixed to the N9 ranges and betting template; it adds no production default.
+
+The existing Prepared owner now supplies a scoped joint-ticket certificate.
+It preserves original holding indices, constructs compatible masses with a
+linear card-bucket inclusion/exclusion sum, un-ranks the board, and ranks only
+the two selected holdings. Its callback lifetime and poison guards reject
+nested or conflicting queries. All 580 ticket/board/sign records match the
+independent Python law and ranker, normally and optimized. The existing
+Prepared constructor still has broader storage and cross-range costs; this
+component result does not establish full-deck preparation.
+
+The existing sparse Store has a constructor-bound true-joint arithmetic mode.
+It requires exactly `2^625` regret and `2^364` average denominators and rejects
+mixed public-board laws or scales. The legacy mode retains its original
+denominators and behavior. Sixteen native guards and three independent component
+controls pass normally and optimized. Two earlier duplicate-stage fixtures
+failed before reaching the intended predicate: one hit its row capacity, and
+the next had inconsistent per-epoch/union reservations. Both failures remain
+preserved. The corrected fixture changes no Store arithmetic or resource cap.
+
+The new scalar walk reuses Template, full History, Catalog and frozen EpochLease.
+It performs two genuine target passes, with 434 staged rows, 1,039 slots and
+868 policy reads per observation. Every betting action remains expanded.
+Conditional values use the fixed `2^625` grid. Before multiplying by opposite
+past reach, the walk checks and removes the exact corresponding power of two;
+this avoids constructing an approximately 995-bit intermediate. The current
+walk's checked peak bound is 683 bits. No weighted marginal or terminal
+contractions are used by this estimator.
+
+The whole-request forecast covers all 336,400 ordered pairs of the 580 tickets
+before Template or private preparation. It reserves 117,690,568 modeled work,
+954,355 logical entries, 52,441,006 payload bits and 502,720 output bytes under
+unchanged caps. Source allocation allowances remain logical reservations,
+not a complete allocator census or RSS measurement.
+
+Six complete requests pass normally and optimized: different private pairs,
+reversed order, repeated world, equivalent tickets, shared flop with changed
+future cards, and boundary tickets. Seven real CLI rejections exit 2 with empty
+stdout. Two saved-image corruption controls reject. Independent replay checks
+every cumulative signed regret, exact average, both roots and all 24,420 policy
+rows including implicit defaults. E2 uses E1's committed policy. One detached
+raw image is live at a time, and neither snapshot is published until both
+observations and final cumulative checks succeed. Normal/optimized native
+streams match exactly. Saved-only replay passes in both modes with zero
+candidate calls and no archived-source execution.
+
+For tickets `(0,0)` then `(11,0)`, E1 retains 434 numerical rows/1,039 slots;
+E2 retains 865/2,071. There are 1,736 policy reads, 868 staged rows, 702 changed
+regret rows quantized, four selected-hand ranks and zero weighted contractions.
+The named request charges 105,483,197 modeled work and writes 501,592 bytes.
+These are logical counters, not a measured speedup or CPU bottleneck profile.
+
+The changed shared owners also pass the legacy Prepared controls (17 tests),
+sparse Store controls (four tests), and complete public-board epoch matrix,
+normally and optimized. All thirteen historical public-board native streams
+and the original 3,130-byte synthetic Store stream remain byte-identical.
+The independent full unit suite at the earlier isolated `f127f09` revision
+passes 3,259 tests with 174 skips and observed exit 0. It does not certify the
+later native changes. Dedicated Windows/Linux/sanitizer checks for the new
+joint path remain a separate gate until their hosted results are verified.
+
+Realistic weighted-range preparation, longer bounded learning, RNG and saved
+policy quality remain open. The older eleven-card rejection is unchanged.
