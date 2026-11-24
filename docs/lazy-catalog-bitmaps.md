@@ -1,6 +1,7 @@
 # Exact first-holding-inline Catalog candidate
 
-Status: source candidate pending executed acceptance. The shared Catalog keeps
+Status: local component gates pass normally and optimized at `0d14b07`;
+whole-walk coupling and cross-platform acceptance remain pending. The shared Catalog keeps
 its eager-bitmap default. An explicit `first_holding_inline` storage contract
 keeps one original holding ID in the existing block descriptor, then creates
 the exact bitmap when a second distinct holding is encountered. Duplicate
@@ -46,7 +47,7 @@ lookups, Store state, epochs, whole-request work, RNG or learning quality.
 
 Before compilation/execution, freeze the owner, controls and independent scalar
 reference. Independently maximize every feasible small descriptor/bitmap state
-for all bitmap widths1..21. Reject invalid mode or R<B geometry, insufficient
+for all bitmap widths 1..21. Reject invalid mode or R<B geometry, insufficient
 work/metadata, and capacity violations before bitmap preparation.
 
 The source-built component must preserve the entire original Catalog frame
@@ -61,3 +62,13 @@ physical-support claim.
 Only after these gates pass should the candidate be coupled to the existing
 full52 T2 walk with a separate resource/version contract and all-row arithmetic
 parity. Performance and actual retained-union evidence remain separate.
+
+Local compilation passes unchanged `/O2 /W4 /WX` flags with MSVC19.44. The
+independent scalar suite runs three tests per Python mode; the complete native
+frame and four corruptions pass in each mode with one observed native call.
+The entire original frame remains valid, with its original 96,000-work
+receipt and 13 guards. Eight new guards check exact failure kinds.
+Thirty-two one-holding public blocks allocate zero lazy bitmap words versus
+672 eager words, with exact full-history/menu identities. One promoted block
+preserves all1,326 generic original IDs in a single21-word bitmap. These are
+logical storage and identity observations, not a speed or physical-game claim.

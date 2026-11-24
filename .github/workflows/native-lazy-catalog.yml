@@ -1,0 +1,62 @@
+name: Native exact lazy Catalog
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  lazy-catalog:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build explicit shared-owner controls
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-lazy-catalog-controls --output-dir "$RUNNER_TEMP/lazy-catalog-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_LAZY_CATALOG_EXE=$RUNNER_TEMP/lazy-catalog-build/native-virtual-lazy-catalog-controls$suffix" >> "$GITHUB_ENV"
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          base = Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              for mode in ('normal', 'optimized'):
+                  output.write(f'LAZY_CATALOG_{mode.upper()}_PATH={base / ("lazy-catalog-" + mode)}\n')
+          PY
+      - name: Check feasible peak states and complete native frame
+        env:
+          OPENPOKER_NATIVE_LAZY_CATALOG_DIR: ${{ env.LAZY_CATALOG_NORMAL_PATH }}
+        run: python -B -m unittest tests.test_lazy_catalog_reference tests.test_native_lazy_catalog -v
+      - name: Repeat with optimized Python
+        env:
+          OPENPOKER_NATIVE_LAZY_CATALOG_DIR: ${{ env.LAZY_CATALOG_OPTIMIZED_PATH }}
+        run: python -O -B -m unittest tests.test_lazy_catalog_reference tests.test_native_lazy_catalog -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exact-lazy-catalog-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/lazy-catalog-build/*.log
+            ${{ runner.temp }}/lazy-catalog-build/*.json
+            ${{ env.LAZY_CATALOG_NORMAL_PATH }}/**
+            ${{ env.LAZY_CATALOG_OPTIMIZED_PATH }}/**
+          if-no-files-found: warn
