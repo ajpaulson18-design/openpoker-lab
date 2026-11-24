@@ -28,6 +28,19 @@ jobs:
           python-version: '3.13'
       - uses: ilammy/msvc-dev-cmd@v1
         if: runner.os == 'Windows'
+      - name: Resolve canonical external evidence paths
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          base = Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              for kind in ('joint', 'whole'):
+                  for mode in ('normal', 'optimized'):
+                      key = f'WEIGHTED_{kind.upper()}_{mode.upper()}_PATH'
+                      output.write(f'{key}={base / ("weighted-" + kind + "-" + mode)}\n')
+          PY
       - name: Build the shared compact Prepared purpose
         shell: bash
         run: |
@@ -40,13 +53,13 @@ jobs:
         run: python -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference -v
       - name: Check candidate private boundaries and selected boards
         env:
-          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ github.workspace }}/../weighted-joint-normal
-          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ github.workspace }}/../weighted-whole-normal
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ env.WEIGHTED_JOINT_NORMAL_PATH }}
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ env.WEIGHTED_WHOLE_NORMAL_PATH }}
         run: python -B -m unittest tests.test_native_weighted_joint_chance tests.test_native_weighted_joint_two_epoch -v
       - name: Repeat all weighted gates with optimized Python
         env:
-          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ github.workspace }}/../weighted-joint-optimized
-          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ github.workspace }}/../weighted-whole-optimized
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ env.WEIGHTED_JOINT_OPTIMIZED_PATH }}
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ env.WEIGHTED_WHOLE_OPTIMIZED_PATH }}
         run: python -O -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference tests.test_native_weighted_joint_chance tests.test_native_weighted_joint_two_epoch -v
       - uses: actions/upload-artifact@v4
         if: always()
@@ -61,8 +74,8 @@ jobs:
             ${{ runner.temp }}/weighted-whole-build/build-failure.json
             ${{ runner.temp }}/weighted-whole-build/compiler-version.log
             ${{ runner.temp }}/weighted-whole-build/native-exact-build-manifest.json
-            ${{ github.workspace }}/../weighted-joint-normal/**
-            ${{ github.workspace }}/../weighted-joint-optimized/**
-            ${{ github.workspace }}/../weighted-whole-normal/**
-            ${{ github.workspace }}/../weighted-whole-optimized/**
+            ${{ env.WEIGHTED_JOINT_NORMAL_PATH }}/**
+            ${{ env.WEIGHTED_JOINT_OPTIMIZED_PATH }}/**
+            ${{ env.WEIGHTED_WHOLE_NORMAL_PATH }}/**
+            ${{ env.WEIGHTED_WHOLE_OPTIMIZED_PATH }}/**
           if-no-files-found: warn

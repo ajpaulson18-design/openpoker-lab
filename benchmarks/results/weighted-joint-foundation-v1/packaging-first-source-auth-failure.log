@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\package_weighted_joint1.py", line 151, in <module>
+    reconstructed = archived_source(commit, tuple(manifest['source_sha256']), manifest['source_sha256'])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\package_weighted_joint1.py", line 85, in archived_source
+    raise ValueError('recorded raw source not a Git checkout form: ' + name)
+ValueError: recorded raw source not a Git checkout form: native/training_phase_profile.hpp

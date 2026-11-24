@@ -87,3 +87,13 @@ identified fragmented `std::cerr` formatting: the unit-buffered stream flushed
 each insertion. The next diagnostic formats one fixed 1,280-byte record and
 writes it once. Its 24-event recorder plus overlapping JSON scratch still fit
 the same 2,048-byte/256-word metadata reserve; no allowance or gate is raised.
+
+The third attempt at `f756eaf` completes all 132 calls with exact complete
+wire parity and passes the unchanged overhead gate: median paired elapsed ratio
+`1.04213734326561`. All three standard images have identical `.text` bytes,
+extent and RVA. On this one host and weighted full52 same-world request, the
+accepted median phase shares are walk 34.01%, row joining/staging 25.83%,
+template 12.81%, publication 8.08% and snapshot export 6.85%. These are
+separately calculated wall-time medians, not additive CPU percentages. The
+inner-walk CPU split remains open. Keep both earlier misses and the WPR
+policy refusal alongside this acceptance.

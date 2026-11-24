@@ -1,0 +1,90 @@
+{
+  "directory": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\weighted-joint-evidence1",
+  "manifest_sha256": "4aa3f0406a5b8cf422f1739ea78fa59b9d50f6e32b650f02ed4a0dc684f1eb64",
+  "archive_summary": {
+    "law-reference.zip": {
+      "bytes": 141634,
+      "sha256": "1ac0e8fbc97a96809b02faca62d092a2b5170a908e7b675f1ce417820efab73f",
+      "members": 18,
+      "expanded_bytes": 409454
+    },
+    "component-normal.zip": {
+      "bytes": 801812,
+      "sha256": "3b456372cdae556efd3933fb2a6825db7772b84d10f47eb21cadf8dccf0fae3b",
+      "members": 170,
+      "expanded_bytes": 2109896
+    },
+    "component-optimized.zip": {
+      "bytes": 801816,
+      "sha256": "8e113e4cd86efdd7923a61905c1cf50ffd6c87e3a9eebee9978dc149d7786299",
+      "members": 170,
+      "expanded_bytes": 2109895
+    },
+    "whole-normal.zip": {
+      "bytes": 1003611,
+      "sha256": "221d66b1b2380c2ad8d0c35b45fa1704561273c2c680094df5fd7f275b67dfc7",
+      "members": 100,
+      "expanded_bytes": 4466730
+    },
+    "whole-optimized.zip": {
+      "bytes": 1003622,
+      "sha256": "03d7f38b9d70c0a3667cd0b82ac94220c0b5c8025772ecf86ec7c06ce40140d1",
+      "members": 100,
+      "expanded_bytes": 4466723
+    },
+    "legacy-normal.zip": {
+      "bytes": 1131354,
+      "sha256": "849598df3cf791c0b673169ece9f5695a1b8f402fd05e7b1f62e8506cc58058a",
+      "members": 143,
+      "expanded_bytes": 5281978
+    },
+    "legacy-optimized.zip": {
+      "bytes": 1131356,
+      "sha256": "41a954e7365bc2bb5701f420803e6fd54d7a19c3c4d63b2e5d9992bb7d4085da",
+      "members": 143,
+      "expanded_bytes": 5281976
+    },
+    "builds.zip": {
+      "bytes": 11411,
+      "sha256": "2c5554cf323214ea4bf50c1b0fbcf8172989941ef6000a9117c7aefddaf2d22d",
+      "members": 10,
+      "expanded_bytes": 30423
+    },
+    "development.zip": {
+      "bytes": 1208743,
+      "sha256": "a2d563ca7ad1dbb4cb041295373fa2f38ce78ae3ed15cba52444fcb65e51b1bf",
+      "members": 34,
+      "expanded_bytes": 1775364
+    },
+    "cpu-collector-refusal.zip": {
+      "bytes": 85813,
+      "sha256": "1cafe58848b0f006fecab0d5ec44ff748aad85e76d5008caa23860e3273c7807",
+      "members": 23,
+      "expanded_bytes": 762637
+    },
+    "phase-1.zip": {
+      "bytes": 979131,
+      "sha256": "cea655222c1a9c558da6b4ee2e3aa3f749ec08397a23dd1a81824dae089ba095",
+      "members": 582,
+      "expanded_bytes": 2136619
+    },
+    "phase-2.zip": {
+      "bytes": 979744,
+      "sha256": "76b83fca3665fa187c075d81a802a1d2b2fed4827b2268f4d87e2d9f979f8998",
+      "members": 582,
+      "expanded_bytes": 2137262
+    },
+    "phase-3.zip": {
+      "bytes": 979900,
+      "sha256": "11164ae0e3ccd9d18a5429e3be961f703eb8cde4d1d39ee11e60dafd2c992dbc",
+      "members": 582,
+      "expanded_bytes": 2138317
+    },
+    "introduced-source.zip": {
+      "bytes": 38513,
+      "sha256": "8797bc117f81fa085ac502126e1ee1908aabbdaa3cae06ad272fbe8c42ea6853",
+      "members": 13,
+      "expanded_bytes": 108711
+    }
+  }
+}
