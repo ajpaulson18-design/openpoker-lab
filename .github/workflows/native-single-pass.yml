@@ -1,0 +1,78 @@
+name: Native joint single pass
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  single-pass:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build both contracts and typed epoch guards
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-two-epoch --output-dir "$RUNNER_TEMP/single-baseline-build" ${{ matrix.flags }}
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass --output-dir "$RUNNER_TEMP/single-candidate-build" ${{ matrix.flags }}
+          python -B -m scripts.build_native_exact_four_street --target virtual-single-pass-epoch-controls --output-dir "$RUNNER_TEMP/single-guards-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_WEIGHTED_SINGLE_PASS_EXE=$RUNNER_TEMP/single-candidate-build/native-virtual-weighted-joint-single-pass$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_SINGLE_PASS_BASELINE_EXE=$RUNNER_TEMP/single-baseline-build/native-virtual-weighted-joint-two-epoch$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_SINGLE_PASS_EPOCH_EXE=$RUNNER_TEMP/single-guards-build/native-virtual-single-pass-epoch-controls$suffix" >> "$GITHUB_ENV"
+      - name: Resolve canonical evidence destinations
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          base = Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              for kind in ('whole', 'guards'):
+                  for mode in ('normal', 'optimized'):
+                      output.write(f'SINGLE_{kind.upper()}_{mode.upper()}_PATH={base / ("single-" + kind + "-" + mode)}\n')
+          PY
+      - name: Independently replay every row and exercise guards
+        env:
+          OPENPOKER_NATIVE_WEIGHTED_SINGLE_PASS_DIR: ${{ env.SINGLE_WHOLE_NORMAL_PATH }}
+          OPENPOKER_NATIVE_SINGLE_PASS_EPOCH_DIR: ${{ env.SINGLE_GUARDS_NORMAL_PATH }}
+        run: python -B -m unittest tests.test_native_single_pass tests.test_native_single_pass_guards -v
+      - name: Repeat with optimized Python
+        env:
+          OPENPOKER_NATIVE_WEIGHTED_SINGLE_PASS_DIR: ${{ env.SINGLE_WHOLE_OPTIMIZED_PATH }}
+          OPENPOKER_NATIVE_SINGLE_PASS_EPOCH_DIR: ${{ env.SINGLE_GUARDS_OPTIMIZED_PATH }}
+        run: python -O -B -m unittest tests.test_native_single_pass tests.test_native_single_pass_guards -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joint-single-pass-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/single-baseline-build/*.log
+            ${{ runner.temp }}/single-baseline-build/*.json
+            ${{ runner.temp }}/single-candidate-build/*.log
+            ${{ runner.temp }}/single-candidate-build/*.json
+            ${{ runner.temp }}/single-guards-build/*.log
+            ${{ runner.temp }}/single-guards-build/*.json
+            ${{ env.SINGLE_WHOLE_NORMAL_PATH }}/**
+            ${{ env.SINGLE_WHOLE_OPTIMIZED_PATH }}/**
+            ${{ env.SINGLE_GUARDS_NORMAL_PATH }}/**
+            ${{ env.SINGLE_GUARDS_OPTIMIZED_PATH }}/**
+          if-no-files-found: warn

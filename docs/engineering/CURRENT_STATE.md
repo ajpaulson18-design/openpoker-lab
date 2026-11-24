@@ -50,6 +50,16 @@ has approximately 15.9 trillion possible exact information rows with complete
 positive ranges. Measure retained sparse-union growth before longer learning;
 reassess validated compression or abstraction when that forecast fails.
 
+The opt-in [single global-value joint walk](../joint-single-pass-walk.md)
+removes duplicate conditional-value traversal across the two seats while
+preserving simultaneous updates and every exact numerical coordinate.
+Local ten-case tie/loss/win coverage passes in both Python modes, alongside
+typed read-contract guards and legacy N9 regressions. A frozen 132-call,
+three-world comparison passes its predeclared gate with median elapsed ratio
+0.846840 and seven of eight pairs faster. This is one host and a fixed-tree
+T2 mix, not longer learning or solved quality. The original two-pass baseline
+and historical evidence remain explicit.
+
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
 Normal/optimized conformance checks both raw results independently, including

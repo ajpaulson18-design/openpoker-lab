@@ -1,7 +1,8 @@
 # Single global-value joint walk candidate
 
-Status: source-only next experiment. The accepted two-target path remains the
-baseline. This proposal changes computation and its versioned read/census
+Status: local exact-conformance and paired-performance gates pass; cross-platform
+checks and immutable evidence publication follow. The two-target path remains the
+explicit baseline. This opt-in candidate changes computation and its versioned read/census
 contract, not chance law, information identity, cumulative signed regret,
 average weighting, policy quantization or update timing.
 
@@ -49,8 +50,8 @@ They replace two identical continuation calculations with one; regret and
 average row work remain. For the named full52 T2 request, prospective composed
 work is 149,877,434, including Catalog 29,228,320, History 5,443,024,
 Store/quantizer 17,132,608, parent 3,313,610 and unchanged Chance 43,715,840.
-These are source-ledger predictions to verify before execution, not CPU/RSS
-measurements or an admission result.
+These source-ledger predictions agree with the local executed admission and
+counters. They are not CPU/RSS measurements.
 
 ## Frozen acceptance gates
 
@@ -80,3 +81,28 @@ phase wall time in the walk on its frozen source/host/request. That motivates
 this measured experiment; it does not identify an inner-walk CPU family or
 promise the proposed speedup. Longer learning, retained-union scaling and
 saved-policy quality remain separate architecture gates.
+
+## Local executed result
+
+At source `70f5209`, ten named requests and eight real parser rejections pass
+normally and with optimized Python. Each mode observes 18 candidate calls and
+four fresh baseline calls for the added win/loss cases; the original six
+baseline wires remain authenticated historical inputs. Both corruption controls
+reject. The unchanged independent Fraction authority verifies every retained
+R/A/policy coordinate, both roots, implicit defaults and full-history identities.
+The independent law/ranker confirms tie/loss/win witnesses for both profiles.
+Ten typed one-read/two-read ownership and completion guards also pass, and
+the legacy N9 whole path plus epoch controls pass normally and optimized.
+
+The frozen paired comparison observes 132 actual complete calls. Its eight
+candidate/baseline elapsed ratios are 0.984696, 0.696474, 1.025201, 0.891761,
+0.801919, 0.751796, 0.922430 and 0.744129. Median 0.846840 and seven faster
+pairs pass the predeclared 0.95/six-pair gate. Every mode's full wire remains
+exact and both modes share the same numeric projection. This is a one-host
+result for the specified three-world mix, including construction, training,
+serialization and process overhead; no inner-walk CPU attribution is inferred.
+
+The first candidate compilation at `fdf33d7` failed MSVC C4127 under `/WX`
+because a template constant appeared in an ordinary conditional. The fix uses
+an explicit `if constexpr` assignment without weakening warning flags. Keep
+that first failure and the original six-case matrices with the expanded result.
