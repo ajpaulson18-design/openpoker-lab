@@ -3,8 +3,9 @@
 Status: the compact ticket-only purpose is implemented on the existing
 `PreparedPublicChance` owner and passes local independent component controls
 normally and with optimized Python. Generic selected-world arithmetic also
-passes its independent reference gates. Full52 native training coupling,
-longer learning, CPU attribution and saved-policy quality remain open.
+passes its independent reference gates. Full52 native coupling now passes its
+local six-request gate normally and optimized. Longer learning, CPU attribution
+and saved-policy quality remain open.
 Existing constructors and contraction behavior remain the default
 compatibility path. The proposed bounds below are historical design estimates;
 the executed component ledger and its scope are recorded next.
@@ -53,8 +54,26 @@ After the shared owner/Store changes, the existing N9 joint trainer also
 passes all six complete requests and seven rejections normally and optimized,
 including independent all-row arithmetic replay. This does not validate
 larger-range native training. The weighted Store contract exists, but its
-full52 coupling still requires certificate/range/deck binding and whole-call
-admission before execution.
+full52 coupling is separately verified below.
+
+At source `92efdc5`, the same native walk and owner set now pass six full52
+complete two-observation requests and eight real selector rejections normally
+and optimized. The named profiles are complete uniform ranges and lexicographic
+holding weights cycling 1..7. Cases cover evolving same-world policy, both
+selector boundaries and shared-flop/different-future boards. Independent replay
+matches both roots, every retained signed R/A slot and sparse Q52 overlay,
+with two corrupted-wire controls. The wire declares the implicit-uniform
+default instead of pretending to serialize the full information universe.
+Four selected-hand ranks and zero contractions are retained per request.
+
+The complete scalar forecast is 162,915,976 work, 971,875 entries,
+53,559,470 payload bits and 502,752 output bytes, under all existing component
+and whole-request caps. Weighted source/deck/original-range counts are bound
+to the callback certificate and Store lease; visible History and action menus
+are validated against the numeric walk. Legacy N9 normal/optimized complete
+request gates also pass after this coupling. This is a finite fixed-tree T2
+witness, not long learning, convergence, full-policy quality or unrestricted
+NLHE readiness. The old eleven-card exhaustive refusal remains unchanged.
 
 ## Contract and scope
 

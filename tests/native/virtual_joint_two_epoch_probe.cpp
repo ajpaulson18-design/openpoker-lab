@@ -5,6 +5,12 @@
 #include <charconv>
 #include <cstring>
 #include <iostream>
+#ifdef OPENPOKER_JOINT_PHASE_PROFILE
+#include "../../native/joint_phase_recorder.hpp"
+#define JOINT_MARK(name,epoch) diagnostics.mark(name,epoch)
+#else
+#define JOINT_MARK(name,epoch) static_cast<void>(0)
+#endif
 #ifdef _WIN32
 #include <fcntl.h>
 #include <io.h>
@@ -149,6 +155,13 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     const std::uint64_t normalizer=weighted_mode?(profile?25'908'876:1'624'350):29;
     for(const auto& selector:selectors) t::require(selector[0]<normalizer && selector[1]<(weighted_mode?34'246'080U:20U),
         "joint selector domain");
+#ifdef OPENPOKER_JOINT_PHASE_PROFILE
+    namespace diagnostic=openpoker::joint_phase_profile;
+    t::require(domain.work+diagnostic::extra_work<=t::work_cap && domain.entries+diagnostic::entries<=t::entries_cap &&
+        domain.payload+diagnostic::payload_bits<=t::payload_cap,"joint diagnostic extra resource admission");
+    diagnostic::Recorder diagnostics;
+#endif
+    JOINT_MARK("begin",0);
     std::array<std::vector<t::chance::WeightedHand>,2> explicit_ranges;
     if constexpr (weighted_mode) {
         // Original ordered physical holding identity, no pair/world table.
@@ -161,6 +174,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
             }
         }
     }
+    JOINT_MARK("range_input",0);
     const t::betting::Template source(t::configuration(),t::template_limits());
     p::Geometry geometry;p::census(source,source.root(),{},geometry);
     const auto checked=whole::forecast(source,geometry);
@@ -168,6 +182,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     t::require(f.work<=domain.work && f.entries<=domain.entries && f.payload<=domain.payload &&
         source.receipt().nodes==388 && source.receipt().edges==410 && !source.receipt().history_suffix_only,
         "sparse epoch source or pair admission changed");
+    JOINT_MARK("template",0);
     t::chance::Limits chance_limits;chance_limits.max_hands_per_side=counts[0];chance_limits.max_integer_bits=weighted_mode?181:384;
     chance_limits.max_modeled_work=f.chance;chance_limits.max_storage_entries=t::chance_entries;
     chance_limits.max_integer_payload_bits=t::chance_payload;
@@ -182,12 +197,14 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         t::chance_setup_bound;
     t::require(chance.normalizer_integer()==normalizer && chance.receipt().modeled_work<=setup_bound,
         "sparse epoch physical prior normalizer or setup bound");
+    JOINT_MARK("chance",0);
     h::Limits history_limits;history_limits.work=f.history;history_limits.nodes=1105;
     history_limits.entries=32*1105+1;history_limits.owned_bytes=t::history_bytes;history_limits.depth=15;
     h::History history(source,deck,history_limits);
     c::Catalog catalog(history,counts,f.catalog);
     e::Store store(catalog,history,counts,f.epoch,weighted_mode?e::ArithmeticContract::weighted_joint_fixed_tree:
         e::ArithmeticContract::true_joint_proof9);
+    JOINT_MARK("owners",0);
     Buffer output(static_cast<std::size_t>(f.output));
     output.bytes(weighted_mode?"OPLWEP01":"OPLJEP01",8);
     output.words(std::array<std::uint64_t,24>{1,2,weighted_mode?0U:24420U,weighted_mode?0U:58164U,t::grid,f.work,f.entries,f.payload,f.output,
@@ -196,15 +213,19 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     if constexpr (weighted_mode) output.words(std::array<std::uint64_t,4>{52,profile,counts[0],counts[1]});
     integer(output,store.regret_denominator_value(),11,false);integer(output,store.average_denominator_value(),6,false);
     t::require(output.written()==(weighted_mode?368U:336U),"sparse epoch global header size");
+    JOINT_MARK("header",0);
     std::uint64_t parent=f.setup+4096,staged_rows=0,staged_slots=0,raw_visits=0,raw_actions=0,raw_reveals=0;
     for (std::size_t i=0;i<2;++i) {
         Observation observation;whole::Board board{};std::array<std::size_t,2> holdings{};
         {
             auto lease=store.begin_epoch(e::ProposalLaw::true_joint);
+            JOINT_MARK("epoch_begin",i+1);
             chance.with_joint_ticket(selectors[i][0],selectors[i][1],[&](const auto& sample) {
+                JOINT_MARK("ticket",i+1);
                 board=sample.board();holdings=sample.holding_indices();
                 joint::Walk walk(source,history,lease,sample,geometry,f.raw);
                 const auto& result=walk.run();
+                JOINT_MARK("walk",i+1);
                 t::require(walk.complete() && result.rows.size()==f.raw.rows && result.slots==f.raw.slots &&
                     result.denominator==store.regret_denominator_value(),"sparse epoch raw walk census or denominator");
                 observation.roots=result.roots;observation.rows=result.rows.size();observation.slots=result.slots;
@@ -228,9 +249,12 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
                         static_cast<std::size_t>(row.holding),counts[row.actor],info.source,std::span(actions).first(info.actions));
                     lease.stage(id,row.regret,row.average,row.average_denominator,result.denominator);
                 }
+                JOINT_MARK("stage",i+1);
             }); // Scalar walk, staged image and borrowed sample expire before commit.
         } // Completed lease releases all immutable borrowed policy views.
+        JOINT_MARK("release",i+1);
         store.commit();
+        JOINT_MARK("commit",i+1);
         staged_rows+=observation.rows;staged_slots+=observation.slots;
         raw_visits+=observation.visits;raw_actions+=observation.actions;raw_reveals+=observation.reveals;
         const auto& er=store.receipt();
@@ -246,6 +270,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
             "sparse epoch cumulative transition counters");
         snapshot(output,i+1,selectors[i][0],selectors[i][1],holdings,board,observation,store,catalog,history,chance,counts);
         check_components(f,source,history,chance,catalog,store,parent);
+        JOINT_MARK("snapshot",i+1);
     }
     const auto& er=store.receipt();const auto& cr=catalog.receipt();const auto& pr=chance.receipt();
     const auto final_bytes=output.written()+256;
@@ -268,7 +293,14 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         cr.public_blocks,cr.information_rows_seen,cr.action_slots_seen,cr.menus,cr.lookups,pr.rank_calls,
         pr.completed_contractions,raw_visits,raw_actions,raw_reveals,1,pr.joint_ticket_queries});
     t::require(output.written()==final_bytes,"sparse epoch final wire byte count");
-    output.publish();return 0;
+    JOINT_MARK("footer",0);
+    output.publish();
+#ifdef OPENPOKER_JOINT_PHASE_PROFILE
+    std::cout.flush();
+    JOINT_MARK("publish",0);
+    diagnostics.write(std::cerr);
+#endif
+    return 0;
 }
 } // namespace
 

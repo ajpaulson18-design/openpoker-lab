@@ -32,18 +32,22 @@ jobs:
         shell: bash
         run: |
           python -B -m scripts.build_native_exact_four_street --target prepared-weighted-joint-controls --output-dir "$RUNNER_TEMP/weighted-joint-build" ${{ matrix.flags }}
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-two-epoch --output-dir "$RUNNER_TEMP/weighted-whole-build" ${{ matrix.flags }}
           if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
           echo "OPENPOKER_NATIVE_WEIGHTED_JOINT_EXE=$RUNNER_TEMP/weighted-joint-build/native-prepared-weighted-joint-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_EXE=$RUNNER_TEMP/weighted-whole-build/native-virtual-weighted-joint-two-epoch$suffix" >> "$GITHUB_ENV"
       - name: Check independent law and selected-world arithmetic
         run: python -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference -v
       - name: Check candidate private boundaries and selected boards
         env:
           OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ github.workspace }}/../weighted-joint-normal
-        run: python -B -m unittest tests.test_native_weighted_joint_chance -v
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ github.workspace }}/../weighted-whole-normal
+        run: python -B -m unittest tests.test_native_weighted_joint_chance tests.test_native_weighted_joint_two_epoch -v
       - name: Repeat all weighted gates with optimized Python
         env:
           OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ github.workspace }}/../weighted-joint-optimized
-        run: python -O -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference tests.test_native_weighted_joint_chance -v
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ github.workspace }}/../weighted-whole-optimized
+        run: python -O -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference tests.test_native_weighted_joint_chance tests.test_native_weighted_joint_two_epoch -v
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -53,6 +57,12 @@ jobs:
             ${{ runner.temp }}/weighted-joint-build/build-failure.json
             ${{ runner.temp }}/weighted-joint-build/compiler-version.log
             ${{ runner.temp }}/weighted-joint-build/native-exact-build-manifest.json
+            ${{ runner.temp }}/weighted-whole-build/build.log
+            ${{ runner.temp }}/weighted-whole-build/build-failure.json
+            ${{ runner.temp }}/weighted-whole-build/compiler-version.log
+            ${{ runner.temp }}/weighted-whole-build/native-exact-build-manifest.json
             ${{ github.workspace }}/../weighted-joint-normal/**
             ${{ github.workspace }}/../weighted-joint-optimized/**
+            ${{ github.workspace }}/../weighted-whole-normal/**
+            ${{ github.workspace }}/../weighted-whole-optimized/**
           if-no-files-found: warn

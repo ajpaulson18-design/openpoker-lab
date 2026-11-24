@@ -39,7 +39,12 @@ The [weighted-range preparation design](../joint-chance-weighted-range-design.md
 keeps the existing resource ceilings and implements a compact ticket-only purpose
 on the same Prepared owner. Local normal/optimized component controls pass on
 full52 uniform and weighted ranges. Generic selected-world reference gates also
-pass; full52 native training coupling remains open. Full52 two-observation
+pass. The shared native walk now also passes six full52 two-observation cases
+and eight selector rejections normally and optimized, with independent
+retained-row arithmetic replay. This fixed-tree T2 witness is not longer
+learning or saved-policy quality. Its 162.9-million-work whole forecast stays
+inside the existing caps; the old eleven-card exhaustive refusal is unchanged.
+Full52 two-observation
 admission would leave a much larger lifetime-storage gate: the fixed template
 has approximately 15.9 trillion possible exact information rows with complete
 positive ranges. Measure retained sparse-union growth before longer learning;

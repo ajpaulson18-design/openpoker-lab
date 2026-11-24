@@ -49,3 +49,23 @@ If stacks cannot distinguish inner costs, a separately source-frozen diagnostic
 build may record a few phase boundaries per epoch, with exact standard-output
 parity and a measured overhead gate. Per-row timers are excluded. Such coarse
 timing cannot establish an inner-walk owner split.
+
+## Frozen coarse fallback
+
+The separate `virtual-weighted-joint-two-epoch-profile` target enables only
+`OPENPOKER_JOINT_PHASE_PROFILE` beyond its standard weighted target. It records
+22 phase boundaries with 23 clock reads and no row timers. Its explicit extra
+reservation is 73,728 work, 256 entries, 16,384 payload bits and at most 4,096
+stderr bytes; all fit inside the existing whole-request caps. Standard output
+and resource fields stay byte-exact to the standard target; diagnostic costs
+are separately declared in its stderr receipt, not hidden in standard counters.
+
+The [paired driver](../scripts/benchmark_joint_phase_profile.py) first
+independently replays the saved full52 weighted same-world request. It freezes
+eight alternating pairs of eight complete calls, after two warmups per target:
+64 timed standard calls, 64 timed diagnostic calls and four warmups. Every
+actual exit and complete output wire must match. The median paired elapsed
+ratio must be at most 1.05 before phase wall-time observations are accepted.
+All pairs and misses remain evidence. Recorder/source/compiler identities must
+stay unchanged. This is wall time on one host and named finite-tree request;
+it cannot attribute inclusive/exclusive CPU costs inside the walk.
