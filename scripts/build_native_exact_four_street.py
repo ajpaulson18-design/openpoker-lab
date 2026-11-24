@@ -20,6 +20,9 @@ DEPENDENCY_MANIFEST_SHA256 = "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b48
 HEADER_ARCHIVE_SHA256 = "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
 LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
 TARGETS = {
+    "prepared-weighted-joint-controls": ("native-prepared-weighted-joint-controls", (
+        "tests/native/prepared_weighted_joint_ticket_controls.cpp", "native/prepared_public_chance.hpp",
+        "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "training-phase-profile-controls": ("native-training-phase-profile-controls", (
         "tests/native/training_phase_profile_controls.cpp", "native/training_phase_profile.hpp", "native/training_phase_trace.hpp")),
     "dyadic-policy-division-controls": ("native-dyadic-policy-division-controls", (
@@ -368,7 +371,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "full-deck-chance-preflight" else "Exact rational opponent-reach component controls only; no sampler, changing-policy trainer or whole-game acceptance."
                   if target == "full-deck-exact-reach-controls" else "Exact visible-prefix fold payoff controls only; changing-policy training and quality remain open."
                   if target == "full-deck-prefix-fold-controls" else "Prepared q=1 public-chance contraction controls only; no cumulative whole-game training or quality admission."
-                  if target == "prepared-public-chance-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
+                  if target == "prepared-public-chance-controls" else "Weighted compact joint-ticket component controls only; no RNG, learner, full52 solver admission or quality."
+                  if target == "prepared-weighted-joint-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
                   if target == "virtual-dyadic-history-controls" else "Persistent exact dyadic state and staged sweep controls only; whole poker training and quality remain open."
                   if target == "virtual-dyadic-state-controls" else "Frozen Q52 policy import/read conformance only; no update, training, solver or capacity acceptance."
                   if target == "virtual-frozen-policy-state-controls" else "Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission."

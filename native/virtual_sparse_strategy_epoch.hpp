@@ -40,7 +40,7 @@ inline constexpr std::size_t payload_bits_cap = std::size_t{1} << 30;
 enum class ErrorKind { invalid_limits, owner_mismatch, failed_owner, active_lease,
                        lease_generation, incomplete_walk, row_or_menu, duplicate_stage,
                        epoch_limit, arithmetic, resource_limit, quantizer };
-enum class ArithmeticContract { uniform_public_proof9, true_joint_proof9 };
+enum class ArithmeticContract { uniform_public_proof9, true_joint_proof9, weighted_joint_fixed_tree };
 enum class ProposalLaw { uniform_public, weighted_river, true_joint };
 class Error final : public std::runtime_error {
     ErrorKind kind_;
@@ -60,6 +60,8 @@ struct Limits {
     std::size_t max_entries = entries_cap;
     std::size_t max_payload_bits = payload_bits_cap;
     std::size_t max_epochs = epoch_limit;
+    // Borrowed Catalog bitmap cost, not a numerical row allocation.
+    std::size_t catalog_max_holding_count = 2;
 };
 
 struct Forecast {
@@ -140,7 +142,8 @@ inline Forecast forecast(const Limits& limits) {
         limits.max_reads < 2 * limits.max_rows_touched || limits.max_reads > 2'136 ||
         !limits.catalog_max_public_blocks || limits.catalog_max_public_blocks > 24'420 ||
         !limits.max_work || limits.max_work > work_cap || !limits.max_entries || limits.max_entries > entries_cap ||
-        !limits.max_payload_bits || limits.max_payload_bits > payload_bits_cap)
+        !limits.max_payload_bits || limits.max_payload_bits > payload_bits_cap ||
+        !limits.catalog_max_holding_count || limits.catalog_max_holding_count > catalog::maximum_holding_count)
         throw Error(ErrorKind::invalid_limits, "invalid sparse strategy epoch limits");
     Forecast f;
     f.constructor_work = 2'048;
@@ -173,7 +176,8 @@ inline Forecast forecast(const Limits& limits) {
     f.own_work = f.constructor_work + f.lease_work + f.read_work + f.stage_work +
         f.commit_work + f.enumeration_work + f.export_work;
     const auto catalog_map_steps = std::bit_width(limits.catalog_max_public_blocks + 1);
-    const auto catalog_access = 512 + 256 * catalog::maximum_actions + 32 * catalog_map_steps + 8;
+    const auto catalog_access = 512 + 256 * catalog::maximum_actions + 32 * catalog_map_steps +
+        8 * ((limits.catalog_max_holding_count + 63) / 64);
     f.catalog_read_work = (limits.max_reads * 2 + limits.max_epochs * limits.max_stage_rows) * catalog_access;
     // resolve + view per policy read, and one validating view per staged row.
     // History decision key/actions, Catalog's full history identity, and the
@@ -250,7 +254,8 @@ private:
 
     static ArithmeticContract admit_arithmetic(ArithmeticContract arithmetic) {
         if (arithmetic!=ArithmeticContract::uniform_public_proof9 &&
-            arithmetic!=ArithmeticContract::true_joint_proof9)
+            arithmetic!=ArithmeticContract::true_joint_proof9 &&
+            arithmetic!=ArithmeticContract::weighted_joint_fixed_tree)
             throw Error(ErrorKind::invalid_limits,"unknown sparse arithmetic contract");
         return arithmetic;
     }
@@ -394,6 +399,10 @@ public:
             check();
             return owner_->arithmetic_contract();
         }
+        [[nodiscard]] const std::array<std::size_t,2>& declared_hand_counts() const {
+            check();
+            return owner_->hand_counts_;
+        }
         [[nodiscard]] FrozenPolicyView frozen_policy(Cursor cursor, std::size_t actor, std::size_t holding) {
             check();
             try {
@@ -503,15 +512,21 @@ public:
         const auto& catalog_limits = catalog_owner.admitted_limits();
         const auto& catalog_receipt = catalog_owner.receipt();
         const auto required_catalog_lookups = limits.max_reads * 2 + limits.max_epochs * limits.max_stage_rows;
-        if (declared_hand_counts != std::array<std::size_t, 2>{2, 2} || catalog_owner.failed() ||
+        const bool weighted=arithmetic_==ArithmeticContract::weighted_joint_fixed_tree;
+        const bool dimensions_ok=weighted ?
+            (declared_hand_counts[0] && declared_hand_counts[1] &&
+             declared_hand_counts[0]<=limits.catalog_max_holding_count &&
+             declared_hand_counts[1]<=limits.catalog_max_holding_count) :
+            (declared_hand_counts==std::array<std::size_t,2>{2,2} && limits.catalog_max_holding_count==2);
+        if (!dimensions_ok || catalog_owner.failed() ||
             !catalog_owner.owns_identity(history_owner, declared_hand_counts) ||
-            catalog_limits.max_holding_count > 2 ||
+            catalog_limits.max_holding_count > limits.catalog_max_holding_count ||
             catalog_limits.max_public_blocks > limits.catalog_max_public_blocks ||
             catalog_receipt.lookups > catalog_limits.max_lookups ||
             required_catalog_lookups > catalog_limits.max_lookups - catalog_receipt.lookups ||
             catalog_receipt.work > catalog_limits.max_work ||
             forecast_.catalog_read_work > catalog_limits.max_work - catalog_receipt.work)
-            throw Error(ErrorKind::invalid_limits, "sparse strategy epoch requires the fixed two-hand catalog");
+            throw Error(ErrorKind::invalid_limits, "sparse strategy epoch declared catalog contract mismatch");
         charge(forecast_.constructor_work);
     }
     Store(const Store&) = delete;
@@ -616,7 +631,7 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
         if (magnitude_bits(raw_regret_denominator) > 638 || raw_regret_denominator <= 0 ||
             raw_regret_denominator != regret_denominator_value() ||
             magnitude_bits(raw_average_denominator) > 381 || raw_average_denominator <= 0 ||
-            (arithmetic_==ArithmeticContract::true_joint_proof9?
+            (arithmetic_!=ArithmeticContract::uniform_public_proof9?
                 raw_average_denominator!=average_denominator_value():
                 Integer(average_denominator) % raw_average_denominator != 0))
             reject(ErrorKind::arithmetic, "sparse raw denominator outside exact fixed contract");
