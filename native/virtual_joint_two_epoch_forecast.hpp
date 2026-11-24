@@ -125,4 +125,25 @@ inline Forecast weighted_domain_forecast(std::array<std::size_t,2> counts) {
         "weighted joint complete request exceeds unchanged caps");
     return f;
 }
+inline Forecast single_pass_domain_forecast(std::array<std::size_t,2> counts) {
+    auto f=weighted_domain_forecast(counts);
+    f.epoch.policy_reads_per_row=1;f.epoch.max_reads=868;
+    f.epoch_cost=e::forecast(f.epoch);
+    // Two Catalog operations per frozen read, join+stage per complete row,
+    // and cumulative exports of at most434+868 rows.
+    f.catalog.max_lookups=2*f.epoch.max_reads+2*868+1302;
+    f.catalog.max_work=c::Catalog::work_forecast(f.catalog);
+    auto& r=f.raw;r.reads=434;r.reach/=2;r.scale/=2;
+    r.mix=1039*(8+t::mul_cost(629,53)+t::add_cost(683)+t::copy_cost(683))+
+        434*(32+t::copy_cost(683)+t::copy_cost(629))+
+        1039*(64+t::add_cost(630)+t::copy_cost(630)+t::mul_cost(630,365)+t::copy_cost(630));
+    r.walk=512+256*1105;r.work=raw_work(r);
+    f.history=4096*1105+1280+2*(48*1039+80*65+8)+868*288+868*640;
+    f.parent=f.setup+4096+512*868+2*r.work;
+    f.work=t::template_cap+f.catalog.max_work+f.history+f.chance+f.epoch_cost.component_work+f.parent+16*f.output;
+    t::require(f.catalog.max_work<=c::work_cap && f.epoch_cost.work<=e::work_cap && f.history<=t::history_cap &&
+        f.chance<=t::chance_cap && f.parent<=t::parent_cap && f.work<=t::work_cap && f.entries<=t::entries_cap &&
+        f.payload<=t::payload_cap && f.output<=p::output_cap,"single-pass joint request exceeds unchanged caps");
+    return f;
+}
 } // namespace openpoker::virtual_joint_two_epoch

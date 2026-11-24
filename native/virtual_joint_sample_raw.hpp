@@ -19,7 +19,7 @@ struct Reach {
     unsigned exponent=0;
 };
 
-class Walk final {
+template<bool SinglePass=false> class BasicWalk final {
     const b::Template& source_;
     h::History& history_;
     e::Store::EpochLease& policy_;
@@ -61,7 +61,7 @@ class Walk final {
         return next;
     }
     Integer terminal(const b::State& state) {
-        t::require(++result_.terminals<=1212,"joint scalar terminal census exceeded");
+        t::require(++result_.terminals<=(SinglePass?606U:1212U),"joint scalar terminal census exceeded");
         ledger_.charge(raw::Family::scale,32+t::copy_cost(629));
         const bool fold=state.phase==b::Phase::fold;
         t::require(fold || state.phase==b::Phase::showdown,"joint scalar terminal phase");
@@ -103,11 +103,11 @@ class Walk final {
             ledger_.charge(raw::Family::walk,128);
             t::require(history_.identity_matches(cursor,id,visible),"weighted joint source/history identity");
         }
-        t::require(++result_.visits<=2210 && id<source_.nodes().size(),"joint scalar visit census exceeded");
+        t::require(++result_.visits<=(SinglePass?1105U:2210U) && id<source_.nodes().size(),"joint scalar visit census exceeded");
         const auto& node=source_.nodes()[id];
         t::require(node.state.street==visible,"joint scalar visible street identity");
         if (node.state.phase==b::Phase::reveal) {
-            t::require(node.edges.size()==1 && ++result_.reveals<=130,"joint scalar reveal census exceeded");
+            t::require(node.edges.size()==1 && ++result_.reveals<=(SinglePass?65U:130U),"joint scalar reveal census exceeded");
             const auto next=node.state.next_street;
             return visit(node.edges[0].child,history_.append_reveal(cursor,std::span(board_).first(next)),
                          next,target,sb,bb);
@@ -118,21 +118,21 @@ class Walk final {
         t::require(node.state.phase==b::Phase::decision && actor<2 && count>=2 && count<=4,
             "joint scalar decision/menu shape");
         const auto view=policy_.frozen_policy(cursor,actor,holdings_[actor]);
-        t::require(++result_.reads<=868 && view.row.actor==actor &&
+        t::require(++result_.reads<=(SinglePass?434U:868U) && view.row.actor==actor &&
             view.row.holding_index==holdings_[actor] && view.units.size()==count && view.row.actions.size()==count,
             "joint scalar selected original holding/menu mismatch");
         if (weighted_) for (std::size_t action=0;action<count;++action)
             t::require(node.edges[action].action.token.size()<=16 &&
                 node.edges[action].action.token==view.row.actions[action],"weighted joint numeric/action menu identity");
         std::size_t row_index=0;
-        if (actor==target) {
+        if (SinglePass || actor==target) {
             t::require(result_.rows.size()<434 && count<=1039-result_.slots,"joint scalar staged capacity");
             row_index=result_.rows.size();
             result_.rows.push_back(average_row(view,actor?bb:sb));result_.slots+=count;
         }
         std::array<Integer,4> children{};
         for (std::size_t action=0;action<count;++action) {
-            t::require(++result_.actions<=2078,"joint scalar action census exceeded");
+            t::require(++result_.actions<=(SinglePass?1039U:2078U),"joint scalar action census exceeded");
             const auto next=advance(actor?bb:sb,view.units[action]);
             children[action]=visit(node.edges[action].child,history_.append_action(cursor,action),visible,target,
                 actor?sb:next,actor?next:bb);
@@ -145,7 +145,7 @@ class Walk final {
         }
         ledger_.charge(raw::Family::mix,32+t::copy_cost(683)+t::copy_cost(629));
         reduce_exact(mixed,52);check(mixed,629);
-        if (actor==target) {
+        if (SinglePass || actor==target) {
             const auto& opposite=actor?sb:bb;
             t::require(opposite.exponent<=364 && opposite.numerator>=0,"joint scalar opposite reach");
             for (std::size_t action=0;action<count;++action) {
@@ -165,11 +165,12 @@ class Walk final {
         return mixed;
     }
 public:
-    Walk(const b::Template& source,h::History& history,e::Store::EpochLease& policy,
+    BasicWalk(const b::Template& source,h::History& history,e::Store::EpochLease& policy,
          const Certificate& sample,const p::Geometry& geometry,const p::Forecast& forecast)
         :source_(source),history_(history),policy_(policy),sample_(sample),geometry_(geometry),forecast_(forecast),
          holdings_(sample.holding_indices()),board_(sample.board()),showdown_sign_(sample.showdown_sign()),
-         weighted_(policy.arithmetic_contract()==e::ArithmeticContract::weighted_joint_fixed_tree),ledger_(forecast) {
+         weighted_(policy.arithmetic_contract()==e::ArithmeticContract::weighted_joint_fixed_tree ||
+                   policy.arithmetic_contract()==e::ArithmeticContract::weighted_joint_single_pass),ledger_(forecast) {
         sample_.require_active();
         const auto counts=policy.declared_hand_counts();
         const bool binding=weighted_ ?
@@ -178,7 +179,11 @@ public:
              holdings_[0]<counts[0] && holdings_[1]<counts[1] && history.supports_deck(sample.deck())) :
             (policy.arithmetic_contract()==e::ArithmeticContract::true_joint_proof9 &&
              sample.purpose()==t::prepared::Purpose::legacy_contractions && holdings_[0]<2 && holdings_[1]<2);
-        t::require(policy.raw_policy_ready() && binding &&
+        const bool pass_contract=SinglePass?
+            policy.arithmetic_contract()==e::ArithmeticContract::weighted_joint_single_pass:
+            policy.arithmetic_contract()!=e::ArithmeticContract::weighted_joint_single_pass;
+        t::require(policy.raw_policy_ready() && binding && pass_contract &&
+            forecast.reads==(SinglePass?434U:868U) &&
             showdown_sign_>=-1 && showdown_sign_<=1 && forecast.rows==434 && forecast.slots==1039 &&
             geometry.visits==1105 && geometry.actions==1039 && geometry.decisions==434 &&
             geometry.reveals==65 && geometry.folds==303 && geometry.showdowns==303 &&
@@ -191,19 +196,28 @@ public:
         t::require(!entered_,"joint scalar owner already entered");entered_=true;
         sample_.require_active();
         ledger_.charge(raw::Family::walk,512);
-        for (std::size_t target=0;target<2;++target) {
-            auto value=visit(source_.root(),history_.root(),0,target,Reach{},Reach{});
-            if (target) value=-value;
-            result_.roots[target]=std::move(value);check(result_.roots[target],629);
+        if constexpr (SinglePass) {
+            result_.roots[0]=visit(source_.root(),history_.root(),0,2,Reach{},Reach{});
+            result_.roots[1]=-result_.roots[0];
+            check(result_.roots[0],629);check(result_.roots[1],629);
+        } else {
+            for (std::size_t target=0;target<2;++target) {
+                auto value=visit(source_.root(),history_.root(),0,target,Reach{},Reach{});
+                if (target) value=-value;
+                result_.roots[target]=std::move(value);check(result_.roots[target],629);
+            }
         }
         sample_.require_active();
         t::require(result_.roots[0]+result_.roots[1]==0 && result_.rows.size()==forecast_.rows &&
-            result_.slots==forecast_.slots && result_.reads==868 && result_.visits==2*geometry_.visits &&
-            result_.actions==2*geometry_.actions && result_.reveals==2*geometry_.reveals &&
-            result_.terminals==2*(geometry_.folds+geometry_.showdowns),"joint scalar complete two-seat census mismatch");
+            result_.slots==forecast_.slots && result_.reads==(SinglePass?434U:868U) &&
+            result_.visits==(SinglePass?1U:2U)*geometry_.visits &&
+            result_.actions==(SinglePass?1U:2U)*geometry_.actions && result_.reveals==(SinglePass?1U:2U)*geometry_.reveals &&
+            result_.terminals==(SinglePass?1U:2U)*(geometry_.folds+geometry_.showdowns),"joint scalar complete two-seat census mismatch");
         complete_=true;return result_;
     }
     [[nodiscard]] const raw::Ledger& ledger() const noexcept {return ledger_;}
     [[nodiscard]] bool complete() const noexcept {return complete_;}
 };
+using Walk=BasicWalk<false>;
+using SinglePassWalk=BasicWalk<true>;
 } // namespace openpoker::virtual_joint_sample_raw

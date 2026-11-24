@@ -5,6 +5,7 @@
 #include <charconv>
 #include <cstring>
 #include <iostream>
+#include <type_traits>
 #ifdef OPENPOKER_JOINT_PHASE_PROFILE
 #include "../../native/joint_phase_recorder.hpp"
 #define JOINT_MARK(name,epoch) diagnostics->mark(name,epoch)
@@ -29,6 +30,13 @@ inline constexpr bool weighted_mode=true;
 #else
 inline constexpr bool weighted_mode=false;
 #endif
+#ifdef OPENPOKER_JOINT_SINGLE_PASS
+inline constexpr bool single_pass_mode=true;
+#else
+inline constexpr bool single_pass_mode=false;
+#endif
+static_assert(!single_pass_mode || weighted_mode);
+using ActiveWalk=std::conditional_t<single_pass_mode,joint::SinglePassWalk,joint::Walk>;
 
 
 namespace {
@@ -99,7 +107,7 @@ void check_components(const whole::Forecast& f,const t::betting::Template& sourc
         cr.work<=f.catalog.max_work && cr.metadata_entries<=f.catalog.max_metadata_entries &&
         cr.metadata_payload_bits<=f.catalog.max_metadata_payload_bits &&
         cr.public_blocks<=868 && cr.information_rows_seen<=868 && cr.action_slots_seen<=2078 &&
-        cr.menus<=434 && cr.lookups<=6510 &&
+        cr.menus<=434 && cr.lookups<=f.catalog.max_lookups &&
         er.work<=f.epoch_cost.own_work && er.quantizer_work<=f.epoch_cost.quantizer_work &&
         er.work+er.quantizer_work<=f.epoch_cost.component_work &&
         er.peak_payload_bits<=f.epoch_cost.payload_bits && parent<=f.parent,
@@ -111,7 +119,7 @@ void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_
               const t::prepared::PreparedPublicChance& chance,std::array<std::size_t,2> counts) {
     const auto begin=output.written();const auto before=store.receipt();
     const auto record_bytes=600+40*before.current_rows+144*before.current_slots;
-    output.bytes(weighted_mode?"OPLWEB01":"OPLJEB01",8);
+    output.bytes(single_pass_mode?"OPLSGB01":weighted_mode?"OPLWEB01":"OPLJEB01",8);
     output.words(std::array<std::uint64_t,20>{1,epoch,ticket,rank,holdings[0],holdings[1],
         board[0],board[1],board[2],board[3],board[4],
         before.current_rows,before.current_slots,observation.rows,observation.slots,observation.reads,
@@ -149,7 +157,8 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     // This evaluates only scalar resource equations, without a policy image.
     const std::array<std::size_t,2> counts=weighted_mode?std::array<std::size_t,2>{1326,1326}:
         std::array<std::size_t,2>{2,2};
-    const auto domain=weighted_mode?whole::weighted_domain_forecast(counts):whole::domain_forecast();
+    const auto domain=single_pass_mode?whole::single_pass_domain_forecast(counts):
+        weighted_mode?whole::weighted_domain_forecast(counts):whole::domain_forecast();
     const auto deck=weighted_mode?t::chance::DeckDefinition::full52():t::chance::DeckDefinition::reduced(t::deck_cards);
     t::require(!weighted_mode || profile<=1,"weighted range profile");
     const std::uint64_t normalizer=weighted_mode?(profile?25'908'876:1'624'350):29;
@@ -180,7 +189,8 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     const t::betting::Template source(t::configuration(),t::template_limits());
     p::Geometry geometry;p::census(source,source.root(),{},geometry);
     const auto checked=whole::forecast(source,geometry);
-    const auto f=weighted_mode?whole::weighted_domain_forecast(counts):checked;
+    const auto f=single_pass_mode?whole::single_pass_domain_forecast(counts):
+        weighted_mode?whole::weighted_domain_forecast(counts):checked;
     t::require(f.work<=domain.work && f.entries<=domain.entries && f.payload<=domain.payload &&
         source.receipt().nodes==388 && source.receipt().edges==410 && !source.receipt().history_suffix_only,
         "sparse epoch source or pair admission changed");
@@ -204,14 +214,14 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     history_limits.entries=32*1105+1;history_limits.owned_bytes=t::history_bytes;history_limits.depth=15;
     h::History history(source,deck,history_limits);
     c::Catalog catalog(history,counts,f.catalog);
-    e::Store store(catalog,history,counts,f.epoch,weighted_mode?e::ArithmeticContract::weighted_joint_fixed_tree:
-        e::ArithmeticContract::true_joint_proof9);
+    e::Store store(catalog,history,counts,f.epoch,single_pass_mode?e::ArithmeticContract::weighted_joint_single_pass:
+        weighted_mode?e::ArithmeticContract::weighted_joint_fixed_tree:e::ArithmeticContract::true_joint_proof9);
     JOINT_MARK("owners",0);
     Buffer output(static_cast<std::size_t>(f.output));
-    output.bytes(weighted_mode?"OPLWEP01":"OPLJEP01",8);
+    output.bytes(single_pass_mode?"OPLSGP01":weighted_mode?"OPLWEP01":"OPLJEP01",8);
     output.words(std::array<std::uint64_t,24>{1,2,weighted_mode?0U:24420U,weighted_mode?0U:58164U,t::grid,f.work,f.entries,f.payload,f.output,
         f.catalog.max_work,f.history,f.chance,f.epoch_cost.component_work,f.parent,f.catalog.max_lookups,
-        1105,388,410,12,11,704,weighted_mode?181U:384U,0,1});
+        1105,388,410,12,11,704,weighted_mode?181U:384U,0,single_pass_mode?2U:1U});
     if constexpr (weighted_mode) output.words(std::array<std::uint64_t,4>{52,profile,counts[0],counts[1]});
     integer(output,store.regret_denominator_value(),11,false);integer(output,store.average_denominator_value(),6,false);
     t::require(output.written()==(weighted_mode?368U:336U),"sparse epoch global header size");
@@ -225,7 +235,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
             chance.with_joint_ticket(selectors[i][0],selectors[i][1],[&](const auto& sample) {
                 JOINT_MARK("ticket",i+1);
                 board=sample.board();holdings=sample.holding_indices();
-                joint::Walk walk(source,history,lease,sample,geometry,f.raw);
+                ActiveWalk walk(source,history,lease,sample,geometry,f.raw);
                 const auto& result=walk.run();
                 JOINT_MARK("walk",i+1);
                 t::require(walk.complete() && result.rows.size()==f.raw.rows && result.slots==f.raw.slots &&
@@ -261,7 +271,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         raw_visits+=observation.visits;raw_actions+=observation.actions;raw_reveals+=observation.reveals;
         const auto& er=store.receipt();
         t::require(er.commits==i+1 && er.staged_rows==staged_rows && er.staged_slots==staged_slots &&
-            er.reads==2*staged_rows && er.quantized_rows<=staged_rows && er.pending_rows==0 &&
+            er.reads==(single_pass_mode?1U:2U)*staged_rows && er.quantized_rows<=staged_rows && er.pending_rows==0 &&
             er.current_rows<=staged_rows && er.current_slots<=staged_slots &&
             // Catalog retains all supported observations. Store omits rows
             // whose cumulative numeric regret and average are both all zero.
@@ -277,9 +287,10 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     const auto& er=store.receipt();const auto& cr=catalog.receipt();const auto& pr=chance.receipt();
     const auto final_bytes=output.written()+256;
     t::require(final_bytes<=f.output && er.commits==2 && store.committed_epochs()==2 && er.export_calls==2 &&
-        er.export_rows<=1302 && er.export_slots<=3117 && er.reads==4*f.raw.rows &&
+        er.export_rows<=1302 && er.export_slots<=3117 && er.reads==2*f.raw.reads &&
         staged_rows==2*f.raw.rows && staged_slots==2*f.raw.slots &&
-        raw_visits==4*geometry.visits && raw_actions==4*geometry.actions && raw_reveals==4*geometry.reveals &&
+        raw_visits==(single_pass_mode?2U:4U)*geometry.visits && raw_actions==(single_pass_mode?2U:4U)*geometry.actions &&
+        raw_reveals==(single_pass_mode?2U:4U)*geometry.reveals &&
         pr.completed_contractions==0 && pr.rank_calls==4 && pr.joint_ticket_queries==2,"sparse epoch final exact counters");
     const auto actual=source.receipt().work+parent+cr.work+history.receipt().work+pr.modeled_work+
         er.work+er.quantizer_work+16*final_bytes;

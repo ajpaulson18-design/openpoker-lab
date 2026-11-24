@@ -40,7 +40,8 @@ inline constexpr std::size_t payload_bits_cap = std::size_t{1} << 30;
 enum class ErrorKind { invalid_limits, owner_mismatch, failed_owner, active_lease,
                        lease_generation, incomplete_walk, row_or_menu, duplicate_stage,
                        epoch_limit, arithmetic, resource_limit, quantizer };
-enum class ArithmeticContract { uniform_public_proof9, true_joint_proof9, weighted_joint_fixed_tree };
+enum class ArithmeticContract { uniform_public_proof9, true_joint_proof9, weighted_joint_fixed_tree,
+                                weighted_joint_single_pass };
 enum class ProposalLaw { uniform_public, weighted_river, true_joint };
 class Error final : public std::runtime_error {
     ErrorKind kind_;
@@ -62,6 +63,7 @@ struct Limits {
     std::size_t max_epochs = epoch_limit;
     // Borrowed Catalog bitmap cost, not a numerical row allocation.
     std::size_t catalog_max_holding_count = 2;
+    std::size_t policy_reads_per_row = 2;
 };
 
 struct Forecast {
@@ -139,7 +141,8 @@ inline Forecast forecast(const Limits& limits) {
         !limits.max_stage_slots || limits.max_stage_slots > 1'282 ||
         2 * limits.max_stage_rows > limits.max_rows_touched ||
         2 * limits.max_stage_slots > limits.max_slots_touched ||
-        limits.max_reads < 2 * limits.max_rows_touched || limits.max_reads > 2'136 ||
+        (limits.policy_reads_per_row!=1 && limits.policy_reads_per_row!=2) ||
+        limits.max_reads < limits.policy_reads_per_row * limits.max_rows_touched || limits.max_reads > 2'136 ||
         !limits.catalog_max_public_blocks || limits.catalog_max_public_blocks > 24'420 ||
         !limits.max_work || limits.max_work > work_cap || !limits.max_entries || limits.max_entries > entries_cap ||
         !limits.max_payload_bits || limits.max_payload_bits > payload_bits_cap ||
@@ -252,11 +255,15 @@ private:
     bool pending_ready_ = false;
     bool poisoned_ = false;
 
-    static ArithmeticContract admit_arithmetic(ArithmeticContract arithmetic) {
+    static ArithmeticContract admit_arithmetic(ArithmeticContract arithmetic,const Limits& limits) {
         if (arithmetic!=ArithmeticContract::uniform_public_proof9 &&
             arithmetic!=ArithmeticContract::true_joint_proof9 &&
-            arithmetic!=ArithmeticContract::weighted_joint_fixed_tree)
+            arithmetic!=ArithmeticContract::weighted_joint_fixed_tree &&
+            arithmetic!=ArithmeticContract::weighted_joint_single_pass)
             throw Error(ErrorKind::invalid_limits,"unknown sparse arithmetic contract");
+        const auto expected=arithmetic==ArithmeticContract::weighted_joint_single_pass?1U:2U;
+        if (limits.policy_reads_per_row!=expected)
+            throw Error(ErrorKind::invalid_limits,"sparse read count differs from arithmetic contract");
         return arithmetic;
     }
     static policy::Limits quantizer_limits(const Limits& limits) {
@@ -448,8 +455,9 @@ public:
                 } else if (seen.second.actions != info.actions) {
                     owner_->reject(ErrorKind::row_or_menu, "sparse observed menu changed");
                 }
-                if (++seen.second.reads > 2) owner_->reject(ErrorKind::incomplete_walk, "sparse row read too many times");
-                if (seen.second.reads == 2) ++complete_rows_;
+                if (++seen.second.reads > owner_->limits_.policy_reads_per_row)
+                    owner_->reject(ErrorKind::incomplete_walk, "sparse row read too many times");
+                if (seen.second.reads == owner_->limits_.policy_reads_per_row) ++complete_rows_;
                 std::span<const std::uint64_t> units;
                 if (current != owner_->current_.end()) units = current->second.units;
                 else units = std::span<const std::uint64_t>(owner_->uniform_defaults_[info.actions]).first(info.actions);
@@ -471,7 +479,7 @@ public:
             check();
             try {
                 if (raw_complete_ || rows != observed_.size() || slots != slots_ || reads != reads_ ||
-                    reads != 2 * rows || complete_rows_ != observed_.size())
+                    reads != owner_->limits_.policy_reads_per_row * rows || complete_rows_ != observed_.size())
                     owner_->reject(ErrorKind::incomplete_walk, "sparse raw walk is not a complete two-seat pass");
                 owner_->charge(rows * 128); // bounded seal plus eventual observed-directory release
                 raw_complete_ = true;
@@ -505,14 +513,15 @@ public:
 
     Store(Catalog& catalog_owner, History& history_owner, std::array<std::size_t, 2> declared_hand_counts,
           Limits limits = {},ArithmeticContract arithmetic=ArithmeticContract::uniform_public_proof9)
-        : limits_(limits), forecast_(forecast(limits)), arithmetic_(admit_arithmetic(arithmetic)),
+        : limits_(limits), forecast_(forecast(limits)), arithmetic_(admit_arithmetic(arithmetic,limits)),
           history_(&history_owner), catalog_(&catalog_owner),
           hand_counts_(declared_hand_counts), quantizer_(quantizer_limits(limits)),
           uniform_defaults_(make_uniform_defaults()) {
         const auto& catalog_limits = catalog_owner.admitted_limits();
         const auto& catalog_receipt = catalog_owner.receipt();
         const auto required_catalog_lookups = limits.max_reads * 2 + limits.max_epochs * limits.max_stage_rows;
-        const bool weighted=arithmetic_==ArithmeticContract::weighted_joint_fixed_tree;
+        const bool weighted=arithmetic_==ArithmeticContract::weighted_joint_fixed_tree ||
+            arithmetic_==ArithmeticContract::weighted_joint_single_pass;
         const bool dimensions_ok=weighted ?
             (declared_hand_counts[0] && declared_hand_counts[1] &&
              declared_hand_counts[0]<=limits.catalog_max_holding_count &&
@@ -619,7 +628,8 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
             2 * row_map_work(limits_.max_stage_rows) +
             2 * row_map_work(limits_.max_rows_touched) + stage_slot_work() * actions);
         const auto seen = lease.observed_.find(id);
-        if (seen == lease.observed_.end() || seen->second.reads != 2 || seen->second.actions != raw_regrets.size())
+        if (seen == lease.observed_.end() || seen->second.reads != limits_.policy_reads_per_row ||
+            seen->second.actions != raw_regrets.size())
             reject(ErrorKind::row_or_menu, "sparse stage row was not read in both target passes");
         auto staged_position = staged_ids_.lower_bound(id);
         if (staged_position != staged_ids_.end() && staged_position->first == id)

@@ -187,6 +187,11 @@ TARGETS["virtual-joint-two-epoch"] = (
 )
 TARGETS['virtual-weighted-joint-two-epoch'] = (
     'native-virtual-weighted-joint-two-epoch', TARGETS['virtual-joint-two-epoch'][1])
+TARGETS['virtual-weighted-joint-single-pass'] = (
+    'native-virtual-weighted-joint-single-pass', TARGETS['virtual-joint-two-epoch'][1])
+TARGETS['virtual-single-pass-epoch-controls'] = (
+    'native-virtual-single-pass-epoch-controls',
+    ('tests/native/virtual_single_pass_epoch_controls.cpp', *TARGETS['virtual-joint-epoch-controls'][1][1:]))
 for _base in ('virtual-joint-two-epoch', 'virtual-weighted-joint-two-epoch'):
     TARGETS[_base + '-profile'] = ('native-' + _base + '-profile',
         (*TARGETS[_base][1], 'native/joint_phase_recorder.hpp'))
@@ -340,13 +345,18 @@ def build(output_directory, *, target="converter", sanitize=False):
             flags.append("-DOPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY")
         command = [compiler, *flags, str(ROOT / sources[0]), "-o", str(executable)]
         version_command = [compiler, "--version"]
-    if target in ('virtual-weighted-joint-two-epoch', 'virtual-weighted-joint-two-epoch-profile'):
+    if target in ('virtual-weighted-joint-two-epoch', 'virtual-weighted-joint-two-epoch-profile',
+                  'virtual-weighted-joint-single-pass'):
         definition = '/DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH' if os.name == 'nt' else '-DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH'
         flags.append(definition)
         # Append before the source/object/link arguments on either compiler.
         command.insert(len(flags), definition)
     if target in ('virtual-joint-two-epoch-profile', 'virtual-weighted-joint-two-epoch-profile'):
         definition = '/DOPENPOKER_JOINT_PHASE_PROFILE' if os.name == 'nt' else '-DOPENPOKER_JOINT_PHASE_PROFILE'
+        flags.append(definition)
+        command.insert(len(flags), definition)
+    if target == 'virtual-weighted-joint-single-pass':
+        definition = '/DOPENPOKER_JOINT_SINGLE_PASS' if os.name == 'nt' else '-DOPENPOKER_JOINT_SINGLE_PASS'
         flags.append(definition)
         command.insert(len(flags), definition)
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)
@@ -400,7 +410,9 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-joint-chance-controls" else "Deterministic PROOF9 two-joint-observation sparse signed-regret epochs only; no RNG, convergence, solved quality or full-range admission."
                   if target == "virtual-joint-two-epoch" else "Deterministic full52 two-joint-observation fixed-tree sparse epochs on named uniform/1..7 profiles; no RNG, long learning, quality or unrestricted NLHE admission."
                   if target == "virtual-weighted-joint-two-epoch" else "Bounded diagnostic joint phase clocks; standard binary wire must match and paired overhead is an independent gate."
-                  if target in ('virtual-joint-two-epoch-profile', 'virtual-weighted-joint-two-epoch-profile') else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target in ('virtual-joint-two-epoch-profile', 'virtual-weighted-joint-two-epoch-profile') else "Opt-in full52 single-global-value walk T2 candidate; independent arithmetic/resource/performance acceptance required, no long learning or quality claim."
+                  if target == 'virtual-weighted-joint-single-pass' else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
+                  if target == 'virtual-single-pass-epoch-controls' else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
