@@ -124,8 +124,10 @@ template<bool SinglePass=false> class BasicWalk final {
         if (weighted_) for (std::size_t action=0;action<count;++action)
             t::require(node.edges[action].action.token.size()<=16 &&
                 node.edges[action].action.token==view.row.actions[action],"weighted joint numeric/action menu identity");
+        bool retain_actor=actor==target;
+        if constexpr (SinglePass) retain_actor=true;
         std::size_t row_index=0;
-        if (SinglePass || actor==target) {
+        if (retain_actor) {
             t::require(result_.rows.size()<434 && count<=1039-result_.slots,"joint scalar staged capacity");
             row_index=result_.rows.size();
             result_.rows.push_back(average_row(view,actor?bb:sb));result_.slots+=count;
@@ -145,7 +147,7 @@ template<bool SinglePass=false> class BasicWalk final {
         }
         ledger_.charge(raw::Family::mix,32+t::copy_cost(683)+t::copy_cost(629));
         reduce_exact(mixed,52);check(mixed,629);
-        if (SinglePass || actor==target) {
+        if (retain_actor) {
             const auto& opposite=actor?sb:bb;
             t::require(opposite.exponent<=364 && opposite.numerator>=0,"joint scalar opposite reach");
             for (std::size_t action=0;action<count;++action) {
