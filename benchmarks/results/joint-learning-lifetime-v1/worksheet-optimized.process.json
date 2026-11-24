@@ -1,0 +1,13 @@
+{
+  "command": [
+    "C:\\Users\\pauls\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-O",
+    "-B",
+    "-m",
+    "scripts.forecast_joint_learning_lifetime"
+  ],
+  "observed_exit_code": 0,
+  "actual_exit_observed": true,
+  "automatic_retries": 0,
+  "native_calls": 0
+}

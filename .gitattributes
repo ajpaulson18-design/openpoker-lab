@@ -267,3 +267,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/weighted-joint-replay-v1/** -text
 /benchmarks/results/joint-single-pass-v1/** -text
 /benchmarks/results/joint-single-pass-replay-v1/** -text
+/benchmarks/results/joint-learning-lifetime-v1/** -text

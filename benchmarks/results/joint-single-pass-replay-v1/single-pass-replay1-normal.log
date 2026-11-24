@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 269, in <module>
+    print(json.dumps(replay(parser.parse_args().packet), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 198, in replay
+    authentication, captured = authenticate(loaded, helper, objects, origin)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 142, in authenticate
+    require(expected in variants(objects.body(head, name)), 'single-pass captured complete Python inventory')
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 33, in require
+    raise ValueError(message)
+ValueError: single-pass captured complete Python inventory

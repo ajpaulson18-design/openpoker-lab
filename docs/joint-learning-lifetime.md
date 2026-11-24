@@ -1,6 +1,6 @@
 # Uniform joint-world learning lifetime worksheet
 
-Status: source frozen for independent validation. No longer native lifetime is
+Status: independent normal/optimized scalar validation passes. No longer native lifetime is
 admitted. The Store still rejects more than two epochs, and every resource cap
 remains unchanged.
 
@@ -57,3 +57,35 @@ The next persistent-learning design must account for the complete requested
 lifetime, measure policy-dependent retained unions, and bind any checkpoint
 or storage compression to exact identity and update semantics. Splitting a
 request into chunks is not permission to reset cumulative resource receipts.
+
+## Executed worksheet
+
+Source `856167c` passes four independent controls in normal and optimized Python,
+including both-seat enumeration of all 15,120 nine-card worlds. The two scalar
+outputs are byte-identical, SHA-256
+`366a5bfc0375efe35f402ffac31713ab0e536f689841fdb95bbe3f24ff716e5a`.
+The [saved observations](../benchmarks/results/joint-learning-lifetime-v1/result.json)
+retain actual child exits, unchanged before/after raw source inventories, and
+the complete rational intervals. No native process or learning run is entered.
+
+| Uniform iid observations | Expected encountered information rows, outward rounded | Expected Catalog logical words, outward rounded |
+| ---: | ---: | ---: |
+| 2 | 867–868 | 185,589–185,590 |
+| 100 | 43,378–43,379 | 2,408,213–2,408,214 |
+| 1,000 | 432,199–432,307 | 22,783,482–22,783,489 |
+| 1,000,000 | 427,350,174–427,350,261 | 18,716,364,332–18,918,901,915 |
+
+The expectation lower bound already exceeds the Catalog's two-million-word
+cap at 100 observations under its current representation. This is not a
+guaranteed count for every deterministic sequence. The current native request
+still has an earlier two-epoch limit. At 262,144 observations, the conservative
+average-numerator envelope first requires 383 bits rather than the current
+382; that means the existing width proof would no longer cover every allowed
+sequence, not that every actual average reaches that width.
+
+The Catalog currently allocates a 21-word holding bitmap even when a public
+block has seen just one holding. This representation is a justified next
+target: compare an exact lazy-bitmap design against the original, with source-
+derived peak reservations, unchanged ownership/identity guards and complete
+numerical parity. Measure numerical retention separately before designing any
+longer-learning admission.

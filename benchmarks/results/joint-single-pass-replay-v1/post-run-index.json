@@ -1,0 +1,60 @@
+{
+  "version": "single-pass-replay-post-run-index-v1",
+  "created_after_runs": true,
+  "is_original_execution_receipt": false,
+  "files": [
+    {
+      "file": "single-pass-replay1-normal.log",
+      "bytes": 1263,
+      "sha256": "74d8fd3b04abb787ceae871291f4c12acb8d04e8c9a57fd00460a5a48cf20618"
+    },
+    {
+      "file": "single-pass-replay2-normal.log",
+      "bytes": 1331,
+      "sha256": "71ff59aa9b931d5f335c1e8644af873689c46a08ee3688317bb64216dbaecb8d"
+    },
+    {
+      "file": "single-pass-replay3-normal.log",
+      "bytes": 963,
+      "sha256": "c6574b1ad25295e305315f0f6e353e390a8236be5fc6cdc7705be97702b25f94"
+    },
+    {
+      "file": "single-pass-replay3-optimized.log",
+      "bytes": 963,
+      "sha256": "c6574b1ad25295e305315f0f6e353e390a8236be5fc6cdc7705be97702b25f94"
+    },
+    {
+      "file": "single-pass-replay4-normal.log",
+      "bytes": 1205,
+      "sha256": "3ab53042c5b68c77e71dffcb3503eb113fc02bf985dd6a208871620c9f4ce272"
+    },
+    {
+      "file": "single-pass-replay4-optimized.log",
+      "bytes": 1205,
+      "sha256": "3ab53042c5b68c77e71dffcb3503eb113fc02bf985dd6a208871620c9f4ce272"
+    },
+    {
+      "file": "single-pass-package1.log",
+      "bytes": 2158,
+      "sha256": "1e853c380ec7bb1daab572fe077a48744fa25340229256db78bb0dec65b4f800"
+    },
+    {
+      "file": "joint-learning-lifetime1-normal.log",
+      "bytes": 1222,
+      "sha256": "b5445c3697f293abd55a56784f7b92511b4e4026d02d33363a23f321dc657e4d"
+    }
+  ],
+  "observed_outer_exits_from_tool_results": {
+    "single-pass-replay1-normal": 1,
+    "single-pass-replay2-normal": 1,
+    "single-pass-replay3-normal": 1,
+    "single-pass-replay3-optimized": 1,
+    "single-pass-replay4-normal": 0,
+    "single-pass-replay4-optimized": 0,
+    "single-pass-package1": 0,
+    "joint-learning-lifetime1-normal": 0
+  },
+  "failure_scope": "First two replays refused before numerics on exact historical checkout forms. Third replay authenticated evidence and reached its first fresh case, then refused Python tuple versus saved JSON list report representation. Fourth passes after JSON representation alignment; mathematical authority and saved wires unchanged.",
+  "candidate_calls_during_all_replays": 0,
+  "archived_source_executed": false
+}

@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 291, in <module>
+    print(json.dumps(replay(parser.parse_args().packet), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 220, in replay
+    authentication, captured = authenticate(loaded, helper, objects, origin)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 180, in authenticate
+    require(expected in variants(canonical) or helper.HISTORICAL_MIXED.get(name) == (expected, objects.tree(origin).get(name)) or
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 42, in require
+    raise ValueError(message)
+ValueError: single-pass timing complete source inventory: tests/native/training_phase_profile_controls.cpp

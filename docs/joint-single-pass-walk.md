@@ -1,7 +1,7 @@
 # Single global-value joint walk candidate
 
-Status: local exact-conformance and paired-performance gates pass; cross-platform
-checks and immutable evidence publication follow. The two-target path remains the
+Status: exact-conformance, paired-performance, saved-replay and Windows/Linux/
+sanitizer gates pass. The two-target path remains the
 explicit baseline. This opt-in candidate changes computation and its versioned read/census
 contract, not chance law, information identity, cumulative signed regret,
 average weighting, policy quantization or update timing.
@@ -106,3 +106,18 @@ The first candidate compilation at `fdf33d7` failed MSVC C4127 under `/WX`
 because a template constant appeared in an ordinary conditional. The fix uses
 an explicit `if constexpr` assignment without weakening warning flags. Keep
 that first failure and the original six-case matrices with the expanded result.
+
+Windows, Linux and sanitizer jobs, including both Python modes and artifact
+uploads, pass at `f660712`. The [immutable packet](../benchmarks/results/joint-single-pass-v1/manifest.json)
+retains 53,666,088 expanded bytes under the unchanged 80-MiB archive budget.
+All 132 timing receipts remain distinct; exact stdout objects are deduplicated.
+The [maintained saved-only reader](../scripts/replay_single_pass_packet.py)
+authenticates the flat inventory, every source/build/process closure, historical
+checkout hashes, current independent math and frozen protocol before replay.
+Normal/optimized reports are byte-identical and run zero native or archived
+source calls. [Replay observations](../benchmarks/results/joint-single-pass-replay-v1/post-run-index.json)
+also preserve the initial source-form refusals and the subsequent tuple/list
+report-encoding refusal; none changes the raw mathematical authority or wires.
+
+The [longer-lifetime worksheet](joint-learning-lifetime.md) makes the next
+storage gate explicit. A faster T2 walk does not admit a persistent learner.

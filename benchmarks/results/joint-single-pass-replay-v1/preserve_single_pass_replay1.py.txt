@@ -1,0 +1,36 @@
+"""Copy original completed observations; post-run index is not execution evidence."""
+from hashlib import sha256
+import json
+from pathlib import Path
+import shutil
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE / 'dyprofile-repo'
+OUT = ROOT / 'benchmarks/results/joint-single-pass-replay-v1'
+OUT.mkdir(exist_ok=False)
+names = ('single-pass-replay1-normal.log', 'single-pass-replay2-normal.log',
+         'single-pass-replay3-normal.log', 'single-pass-replay3-optimized.log',
+         'single-pass-replay4-normal.log', 'single-pass-replay4-optimized.log',
+         'single-pass-package1.log', 'joint-learning-lifetime1-normal.log')
+records = []
+for name in names:
+    raw = (BASE / name).read_bytes(); (OUT / name).write_bytes(raw)
+    records.append({'file': name, 'bytes': len(raw), 'sha256': sha256(raw).hexdigest()})
+normal = (BASE / names[4]).read_bytes(); optimized = (BASE / names[5]).read_bytes()
+if normal != optimized or json.loads(normal)['candidate_calls'] != 0:
+    raise ValueError('saved replay cross-mode mismatch')
+shutil.copyfile(Path(__file__), OUT / 'preserve_single_pass_replay1.py.txt')
+(OUT / 'post-run-index.json').write_text(json.dumps({'version': 'single-pass-replay-post-run-index-v1',
+    'created_after_runs': True, 'is_original_execution_receipt': False, 'files': records,
+    'observed_outer_exits_from_tool_results': {'single-pass-replay1-normal': 1, 'single-pass-replay2-normal': 1,
+        'single-pass-replay3-normal': 1, 'single-pass-replay3-optimized': 1,
+        'single-pass-replay4-normal': 0, 'single-pass-replay4-optimized': 0, 'single-pass-package1': 0,
+        'joint-learning-lifetime1-normal': 0},
+    'failure_scope': 'First two replays refused before numerics on exact historical checkout forms. Third replay authenticated evidence and reached its first fresh case, then refused Python tuple versus saved JSON list report representation. Fourth passes after JSON representation alignment; mathematical authority and saved wires unchanged.',
+    'candidate_calls_during_all_replays': 0, 'archived_source_executed': False}, indent=2) + '\n')
+target = ROOT / 'benchmarks/results/joint-learning-lifetime-v1'
+shutil.copytree(BASE / 'joint-learning-lifetime1', target)
+shutil.copyfile(BASE / 'joint-learning-lifetime1-runner.log', target / 'runner.log')
+shutil.copyfile(BASE / 'run_joint_lifetime1.py', target / 'run_joint_lifetime1.py.txt')
+print(json.dumps({'replay_result_sha256': sha256(normal).hexdigest(), 'original_logs': len(records),
+                  'native_calls': 0, 'archived_source_executed': False}))

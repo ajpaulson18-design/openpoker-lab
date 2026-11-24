@@ -58,7 +58,18 @@ typed read-contract guards and legacy N9 regressions. A frozen 132-call,
 three-world comparison passes its predeclared gate with median elapsed ratio
 0.846840 and seven of eight pairs faster. This is one host and a fixed-tree
 T2 mix, not longer learning or solved quality. The original two-pass baseline
-and historical evidence remain explicit.
+and historical evidence remain explicit. Windows/Linux/sanitizer jobs pass,
+and source-authenticated saved replay passes in both Python modes without
+native execution.
+
+The [uniform lifetime worksheet](../joint-learning-lifetime.md) independently
+checks both-seat physical marginals and bounds encountered identities without
+confusing them with nonzero numerical retention. At 100 iid uniform worlds,
+the present Catalog ledger's expected lower bound exceeds two million words;
+at one million worlds, expected encountered rows are about 427 million.
+This justifies investigating exact lazy holding bitmaps before extending
+learning lifetimes. The existing two-epoch limit and all resource ceilings
+remain unchanged.
 
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.

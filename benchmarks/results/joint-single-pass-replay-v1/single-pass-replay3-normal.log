@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 292, in <module>
+    print(json.dumps(replay(parser.parse_args().packet), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 239, in replay
+    require(result == helper.decode(files['whole-2/' + label + '/independent-rows.json']), 'single-pass fresh saved report agreement')
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_single_pass_packet.py", line 43, in require
+    raise ValueError(message)
+ValueError: single-pass fresh saved report agreement
