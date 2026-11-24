@@ -236,7 +236,8 @@ def replay(packet=PACKET):
                     old = loaded['baseline']['whole-2/' + label + '/stdout.bin']; baseline(profile, pair, old)
                     require(project(raw) == project(old), 'single-pass saved baseline exact numerical projection')
                     result['baseline_numeric_projection_sha256'] = digest(project(old))
-                    require(result == helper.decode(files['whole-2/' + label + '/independent-rows.json']), 'single-pass fresh saved report agreement')
+                    require(json.loads(json.dumps(result)) == helper.decode(files['whole-2/' + label + '/independent-rows.json']),
+                            'single-pass fresh saved report agreement')
                     reports.append(result)
                     if 'whole-1/' + label + '/stdout.bin' in files:
                         require(files['whole-1/' + label + '/stdout.bin'] == raw, 'single-pass original six-case wire preservation')
