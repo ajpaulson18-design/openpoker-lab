@@ -16,7 +16,8 @@ from tests.virtual_frozen_run_control import run_bounded_child
 from tests.virtual_native_single_pass_reference import verify as eager_verify
 from tests.virtual_native_lazy_joint_reference import verify
 from tests.virtual_lazy_joint_forecast_reference import forecast
-from tests.virtual_joint_witness_cases import cases, validate_sign_witnesses
+from tests.virtual_joint_witness_cases import validate_sign_witnesses
+from tests.virtual_lazy_joint_witnesses import cases, validate_shared_board_witnesses
 
 ROOT = Path(__file__).resolve().parents[1]
 EXTRA = ('tests/virtual_weighted_joint_reference.py', 'tests/virtual_weighted_joint_raw_reference.py',
@@ -24,6 +25,7 @@ EXTRA = ('tests/virtual_weighted_joint_reference.py', 'tests/virtual_weighted_jo
          'tests/virtual_single_pass_forecast_reference.py', 'tests/virtual_native_single_pass_reference.py',
          'tests/virtual_lazy_catalog_reference.py', 'tests/virtual_lazy_joint_forecast_reference.py',
          'tests/virtual_native_lazy_joint_reference.py', 'tests/virtual_joint_witness_cases.py',
+         'tests/virtual_lazy_joint_witnesses.py',
          'tests/test_native_lazy_joint.py', 'tests/test_lazy_joint_forecast.py',
          'scripts/replay_native_grid_raw.py', 'scripts/replay_joint_two_epoch.py')
 
@@ -92,6 +94,7 @@ class NativeLazyJointTests(unittest.TestCase):
         (output / 'baseline-native-build-manifest.json').write_bytes(baseline_identity[0])
         (output / 'forecast.json').write_text(json.dumps(resource, indent=2) + '\n')
         (output / 'independent-sign-witnesses.json').write_text(json.dumps(validate_sign_witnesses(), indent=2) + '\n')
+        (output / 'independent-shared-board-witnesses.json').write_text(json.dumps(validate_shared_board_witnesses(), indent=2) + '\n')
         # Preserve the published single-pass wires as an additional default-
         # path regression. Never execute a source or binary from the archive.
         archived = (ROOT / 'benchmarks/results/joint-single-pass-v1/candidate-normal.zip').read_bytes()
@@ -117,9 +120,12 @@ class NativeLazyJointTests(unittest.TestCase):
                 arguments = [str(profile), *[str(value) for item in pair for value in item]]
                 raw = run(executable, label, arguments, 0); report = verify(profile, pair, raw)
                 old = run(baseline, 'baseline-' + label, arguments, 0); eager_verify(profile, pair, old)
-                golden = archive.read('whole-2/' + label + '/stdout.bin')
-                self.assertEqual(old, golden)
+                golden_member = 'whole-2/' + label + '/stdout.bin'
+                if golden_member in archive.namelist():
+                    self.assertEqual(old, archive.read(golden_member))
                 self.assertEqual(report['canonical_eager_stdout_sha256'], sha256(old).hexdigest())
+                if label.endswith('shared-board-distinct-holding'):
+                    self.assertGreater(report['promoted_public_blocks'], 6)
                 (output / label / 'independent-rows-storage.json').write_text(json.dumps(report, indent=2) + '\n')
                 reports.append({'case': label, **report})
                 if first is None:
@@ -141,7 +147,7 @@ class NativeLazyJointTests(unittest.TestCase):
         unchanged(executable, target, identity, head, source)
         self.assertEqual(authenticate(baseline, ROOT, 'virtual-weighted-joint-single-pass'), baseline_identity)
         (output / 'matrix-result.json').write_text(json.dumps({'status': 'lazy-full52-matrix-exact', 'cases': reports,
-            'successful_candidate_requests': 10, 'rejected_candidate_requests': 8, 'baseline_requests': 10,
+            'successful_candidate_requests': len(reports), 'rejected_candidate_requests': 8, 'baseline_requests': len(reports),
             'observed_native_calls': calls, 'corruption_controls': len(corruptions), 'quality_gate': None,
             'scope': 'Named full52 uniform/1..7 fixed-tree T2 storage and arithmetic only; no longer learning, CPU/RSS or quality admission.'}, indent=2) + '\n')
 

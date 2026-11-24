@@ -81,9 +81,9 @@ ordinary eager targets retain their versioned contracts. Three new typed
 Store/Catalog mismatch guards supplement the original ten read/epoch guards.
 No arithmetic mode, denominator, Q52 apportionment or epoch count changes.
 
-The proposed `OPLLGP01`/`OPLLGB01` wire contract3 adds two final observed words:
+The proposed `OPLLGP01`/`OPLLGB01` wire contract 3 adds two final observed words:
 allocated bitmap words and peak occupied logical metadata. Its complete
-forecast is150,030,714 work,953,663 entries,52,393,006 payload bits and502,768
+forecast is 150,030,714 work, 953,663 entries, 52,393,006 payload bits and 502,768
 output bytes under the existing ceilings. Extra Catalog work and the two new
 serialized words are charged; the metadata/payload reservations decrease.
 
@@ -91,25 +91,28 @@ The independent reader first authenticates every new schema/resource field,
 then normalizes only those fields to the eager version. The unchanged current
 eager authority validates every mathematical byte, complete retained policy,
 default and traversal counter. An independently derived promotion census uses
-the434 authenticated E0 descriptors, own-holding changes and visible-prefix
+the 434 authenticated E0 descriptors, own-holding changes and visible-prefix
 equality between the two worlds. It checks the new bitmap and occupied-ledger
 observations exactly. No hidden future cards enter policy identity.
 
 Before frame copying or numerical preparation, the reference composes its
 law/source/raw reservations with two bounded frame copies and fixed metadata
-checks:499,930,720 modeled work under the unchanged500-million reference cap.
+checks: 499,930,720 modeled work under the unchanged 500-million reference cap.
 A memoryview prevents an otherwise unaccounted preliminary slice copy.
 
-Frozen acceptance requires ten full52 requests covering both range profiles
+Frozen acceptance requires twelve full52 requests covering both range profiles
 and tie/loss/win worlds, eight parser rejections, five wire-corruption refusals,
 and all-row arithmetic/storage checks normally and optimized. A fresh eager
-baseline must also match all ten published single-pass wires byte for byte;
+baseline must also match all ten published single-pass wires byte for byte
+and independently verify two additional shared-board/distinct-holding cases;
 the new candidate's explicitly normalized wire must match that baseline.
 
 After correctness, compare eight alternating pairs of sixteen complete calls,
-with two warmups per target. Cycle weighted tie/loss/win tickets0,4,1966603
-at rank0 using index`(16*block+call)%3`, identically for both targets. Preserve
-all260 observations without retries. For adoption, require median lazy/eager
-elapsed ratio at most1.05 and at most two pairs above1.10. This is a one-host
+with two warmups per target. Cycle weighted tie/loss/win tickets 0, 4, 1966603
+at rank 0 and a shared-board/distinct-holding request using
+index `(16*block+call)%4`, identically for both targets. The coverage revision
+is frozen before any elapsed comparison is executed. Preserve all 260
+observations without retries. For adoption, require median lazy/eager
+elapsed ratio at most 1.05 and at most two pairs above 1.10. This is a one-host
 nonregression gate for a storage optimization, not a required speedup or an
 RSS claim. Do not change these gates after observing timing.

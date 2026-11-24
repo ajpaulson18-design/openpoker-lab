@@ -26,6 +26,7 @@ def benchmark(baseline, candidate, expected, output):
     from tests.virtual_native_single_pass_reference import verify as verify_eager
     from tests.virtual_native_lazy_joint_reference import verify as verify_lazy
     from tests.virtual_joint_witness_cases import validate_sign_witnesses
+    from tests.virtual_lazy_joint_witnesses import validate_shared_board_witnesses
     paths = {'eager': baseline.resolve(), 'lazy': candidate.resolve()}
     expected = expected.resolve(); output = output.resolve()
     require(output.parent == ROOT.parent.resolve(), 'external sibling lazy benchmark output')
@@ -45,23 +46,25 @@ def benchmark(baseline, candidate, expected, output):
         return ['<owned-boost-include>' if flag.startswith(('/I', '-I')) else flag for flag in record['flags']]
     require(flags(lazy) in ([*flags(eager), '/DOPENPOKER_JOINT_LAZY_CATALOG'],
                            [*flags(eager), '-DOPENPOKER_JOINT_LAZY_CATALOG']), 'lazy macro only flag difference')
-    labels = ('same-world', 'sb-loss', 'sb-win'); tickets = (0, 4, 1966603)
+    labels = ('same-world', 'sb-loss', 'sb-win', 'shared-board-distinct-holding')
+    selectors = (((0, 0), (0, 0)), ((4, 0), (4, 0)), ((1966603, 0), (1966603, 0)),
+                 ((0, 2140425), (4, 2140425)))
     wires = {mode: tuple((expected / ((('baseline-' if mode == 'eager' else '') + 'profile-1-' + label)) / 'stdout.bin').read_bytes()
                          for label in labels) for mode in paths}
     references = {'eager': [], 'lazy': []}; canonical_hashes = []
-    for index, ticket in enumerate(tickets):
-        pair = ((ticket, 0), (ticket, 0))
+    for index, pair in enumerate(selectors):
         references['eager'].append(verify_eager(1, pair, wires['eager'][index]))
         references['lazy'].append(verify_lazy(1, pair, wires['lazy'][index]))
         canonical = sha256(wires['eager'][index]).hexdigest(); canonical_hashes.append(canonical)
         require(references['lazy'][-1]['canonical_eager_stdout_sha256'] == canonical and
                 references['lazy'][-1]['epochs'] == references['eager'][-1]['epochs'], 'independently exact eager/lazy numerical and normalized counter agreement')
-    witnesses = validate_sign_witnesses()
+    witnesses = validate_sign_witnesses(); shared_board = validate_shared_board_witnesses()
     dump(output / 'independent-expected.json', references)
     dump(output / 'protocol.json', {'head': head, 'source_raw_sha256': sources,
-        'selectors': [[1, ticket, 0, ticket, 0] for ticket in tickets], 'case_labels': labels,
+        'selectors': [[1, *[value for item in pair for value in item]] for pair in selectors], 'case_labels': labels,
         'independent_sign_witnesses': witnesses,
-        'case_schedule': '(16*block+call)%3, identical for both modes; warmups use indices 0 and 1',
+        'independent_shared_board_witnesses': shared_board,
+        'case_schedule': '(16*block+call)%4, identical for both modes; warmups use indices 0 and 1',
         'blocks': BLOCKS, 'calls_per_block': CALLS, 'warmups_per_target': 2, 'timed_calls_per_target': 128,
         'automatic_retries': 0, 'median_lazy_eager_limit': 1.05, 'maximum_pairs_above_1_10': 2,
         'full_wire_sha256': {mode: [sha256(raw).hexdigest() for raw in images] for mode, images in wires.items()},
@@ -70,8 +73,9 @@ def benchmark(baseline, candidate, expected, output):
     for mode, identity in identities.items():
         (output / (mode + '-build.json')).write_bytes(identity[0])
     def run(mode, label, index):
-        child = output / label; ticket = str(tickets[index])
-        result = run_bounded_child([str(paths[mode]), '1', ticket, '0', ticket, '0'], b'', child,
+        child = output / label
+        arguments = ['1', *[str(value) for item in selectors[index] for value in item]]
+        result = run_bounded_child([str(paths[mode]), *arguments], b'', child,
             stdout_limit=len(wires[mode][index]), stderr_limit=4096, timeout=60)
         raw = (child / 'stdout.bin').read_bytes()
         require(result['status'] == 'exited' and result['actual_exit_observed'] and result['returncode'] == 0 and
@@ -86,7 +90,7 @@ def benchmark(baseline, candidate, expected, output):
         order = ('eager', 'lazy') if block % 2 == 0 else ('lazy', 'eager')
         record = {'block': block, 'order': order}
         for mode in order:
-            record[mode] = [run(mode, f'block-{block}-{mode}-{i}', (CALLS * block + i) % 3) for i in range(CALLS)]
+            record[mode] = [run(mode, f'block-{block}-{mode}-{i}', (CALLS * block + i) % 4) for i in range(CALLS)]
         record['elapsed_ratio'] = sum(item['duration_seconds'] for item in record['lazy']) / sum(item['duration_seconds'] for item in record['eager'])
         blocks.append(record); dump(output / f'block-{block}.json', record)
         print(json.dumps({'block': block, 'elapsed_ratio': record['elapsed_ratio']}), flush=True)
