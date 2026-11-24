@@ -1,6 +1,11 @@
 # Joint walk CPU protocol
 
-Status: frozen measurement protocol, not an executed CPU attribution result.
+Status: first execution at `fb4e8f3` stopped at collector startup. Windows WPR
+returned `0xc5585011`, "Failed to enable the policy to profile system
+performance." Both unprofiled warmups exited zero with the pinned complete
+wire; no profiled call ran. A subsequent status check confirmed WPR was not
+recording. The refusal and process receipts are preserved; no CPU attribution
+or overhead acceptance is established. The protocol below remains frozen.
 The [driver](../scripts/profile_joint_two_epoch_cpu.py) measures the accepted
 same-world N9 two-observation request with selectors `0 0 0 0`. The independent
 saved observation has 335,744 bytes and SHA256

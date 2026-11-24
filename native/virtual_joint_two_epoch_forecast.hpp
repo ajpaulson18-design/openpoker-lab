@@ -63,7 +63,7 @@ inline Forecast domain_forecast() {
     const auto joint_entries=t::prepared::PreparedPublicChance::joint_ticket_entries_bound();
     const auto joint_payload=t::prepared::PreparedPublicChance::joint_ticket_payload_bound();
     // One raw result at a time and a private byte buffer covering both committed
-    // snapshots. Existing 12k/1MiB chance owner reservation excludes the scoped
+    // snapshots. Existing 12k/1,048,576-bit chance owner reservation excludes the scoped
     // certificate's explicitly added 128 entries/1024 bits. Source allowance is
     // a logical reservation, not a complete allocator or RSS measurement.
     f.entries=131072+cat_words+f.epoch_cost.entries+12000+joint_entries+(32*1105+1)+16384+
@@ -82,5 +82,47 @@ inline Forecast forecast(const t::betting::Template& source,const p::Geometry& g
         receipt.max_depth==15 && !receipt.history_suffix_only && receipt.work<=t::template_cap &&
         receipt.entries+receipt.peak_scratch_entries<=131072,"joint two-epoch source receipt changed");
     return domain_forecast();
+}
+// Same fixed betting tree and sparse update lifetime, with an explicitly
+// weighted compact owner. This is a scalar envelope, not admission by itself.
+inline Forecast weighted_domain_forecast(std::array<std::size_t,2> counts) {
+    t::require(counts[0] && counts[1] && counts[0]<=1326 && counts[1]<=1326,
+        "weighted joint declared range geometry");
+    auto f=domain_forecast();
+    const auto old_words=f.catalog.max_metadata_entries;
+    f.catalog.max_holding_count=std::max(counts[0],counts[1]);
+    f.catalog.max_work=c::Catalog::work_forecast(f.catalog);
+    f.catalog.max_metadata_entries=c::Catalog::metadata_word_forecast(f.catalog);
+    f.catalog.max_metadata_payload_bits=64*f.catalog.max_metadata_entries;
+    f.epoch.catalog_max_holding_count=f.catalog.max_holding_count;
+    f.epoch_cost=e::forecast(f.epoch);
+    f.raw.walk+=128*2*1105;f.raw.work=raw_work(f.raw);
+    using Prepared=t::prepared::PreparedPublicChance;
+    f.chance=Prepared::weighted_joint_setup_work_bound(counts[0],counts[1])+
+        2*Prepared::weighted_joint_ticket_work_bound(counts[0],counts[1]);
+    const auto chance_entries=Prepared::weighted_joint_owner_entries_bound(counts[0],counts[1])+
+        Prepared::weighted_joint_ticket_entries_bound();
+    const auto chance_payload=Prepared::weighted_joint_owner_payload_bound(counts[0],counts[1])+
+        Prepared::weighted_joint_ticket_payload_bound();
+    t::require(chance_entries<=t::chance_entries && chance_payload<=t::chance_payload,
+        "weighted joint chance does not fit unchanged owner caps");
+    // Four extra header words name deck/profile/original holding counts.
+    f.output+=32;
+    f.parent=f.setup+4096+512*868+2*f.raw.work;
+    f.work=t::template_cap+f.catalog.max_work+f.history+f.chance+f.epoch_cost.component_work+f.parent+16*f.output;
+    f.entries+=f.catalog.max_metadata_entries-old_words+
+        Prepared::weighted_joint_ticket_entries_bound()-Prepared::joint_ticket_entries_bound()+32;
+    f.payload+=64*(f.catalog.max_metadata_entries-old_words)+
+        Prepared::weighted_joint_ticket_payload_bound()-Prepared::joint_ticket_payload_bound()+8*32;
+    // The existing16,384-entry/2^22-bit caller-source allowance also covers
+    // both full explicit input ranges (3*2652 entries and80*2652 bits), plus
+    // bounded construction temporaries. No second full range copy in Prepared.
+    t::require(3*(counts[0]+counts[1])+256<=16384 &&
+        80*(counts[0]+counts[1])+8192<=(1ULL<<22) &&
+        f.catalog.max_work<=c::work_cap && f.epoch_cost.work<=e::work_cap &&
+        f.history<=t::history_cap && f.chance<=t::chance_cap && f.parent<=t::parent_cap &&
+        f.work<=t::work_cap && f.entries<=t::entries_cap && f.payload<=t::payload_cap && f.output<=p::output_cap,
+        "weighted joint complete request exceeds unchanged caps");
+    return f;
 }
 } // namespace openpoker::virtual_joint_two_epoch

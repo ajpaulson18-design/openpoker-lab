@@ -1,0 +1,58 @@
+name: Weighted compact joint chance
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  weighted-joint:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build the shared compact Prepared purpose
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target prepared-weighted-joint-controls --output-dir "$RUNNER_TEMP/weighted-joint-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_WEIGHTED_JOINT_EXE=$RUNNER_TEMP/weighted-joint-build/native-prepared-weighted-joint-controls$suffix" >> "$GITHUB_ENV"
+      - name: Check independent law and selected-world arithmetic
+        run: python -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference -v
+      - name: Check candidate private boundaries and selected boards
+        env:
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ github.workspace }}/../weighted-joint-normal
+        run: python -B -m unittest tests.test_native_weighted_joint_chance -v
+      - name: Repeat all weighted gates with optimized Python
+        env:
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ github.workspace }}/../weighted-joint-optimized
+        run: python -O -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference tests.test_native_weighted_joint_chance -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weighted-joint-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/weighted-joint-build/build.log
+            ${{ runner.temp }}/weighted-joint-build/build-failure.json
+            ${{ runner.temp }}/weighted-joint-build/compiler-version.log
+            ${{ runner.temp }}/weighted-joint-build/native-exact-build-manifest.json
+            ${{ github.workspace }}/../weighted-joint-normal/**
+            ${{ github.workspace }}/../weighted-joint-optimized/**
+          if-no-files-found: warn

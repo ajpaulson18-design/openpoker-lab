@@ -29,6 +29,7 @@ class Walk final {
     std::array<std::size_t,2> holdings_;
     std::array<std::uint8_t,5> board_;
     int showdown_sign_;
+    const bool weighted_;
     raw::Ledger ledger_;
     raw::Result result_;
     bool entered_=false,complete_=false;
@@ -96,6 +97,12 @@ class Walk final {
     Integer visit(std::size_t id,h::History::Cursor cursor,std::size_t visible,std::size_t target,
                   const Reach& sb,const Reach& bb) {
         ledger_.charge(raw::Family::walk,128);
+        if (weighted_) {
+            // Explicit extra allowance for History/source identity and up to
+            // four fixed <=16-byte action-token comparisons at a decision.
+            ledger_.charge(raw::Family::walk,128);
+            t::require(history_.identity_matches(cursor,id,visible),"weighted joint source/history identity");
+        }
         t::require(++result_.visits<=2210 && id<source_.nodes().size(),"joint scalar visit census exceeded");
         const auto& node=source_.nodes()[id];
         t::require(node.state.street==visible,"joint scalar visible street identity");
@@ -114,6 +121,9 @@ class Walk final {
         t::require(++result_.reads<=868 && view.row.actor==actor &&
             view.row.holding_index==holdings_[actor] && view.units.size()==count && view.row.actions.size()==count,
             "joint scalar selected original holding/menu mismatch");
+        if (weighted_) for (std::size_t action=0;action<count;++action)
+            t::require(node.edges[action].action.token.size()<=16 &&
+                node.edges[action].action.token==view.row.actions[action],"weighted joint numeric/action menu identity");
         std::size_t row_index=0;
         if (actor==target) {
             t::require(result_.rows.size()<434 && count<=1039-result_.slots,"joint scalar staged capacity");
@@ -158,10 +168,17 @@ public:
     Walk(const b::Template& source,h::History& history,e::Store::EpochLease& policy,
          const Certificate& sample,const p::Geometry& geometry,const p::Forecast& forecast)
         :source_(source),history_(history),policy_(policy),sample_(sample),geometry_(geometry),forecast_(forecast),
-         holdings_(sample.holding_indices()),board_(sample.board()),showdown_sign_(sample.showdown_sign()),ledger_(forecast) {
+         holdings_(sample.holding_indices()),board_(sample.board()),showdown_sign_(sample.showdown_sign()),
+         weighted_(policy.arithmetic_contract()==e::ArithmeticContract::weighted_joint_fixed_tree),ledger_(forecast) {
         sample_.require_active();
-        t::require(policy.raw_policy_ready() && policy.arithmetic_contract()==e::ArithmeticContract::true_joint_proof9 &&
-            holdings_[0]<2 && holdings_[1]<2 &&
+        const auto counts=policy.declared_hand_counts();
+        const bool binding=weighted_ ?
+            (sample.purpose()==t::prepared::Purpose::joint_tickets_v1 &&
+             sample.declared_hand_counts()==counts && counts[0]<=1326 && counts[1]<=1326 &&
+             holdings_[0]<counts[0] && holdings_[1]<counts[1] && history.supports_deck(sample.deck())) :
+            (policy.arithmetic_contract()==e::ArithmeticContract::true_joint_proof9 &&
+             sample.purpose()==t::prepared::Purpose::legacy_contractions && holdings_[0]<2 && holdings_[1]<2);
+        t::require(policy.raw_policy_ready() && binding &&
             showdown_sign_>=-1 && showdown_sign_<=1 && forecast.rows==434 && forecast.slots==1039 &&
             geometry.visits==1105 && geometry.actions==1039 && geometry.decisions==434 &&
             geometry.reveals==65 && geometry.folds==303 && geometry.showdowns==303 &&

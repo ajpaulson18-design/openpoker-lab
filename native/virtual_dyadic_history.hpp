@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <bit>
 #include <cstddef>
 #include <cstdint>
 #include <limits>
@@ -281,6 +282,18 @@ public:
     [[nodiscard]] bool identity_matches(Cursor c,std::size_t source,std::size_t visible) const {
         const auto& p=validate(c);
         return p.source==source && c.size_==visible;
+    }
+    // Read-only physical deck binding; the caller reserves the <=52-card
+    // validation in its own constructor ledger. No source is borrowed.
+    [[nodiscard]] bool supports_deck(const full_deck_public_chance::DeckDefinition& deck) const noexcept {
+        if (failed_ || deck.count<9 || deck.count>52 ||
+            static_cast<std::size_t>(std::popcount(deck_mask_))!=deck.count) return false;
+        std::uint64_t mask=0;
+        for (std::size_t i=0;i<deck.count;++i) {
+            if (deck.cards[i]>=52 || (i && deck.cards[i-1]>=deck.cards[i])) return false;
+            mask|=std::uint64_t{1}<<deck.cards[i];
+        }
+        return mask==deck_mask_;
     }
     [[nodiscard]] Cursor append_action(Cursor c,std::size_t edge) {
         try {

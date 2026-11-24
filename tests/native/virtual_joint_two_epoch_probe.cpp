@@ -18,6 +18,11 @@ namespace c=whole::c;
 namespace h=openpoker::virtual_dyadic_history;
 namespace raw=openpoker::virtual_frozen_grid_raw;
 namespace joint=openpoker::virtual_joint_sample_raw;
+#ifdef OPENPOKER_WEIGHTED_JOINT_TWO_EPOCH
+inline constexpr bool weighted_mode=true;
+#else
+inline constexpr bool weighted_mode=false;
+#endif
 
 
 namespace {
@@ -97,10 +102,10 @@ void check_components(const whole::Forecast& f,const t::betting::Template& sourc
 void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_t rank,
               const std::array<std::size_t,2>& holdings,const whole::Board& board,const Observation& observation,
               e::Store& store,c::Catalog& catalog,const h::History& history,
-              const t::prepared::PreparedPublicChance& chance) {
+              const t::prepared::PreparedPublicChance& chance,std::array<std::size_t,2> counts) {
     const auto begin=output.written();const auto before=store.receipt();
     const auto record_bytes=600+40*before.current_rows+144*before.current_slots;
-    output.bytes("OPLJEB01",8);
+    output.bytes(weighted_mode?"OPLWEB01":"OPLJEB01",8);
     output.words(std::array<std::uint64_t,20>{1,epoch,ticket,rank,holdings[0],holdings[1],
         board[0],board[1],board[2],board[3],board[4],
         before.current_rows,before.current_slots,observation.rows,observation.slots,observation.reads,
@@ -110,7 +115,7 @@ void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_
     store.visit_committed([&](e::RowId id,std::span<const t::Integer> regrets,
                              std::span<const t::Integer> averages,std::span<const std::uint64_t> units) {
         const auto view=catalog.view(id);
-        t::require(view.actor<2 && view.holding_index<2 && !units.empty() && units.size()<=4 &&
+        t::require(view.actor<2 && view.holding_index<counts[view.actor] && !units.empty() && units.size()<=4 &&
             units.size()==view.actions.size() && regrets.size()==units.size() && averages.size()==units.size(),
             "sparse epoch committed export shape");
         t::require(rows<before.current_rows && units.size()<=before.current_slots-slots,
@@ -133,36 +138,64 @@ void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_
         observation.peak_bits,er.export_calls,er.export_rows,er.export_slots,1,pr.joint_ticket_queries});
     t::require(output.written()-begin==record_bytes,"sparse epoch snapshot byte census");
 }
-int run(const std::array<std::array<std::uint64_t,2>,2>& selectors) {
+int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned profile=0) {
     // Strong fixed-domain admission precedes Template and private preparation.
     // This evaluates only scalar resource equations, without a policy image.
-    const auto domain=whole::domain_forecast();
-    const auto deck=t::chance::DeckDefinition::reduced(t::deck_cards);
-    for(const auto& selector:selectors) t::require(selector[0]<29 && selector[1]<20,"joint selector domain");
+    const std::array<std::size_t,2> counts=weighted_mode?std::array<std::size_t,2>{1326,1326}:
+        std::array<std::size_t,2>{2,2};
+    const auto domain=weighted_mode?whole::weighted_domain_forecast(counts):whole::domain_forecast();
+    const auto deck=weighted_mode?t::chance::DeckDefinition::full52():t::chance::DeckDefinition::reduced(t::deck_cards);
+    t::require(!weighted_mode || profile<=1,"weighted range profile");
+    const std::uint64_t normalizer=weighted_mode?(profile?25'908'876:1'624'350):29;
+    for(const auto& selector:selectors) t::require(selector[0]<normalizer && selector[1]<(weighted_mode?34'246'080U:20U),
+        "joint selector domain");
+    std::array<std::vector<t::chance::WeightedHand>,2> explicit_ranges;
+    if constexpr (weighted_mode) {
+        // Original ordered physical holding identity, no pair/world table.
+        for (auto& side:explicit_ranges) {
+            side.reserve(1326);
+            for (unsigned a=0;a<52;++a) for (unsigned other=a+1;other<52;++other) {
+                const double weight=profile?static_cast<double>(side.size()%7+1):1.;
+                side.push_back({{static_cast<std::uint8_t>(a),static_cast<std::uint8_t>(other)},
+                    std::bit_cast<std::uint64_t>(weight)});
+            }
+        }
+    }
     const t::betting::Template source(t::configuration(),t::template_limits());
     p::Geometry geometry;p::census(source,source.root(),{},geometry);
-    const auto f=whole::forecast(source,geometry);
+    const auto checked=whole::forecast(source,geometry);
+    const auto f=weighted_mode?whole::weighted_domain_forecast(counts):checked;
     t::require(f.work<=domain.work && f.entries<=domain.entries && f.payload<=domain.payload &&
         source.receipt().nodes==388 && source.receipt().edges==410 && !source.receipt().history_suffix_only,
         "sparse epoch source or pair admission changed");
-    t::chance::Limits chance_limits;chance_limits.max_hands_per_side=2;chance_limits.max_integer_bits=384;
+    t::chance::Limits chance_limits;chance_limits.max_hands_per_side=counts[0];chance_limits.max_integer_bits=weighted_mode?181:384;
     chance_limits.max_modeled_work=f.chance;chance_limits.max_storage_entries=t::chance_entries;
     chance_limits.max_integer_payload_bits=t::chance_payload;
-    t::prepared::PreparedPublicChance chance(t::ranges[0],t::ranges[1],deck,chance_limits,64);
-    t::require(chance.normalizer_integer()==29 && chance.receipt().modeled_work<=t::chance_setup_bound,
+    const auto make_chance=[&]() -> t::prepared::PreparedPublicChance {
+        if constexpr (weighted_mode)
+            return t::prepared::PreparedPublicChance(explicit_ranges[0],explicit_ranges[1],
+                t::prepared::Purpose::joint_tickets_v1,deck,chance_limits);
+        else return t::prepared::PreparedPublicChance(t::ranges[0],t::ranges[1],deck,chance_limits,64);
+    };
+    auto chance=make_chance();
+    const auto setup_bound=weighted_mode?t::prepared::PreparedPublicChance::weighted_joint_setup_work_bound(counts[0],counts[1]):
+        t::chance_setup_bound;
+    t::require(chance.normalizer_integer()==normalizer && chance.receipt().modeled_work<=setup_bound,
         "sparse epoch physical prior normalizer or setup bound");
     h::Limits history_limits;history_limits.work=f.history;history_limits.nodes=1105;
     history_limits.entries=32*1105+1;history_limits.owned_bytes=t::history_bytes;history_limits.depth=15;
     h::History history(source,deck,history_limits);
-    c::Catalog catalog(history,{2,2},f.catalog);
-    e::Store store(catalog,history,{2,2},f.epoch,e::ArithmeticContract::true_joint_proof9);
+    c::Catalog catalog(history,counts,f.catalog);
+    e::Store store(catalog,history,counts,f.epoch,weighted_mode?e::ArithmeticContract::weighted_joint_fixed_tree:
+        e::ArithmeticContract::true_joint_proof9);
     Buffer output(static_cast<std::size_t>(f.output));
-    output.bytes("OPLJEP01",8);
-    output.words(std::array<std::uint64_t,24>{1,2,24420,58164,t::grid,f.work,f.entries,f.payload,f.output,
+    output.bytes(weighted_mode?"OPLWEP01":"OPLJEP01",8);
+    output.words(std::array<std::uint64_t,24>{1,2,weighted_mode?0U:24420U,weighted_mode?0U:58164U,t::grid,f.work,f.entries,f.payload,f.output,
         f.catalog.max_work,f.history,f.chance,f.epoch_cost.component_work,f.parent,f.catalog.max_lookups,
-        1105,388,410,12,11,704,384,0,1});
+        1105,388,410,12,11,704,weighted_mode?181U:384U,0,1});
+    if constexpr (weighted_mode) output.words(std::array<std::uint64_t,4>{52,profile,counts[0],counts[1]});
     integer(output,store.regret_denominator_value(),11,false);integer(output,store.average_denominator_value(),6,false);
-    t::require(output.written()==336,"sparse epoch global header size");
+    t::require(output.written()==(weighted_mode?368U:336U),"sparse epoch global header size");
     std::uint64_t parent=f.setup+4096,staged_rows=0,staged_slots=0,raw_visits=0,raw_actions=0,raw_reveals=0;
     for (std::size_t i=0;i<2;++i) {
         Observation observation;whole::Board board{};std::array<std::size_t,2> holdings{};
@@ -185,14 +218,14 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors) {
                 for (const auto& row:result.rows) {
                     t::require(512<=f.parent-parent,"sparse epoch row join parent reservation");parent+=512;
                     const auto cursor=history.decision_cursor(row.ordinal);const auto info=history.decision_key(cursor);
-                    t::require(info.ordinal==row.ordinal && info.actor==row.actor && row.actor<2 && row.holding<2 &&
+                    t::require(info.ordinal==row.ordinal && info.actor==row.actor && row.actor<2 && row.holding<counts[row.actor] &&
                         info.actions==row.actions && row.actions>=2 && row.actions<=4 &&
                         row.regret.size()==row.actions && row.average.size()==row.actions,
                         "sparse epoch raw row identity mismatch");
                     std::array<std::string_view,4> actions{};
                     history.decision_actions(cursor,std::span(actions).first(info.actions));
                     const auto id=catalog.resolve(history,cursor,static_cast<std::size_t>(row.actor),
-                        static_cast<std::size_t>(row.holding),2,info.source,std::span(actions).first(info.actions));
+                        static_cast<std::size_t>(row.holding),counts[row.actor],info.source,std::span(actions).first(info.actions));
                     lease.stage(id,row.regret,row.average,row.average_denominator,result.denominator);
                 }
             }); // Scalar walk, staged image and borrowed sample expire before commit.
@@ -211,7 +244,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors) {
             chance.receipt().completed_contractions==0 && chance.receipt().rank_calls==(i+1)*2 &&
             chance.receipt().joint_ticket_queries==i+1,
             "sparse epoch cumulative transition counters");
-        snapshot(output,i+1,selectors[i][0],selectors[i][1],holdings,board,observation,store,catalog,history,chance);
+        snapshot(output,i+1,selectors[i][0],selectors[i][1],holdings,board,observation,store,catalog,history,chance,counts);
         check_components(f,source,history,chance,catalog,store,parent);
     }
     const auto& er=store.receipt();const auto& cr=catalog.receipt();const auto& pr=chance.receipt();
@@ -241,15 +274,23 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors) {
 
 int main(int argc,char** argv) {
     try {
-        t::require(argc==5,"joint epoch requires two private tickets and board ranks");
+        t::require(argc==(weighted_mode?6:5),weighted_mode?"weighted joint epoch requires profile and two selectors":
+            "joint epoch requires two private tickets and board ranks");
+        unsigned profile=0;
+        if constexpr (weighted_mode) {
+            const auto text=argument(argv[1],1);
+            t::require(text=="0" || text=="1","weighted profile must be zero or one");
+            profile=text=="1"?1U:0U;
+        }
         std::array<std::array<std::uint64_t,2>,2> selectors{};
         for(std::size_t epoch=0;epoch<2;++epoch) for(std::size_t field=0;field<2;++field) {
-            const auto text=argument(argv[1+2*epoch+field],2);unsigned value=0;
+            const auto text=argument(argv[(weighted_mode?2:1)+2*epoch+field],weighted_mode?8:2);unsigned value=0;
             const auto parsed=std::from_chars(text.data(),text.data()+text.size(),value);
-            t::require(!text.empty() && parsed.ec==std::errc{} && parsed.ptr==text.data()+text.size() &&
-                value<(field?20U:29U),"joint selector outside exact fixed ticket domain");
+            const unsigned maximum=weighted_mode?(field?34'246'080U:(profile?25'908'876U:1'624'350U)):(field?20U:29U);
+            t::require(!text.empty() && parsed.ec==std::errc{} && parsed.ptr==text.data()+text.size() && value<maximum,
+                "joint selector outside exact fixed ticket domain");
             selectors[epoch][field]=value;
         }
-        return run(selectors);
+        return run(selectors,profile);
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 2;}
 }

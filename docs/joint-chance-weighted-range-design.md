@@ -1,10 +1,60 @@
 # Weighted joint-ticket owner design
 
-Status: source-only design. This is not an implemented mode, a native
-admission, a benchmark, or a training-quality claim. It proposes a bounded
-ticket-only purpose on the existing `PreparedPublicChance` owner for finite
-full52 ranges with exact positive binary64 priors. Existing constructors and
-contraction behavior remain the default compatibility path.
+Status: the compact ticket-only purpose is implemented on the existing
+`PreparedPublicChance` owner and passes local independent component controls
+normally and with optimized Python. Generic selected-world arithmetic also
+passes its independent reference gates. Full52 native training coupling,
+longer learning, CPU attribution and saved-policy quality remain open.
+Existing constructors and contraction behavior remain the default
+compatibility path. The proposed bounds below are historical design estimates;
+the executed component ledger and its scope are recorded next.
+
+## Executed component gate
+
+Independent weighted-law source `4208c70` passes twelve normal/optimized
+controls, including a streamed literal 1,326-by-1,326 compatibility census,
+every original-own-row CDF boundary, exact binary64 normalization, full52
+board witnesses and rejection gates. It retains no private-pair table.
+The generic selected-world reference at `77a588b` passes four normal/optimized
+controls. Its N9 policies match all 24,420 accepted literal rows after both
+epochs; its full52 witness keeps policies implicit/sparse and checks changing
+signed regrets, averages and untouched defaults. No full52 universe is built.
+The complete maximal reference reserve is 498,859,648 work and
+15,965,219,904 created bits under the unchanged 500-million/16-billion caps.
+
+The native component at `56fb353` passes seventeen complete accepted requests
+and nine real rejection requests in each Python mode. It checks all 580 N9
+world tickets and all 2,652 original-own CDF boundary queries for each of
+uniform and nonuniform full52 ranges. Thirty-one selected boards per full52
+profile are independently unranked and ranked; other boundary-query board
+records have physical/grammar checks, without a claim of independent ranking
+for all boundary queries. Normal/optimized streams and observed exits are
+retained. No RNG, full52 native raw walk, speed or quality result follows.
+
+The final conservative owner ledger uses 256 metadata entries, four
+descriptor entries per bucket integer, and a 256-entry scratch allowance.
+At maximum ranges it reserves 11,076 retained entries and 11,332 peak entries
+under the existing 12,000-entry cap. Retained integer payload is bounded by
+330,407 bits and peak payload by 338,599 bits under the unchanged
+1,048,576-bit cap. These are logical admission counters, not allocator/RSS
+measurements. Constructor work is `65536+16384*(H0+H1)`; one ticket is
+`12288+64*H1+256*bit_width(H0)`, at most 99,968 units. A 512-query component
+request reserves at most 94,699,520 chance work, below 110 million.
+
+The first component harness attempt refused its range-bearing request at the
+existing 1,025-byte short-stdin observer boundary, before any native invocation.
+The new protocol keeps that cap and uses a separately bounded 98,304-byte
+input artifact for the larger explicit range wire. The first file-wire build
+failed because of a duplicate local stream name; its compiler failure is
+retained. The corrected fresh build and both conformance matrices pass.
+No chance, whole-request, integer or output ceiling was raised.
+
+After the shared owner/Store changes, the existing N9 joint trainer also
+passes all six complete requests and seven rejections normally and optimized,
+including independent all-row arithmetic replay. This does not validate
+larger-range native training. The weighted Store contract exists, but its
+full52 coupling still requires certificate/range/deck binding and whole-call
+admission before execution.
 
 ## Contract and scope
 

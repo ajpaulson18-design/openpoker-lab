@@ -36,8 +36,10 @@ RNG and saved-policy quality remain open. The older Windows standalone History
 compiler failure is still unresolved.
 
 The [weighted-range preparation design](../joint-chance-weighted-range-design.md)
-keeps the existing resource ceilings and proposes a compact ticket-only purpose
-on the same Prepared owner. It remains source-only. Full52 two-observation
+keeps the existing resource ceilings and implements a compact ticket-only purpose
+on the same Prepared owner. Local normal/optimized component controls pass on
+full52 uniform and weighted ranges. Generic selected-world reference gates also
+pass; full52 native training coupling remains open. Full52 two-observation
 admission would leave a much larger lifetime-storage gate: the fixed template
 has approximately 15.9 trillion possible exact information rows with complete
 positive ranges. Measure retained sparse-union growth before longer learning;

@@ -185,6 +185,8 @@ TARGETS["virtual-joint-two-epoch"] = (
     ("tests/native/virtual_joint_two_epoch_probe.cpp", "native/virtual_joint_sample_raw.hpp",
      "native/virtual_joint_two_epoch_forecast.hpp", *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
 )
+TARGETS['virtual-weighted-joint-two-epoch'] = (
+    'native-virtual-weighted-joint-two-epoch', TARGETS['virtual-joint-two-epoch'][1])
 for _target, (_helper, _sources) in tuple(TARGETS.items()):
     if "native/virtual_dyadic_state.hpp" in _sources:
         TARGETS[_target] = (_helper, tuple(dict.fromkeys((*_sources, "native/virtual_information_identity.hpp"))))
@@ -335,6 +337,11 @@ def build(output_directory, *, target="converter", sanitize=False):
             flags.append("-DOPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY")
         command = [compiler, *flags, str(ROOT / sources[0]), "-o", str(executable)]
         version_command = [compiler, "--version"]
+    if target == 'virtual-weighted-joint-two-epoch':
+        definition = '/DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH' if os.name == 'nt' else '-DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH'
+        flags.append(definition)
+        # Append before the source/object/link arguments on either compiler.
+        command.insert(len(flags), definition)
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)
     (directory / "compiler-version.log").write_bytes(version.stdout + version.stderr)
     try:
@@ -384,7 +391,8 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "virtual-sparse-two-epoch" else "Synthetic true-joint arithmetic epoch controls only; no whole-game training, RNG, quality or wider admission."
                   if target == "virtual-joint-epoch-controls" else "Fixed PROOF9 exact joint-ticket and selected-pair chance controls only; no RNG, trainer, quality or wider admission."
                   if target == "virtual-joint-chance-controls" else "Deterministic PROOF9 two-joint-observation sparse signed-regret epochs only; no RNG, convergence, solved quality or full-range admission."
-                  if target == "virtual-joint-two-epoch" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-joint-two-epoch" else "Deterministic full52 two-joint-observation fixed-tree sparse epochs on named uniform/1..7 profiles; no RNG, long learning, quality or unrestricted NLHE admission."
+                  if target == "virtual-weighted-joint-two-epoch" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."
