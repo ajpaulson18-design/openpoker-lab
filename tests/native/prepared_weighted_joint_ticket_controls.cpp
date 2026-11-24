@@ -35,7 +35,7 @@ int main(int argc,char** argv) {
         const std::filesystem::path path(argv[1]);
         require(std::filesystem::is_regular_file(path) && !std::filesystem::is_symlink(path) &&
                 std::filesystem::file_size(path)<=98'304,"probe input artifact byte bound");
-        std::ifstream input(path);require(input.good(),"probe input artifact unreadable");input_stream=&input;
+        std::ifstream artifact(path);require(artifact.good(),"probe input artifact unreadable");input_stream=&artifact;
         const auto n=word(),h0=word(),h1=word(),queries=word();
         require((n==9 || n==52) && h0>0 && h0<=1326 && h1>0 && h1<=1326 && queries>0 && queries<=512,
                 "probe request geometry");
