@@ -1,0 +1,186 @@
+{
+  "status": "opponent-proposal-structural-study-replayed",
+  "authentication": {
+    "first-refusal": {
+      "source_files": 13,
+      "original_python_children": 0
+    },
+    "completed": {
+      "source_files": 13,
+      "original_python_children": 4
+    }
+  },
+  "fresh_tests": 4,
+  "worksheet_sha256": "b6c73465cd13ebef4fe6b5778ca8b81a1553ca499d64286b3053b0a742bbca0f",
+  "worksheet": {
+    "status": "uniform-menu-opponent-proposal-structural-worksheet",
+    "deck_cards": 52,
+    "proposal": "Each target expands all own actions and samples an opponent menu uniformly with q=1/K. Two target passes share the world; proposal draws are independent across full histories. This is not policy-proportional external sampling.",
+    "expected_two_target_counts": {
+      "visits": {
+        "numerator": 1636555,
+        "denominator": 31104
+      },
+      "reads": {
+        "numerator": 1752151,
+        "denominator": 62208
+      },
+      "terminals": {
+        "numerator": 1187227,
+        "denominator": 62208
+      },
+      "reveals": {
+        "numerator": 27811,
+        "denominator": 5184
+      },
+      "actions": {
+        "numerator": 1407481,
+        "denominator": 31104
+      },
+      "target_update_rows": {
+        "numerator": 642037,
+        "denominator": 62208
+      }
+    },
+    "componentwise_two_target_worst_bounds": {
+      "visits": 367,
+      "reads": 204,
+      "terminals": 127,
+      "reveals": 41,
+      "actions": 327,
+      "target_update_rows": 76
+    },
+    "expected_unique_read_rows_one_world": {
+      "numerator": 21883070621,
+      "denominator": 859963392
+    },
+    "literal_full_walk_counts": {
+      "visits": 1105,
+      "actions": 1039,
+      "reveals": 65,
+      "terminals": 606,
+      "reads": 434
+    },
+    "inverse_proposal_bounds": {
+      "full_opponent_path_by_target": [
+        3072,
+        768
+      ],
+      "opponent_prefix_at_target_row": 3072
+    },
+    "hypothetical_carrier_magnitude_bits": {
+      "single_regret": 641,
+      "two_regrets": 642,
+      "single_average": 376,
+      "two_averages": 377,
+      "regret_denominator_power": 625,
+      "average_denominator_power": 364
+    },
+    "iid_uniform_joint_world_encounters": [
+      {
+        "observations": 2,
+        "catalog_public_blocks": {
+          "lower": 5,
+          "upper": 435
+        },
+        "catalog_seen_rows": {
+          "lower": 5,
+          "upper": 439
+        },
+        "target_update_encounters": {
+          "lower": 1,
+          "upper": 435
+        },
+        "full_walk_seen_rows": {
+          "lower": 434,
+          "upper": 868
+        }
+      },
+      {
+        "observations": 100,
+        "catalog_public_blocks": {
+          "lower": 1835,
+          "upper": 2265
+        },
+        "catalog_seen_rows": {
+          "lower": 2313,
+          "upper": 2759
+        },
+        "target_update_encounters": {
+          "lower": 857,
+          "upper": 1296
+        },
+        "full_walk_seen_rows": {
+          "lower": 42948,
+          "upper": 43400
+        }
+      },
+      {
+        "observations": 1000,
+        "catalog_public_blocks": {
+          "lower": 20203,
+          "upper": 20684
+        },
+        "catalog_seen_rows": {
+          "lower": 23552,
+          "upper": 25678
+        },
+        "target_update_encounters": {
+          "lower": 9541,
+          "upper": 10504
+        },
+        "full_walk_seen_rows": {
+          "lower": 431310,
+          "upper": 434000
+        }
+      },
+      {
+        "observations": 1000000,
+        "catalog_public_blocks": {
+          "lower": 13488782,
+          "upper": 13893866
+        },
+        "catalog_seen_rows": {
+          "lower": 20411660,
+          "upper": 20454659
+        },
+        "target_update_encounters": {
+          "lower": 7905114,
+          "upper": 7912316
+        },
+        "full_walk_seen_rows": {
+          "lower": 427342216,
+          "upper": 428007956
+        }
+      }
+    ],
+    "complete_reference_reservation": {
+      "work": 80000000,
+      "entries": 262144,
+      "created_bits": 2000000000,
+      "integer_bits": 4096
+    },
+    "source_work": 29080329,
+    "numeric_template_nodes": 388,
+    "modeled_source_plus_scalar_work": 40501001,
+    "resource_accounting": {
+      "work": 80000000,
+      "entries": 262144,
+      "created_bits": 2000000000,
+      "integer_bits": 4096
+    },
+    "attempted_training": false,
+    "native_calls": 0,
+    "rng_calls": 0,
+    "quality_gate": null,
+    "native_admission": false,
+    "scope": "Exact structural menu-law costs and outward encounter expectations only. Lifetime assumes iid uniform physical worlds and independent fixed uniform menu proposals, not evolving policy proposals. Target-role averaging would require inverse proposal correction and a separate all-slot expectation/variance proof. No sampler/update implementation, timing, numerical-retention, native lifetime, eleven-card or NLHE quality admission."
+  },
+  "native_calls": 0,
+  "rng_calls": 0,
+  "archived_source_executed": false,
+  "attempted_training": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 239812,
+  "scope": "Current structural costs, small exact occupancy and budget-refusal checks after complete original source/process admission. No sampled R/A operator, second-moment proof, timing, native lifetime, numerical-retention or quality claim."
+}

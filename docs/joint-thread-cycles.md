@@ -267,4 +267,8 @@ specific arithmetic rewrite or any larger solver cap.
 The corrected CPU workflow is fully successful on Windows, Linux and
 sanitizers at `48433ca`, including artifact publication and v1 arithmetic saved
 replay. The same head's Python 3.13 regression job passes 3,356 tests with 171
-skips. The new typed-TLS CI remains separate and must be checked at its own head.
+skips. The complete typed-TLS CPU workflow also passes Windows, Linux and
+sanitizers at `590b229`, including all three saved packets, portable controls,
+all Windows offsets and artifact publication. This validates preservation and
+correctness while retaining both arithmetic-overhead failures; it does not
+admit their fine CPU attribution or resolve the standalone History compiler crash.
