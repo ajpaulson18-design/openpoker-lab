@@ -1,0 +1,49 @@
+{
+  "status": "arithmetic-observer-exact-math-and-overhead-miss-replayed",
+  "authentication": {
+    "controls": {
+      "source_closures": 2,
+      "actual_process_receipts": 2
+    },
+    "parity": {
+      "source_closures": 2,
+      "actual_process_receipts": 270
+    },
+    "overhead": {
+      "source_closures": 1,
+      "actual_process_receipts": 260
+    },
+    "builds": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    },
+    "objects": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    }
+  },
+  "independent_cases": 4,
+  "parity_native_calls": 270,
+  "synthetic_offsets_per_mode": 32,
+  "observer_gate": {
+    "paired_ratios": [
+      1.4535591986275394,
+      1.110582617876449,
+      1.0288277006505029,
+      1.727972218374995,
+      1.3247928301265004,
+      1.4151056993820572,
+      1.2662272230492517,
+      1.02304461202973
+    ],
+    "median_ratio": 1.295510026587876,
+    "pairs_above_1_10": 6,
+    "accepted": false
+  },
+  "attribution_admitted": false,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 7117897,
+  "scope": "Saved all-row math, independent helper sequence, sampled accounting, argument rejections and failed observer gate. No hardware query, usable helper attribution, solver improvement or realistic-game admission."
+}

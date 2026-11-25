@@ -58,12 +58,29 @@ jobs:
         env:
           OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_DIR: ${{ env.CPU_CONTROLS_OPTIMIZED }}
         run: python -O -B -m unittest tests.test_joint_cycle_reference -v
+      # Arithmetic observers retain a separate acceptance gate; CI checks
+      # arithmetic/shape only and never adopts shared-runner elapsed results.
+      - name: Build arithmetic recorder controls
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target joint-arithmetic-cycle-controls --output-dir "$RUNNER_TEMP/cpu-arithmetic-controls-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          export OPENPOKER_NATIVE_ARITHMETIC_CYCLE_EXE="$RUNNER_TEMP/cpu-arithmetic-controls-build/native-joint-arithmetic-cycle-controls$suffix"
+          python -B - <<'PY'
+          import os,subprocess,sys
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          for mode in ('normal','optimized'):
+              environment=dict(os.environ,OPENPOKER_NATIVE_ARITHMETIC_CYCLE_DIR=str(base/('joint-arithmetic-controls-'+mode)))
+              subprocess.run([sys.executable,*(['-O'] if mode=='optimized' else []),'-B','-m','unittest','tests.test_joint_arithmetic_cycles','-v'],env=environment,check=True)
+          PY
       - name: Build Windows diagnostic and identical standard source
         if: runner.os == 'Windows'
         shell: bash
         run: |
           python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass --output-dir "$RUNNER_TEMP/cpu-standard-build"
           python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-cycles --output-dir "$RUNNER_TEMP/cpu-diagnostic-build"
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-arithmetic-cycles --output-dir "$RUNNER_TEMP/cpu-arithmetic-build"
       - name: Check every Windows case and offset without elapsed adoption
         if: runner.os == 'Windows'
         shell: bash
@@ -73,6 +90,7 @@ jobs:
           from pathlib import Path
           from scripts import joint_evidence_archive as archive, replay_joint_two_epoch_packet as helper, replay_joint_cycles_packet as replay
           from scripts.benchmark_joint_cycles import benchmark, LABELS
+          from scripts.benchmark_joint_arithmetic_cycles import benchmark as arithmetic_benchmark
           base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
           _,loaded,_=archive.load(replay.PACKET,helper,pin=replay.PIN,version='joint-cycles',labels=('controls','parity','overhead','builds','objects'),packager='package_joint_cycles1.py.txt')
           expected=base/'joint-cycle-expected';expected.mkdir(exist_ok=False)
@@ -81,6 +99,7 @@ jobs:
               (directory/'stdout.bin').write_bytes(loaded['parity'][f'normal/standard-{i}/stdout.bin'])
           root=Path(os.environ['RUNNER_TEMP'])
           benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-diagnostic-build/native-virtual-weighted-joint-single-pass-cycles.exe',expected,base/'joint-cycle-native-parity',parity_only=True)
+          arithmetic_benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-arithmetic-build/native-virtual-weighted-joint-single-pass-arithmetic-cycles.exe',expected,base/'joint-arithmetic-native-parity',parity_only=True)
           PY
       - name: Stage bounded evidence under an absolute artifact root
         if: always()
@@ -93,11 +112,11 @@ jobs:
           temp=Path(os.environ['RUNNER_TEMP']).resolve()
           output=temp/'joint-cycle-evidence';output.mkdir(exist_ok=False)
           copied=[]
-          for name in ('joint-cycle-controls-normal','joint-cycle-controls-optimized','joint-cycle-native-parity'):
+          for name in ('joint-cycle-controls-normal','joint-cycle-controls-optimized','joint-cycle-native-parity','joint-arithmetic-controls-normal','joint-arithmetic-controls-optimized','joint-arithmetic-native-parity'):
               source=base/name
               if source.is_dir() and not source.is_symlink():
                   shutil.copytree(source,output/name);copied.append(name)
-          for name in ('cpu-controls-build','cpu-standard-build','cpu-diagnostic-build'):
+          for name in ('cpu-controls-build','cpu-standard-build','cpu-diagnostic-build','cpu-arithmetic-controls-build','cpu-arithmetic-build'):
               source=temp/name
               if source.is_dir() and not source.is_symlink():
                   target=output/name;target.mkdir()
