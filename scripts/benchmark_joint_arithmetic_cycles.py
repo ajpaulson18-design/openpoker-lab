@@ -7,30 +7,36 @@ import statistics
 from scripts.benchmark_joint_cycles import LABELS, SELECTORS, dump, need
 
 
-def benchmark(baseline, candidate, expected, output, *, parity_only=False):
+def benchmark(baseline, candidate, expected, output, *, parity_only=False, light=False):
     from tests.test_joint_arithmetic_cycles import capture
     from tests.test_native_lazy_joint import unchanged
     from tests.test_native_exact_reach import authenticate
     from tests.virtual_frozen_run_control import run_bounded_child
     from tests.virtual_native_single_pass_reference import verify
     from tests.virtual_joint_arithmetic_cycle_reference import decode, numeric_sequence
+    if light:
+        from tests.test_joint_arithmetic_light_cycles import capture
+        from tests.virtual_joint_arithmetic_light_reference import decode
     root = Path(__file__).resolve().parents[1]
     paths = {'standard': baseline.resolve(), 'diagnostic': candidate.resolve()}
-    targets = {'standard': 'virtual-weighted-joint-single-pass', 'diagnostic': 'virtual-weighted-joint-single-pass-arithmetic-cycles'}
+    targets = {'standard': 'virtual-weighted-joint-single-pass', 'diagnostic':
+               'virtual-weighted-joint-single-pass-arithmetic-light-cycles' if light else 'virtual-weighted-joint-single-pass-arithmetic-cycles'}
     output = output.resolve(); expected = expected.resolve(); sequence = numeric_sequence()
     identity, head, source = capture(paths['diagnostic'], targets['diagnostic'], output)
     baseline_identity = authenticate(paths['standard'], root, targets['standard'])
     (output / 'baseline-build.json').write_bytes(baseline_identity[0])
     a, b = baseline_identity[1], identity[1]
     need(a['compiler_sha256'] == b['compiler_sha256'] and a['dependency_archive_sha256'] == b['dependency_archive_sha256'], 'matched arithmetic diagnostic compiler/dependency')
-    added = {'native/joint_thread_cycle_recorder.hpp', 'native/joint_arithmetic_cycle_recorder.hpp'}
+    added = {'native/joint_thread_cycle_recorder.hpp', 'native/joint_arithmetic_cycle_recorder.hpp', 'native/joint_arithmetic_light_recorder.hpp'}
     need({k: v for k, v in b['source_sha256'].items() if k not in added} == a['source_sha256'], 'matched arithmetic core source closure')
     def flags(value): return ['<include>' if flag.startswith(('/I', '-I')) else flag for flag in value['flags']]
-    need(flags(b) in ([*flags(a), '/DOPENPOKER_JOINT_ARITHMETIC_CYCLES'], [*flags(a), '-DOPENPOKER_JOINT_ARITHMETIC_CYCLES']), 'arithmetic diagnostic macro only flags')
+    macro = 'OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES' if light else 'OPENPOKER_JOINT_ARITHMETIC_CYCLES'
+    need(flags(b) in ([*flags(a), '/D' + macro], [*flags(a), '-D' + macro]), 'arithmetic diagnostic macro only flags')
     wires = [(expected / ('baseline-profile-1-' + label) / 'stdout.bin').read_bytes() for label in LABELS]
     dump(output / 'independent-expected.json', [verify(1, pair, raw) for pair, raw in zip(SELECTORS, wires)])
     dump(output / 'protocol.json', {'head': head, 'source_raw_sha256': {k: sha256(v).hexdigest() for k, v in source.items()},
         'selectors': SELECTORS, 'profile': 1, 'labels': LABELS, 'blocks': 0 if parity_only else 8,
+        'observer_mode': 'typed-tls-inline-v1' if light else 'virtual-scopes-v1',
         'calls_per_block': 16, 'warmups_per_target': 2, 'automatic_retries': 0,
         'schedule': 'case=i%4; offset=(5*(4*block+i//4))%32; each case/offset once over eight blocks; alternate target order by block',
         'independent_numeric_rule_helper_sequence': sequence,
@@ -72,6 +78,7 @@ def benchmark(baseline, candidate, expected, output, *, parity_only=False):
     ratios = [block['elapsed_ratio'] for block in blocks]; median = statistics.median(ratios) if ratios else None; above = sum(r > 1.10 for r in ratios)
     result = {'status': 'arithmetic-parity-complete' if parity_only else 'arithmetic-observer-overhead-comparison-complete',
         'actual_native_calls': calls, 'paired_elapsed_ratios': ratios, 'median_diagnostic_standard_ratio': median, 'pairs_above_1_10': above,
+        'observer_mode': 'typed-tls-inline-v1' if light else 'virtual-scopes-v1',
         'observer_overhead_gate_pass': None if parity_only else median <= 1.05 and above <= 2, 'exact_all_row_wires': True, 'quality_gate': None,
         'scope': 'Separate eager fixed-template T2 numeric helper diagnostic. An empirical helper estimate is usable only after its own observer gate. No solver speedup, longer learning or realistic-game admission.'}
     dump(output / 'result.json', result); return result
@@ -80,5 +87,5 @@ def benchmark(baseline, candidate, expected, output, *, parity_only=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('baseline', 'candidate', 'expected', 'output'): parser.add_argument(name, type=Path)
-    parser.add_argument('--parity-only', action='store_true'); args = parser.parse_args()
-    print(json.dumps(benchmark(args.baseline, args.candidate, args.expected, args.output, parity_only=args.parity_only), indent=2))
+    parser.add_argument('--parity-only', action='store_true'); parser.add_argument('--light', action='store_true'); args = parser.parse_args()
+    print(json.dumps(benchmark(args.baseline, args.candidate, args.expected, args.output, parity_only=args.parity_only, light=args.light), indent=2))

@@ -207,3 +207,28 @@ the action rejects `..` in patterns. The
 [first upload failure](../benchmarks/results/joint-thread-cycles-ci-v1/first-upload-failure.txt)
 is retained separately. A corrected workflow stages only named evidence
 under an absolute runner-temp root; its complete result remains to be checked.
+
+### Frozen typed-TLS observer revision
+
+The separate `virtual-weighted-joint-single-pass-arithmetic-light-cycles`
+target replaces type-erased virtual scope dispatch with a typed thread-local
+recorder. Unsampled helper entry/exit checks use that installation and the
+same exact census; they make no OS thread queries. Sampled clock calls and
+phase boundaries retain actual-thread checks. Installation is one-shot per
+thread, nested contexts reject, scopes cannot be copied, abandoned scopes
+poison the recorder, and a real foreign thread must fail before observing.
+Mixed diagnostic build contracts reject at compilation.
+
+The version-two stderr frame names `typed-tls-inline-v1`. An independent
+wrapper requires that mode, then uses the unchanged numeric-rule sequence
+and v1 sample/accounting authority. Four unequal synthetic costs, all 32
+offsets and the added foreign-thread guard remain mandatory. The diagnostic
+uses the same 655,360 work, 2,048 entries, 131,072 payload bits, 512-query and
+8,192-byte reservations as the failed observer; no game ceiling changes.
+
+`scripts/benchmark_joint_arithmetic_cycles.py --light` keeps the same four
+requests, 32 offsets, eight alternating pairs, sixteen calls per block and
+two warmups per target. Its fixed gate is still median ratio <=1.05 with at
+most two pairs >1.10; no automatic retries. The v1 miss is immutable and
+cannot be superseded by this observer. No revised CPU attribution or runtime
+acceptance is claimed before execution.

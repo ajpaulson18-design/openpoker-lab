@@ -3,8 +3,12 @@
 // No sampling/RNG, prior multiplication, clipping, or policy publication here.
 #include "virtual_frozen_grid_raw.hpp"
 #include "virtual_sparse_strategy_epoch.hpp"
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+#ifdef OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES
+#include "joint_arithmetic_light_recorder.hpp"
+namespace openpoker {namespace joint_numeric_cycles=joint_arithmetic_light_cycles;}
+#elif defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES)
 #include "joint_arithmetic_cycle_recorder.hpp"
+namespace openpoker {namespace joint_numeric_cycles=joint_arithmetic_cycles;}
 #endif
 #ifdef OPENPOKER_JOINT_THREAD_CYCLES
 #include "joint_thread_cycle_recorder.hpp"
@@ -56,8 +60,8 @@ template<bool SinglePass=false> class BasicWalk final {
         if (negative) value=-value;
     }
     Reach advance(const Reach& previous,std::uint64_t units) {
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
-        joint_arithmetic_cycles::Scope observation(joint_arithmetic_cycles::Family::reach);
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
+        joint_numeric_cycles::Scope observation(joint_numeric_cycles::Family::reach);
 #endif
         ledger_.charge(raw::Family::reach,24+t::mul_cost(365,53)+t::copy_cost(365));
         t::require(previous.exponent<=312 && previous.numerator>=0 && units<=t::grid,
@@ -67,14 +71,14 @@ template<bool SinglePass=false> class BasicWalk final {
         next.numerator=previous.numerator*units;
         check(next.numerator,365);
         // Zero reach retains the full literal action count and exponent.
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
         observation.close();
 #endif
         return next;
     }
     Integer terminal(const b::State& state) {
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
-        joint_arithmetic_cycles::Scope observation(joint_arithmetic_cycles::Family::terminal);
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
+        joint_numeric_cycles::Scope observation(joint_numeric_cycles::Family::terminal);
 #endif
         t::require(++result_.terminals<=(SinglePass?606U:1212U),"joint scalar terminal census exceeded");
         ledger_.charge(raw::Family::scale,32+t::copy_cost(629));
@@ -89,14 +93,14 @@ template<bool SinglePass=false> class BasicWalk final {
         if (sign<0) value=-value;
         else if (!sign) value=0;
         check(value,629);
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
         observation.close();
 #endif
         return value;
     }
     raw::Row average_row(const e::FrozenPolicyView& view,const Reach& own) {
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
-        joint_arithmetic_cycles::Scope observation(joint_arithmetic_cycles::Family::average);
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
+        joint_numeric_cycles::Scope observation(joint_numeric_cycles::Family::average);
 #endif
         const auto count=view.units.size();
         ledger_.charge(raw::Family::average,64+t::copy_cost(365));
@@ -114,7 +118,7 @@ template<bool SinglePass=false> class BasicWalk final {
             value<<=312-own.exponent;check(value,365);
             row.average[action]=std::move(value);
         }
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
         observation.close();
 #endif
         return row;
@@ -170,8 +174,8 @@ template<bool SinglePass=false> class BasicWalk final {
             children[action]=visit(node.edges[action].child,history_.append_action(cursor,action),visible,target,
                 actor?sb:next,actor?next:bb);
         }
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
-        joint_arithmetic_cycles::Scope observation(joint_arithmetic_cycles::Family::mix);
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
+        joint_numeric_cycles::Scope observation(joint_numeric_cycles::Family::mix);
 #endif
         Integer mixed=0;
         for (std::size_t action=0;action<count;++action) {
@@ -198,7 +202,7 @@ template<bool SinglePass=false> class BasicWalk final {
                 result_.rows[row_index].regret[action]=std::move(difference);
             }
         }
-#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES)
         observation.close();
 #endif
         return mixed;
