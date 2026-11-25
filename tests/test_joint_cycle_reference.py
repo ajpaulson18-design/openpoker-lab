@@ -61,7 +61,8 @@ class NativeJointCycleTests(unittest.TestCase):
                     decode(b'JOINT_THREAD_CYCLES ' + json.dumps(value).encode() + b'\n', offset, synthetic=True)
         labels = ('offset', 'missing-observer', 'nested-install', 'wrong-phase', 'read-context', 'incomplete',
                   'foreign-thread', 'clock-failure', 'nonmonotone', 'nested-read', 'phase-during-read', 'double-close', 'abandoned')
-        self.assertEqual(lines[4:], [*(('GUARD ' + label + ' PASS\n').encode() for label in labels), b'JOINT_THREAD_CYCLE_GUARDS_V1 PASS 13\n'])
+        self.assertEqual([line.rstrip(b'\r\n') for line in lines[4:]],
+                         [*(('GUARD ' + label + ' PASS').encode() for label in labels), b'JOINT_THREAD_CYCLE_GUARDS_V1 PASS 13'])
         unchanged(executable, target, identity, head, source)
         (output / 'result.json').write_text(json.dumps({'status': 'synthetic-real-recorder-census-exact',
             'offsets': reports, 'native_guards': 13, 'parser_mutations': 16, 'observed_native_calls': 1,
