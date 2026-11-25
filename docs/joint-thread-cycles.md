@@ -139,3 +139,35 @@ the clock cost varies, and observer checks, branching and compiler effects
 remain. The read family includes History, Catalog and Store operations; it
 does not isolate an individual owner. Sampled CPU data must not justify
 another optimization unless the fixed observer-overhead gate passes.
+
+## Frozen arithmetic helper experiment
+
+The next separate diagnostic target is
+`virtual-weighted-joint-single-pass-arithmetic-cycles`. It observes disjoint
+reach updates, terminal-value construction, average-row construction and the
+post-child value/regret mixing body. Scopes include local guards, modeled
+ledgers and allocations; they are not pure multiprecision instruction latency.
+The standard target's preprocessed numerical path stays unchanged.
+
+The independent numeric betting rules derive the complete ordered helper
+sequence: 1,039 reach, 606 terminal, 434 average and 434 mix calls per epoch.
+Two epochs give 5,026 calls. One-in-32 observation makes 157 or 158 samples,
+369 or 371 counter queries including calibration and 22 phases. Before any
+preparation the diagnostic reserves 655,360 work, 2,048 entries, 131,072
+payload bits and 8,192 stderr bytes within existing whole-request ceilings.
+No game, Store, integer-width or global resource limit is raised.
+
+The actual recorder's portable synthetic clock covers all 32 offsets and
+four unequal known helper costs. Balanced extrapolation across those offsets
+must recover each family's exact total; fourteen native guards and independent
+parser mutations check failure behavior. Native parity must cover all four
+requests at every offset, plus real argument rejections.
+
+`scripts/benchmark_joint_arithmetic_cycles.py` then freezes eight alternating
+pairs of sixteen calls, plus two warmups per target (260 processes). Case
+index is `i%4`; offset is `(5*(4*block+i//4))%32`. Over eight blocks each
+case sees every offset exactly once. Acceptance again requires median
+diagnostic/standard elapsed ratio at most 1.05 and at most two pairs above
+1.10, with no automatic retries. This is a new observer gate; the accepted
+policy-read observer does not admit it. No arithmetic observations or solver
+kernel improvement are claimed before execution.

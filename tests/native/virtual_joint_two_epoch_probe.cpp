@@ -6,7 +6,10 @@
 #include <cstring>
 #include <iostream>
 #include <type_traits>
-#if defined(OPENPOKER_JOINT_THREAD_CYCLES)
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES)
+#include "../../native/joint_arithmetic_cycle_recorder.hpp"
+#define JOINT_MARK(name,epoch) diagnostics->mark(name,epoch)
+#elif defined(OPENPOKER_JOINT_THREAD_CYCLES)
 #include "../../native/joint_thread_cycle_recorder.hpp"
 #define JOINT_MARK(name,epoch) diagnostics->mark(name,epoch)
 #elif defined(OPENPOKER_JOINT_PHASE_PROFILE)
@@ -45,7 +48,7 @@ inline constexpr bool lazy_catalog_mode=true;
 inline constexpr bool lazy_catalog_mode=false;
 #endif
 static_assert(!lazy_catalog_mode || single_pass_mode);
-#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES)
 static_assert(single_pass_mode && weighted_mode);
 #endif
 using ActiveWalk=std::conditional_t<single_pass_mode,joint::SinglePassWalk,joint::Walk>;
@@ -165,7 +168,7 @@ void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_
     t::require(output.written()-begin==record_bytes,"sparse epoch snapshot byte census");
 }
 int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned profile=0
-#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES)
         ,unsigned cycle_offset=0
 #endif
         ) {
@@ -181,8 +184,10 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     const std::uint64_t normalizer=weighted_mode?(profile?25'908'876:1'624'350):29;
     for(const auto& selector:selectors) t::require(selector[0]<normalizer && selector[1]<(weighted_mode?34'246'080U:20U),
         "joint selector domain");
-#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_PHASE_PROFILE)
-#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_PHASE_PROFILE)
+#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+    namespace diagnostic=openpoker::joint_arithmetic_cycles;
+#elif defined(OPENPOKER_JOINT_THREAD_CYCLES)
     namespace diagnostic=openpoker::joint_thread_cycles;
 #else
     namespace diagnostic=openpoker::joint_phase_profile;
@@ -191,7 +196,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
         domain.payload+diagnostic::payload_bits<=t::payload_cap,"joint diagnostic extra resource admission");
     // Keep the bounded recorder out of the core call's stack layout and
     // isolate its clock/formatting bodies from the compiler's inlining budget.
-#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES)
     auto diagnostics=std::make_unique<diagnostic::Recorder<>>(cycle_offset,lazy_catalog_mode);
     diagnostic::Install installation(*diagnostics);
 #else
@@ -337,7 +342,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     t::require(output.written()==final_bytes,"sparse epoch final wire byte count");
     JOINT_MARK("footer",0);
     output.publish();
-#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_PHASE_PROFILE)
+#if defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES) || defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_PHASE_PROFILE)
     std::cout.flush();
     JOINT_MARK("publish",0);
     diagnostics->write(std::cerr);
@@ -348,7 +353,13 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
 
 int main(int argc,char** argv) {
     try {
-#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#ifdef OPENPOKER_JOINT_ARITHMETIC_CYCLES
+        t::require(argc==7,"arithmetic cycle diagnostic requires profile, two selectors and offset");
+        const auto offset_text=argument(argv[6],2);unsigned cycle_offset=32;
+        const auto parsed_offset=std::from_chars(offset_text.data(),offset_text.data()+offset_text.size(),cycle_offset);
+        t::require(!offset_text.empty() && parsed_offset.ec==std::errc{} && parsed_offset.ptr==offset_text.data()+offset_text.size() &&
+            cycle_offset<32,"arithmetic cycle offset domain");
+#elif defined(OPENPOKER_JOINT_THREAD_CYCLES)
         t::require(argc==7,"joint cycle diagnostic requires profile, two selectors and offset");
         const auto offset_text=argument(argv[6],1);
         t::require(offset_text.size()==1 && offset_text[0]>='0' && offset_text[0]<='3',"joint cycle offset domain");
@@ -373,7 +384,7 @@ int main(int argc,char** argv) {
             selectors[epoch][field]=value;
         }
         return run(selectors,profile
-#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_ARITHMETIC_CYCLES)
             ,cycle_offset
 #endif
             );

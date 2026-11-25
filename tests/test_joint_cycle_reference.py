@@ -15,12 +15,13 @@ EXTRA = ('tests/virtual_joint_cycle_reference.py', 'tests/test_joint_cycle_refer
          'scripts/benchmark_joint_cycles.py')
 
 
-def capture(executable, target, output):
+def capture(executable, target, output, *, extra=()):
     identity, head, source = earlier_capture(executable, target, output)
-    if subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=all', '--', *EXTRA], cwd=ROOT):
+    names = (*EXTRA, *extra)
+    if subprocess.check_output(['git', 'status', '--porcelain', '--untracked-files=all', '--', *names], cwd=ROOT):
         raise ValueError('cycle controller source must be committed clean')
     record_path = output / 'source-identity.json'; record = json.loads(record_path.read_bytes())
-    for name in EXTRA:
+    for name in names:
         raw = (ROOT / name).read_bytes(); source[name] = raw
         path = output / 'source' / name; path.parent.mkdir(exist_ok=True, parents=True); path.write_bytes(raw)
         record['raw_sha256'][name] = sha256(raw).hexdigest()

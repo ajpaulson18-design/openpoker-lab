@@ -209,6 +209,13 @@ TARGETS['joint-thread-cycle-controls'] = (
 for _base in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy'):
     TARGETS[_base + '-cycles'] = ('native-' + _base + '-cycles',
         (*TARGETS[_base][1], 'native/joint_thread_cycle_recorder.hpp'))
+TARGETS['virtual-weighted-joint-single-pass-arithmetic-cycles'] = (
+    'native-virtual-weighted-joint-single-pass-arithmetic-cycles',
+    (*TARGETS['virtual-weighted-joint-single-pass-cycles'][1], 'native/joint_arithmetic_cycle_recorder.hpp'))
+TARGETS['joint-arithmetic-cycle-controls'] = (
+    'native-joint-arithmetic-cycle-controls',
+    ('tests/native/joint_arithmetic_cycle_controls.cpp', 'native/joint_arithmetic_cycle_recorder.hpp',
+     'native/joint_thread_cycle_recorder.hpp'))
 for _base in ('virtual-joint-two-epoch', 'virtual-weighted-joint-two-epoch'):
     TARGETS[_base + '-profile'] = ('native-' + _base + '-profile',
         (*TARGETS[_base][1], 'native/joint_phase_recorder.hpp'))
@@ -366,7 +373,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         version_command = [compiler, "--version"]
     if target in ('virtual-weighted-joint-two-epoch', 'virtual-weighted-joint-two-epoch-profile',
                   'virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy',
-                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles'):
+                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles',
+                  'virtual-weighted-joint-single-pass-arithmetic-cycles'):
         definition = '/DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH' if os.name == 'nt' else '-DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH'
         flags.append(definition)
         # Append before the source/object/link arguments on either compiler.
@@ -376,7 +384,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         flags.append(definition)
         command.insert(len(flags), definition)
     if target in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy',
-                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles'):
+                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles',
+                  'virtual-weighted-joint-single-pass-arithmetic-cycles'):
         definition = '/DOPENPOKER_JOINT_SINGLE_PASS' if os.name == 'nt' else '-DOPENPOKER_JOINT_SINGLE_PASS'
         flags.append(definition)
         command.insert(len(flags), definition)
@@ -385,7 +394,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         flags.append(definition)
         command.insert(len(flags), definition)
     if target.endswith('-cycles'):
-        definition = '/DOPENPOKER_JOINT_THREAD_CYCLES' if os.name == 'nt' else '-DOPENPOKER_JOINT_THREAD_CYCLES'
+        macro = 'OPENPOKER_JOINT_ARITHMETIC_CYCLES' if target.endswith('-arithmetic-cycles') else 'OPENPOKER_JOINT_THREAD_CYCLES'
+        definition = ('/D' if os.name == 'nt' else '-D') + macro
         flags.append(definition)
         command.insert(len(flags), definition)
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)
@@ -446,7 +456,7 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == 'virtual-lazy-epoch-controls' else "Windows own-thread CPU-cycle API microprobe only; no solver, system profiler, timing acceptance or quality."
                   if target == 'current-thread-cycle-probe' else "Bounded sampled own-thread CPU diagnostic; exact wire parity and overhead gate remain separate. No quality or realistic-game admission."
                   if target.endswith('-cycles') else "Synthetic clock controls of the actual bounded cycle recorder; no solver timing or quality claim."
-                  if target == 'joint-thread-cycle-controls' else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
+                  if target in ('joint-thread-cycle-controls', 'joint-arithmetic-cycle-controls') else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
                   if target == 'virtual-single-pass-epoch-controls' else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
