@@ -203,6 +203,12 @@ TARGETS['virtual-lazy-epoch-controls'] = (
     ('tests/native/virtual_lazy_epoch_controls.cpp', *TARGETS['virtual-single-pass-epoch-controls'][1]))
 TARGETS['current-thread-cycle-probe'] = (
     'native-current-thread-cycle-probe', ('tests/native/current_thread_cycle_probe.cpp',))
+TARGETS['joint-thread-cycle-controls'] = (
+    'native-joint-thread-cycle-controls',
+    ('tests/native/joint_thread_cycle_controls.cpp', 'native/joint_thread_cycle_recorder.hpp'))
+for _base in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy'):
+    TARGETS[_base + '-cycles'] = ('native-' + _base + '-cycles',
+        (*TARGETS[_base][1], 'native/joint_thread_cycle_recorder.hpp'))
 for _base in ('virtual-joint-two-epoch', 'virtual-weighted-joint-two-epoch'):
     TARGETS[_base + '-profile'] = ('native-' + _base + '-profile',
         (*TARGETS[_base][1], 'native/joint_phase_recorder.hpp'))
@@ -291,7 +297,7 @@ def _extract(directory, headers):
 def build(output_directory, *, target="converter", sanitize=False):
     _need(type(target) is str and target in TARGETS, "Unsupported native exact build target")
     _need(type(sanitize) is bool, "Native exact sanitize selection must be boolean")
-    _need(target != 'current-thread-cycle-probe' or os.name == 'nt',
+    _need((target != 'current-thread-cycle-probe' and not target.endswith('-cycles')) or os.name == 'nt',
           'Current-thread cycle probe requires Windows; no alternate clock fallback')
     directory = Path(output_directory).resolve()
     _need(directory != ROOT and ROOT not in directory.parents, "Native exact builds must be outside the source checkout")
@@ -359,7 +365,8 @@ def build(output_directory, *, target="converter", sanitize=False):
         command = [compiler, *flags, str(ROOT / sources[0]), "-o", str(executable)]
         version_command = [compiler, "--version"]
     if target in ('virtual-weighted-joint-two-epoch', 'virtual-weighted-joint-two-epoch-profile',
-                  'virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy'):
+                  'virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy',
+                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles'):
         definition = '/DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH' if os.name == 'nt' else '-DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH'
         flags.append(definition)
         # Append before the source/object/link arguments on either compiler.
@@ -368,12 +375,17 @@ def build(output_directory, *, target="converter", sanitize=False):
         definition = '/DOPENPOKER_JOINT_PHASE_PROFILE' if os.name == 'nt' else '-DOPENPOKER_JOINT_PHASE_PROFILE'
         flags.append(definition)
         command.insert(len(flags), definition)
-    if target in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy'):
+    if target in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy',
+                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles'):
         definition = '/DOPENPOKER_JOINT_SINGLE_PASS' if os.name == 'nt' else '-DOPENPOKER_JOINT_SINGLE_PASS'
         flags.append(definition)
         command.insert(len(flags), definition)
-    if target == 'virtual-weighted-joint-single-pass-lazy':
+    if target in ('virtual-weighted-joint-single-pass-lazy', 'virtual-weighted-joint-single-pass-lazy-cycles'):
         definition = '/DOPENPOKER_JOINT_LAZY_CATALOG' if os.name == 'nt' else '-DOPENPOKER_JOINT_LAZY_CATALOG'
+        flags.append(definition)
+        command.insert(len(flags), definition)
+    if target.endswith('-cycles'):
+        definition = '/DOPENPOKER_JOINT_THREAD_CYCLES' if os.name == 'nt' else '-DOPENPOKER_JOINT_THREAD_CYCLES'
         flags.append(definition)
         command.insert(len(flags), definition)
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)
@@ -432,7 +444,9 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == 'virtual-weighted-joint-single-pass' else "Opt-in exact lazy Catalog single-global-pass full52 T2 candidate; no longer lifetime, universal performance or quality admission."
                   if target == 'virtual-weighted-joint-single-pass-lazy' else "Synthetic lazy Catalog/Store contract and exact single-row commit controls only; no whole-game or quality admission."
                   if target == 'virtual-lazy-epoch-controls' else "Windows own-thread CPU-cycle API microprobe only; no solver, system profiler, timing acceptance or quality."
-                  if target == 'current-thread-cycle-probe' else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
+                  if target == 'current-thread-cycle-probe' else "Bounded sampled own-thread CPU diagnostic; exact wire parity and overhead gate remain separate. No quality or realistic-game admission."
+                  if target.endswith('-cycles') else "Synthetic clock controls of the actual bounded cycle recorder; no solver timing or quality claim."
+                  if target == 'joint-thread-cycle-controls' else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
                   if target == 'virtual-single-pass-epoch-controls' else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."

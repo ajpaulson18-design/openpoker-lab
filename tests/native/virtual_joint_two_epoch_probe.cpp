@@ -6,7 +6,10 @@
 #include <cstring>
 #include <iostream>
 #include <type_traits>
-#ifdef OPENPOKER_JOINT_PHASE_PROFILE
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES)
+#include "../../native/joint_thread_cycle_recorder.hpp"
+#define JOINT_MARK(name,epoch) diagnostics->mark(name,epoch)
+#elif defined(OPENPOKER_JOINT_PHASE_PROFILE)
 #include "../../native/joint_phase_recorder.hpp"
 #define JOINT_MARK(name,epoch) diagnostics->mark(name,epoch)
 #else
@@ -42,6 +45,9 @@ inline constexpr bool lazy_catalog_mode=true;
 inline constexpr bool lazy_catalog_mode=false;
 #endif
 static_assert(!lazy_catalog_mode || single_pass_mode);
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+static_assert(single_pass_mode && weighted_mode);
+#endif
 using ActiveWalk=std::conditional_t<single_pass_mode,joint::SinglePassWalk,joint::Walk>;
 
 
@@ -158,7 +164,11 @@ void snapshot(Buffer& output,std::size_t epoch,std::uint64_t ticket,std::uint64_
         observation.peak_bits,er.export_calls,er.export_rows,er.export_slots,1,pr.joint_ticket_queries});
     t::require(output.written()-begin==record_bytes,"sparse epoch snapshot byte census");
 }
-int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned profile=0) {
+int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned profile=0
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+        ,unsigned cycle_offset=0
+#endif
+        ) {
     // Strong fixed-domain admission precedes Template and private preparation.
     // This evaluates only scalar resource equations, without a policy image.
     const std::array<std::size_t,2> counts=weighted_mode?std::array<std::size_t,2>{1326,1326}:
@@ -171,13 +181,22 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     const std::uint64_t normalizer=weighted_mode?(profile?25'908'876:1'624'350):29;
     for(const auto& selector:selectors) t::require(selector[0]<normalizer && selector[1]<(weighted_mode?34'246'080U:20U),
         "joint selector domain");
-#ifdef OPENPOKER_JOINT_PHASE_PROFILE
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_PHASE_PROFILE)
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+    namespace diagnostic=openpoker::joint_thread_cycles;
+#else
     namespace diagnostic=openpoker::joint_phase_profile;
+#endif
     t::require(domain.work+diagnostic::extra_work<=t::work_cap && domain.entries+diagnostic::entries<=t::entries_cap &&
         domain.payload+diagnostic::payload_bits<=t::payload_cap,"joint diagnostic extra resource admission");
     // Keep the bounded recorder out of the core call's stack layout and
     // isolate its clock/formatting bodies from the compiler's inlining budget.
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+    auto diagnostics=std::make_unique<diagnostic::Recorder<>>(cycle_offset,lazy_catalog_mode);
+    diagnostic::Install installation(*diagnostics);
+#else
     auto diagnostics=std::make_unique<diagnostic::Recorder>();
+#endif
 #endif
     JOINT_MARK("begin",0);
     std::array<std::vector<t::chance::WeightedHand>,2> explicit_ranges;
@@ -318,7 +337,7 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
     t::require(output.written()==final_bytes,"sparse epoch final wire byte count");
     JOINT_MARK("footer",0);
     output.publish();
-#ifdef OPENPOKER_JOINT_PHASE_PROFILE
+#if defined(OPENPOKER_JOINT_THREAD_CYCLES) || defined(OPENPOKER_JOINT_PHASE_PROFILE)
     std::cout.flush();
     JOINT_MARK("publish",0);
     diagnostics->write(std::cerr);
@@ -329,8 +348,15 @@ int run(const std::array<std::array<std::uint64_t,2>,2>& selectors,unsigned prof
 
 int main(int argc,char** argv) {
     try {
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+        t::require(argc==7,"joint cycle diagnostic requires profile, two selectors and offset");
+        const auto offset_text=argument(argv[6],1);
+        t::require(offset_text.size()==1 && offset_text[0]>='0' && offset_text[0]<='3',"joint cycle offset domain");
+        const auto cycle_offset=static_cast<unsigned>(offset_text[0]-'0');
+#else
         t::require(argc==(weighted_mode?6:5),weighted_mode?"weighted joint epoch requires profile and two selectors":
             "joint epoch requires two private tickets and board ranks");
+#endif
         unsigned profile=0;
         if constexpr (weighted_mode) {
             const auto text=argument(argv[1],1);
@@ -346,6 +372,10 @@ int main(int argc,char** argv) {
                 "joint selector outside exact fixed ticket domain");
             selectors[epoch][field]=value;
         }
-        return run(selectors,profile);
+        return run(selectors,profile
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+            ,cycle_offset
+#endif
+            );
     } catch(const std::exception& error) {std::cerr<<error.what()<<'\n';return 2;}
 }

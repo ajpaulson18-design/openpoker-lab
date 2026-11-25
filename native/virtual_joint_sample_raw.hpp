@@ -3,6 +3,9 @@
 // No sampling/RNG, prior multiplication, clipping, or policy publication here.
 #include "virtual_frozen_grid_raw.hpp"
 #include "virtual_sparse_strategy_epoch.hpp"
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+#include "joint_thread_cycle_recorder.hpp"
+#endif
 
 namespace openpoker::virtual_joint_sample_raw {
 namespace t=virtual_dyadic_training;
@@ -117,7 +120,13 @@ template<bool SinglePass=false> class BasicWalk final {
         const auto actor=node.state.actor;const auto count=node.edges.size();
         t::require(node.state.phase==b::Phase::decision && actor<2 && count>=2 && count<=4,
             "joint scalar decision/menu shape");
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+        joint_thread_cycles::ReadScope read_scope;
+#endif
         const auto view=policy_.frozen_policy(cursor,actor,holdings_[actor]);
+#ifdef OPENPOKER_JOINT_THREAD_CYCLES
+        read_scope.close();
+#endif
         t::require(++result_.reads<=(SinglePass?434U:868U) && view.row.actor==actor &&
             view.row.holding_index==holdings_[actor] && view.units.size()==count && view.row.actions.size()==count,
             "joint scalar selected original holding/menu mismatch");
