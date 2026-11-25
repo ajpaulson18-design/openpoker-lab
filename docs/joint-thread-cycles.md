@@ -214,7 +214,7 @@ The separate `virtual-weighted-joint-single-pass-arithmetic-light-cycles`
 target replaces type-erased virtual scope dispatch with a typed thread-local
 recorder. Unsampled helper entry/exit checks use that installation and the
 same exact census; they make no OS thread queries. Sampled clock calls and
-phase boundaries retain actual-thread checks. Installation is one-shot per
+phase boundaries retain actual-thread checks. Installation is one-at-a-time per
 thread, nested contexts reject, scopes cannot be copied, abandoned scopes
 poison the recorder, and a real foreign thread must fail before observing.
 Mixed diagnostic build contracts reject at compilation.

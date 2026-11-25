@@ -275,3 +275,4 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/joint-arithmetic-cycles-v1/** -text
 /benchmarks/results/joint-arithmetic-cycles-replay-v1/** -text
 /benchmarks/results/joint-arithmetic-light-v1/** -text
+/benchmarks/results/joint-arithmetic-light-replay-v1/** -text

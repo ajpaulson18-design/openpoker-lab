@@ -1,0 +1,30 @@
+{
+  "created_after_runs": true,
+  "is_original_execution_receipt": false,
+  "reader_head": "04b78dbbf2edc7a8259a442b945d04c70b3e12e4",
+  "logs": {
+    "light-normal": {
+      "bytes": 1456,
+      "sha256": "036267da298101d7009eec5c56f4dc4f59468a30f750537daed3adfd219ab70a"
+    },
+    "light-optimized": {
+      "bytes": 1456,
+      "sha256": "036267da298101d7009eec5c56f4dc4f59468a30f750537daed3adfd219ab70a"
+    },
+    "original-regression": {
+      "bytes": 1403,
+      "sha256": "c0fd7c75bebf53aa19d04fab0d6c9496fe7bb59e0239d146e5d14a976c704888"
+    },
+    "admission": {
+      "bytes": 994,
+      "sha256": "6920c36b3493bf97ace94439a192e1620bc491a1492db3685ad283d48cc4a0e8"
+    }
+  },
+  "observed_outer_exits": {
+    "light-normal": 0,
+    "light-optimized": 0,
+    "original-regression": 0,
+    "admission": 0
+  },
+  "scope": "Post-run saved-only replay preservation. Typed-TLS reports identical across modes, original observer replay unchanged, both gates remain failed. Six tests/twelve pre-numerical evidence refusals pass. No native or hardware calls."
+}

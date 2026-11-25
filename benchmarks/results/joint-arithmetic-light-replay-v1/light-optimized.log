@@ -1,0 +1,50 @@
+{
+  "status": "arithmetic-light-observer-exact-math-and-overhead-miss-replayed",
+  "authentication": {
+    "controls": {
+      "source_closures": 2,
+      "actual_process_receipts": 2
+    },
+    "parity": {
+      "source_closures": 2,
+      "actual_process_receipts": 270
+    },
+    "overhead": {
+      "source_closures": 1,
+      "actual_process_receipts": 260
+    },
+    "builds": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    },
+    "objects": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    }
+  },
+  "independent_cases": 4,
+  "parity_native_calls": 270,
+  "synthetic_offsets_per_mode": 32,
+  "observer_gate": {
+    "paired_ratios": [
+      1.1554774040443108,
+      1.4584259600846576,
+      0.8582116137907334,
+      1.2200291619693606,
+      1.6580242553775089,
+      1.1690706008269116,
+      1.615330861298106,
+      1.1775582840922871
+    ],
+    "median_ratio": 1.1987937230308239,
+    "pairs_above_1_10": 7,
+    "accepted": false
+  },
+  "attribution_admitted": false,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 7176927,
+  "scope": "Saved all-row math, independent helper sequence, sampled accounting, argument rejections and failed observer gate. No hardware query, usable helper attribution, solver improvement or realistic-game admission.",
+  "observer_mode": "typed-tls-inline-v1"
+}

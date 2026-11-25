@@ -1,0 +1,11 @@
+test_changed_manifest_refuses_before_numerics (tests.test_joint_cycles_packet_admission.JointCyclesPacketAdmissionTests.test_changed_manifest_refuses_before_numerics) ... ok
+test_changed_objects_refuse_before_numerics (tests.test_joint_cycles_packet_admission.JointCyclesPacketAdmissionTests.test_changed_objects_refuse_before_numerics) ... ok
+test_changed_light_manifest (tests.test_arithmetic_cycles_packet_admission.ArithmeticPacketAdmissionTests.test_changed_light_manifest) ... ok
+test_changed_light_objects (tests.test_arithmetic_cycles_packet_admission.ArithmeticPacketAdmissionTests.test_changed_light_objects) ... ok
+test_changed_manifest (tests.test_arithmetic_cycles_packet_admission.ArithmeticPacketAdmissionTests.test_changed_manifest) ... ok
+test_changed_objects (tests.test_arithmetic_cycles_packet_admission.ArithmeticPacketAdmissionTests.test_changed_objects) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 40.486s
+
+OK
