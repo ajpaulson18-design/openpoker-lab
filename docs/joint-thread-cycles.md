@@ -171,3 +171,39 @@ diagnostic/standard elapsed ratio at most 1.05 and at most two pairs above
 1.10, with no automatic retries. This is a new observer gate; the accepted
 policy-read observer does not admit it. No arithmetic observations or solver
 kernel improvement are claimed before execution.
+
+### First arithmetic observer: overhead miss
+
+At source `7d5401712a3f104628949e20a864db18bfe0a939`, both synthetic modes
+pass all 32 offsets, fourteen native guards and 96 parser mutations. The
+independent numeric betting rules agree on the complete ordered call sequence.
+Both 135-process native parity matrices pass all four requests at every
+offset and three real argument rejections, preserving all numeric bytes.
+
+The separately frozen 260-process overhead comparison **fails** its unchanged
+gate: median diagnostic / standard ratio **1.295510026587876**, with **six**
+pairs above 1.10. Keep every original pair and raw CPU record. These helper
+shares are **not admitted for kernel selection**. Comparison completion with
+exit zero does not mean acceptance. Do not repeat unchanged until it passes.
+
+The [immutable arithmetic packet](../benchmarks/results/joint-arithmetic-cycles-v1/manifest.json)
+retains 532 original native processes, 85 shared byte objects and 7,117,897
+stored expanded bytes. Manifest SHA-256:
+`dc78a8c65b8be4e7f47ab8229fdd7c06611d259df4d52eb14b0e1f44a4db0233`.
+`python -B -m scripts.replay_joint_arithmetic_cycles_packet` authenticates
+source/build/process evidence before numerical imports and independently
+replays arithmetic, offset accounting and the original observer miss. It
+makes no native or hardware calls and returns `attribution_admitted=false`.
+
+The next justified profiler change is to avoid virtual calls and thread-ID
+queries on unsampled helper calls, preserving thread-local installation,
+sampled ownership checks, exact counters and all failure guards. It needs
+its own source freeze, exact-wire checks and the same fixed overhead gate.
+No solver arithmetic change is justified by this failed observer.
+
+On GitHub at `6ba9eea`, all CPU saved-replay, native-control and Windows
+whole-wire checks pass, but all three jobs fail the artifact upload because
+the action rejects `..` in patterns. The
+[first upload failure](../benchmarks/results/joint-thread-cycles-ci-v1/first-upload-failure.txt)
+is retained separately. A corrected workflow stages only named evidence
+under an absolute runner-temp root; its complete result remains to be checked.

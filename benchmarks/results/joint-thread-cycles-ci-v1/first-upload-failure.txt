@@ -1,0 +1,20 @@
+Post-run CI failure note; this is a derived excerpt, not an original local process receipt.
+
+Commit: 6ba9eeafaff50787a3827b6ba0bdb481d5ab9d78
+Run: https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/45524817043
+Windows job: https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/45524817043/job/138905420759
+Linux job: 138905420944
+Sanitized job: 138905421180
+
+All three jobs passed saved math/CPU replay, evidence mutations, native recorder
+build, normal controls and optimized controls. Windows additionally passed both
+whole native builds and all case/offset parity checks. The upload step failed
+in all three jobs. Do not report the complete workflows as successful.
+
+Decoded Windows log error:
+2026-11-25T01:23:09.5648480Z ##[error]Invalid pattern 'D:\a\openpoker-lab\openpoker-lab/../joint-cycle-controls-normal/**'. Relative pathing '.' and '..' is not allowed.
+
+Correction: copy only named evidence directories and named build log/JSON files
+under an absolute runner-temp staging root, then upload that root. Original
+validation paths and arithmetic remain unchanged. A fresh CI run must verify
+the corrected publication step.

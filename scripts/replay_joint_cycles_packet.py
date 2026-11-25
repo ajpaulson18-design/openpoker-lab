@@ -46,7 +46,8 @@ def bootstrap():
     return head, hashes
 
 
-def authenticate(loaded, helper):
+def authenticate(loaded, helper, *, origin=ORIGIN, expected_inventory=None,
+                 added_headers=('native/joint_thread_cycle_recorder.hpp',), allowed_exits=(0,)):
     class Objects(helper.GitObjects):
         def __init__(self): super().__init__(); self.by_blob = {}
         def body(self, head, name):
@@ -68,18 +69,18 @@ def authenticate(loaded, helper):
             builds.setdefault(built['target'], []).append(built)
             if prefix + 'baseline-build.json' in files:
                 baseline = helper.decode(files[prefix + 'baseline-build.json']); helper.build_source_links(baseline, source)
-                need({k: v for k, v in built['source_sha256'].items() if k != 'native/joint_thread_cycle_recorder.hpp'} == baseline['source_sha256'], 'CPU same baseline core closure')
+                need({k: v for k, v in built['source_sha256'].items() if k not in added_headers} == baseline['source_sha256'], 'CPU same baseline core closure')
                 builds.setdefault(baseline['target'], []).append(baseline)
             if label == 'overhead':
-                need(prefix == 'study/' and head == ORIGIN, 'CPU frozen timing origin'); latest = source
+                need(prefix == 'study/' and head == origin, 'CPU frozen timing origin'); latest = source
                 protocol = helper.decode(files['study/protocol.json'])
                 need(protocol['head'] == head and protocol['source_raw_sha256'] == hashes, 'CPU timing complete frozen source inventory')
             closures += 1
         processes, _ = helper.process_receipts(files)
-        need(all(p['exit'] == 0 for p in processes.values()), 'CPU original native exits')
+        need(all(p['exit'] in allowed_exits for p in processes.values()), 'CPU original native exits')
         reports[label] = {'source_closures': closures, 'actual_process_receipts': len(processes)}
-    need({k: v['actual_process_receipts'] for k, v in reports.items()} ==
-         {'controls': 4, 'parity': 40, 'overhead': 260, 'builds': 0, 'objects': 0}, 'CPU exact 304-process inventory')
+    inventory = {'controls': 4, 'parity': 40, 'overhead': 260, 'builds': 0, 'objects': 0} if expected_inventory is None else expected_inventory
+    need({k: v['actual_process_receipts'] for k, v in reports.items()} == inventory, 'CPU exact process inventory')
     for name, raw in loaded['builds'].items():
         if name.endswith('/native-exact-build-manifest.json'):
             built = helper.decode(raw); need(built in builds[built['target']], 'CPU every successful build linked')

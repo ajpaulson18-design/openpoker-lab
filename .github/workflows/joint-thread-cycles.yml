@@ -33,7 +33,9 @@ jobs:
         run: |
           python -B -m scripts.replay_joint_cycles_packet > "$RUNNER_TEMP/cpu-replay-normal.json"
           python -O -B -m scripts.replay_joint_cycles_packet > "$RUNNER_TEMP/cpu-replay-optimized.json"
-          python -B -m unittest tests.test_joint_cycles_packet_admission -v
+          python -B -m scripts.replay_joint_arithmetic_cycles_packet > "$RUNNER_TEMP/cpu-replay-arithmetic-normal.json"
+          python -O -B -m scripts.replay_joint_arithmetic_cycles_packet > "$RUNNER_TEMP/cpu-replay-arithmetic-optimized.json"
+          python -B -m unittest tests.test_joint_cycles_packet_admission tests.test_arithmetic_cycles_packet_admission -v
       - name: Build actual recorder with a synthetic clock
         shell: bash
         run: |
@@ -80,19 +82,35 @@ jobs:
           root=Path(os.environ['RUNNER_TEMP'])
           benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-diagnostic-build/native-virtual-weighted-joint-single-pass-cycles.exe',expected,base/'joint-cycle-native-parity',parity_only=True)
           PY
+      - name: Stage bounded evidence under an absolute artifact root
+        if: always()
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import json,os,shutil
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          temp=Path(os.environ['RUNNER_TEMP']).resolve()
+          output=temp/'joint-cycle-evidence';output.mkdir(exist_ok=False)
+          copied=[]
+          for name in ('joint-cycle-controls-normal','joint-cycle-controls-optimized','joint-cycle-native-parity'):
+              source=base/name
+              if source.is_dir() and not source.is_symlink():
+                  shutil.copytree(source,output/name);copied.append(name)
+          for name in ('cpu-controls-build','cpu-standard-build','cpu-diagnostic-build'):
+              source=temp/name
+              if source.is_dir() and not source.is_symlink():
+                  target=output/name;target.mkdir()
+                  for path in source.iterdir():
+                      if path.is_file() and not path.is_symlink() and path.suffix in ('.json','.log'):
+                          shutil.copyfile(path,target/path.name);copied.append(name+'/'+path.name)
+          for path in temp.glob('cpu-replay-*.json'):
+              if path.is_file() and not path.is_symlink():shutil.copyfile(path,output/path.name);copied.append(path.name)
+          (output/'inventory.json').write_text(json.dumps({'created_after_checks':True,'copied':copied},indent=2)+'\n')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: joint-thread-cycles-${{ matrix.label }}
-          path: |
-            ${{ runner.temp }}/cpu-replay-*.json
-            ${{ runner.temp }}/cpu-controls-build/*.log
-            ${{ runner.temp }}/cpu-controls-build/*.json
-            ${{ runner.temp }}/cpu-standard-build/*.log
-            ${{ runner.temp }}/cpu-standard-build/*.json
-            ${{ runner.temp }}/cpu-diagnostic-build/*.log
-            ${{ runner.temp }}/cpu-diagnostic-build/*.json
-            ${{ github.workspace }}/../joint-cycle-controls-normal/**
-            ${{ github.workspace }}/../joint-cycle-controls-optimized/**
-            ${{ github.workspace }}/../joint-cycle-native-parity/**
+          path: ${{ runner.temp }}/joint-cycle-evidence/
           if-no-files-found: warn
