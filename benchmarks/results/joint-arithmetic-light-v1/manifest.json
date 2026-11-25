@@ -1,0 +1,56 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 72174,
+      "expanded_bytes": 380053,
+      "file": "controls.zip",
+      "manifest_sha256": "e9ab62da1300adfabbd50ba2d148caa4c05dd2efe9ff00e9d774eedc78040045",
+      "members": 127,
+      "sha256": "ad11fce306d58b5c242be607928d1ef65770773e8d0e1fc428c438744b47be45"
+    },
+    {
+      "bytes": 961447,
+      "expanded_bytes": 2073248,
+      "file": "parity.zip",
+      "manifest_sha256": "9a65d6a3509044bc23dae41771ceebb5a21e6d23006083d7cb9fb570cf0c6b2c",
+      "members": 1511,
+      "sha256": "edcb4fe34cd40dc1bddb4b4d00a477dc096b486e0fd108fb34e977c4f42ac02d"
+    },
+    {
+      "bytes": 534457,
+      "expanded_bytes": 1363103,
+      "file": "overhead.zip",
+      "manifest_sha256": "a2ff8e96ac601f05c1fa7e87e09feeb136fe8b62e32e96f43c03eba5a81535f9",
+      "members": 1137,
+      "sha256": "36b3c6422af6d36bef6796be146a368a2549e19b5450e276079e2cf832007e7f"
+    },
+    {
+      "bytes": 26218,
+      "expanded_bytes": 71949,
+      "file": "builds.zip",
+      "manifest_sha256": "7b0c70ef1e4f57eeb9c94b2238f44dd7be8ec7e5217725f16ed76809d6078b75",
+      "members": 16,
+      "sha256": "4efa383981a110ee05f2487880d47bd5647f29ee6b29123c1b2d7986018f0803"
+    },
+    {
+      "bytes": 974574,
+      "expanded_bytes": 3288574,
+      "file": "objects.zip",
+      "manifest_sha256": "9df278501d3cdd951bbadf1bd359bc354a97c864dd8ad3f2dd3f16765e7cc323",
+      "members": 88,
+      "sha256": "df0842cfc3697b42b73c85d2caa4d02f8c2247a6d4dcb4bff58ffbe655203914"
+    }
+  ],
+  "exact_shared_objects": 87,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "1998cabc6d541a66b993e2b3eb96a6683a57421b0bea9f5f8cdcde327783d282",
+  "scope": "Original typed-TLS observer synthetic/parity processes and failed overhead gate. No admitted helper attribution, solver improvement, longer learning, quality or resource-limit change.",
+  "stored_expanded_bytes": 7176927,
+  "version": "joint-cycles-package-v1"
+}

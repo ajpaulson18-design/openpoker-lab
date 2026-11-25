@@ -232,3 +232,39 @@ two warmups per target. Its fixed gate is still median ratio <=1.05 with at
 most two pairs >1.10; no automatic retries. The v1 miss is immutable and
 cannot be superseded by this observer. No revised CPU attribution or runtime
 acceptance is claimed before execution.
+
+### Typed-TLS result: second arithmetic-observer miss
+
+At source `dea4f35458481f67eb427645a39080753211dd14`, the typed-TLS
+recorder passes both synthetic modes, all 32 offsets, fifteen native guards
+(including a real foreign thread), 96 parser mutations per mode, and both
+135-process all-row parity/argument matrices.
+
+Its separate 260-process comparison also **misses** the unchanged overhead
+gate: median ratio **1.1987937230308239**, with **seven** pairs above 1.10.
+Do not use its helper-cycle shares for kernel selection or treat the different
+observer medians as a measured solver speedup. Raw data, all policies and every
+pair remain preserved. Both arithmetic observers remain diagnostic experiments;
+neither is an admitted source of fine CPU attribution.
+
+The [typed-TLS packet](../benchmarks/results/joint-arithmetic-light-v1/manifest.json)
+retains 532 original native processes, 87 shared objects and 7,176,927 stored
+expanded bytes. Manifest SHA-256:
+`1c7beace60d836d94ec015ec3b39c33c7a1a197b46674804d24f841a0dc4fcdb`.
+`python -B -m scripts.replay_joint_arithmetic_cycles_packet --light` independently
+replays complete arithmetic, offset census, foreign-thread guard and this
+unchanged miss after evidence/source admission. Its output must keep
+`attribution_admitted=false`, with zero native or hardware calls.
+
+Stop tuning per-helper observers after these two distinct failures. The
+accepted read/coarse-phase evidence is still useful: reads are a minority of
+walk cost and staging is substantial. Next separate Store staging from public
+row joins using a lower-frequency observation contract before a staging kernel
+change. Broader branch-work reduction also needs an independent unbiasedness,
+variance and lifetime-storage study; these profiler misses do not justify a
+specific arithmetic rewrite or any larger solver cap.
+
+The corrected CPU workflow is fully successful on Windows, Linux and
+sanitizers at `48433ca`, including artifact publication and v1 arithmetic saved
+replay. The same head's Python 3.13 regression job passes 3,356 tests with 171
+skips. The new typed-TLS CI remains separate and must be checked at its own head.

@@ -12,8 +12,11 @@ packet and both previous lazy-storage elapsed misses. A separate four-family
 arithmetic observer passes all-row parity and synthetic controls but misses
 its own unchanged overhead gate (median 1.29551, six pairs above 1.10). Its
 532-process packet and saved replay preserve that failure; arithmetic helper
-shares are not admitted. Next reduce unsampled observer work and retest before
-choosing a solver kernel change. This is CPU
+shares are not admitted. A typed-TLS revision also passes all-row/guard checks
+but misses the same gate (median 1.19879, seven pairs above 1.10). Both original
+misses are immutable; stop per-helper observer tuning and next separate Store
+staging from row joins using the admitted coarse evidence. Branch-work changes
+also require independent unbiasedness/variance/storage proof. This is CPU
 evidence, not faster solver code, longer learning, quality or eleven-card
 admission. At `33a108f`, lazy component/whole checks pass Windows/Linux/sanitizers,
 and saved numerical/storage replay passes Windows and Linux. The broader
