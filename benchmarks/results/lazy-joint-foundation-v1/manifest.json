@@ -1,0 +1,80 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 118925,
+      "expanded_bytes": 189060,
+      "file": "components.zip",
+      "manifest_sha256": "cfaed02dbe2e389ff27e0f11ac06362ef3b4e06218a8fc8477ebf2e413d4fdcb",
+      "members": 201,
+      "sha256": "cee0b1b5b4ee74b13f826f03169dea2fb080f3142f26f1e9d64ed7230e9f20a4"
+    },
+    {
+      "bytes": 654128,
+      "expanded_bytes": 4029042,
+      "file": "whole-normal.zip",
+      "manifest_sha256": "24cc7716247deee0cc7b0e56d7dde806b885758016d8e684750735438af07904",
+      "members": 754,
+      "sha256": "767e699b342653dea01d5c2cf34c70da91c376ba8d22eb4259b01ea75e9936c4"
+    },
+    {
+      "bytes": 654164,
+      "expanded_bytes": 4029052,
+      "file": "whole-optimized.zip",
+      "manifest_sha256": "97aa247bc83754ef5589784055e35d26643690fc6b1622bdfb8b55e2fe14f245",
+      "members": 754,
+      "sha256": "b3cfe8deff8e44cee4522f0c891fa819ab2c96e1d6ab85c9045e2ec58bf642ae"
+    },
+    {
+      "bytes": 381935,
+      "expanded_bytes": 689904,
+      "file": "timing-1.zip",
+      "manifest_sha256": "c490d3862bf34ff32d7930691f90a10c1e5ed645f410b90a4f533e91b362869c",
+      "members": 1056,
+      "sha256": "12f0ed76d5e8ffdda35c61fb3e923c2359ee471fa629c8f1f485f29e53633eab"
+    },
+    {
+      "bytes": 381964,
+      "expanded_bytes": 689912,
+      "file": "timing-2.zip",
+      "manifest_sha256": "d871cd4e1b5d51131d2540bbe6d20366ed434292da33aab7d09f9bd3f9d5c949",
+      "members": 1056,
+      "sha256": "96272a306c31de1414dc505477e38c3c58206d9ae8de06e83b43a5e8fbaf37b0"
+    },
+    {
+      "bytes": 16876,
+      "expanded_bytes": 27711,
+      "file": "thread-cycle-probes.zip",
+      "manifest_sha256": "ee1e023186b81c5163f2c26ac5349aad0f6d358ca46d2fcb328814c1b7a854fc",
+      "members": 33,
+      "sha256": "1e4c7f30a0812bc420fce0f4f1c381dedd7755d0f730c5b65bc888f1b2d441ca"
+    },
+    {
+      "bytes": 73548,
+      "expanded_bytes": 220226,
+      "file": "builds-and-parity.zip",
+      "manifest_sha256": "73b11911f940892b9a9507a6ad30f5cdecfd49a9e2cd0abd7d02bd12bddd81a9",
+      "members": 40,
+      "sha256": "ccb5148c43feaf59b91759c16688d5ed894e3ebcbd570bd8109875c3240f0db2"
+    },
+    {
+      "bytes": 1629279,
+      "expanded_bytes": 10995957,
+      "file": "objects.zip",
+      "manifest_sha256": "8f6140b5df62a13811238a69fb7c2506c22d66851ab139e8836143e3d3d39f47",
+      "members": 114,
+      "sha256": "c0b30b7edf61e77fb8af3aea54f70ac1cb9b610defc64d297e80a82138fa9c0a"
+    }
+  ],
+  "exact_shared_objects": 113,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "30e8cc1d81aaaeae68295e29a00ab02319e6e721971a434ec9c2b17c544e347a",
+  "scope": "Exact completed component/whole/guard observations, first verifier refusal, both elapsed misses, two own-thread counter probes and source/build/process provenance. No adoption, universal performance, longer learning or quality claim.",
+  "stored_expanded_bytes": 20870864,
+  "version": "lazy-joint-package-v1"
+}
