@@ -1,0 +1,48 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 8437,
+      "expanded_bytes": 11661,
+      "file": "first-refusal.zip",
+      "manifest_sha256": "ecd970c2f3e9142a14a21d2df23e57e3120aca6436bf8e94e888ed314b138d50",
+      "members": 16,
+      "sha256": "ec5fa8643e4eea18d7487414c13dc72dc18ff2dfeac2d21f40bd7ee6c6570a6a"
+    },
+    {
+      "bytes": 15759,
+      "expanded_bytes": 27417,
+      "file": "completed.zip",
+      "manifest_sha256": "e610400fc9ffa11ff2b4123212fe9ca2f92854d6843dd53c18088d27560f3c0b",
+      "members": 33,
+      "sha256": "ee3af9e113f02708ee0fa20d429e871f4be10b22bf5ed431cda9a282e6738e51"
+    },
+    {
+      "bytes": 4776,
+      "expanded_bytes": 9858,
+      "file": "builds.zip",
+      "manifest_sha256": "c57164823e02cf0e39a0f50c0221f238af4c230c4820d35455dd456c26941712",
+      "members": 4,
+      "sha256": "2ee4449a51e76aed0a0201f722bd0031a0f17cb2855835a010f2ad3175b7fb00"
+    },
+    {
+      "bytes": 56494,
+      "expanded_bytes": 190876,
+      "file": "objects.zip",
+      "manifest_sha256": "0603855984067d036209bdadf277f99a02966896b424b07ea2bf2d1a0d70dfd4",
+      "members": 17,
+      "sha256": "9cd0d26e33b855d5c103d9dc2afd67b3268644bf96622a0f586b6b560edb355a"
+    }
+  ],
+  "exact_shared_objects": 16,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "ed513bb0328e7d440937670096c253cfc7aab99a64a7c91338a1fd27e897a229",
+  "scope": "Complete original source identities, first pre-child refusal and successful four-child structural mathematical study. Expected/worst branch counts and uniform-law encounter intervals only; no sampled updates, timing, variance, numerical retention, native lifetime or quality.",
+  "stored_expanded_bytes": 239812,
+  "version": "opponent-action-package-v1"
+}

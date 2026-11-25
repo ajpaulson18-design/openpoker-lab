@@ -1,0 +1,31 @@
+name: Opponent action structural evidence
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  structural-study:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Replay original source/process evidence and independent structural mathematics
+        shell: bash
+        run: |
+          python -B -m scripts.replay_opponent_action_study > "$RUNNER_TEMP/opponent-study-replay-normal.json"
+          python -O -B -m scripts.replay_opponent_action_study > "$RUNNER_TEMP/opponent-study-replay-optimized.json"
+          python -B -m unittest tests.test_opponent_action_study_admission -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: opponent-structural-evidence-${{ matrix.os }}
+          path: ${{ runner.temp }}/opponent-study-replay-*.json
+          if-no-files-found: warn

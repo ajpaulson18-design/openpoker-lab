@@ -2,6 +2,17 @@
 
 ## Unified solver foundation in development
 
+The [opponent-action structural study](../opponent-action-sampling-study.md)
+now passes independent normal/optimized controls on the same four-street
+numeric template. A fixed uniform menu proposal projects 52.6156 expected
+visits (367 componentwise worst bound) for two target traversals, against the
+current full walk's 1,105. At one million uniform worlds, projected seen rows
+remain about 20.4 million versus roughly 427 million for full walks. This
+warrants an all-coordinate estimator/variance proof, not native adoption.
+No sampled R/A operator, timing, longer lifetime or saved-policy quality is
+admitted. Policy-proportional role-split averaging is a separate candidate;
+its law must not borrow this uniform proposal's encounter figures.
+
 The [own-thread CPU diagnostic](../joint-thread-cycles.md) now passes exact
 all-row wire parity across four requests/four offsets in both Python modes and
 its fixed observer-overhead gate (260 calls; median ratio 1.01435, two pairs

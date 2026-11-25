@@ -1,6 +1,6 @@
 # Opponent-action sampling: work, storage and mathematical gates
 
-Status: design and source-frozen structural worksheet. No sampled update
+Status: independent normal/optimized structural controls pass. No sampled update
 operator, RNG, native trainer, longer lifetime or quality admission yet.
 This continues the shared four-street foundation and preserves the old
 eleven-card refusal, rather than creating separate street solvers.
@@ -118,3 +118,60 @@ source-inclusive evidence. RNG, evolving-policy learning and independently
 replayed saved-policy quality remain later gates. Adoption needs cost to the
 same quality on the same game, including setup/diagnostics and every preserved
 miss; fewer nodes or cheaper iterations alone do not establish improvement.
+
+## Executed structural worksheet
+
+Source and complete thirteen-file import closure were captured at
+`37a8ebeaaae4b6da68f08b62a83410ffe8b3ff04` before four bounded Python
+children. Four tests pass in both modes. The two worksheet streams are
+byte-identical, SHA-256
+`b6c73465cd13ebef4fe6b5778ca8b81a1553ca499d64286b3053b0a742bbca0f`.
+The first controller attempt refused its excessive stderr allowance before
+any mathematical child; that source snapshot and original failure are retained.
+The corrected controller uses the existing 65,536-byte ceiling.
+
+| Per one selected world | Current single-global full walk | Proposed two-target expected count | Proposed componentwise worst bound |
+| --- | ---: | ---: | ---: |
+| Visits | 1,105 | 52.615580 | 367 |
+| Policy reads | 434 | 28.166008 | 204 |
+| Terminals | 606 | 19.084796 | 127 |
+| Reveals | 65 | 5.364776 | 41 |
+| Action traversals | 1,039 | 45.250804 | 327 |
+| Target-role decision rows | Both actors: 434 | 10.320811 | 76 |
+
+Expected distinct rows in the two-pass read union are approximately 25.4465,
+which differs from 28.1660 policy reads. These are exact rational expectations
+rounded for the table, not sampled observations or timings. The comparator
+is the existing single-global-value walk, not the older duplicated target walk.
+
+For one million iid uniform joint worlds under the fixed uniform menu proposal,
+the outward seen-row interval is **20,411,660..20,454,659**. The same coarse
+interval method gives **427,342,216..428,007,956** for full walks; the older
+dedicated lifetime worksheet has a tighter full-walk interval. Target-role
+encounters are **7,905,114..7,912,316**. Numerical retention remains unknown.
+Even the reduced encounter projection is millions of rows and does not fit
+the existing two-million-entry Catalog by itself.
+
+The maximum full opponent inverse menu products are 3,072 and 768 for the two
+targets; the largest target-row prefix product is 3,072. Hypothetical R/A
+magnitude envelopes are 641/376 bits for one update and 642/377 for two.
+Those fit existing raw/cumulative carrier widths, but neither the new update
+operator nor its intermediate-width, lease and whole-work contract is admitted.
+The worksheet's modeled source-plus-scalar work is 40,501,001 within its
+prepaid 80-million envelope. These are modeled reference units, not CPU time.
+
+The [immutable study packet](../benchmarks/results/opponent-action-study-v1/manifest.json)
+preserves both original source snapshots, the first refusal and all four Python
+receipts. It stores 239,812 expanded bytes and sixteen exact shared objects;
+manifest SHA-256 is
+`ae2152a69f96873226949f695e73d45ffdbf45145cd73a9d67576f55fc381c9c`.
+`python -B -m scripts.replay_opponent_action_study` admits the packet and
+complete raw/Git source closure before importing current mathematical modules,
+then recomputes the worksheet and independent controls. No archived code,
+native call, RNG or training result is introduced by saved replay.
+
+This result warrants the all-coordinate estimator and second-moment proof.
+It does not select uniform proposals over policy-proportional role-split
+sampling, and does not establish improved cost to the same quality. Preserve
+the two failed arithmetic observers and the admitted coarse CPU evidence as
+separate observations; branch counts do not retroactively admit their shares.
