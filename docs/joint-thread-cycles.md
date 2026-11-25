@@ -1,7 +1,8 @@
 # Own-thread compute diagnostics
 
-Status: native own-thread capability is observed. No solver CPU attribution
-or profiling acceptance yet.
+Status: the sampled frozen-policy-read diagnostic passes exact-wire and fixed
+observer-overhead gates on the named local fixture. Finer arithmetic attribution
+and any resulting kernel improvement remain open.
 
 The [two lazy-Catalog elapsed misses](lazy-catalog-bitmaps.md) do not identify
 whether the extra time comes from native computation, process observation,
@@ -54,6 +55,60 @@ four repetitions while bounding queries. Any extrapolation must distinguish
 raw observed cycles, empirical clock overhead and estimated uninstrumented
 shares. Preserve all raw calibration data and independently gate observer
 overhead before using the result to select another optimization.
+
+## First retained CPU result
+
+Source `ab2c4e14c8eba4b7ff7b9a68e68f182692d59c9a`, MSVC 19.44,
+Python 3.12.14: all four requests and four sampling offsets preserve the
+complete independently checked numeric wire in both Python modes (40 native
+processes). The actual recorder also passes four synthetic offsets, thirteen
+native failure guards and sixteen independent parser mutations in both modes.
+The first outer synthetic test failed only on Windows text newlines after its
+cycle assertions passed; retain those original native outputs and failed logs.
+
+The fixed 260-process comparison completes with median diagnostic / standard
+elapsed ratio **1.0143528923875313**, with **two** pairs above 1.10. This passes
+the predeclared observer gate. It is permission to use this diagnostic on the
+named fixture, not evidence that a solver kernel became faster. Individual
+paired ratios range from 0.834 to 1.246; retain every pair.
+
+Across the 128 timed diagnostic calls, the median empirically corrected and
+extrapolated frozen-policy-read share of walk cycles is **0.2031827313971546**
+(individual-call range 0.1558..0.2793). Per-case median proxies are 0.2350
+for tie, 0.2026 for loss, 0.2048 for win and 0.2000 for the shared-board case.
+This family includes History, Catalog and Store work. It does not isolate
+Catalog CPU or establish exact unobserved shares.
+
+Median recorded phase cycles, summing both epochs within each call:
+
+| Recorded interval | Median CPU clock cycles |
+| --- | ---: |
+| Template construction and geometry census | 11,869,081 |
+| Both native walks, including observer | 25,779,445.5 |
+| Raw validation, row joins and Store staging | 23,976,714 |
+| Both committed snapshots | 6,558,661 |
+
+These medians are separate observations, not additive percentages of a common
+median call. Phase intervals exclude process startup/shutdown. Raw samples,
+empty-query pairs and original wall observations are all retained; never
+convert CPU clock cycles to time.
+
+The result does **not** justify further speculative Catalog layout tuning.
+Most walk cycles remain outside the observed read family. Next split exact
+arithmetic/value construction inside the walk, while preserving source,
+policy, zero-reach traversal and independent arithmetic. Staging also warrants
+attribution before redesigning row identity or quantization. Any subsequent
+optimization needs its own unchanged-cap correctness and elapsed gates.
+
+The immutable [CPU packet](../benchmarks/results/joint-thread-cycles-v1/manifest.json)
+contains 304 original process receipts, 81 exact shared byte objects and
+5,081,563 stored expanded bytes. Its manifest SHA-256 is
+`b5318e223def3f5230fb6435a2bee2c5ca9ed42338397c50e14352b46ad55c74`.
+`python -B -m scripts.replay_joint_cycles_packet` authenticates the complete
+source/build/process closure before importing current numerical modules, then
+replays all-row math, every offset, raw cycle accounting and the fixed gate.
+Changed manifest/object controls refuse before mathematical imports. Saved
+replay makes zero native calls and no hardware queries.
 
 ## Frozen sampled-read experiment
 

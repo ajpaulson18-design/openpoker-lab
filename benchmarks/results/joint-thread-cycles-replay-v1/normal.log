@@ -1,0 +1,78 @@
+{
+  "status": "joint-cycles-exact-math-accounting-and-overhead-replayed",
+  "authentication": {
+    "controls": {
+      "source_closures": 4,
+      "actual_process_receipts": 4
+    },
+    "parity": {
+      "source_closures": 2,
+      "actual_process_receipts": 40
+    },
+    "overhead": {
+      "source_closures": 1,
+      "actual_process_receipts": 260
+    },
+    "builds": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    },
+    "objects": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    }
+  },
+  "fresh_independent_cases": 4,
+  "parity_calls": 40,
+  "timed_diagnostic_calls": 128,
+  "observer_gate": {
+    "paired_ratios": [
+      1.245764294561246,
+      1.0554134534052202,
+      0.9562339558980842,
+      0.9508372877844465,
+      0.9732923313698424,
+      1.099996558013397,
+      1.1040069805964356,
+      0.8341688260379914
+    ],
+    "median_ratio": 1.0143528923875313,
+    "pairs_above_1_10": 2,
+    "accepted": true
+  },
+  "cpu_observation": {
+    "median_read_share_proxy": 0.2031827313971546,
+    "range_read_share_proxy": [
+      0.15578166376514785,
+      0.27927185778498764
+    ],
+    "by_case_median_read_share_proxy": {
+      "same-world": 0.23503629380661561,
+      "sb-loss": 0.20259863480362728,
+      "sb-win": 0.2047719480445959,
+      "shared-board-distinct-holding": 0.20002565701237832
+    },
+    "median_recorded_phase_cycles": {
+      "begin": 173731.0,
+      "range_input": 328370.0,
+      "template": 11869081.0,
+      "chance": 3801430.5,
+      "owners": 1375774.0,
+      "header": 111058.0,
+      "epoch_begin": 16781.5,
+      "ticket": 43748.5,
+      "walk": 25779445.5,
+      "stage": 23976714.0,
+      "release": 1876245.0,
+      "commit": 2725408.0,
+      "snapshot": 6558661.0,
+      "footer": 19962.0,
+      "publish": 508972.0
+    }
+  },
+  "stored_expanded_bytes": 5081563,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "quality_gate": null,
+  "scope": "Saved sampled read-family CPU cycles and empirical correction, one host/frozen fixed-template T2. No hardware query, cycle conversion, exact unprofiled owner share, kernel speedup, longer learning or realistic-game admission."
+}

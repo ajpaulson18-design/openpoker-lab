@@ -2,6 +2,19 @@
 
 ## Unified solver foundation in development
 
+The [own-thread CPU diagnostic](../joint-thread-cycles.md) now passes exact
+all-row wire parity across four requests/four offsets in both Python modes and
+its fixed observer-overhead gate (260 calls; median ratio 1.01435, two pairs
+above 1.10). Sampled frozen-policy reads account for a median empirically
+corrected proxy of 20.3% of walk cycles on this fixture. Most walk cost remains
+unattributed; staging is also substantial. Preserve the 304-process immutable
+packet and both previous lazy-storage elapsed misses. Next attribute exact
+arithmetic/value construction before choosing a kernel change. This is CPU
+evidence, not faster solver code, longer learning, quality or eleven-card
+admission. At `33a108f`, lazy component/whole checks pass Windows/Linux/sanitizers,
+and saved numerical/storage replay passes Windows and Linux. The broader
+standalone Windows History compiler crash remains separate and unresolved.
+
 The [sparse catalog and policy epochs](../sparse-policy-epochs.md) separate
 full-history identity from numerical policy storage. The native catalog keeps
 encountered public blocks and declared seen holding indices; its local controls
