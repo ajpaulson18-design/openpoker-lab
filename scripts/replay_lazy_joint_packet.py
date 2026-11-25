@@ -145,6 +145,11 @@ def authenticate(loaded, helper, known):
                 source[name] = raw
             built = helper.decode(files[prefix + 'native-build-manifest.json']); helper.build_source_links(built, source)
             native.setdefault(built['target'], []).append((built, source))
+            if prefix + 'baseline-native-build-manifest.json' in files:
+                paired = helper.decode(files[prefix + 'baseline-native-build-manifest.json'])
+                helper.build_source_links(paired, source)
+                require(paired['source_sha256'] == built['source_sha256'], 'lazy paired baseline complete shared source closure')
+                native.setdefault(paired['target'], []).append((paired, source))
             if label == 'whole-normal' and prefix == 'whole-3/':
                 require(head == LATEST, 'lazy latest numerical source origin'); latest = source
             closures += 1
