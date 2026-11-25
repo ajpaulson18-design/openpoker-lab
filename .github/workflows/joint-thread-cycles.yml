@@ -1,0 +1,98 @@
+name: Joint own-thread CPU evidence
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  cycle-evidence:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Replay saved math and CPU accounting without native calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_joint_cycles_packet > "$RUNNER_TEMP/cpu-replay-normal.json"
+          python -O -B -m scripts.replay_joint_cycles_packet > "$RUNNER_TEMP/cpu-replay-optimized.json"
+          python -B -m unittest tests.test_joint_cycles_packet_admission -v
+      - name: Build actual recorder with a synthetic clock
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target joint-thread-cycle-controls --output-dir "$RUNNER_TEMP/cpu-controls-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_EXE=$RUNNER_TEMP/cpu-controls-build/native-joint-thread-cycle-controls$suffix" >> "$GITHUB_ENV"
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as output:
+              for mode in ('normal','optimized'):
+                  output.write(f'CPU_CONTROLS_{mode.upper()}={base / ("joint-cycle-controls-"+mode)}\n')
+          PY
+      - name: Verify recorder census and failure guards
+        env:
+          OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_DIR: ${{ env.CPU_CONTROLS_NORMAL }}
+        run: python -B -m unittest tests.test_joint_cycle_reference -v
+      - name: Repeat controls with optimized Python
+        env:
+          OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_DIR: ${{ env.CPU_CONTROLS_OPTIMIZED }}
+        run: python -O -B -m unittest tests.test_joint_cycle_reference -v
+      - name: Build Windows diagnostic and identical standard source
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass --output-dir "$RUNNER_TEMP/cpu-standard-build"
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-cycles --output-dir "$RUNNER_TEMP/cpu-diagnostic-build"
+      - name: Check every Windows case and offset without elapsed adoption
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          from scripts import joint_evidence_archive as archive, replay_joint_two_epoch_packet as helper, replay_joint_cycles_packet as replay
+          from scripts.benchmark_joint_cycles import benchmark, LABELS
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          _,loaded,_=archive.load(replay.PACKET,helper,pin=replay.PIN,version='joint-cycles',labels=('controls','parity','overhead','builds','objects'),packager='package_joint_cycles1.py.txt')
+          expected=base/'joint-cycle-expected';expected.mkdir(exist_ok=False)
+          for i,label in enumerate(LABELS):
+              directory=expected/('baseline-profile-1-'+label);directory.mkdir()
+              (directory/'stdout.bin').write_bytes(loaded['parity'][f'normal/standard-{i}/stdout.bin'])
+          root=Path(os.environ['RUNNER_TEMP'])
+          benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-diagnostic-build/native-virtual-weighted-joint-single-pass-cycles.exe',expected,base/'joint-cycle-native-parity',parity_only=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joint-thread-cycles-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/cpu-replay-*.json
+            ${{ runner.temp }}/cpu-controls-build/*.log
+            ${{ runner.temp }}/cpu-controls-build/*.json
+            ${{ runner.temp }}/cpu-standard-build/*.log
+            ${{ runner.temp }}/cpu-standard-build/*.json
+            ${{ runner.temp }}/cpu-diagnostic-build/*.log
+            ${{ runner.temp }}/cpu-diagnostic-build/*.json
+            ${{ github.workspace }}/../joint-cycle-controls-normal/**
+            ${{ github.workspace }}/../joint-cycle-controls-optimized/**
+            ${{ github.workspace }}/../joint-cycle-native-parity/**
+          if-no-files-found: warn

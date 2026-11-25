@@ -1,0 +1,56 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 129164,
+      "expanded_bytes": 212702,
+      "file": "controls.zip",
+      "manifest_sha256": "78f08d668fe945e2171c2d11b47970c796e0f4d0904118456dca4859bf4bd182",
+      "members": 227,
+      "sha256": "2b168d5ddfd6a637e7baede182866182bf0ab2526e2269d5d607be334e05f5b7"
+    },
+    {
+      "bytes": 211943,
+      "expanded_bytes": 402704,
+      "file": "parity.zip",
+      "manifest_sha256": "8046c2c039942312ee79a5dd9b584da2c97813a64731a4f059e35cf49d2eb3b9",
+      "members": 355,
+      "sha256": "9123ab9af23926ce0e1a7ca3b913f811302f37f0d4553a515618e3cee1ba7a75"
+    },
+    {
+      "bytes": 500137,
+      "expanded_bytes": 1179910,
+      "file": "overhead.zip",
+      "manifest_sha256": "72dd0c3571c53a349590ed9a52c1fb91b39682f18564a5b3909d0b1bf83e4a7a",
+      "members": 1131,
+      "sha256": "88e233087158779d856a8b59e017f7a4f7caa8a2ef01fcdb7cfd0070daec8a65"
+    },
+    {
+      "bytes": 24276,
+      "expanded_bytes": 67045,
+      "file": "builds.zip",
+      "manifest_sha256": "78b1c258f41604ad14fff145637b63570b85067b1de16e56a5a3ce465fc23f41",
+      "members": 15,
+      "sha256": "ef584f7d169daf22aa03b0c222bfe724be3fbf8c061b9fe7fad55e1abcc0c6e1"
+    },
+    {
+      "bytes": 961572,
+      "expanded_bytes": 3219202,
+      "file": "objects.zip",
+      "manifest_sha256": "93261cbb55c871370548330fa3e60f4dddeffe6cdf16731b025dafb0cf317336",
+      "members": 82,
+      "sha256": "3d526572b2261e68c1db30d740cdc347f2f99d19f5571aab9f493ab62a102760"
+    }
+  ],
+  "exact_shared_objects": 81,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "127c8647182753d59097aa84b79acaced97cad377da01ebb979a8bd96fc1f6f2",
+  "scope": "Frozen sampled frozen-policy-read CPU observation, four-case/offset wire parity, fixed observer overhead gate and first text assertion failure. No cycle-to-time conversion, exact owner-only attribution, kernel improvement, longer learning or quality claim.",
+  "stored_expanded_bytes": 5081563,
+  "version": "joint-cycles-package-v1"
+}
