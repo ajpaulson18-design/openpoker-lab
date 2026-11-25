@@ -1,0 +1,59 @@
+{
+  "version": "lazy-replay-post-run-index-v1",
+  "created_after_runs": true,
+  "is_original_execution_receipt": false,
+  "files": [
+    {
+      "file": "lazy-joint-replay1-normal.log",
+      "bytes": 1151,
+      "sha256": "70d9c1b7604612e3bc1d08c6366c5052fb9ea919d0eb37f27be0ba62eadb136c"
+    },
+    {
+      "file": "lazy-joint-replay1-optimized.log",
+      "bytes": 1151,
+      "sha256": "70d9c1b7604612e3bc1d08c6366c5052fb9ea919d0eb37f27be0ba62eadb136c"
+    },
+    {
+      "file": "lazy-joint-replay2-normal.log",
+      "bytes": 1595,
+      "sha256": "a06a6a8b3700e74de0c17ac9489a9cb069d3b0a2e5659c339a285762c9262e48"
+    },
+    {
+      "file": "lazy-joint-replay2-optimized.log",
+      "bytes": 1595,
+      "sha256": "a06a6a8b3700e74de0c17ac9489a9cb069d3b0a2e5659c339a285762c9262e48"
+    },
+    {
+      "file": "lazy-packet-admission1.log",
+      "bytes": 433,
+      "sha256": "8e1b2268da91aeba6d838c0323336b421c7415098cb7e07cadbcbda2bca742e8"
+    },
+    {
+      "file": "lazy-packet-admission2.log",
+      "bytes": 433,
+      "sha256": "53eb6e9cf9aeb98f3096806dfa16e6d640c88fd0a9c79171eefdaca385328cec"
+    },
+    {
+      "file": "lazy-joint-package1.log",
+      "bytes": 2812,
+      "sha256": "3d94557253fcc4a29831724e08e5d68edaf8e1e8430dcc061bf20ec509ce1f8f"
+    }
+  ],
+  "known_source_context": {
+    "first_replay": "f8c00b85ffa845bec28ddea8c1eae516a2303e17",
+    "successful_replay": "45de3dbe6676e7194dd20445bbd972ff55ad6af8"
+  },
+  "observed_outer_exits_from_tool_results": {
+    "first_normal": 1,
+    "first_optimized": 1,
+    "second_normal": 0,
+    "second_optimized": 0,
+    "admission_first": 0,
+    "admission_second": 0,
+    "packaging": 0
+  },
+  "failure_scope": "First replay refused before numerical imports because its build registry omitted the paired eager manifest. The fix authenticates that manifest against the already captured identical complete source map. Raw evidence and mathematical authority were unchanged.",
+  "native_calls_during_replay": 0,
+  "archived_source_executed": false,
+  "successful_report_sha256": "a06a6a8b3700e74de0c17ac9489a9cb069d3b0a2e5659c339a285762c9262e48"
+}

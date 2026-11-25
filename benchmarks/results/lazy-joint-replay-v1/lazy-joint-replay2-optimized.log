@@ -1,0 +1,56 @@
+{
+  "status": "lazy-joint-primary-numerics-storage-and-both-misses-replayed",
+  "authentication": {
+    "components": {
+      "source_closures": 4,
+      "actual_process_receipts": 4
+    },
+    "whole-normal": {
+      "source_closures": 6,
+      "actual_process_receipts": 68
+    },
+    "whole-optimized": {
+      "source_closures": 6,
+      "actual_process_receipts": 68
+    },
+    "timing-1": {
+      "source_closures": 0,
+      "actual_process_receipts": 260
+    },
+    "timing-2": {
+      "source_closures": 0,
+      "actual_process_receipts": 260
+    },
+    "thread-cycle-probes": {
+      "source_closures": 2,
+      "actual_process_receipts": 2
+    },
+    "builds-and-parity": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    },
+    "objects": {
+      "source_closures": 0,
+      "actual_process_receipts": 0
+    }
+  },
+  "latest_independent_cases_per_mode": 12,
+  "fresh_component_replays": 2,
+  "elapsed_studies": {
+    "1": {
+      "median_ratio": 1.041113772668063,
+      "pairs_above_1_10": 3,
+      "accepted": false
+    },
+    "2": {
+      "median_ratio": 1.06512147995754,
+      "pairs_above_1_10": 1,
+      "accepted": false
+    }
+  },
+  "stored_expanded_bytes": 20870864,
+  "exact_shared_objects": 113,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "scope": "Fresh latest whole-row/storage and component mathematics, stream parity and both elapsed gates. Older partial/epoch/probe records authenticate only; no fresh hardware query, adoption, longer learning, CPU/RSS or quality claim."
+}

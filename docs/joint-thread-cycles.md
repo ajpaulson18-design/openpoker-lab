@@ -1,7 +1,7 @@
 # Own-thread compute diagnostics
 
-Status: environment capability probe source frozen before native execution;
-no solver CPU attribution or profiling acceptance yet.
+Status: native own-thread capability is observed. No solver CPU attribution
+or profiling acceptance yet.
 
 The [two lazy-Catalog elapsed misses](lazy-catalog-bitmaps.md) do not identify
 whether the extra time comes from native computation, process observation,
@@ -40,3 +40,17 @@ wires and source provenance. Reserve metadata, clock calls, formatting and I/O
 before preparation, and independently gate complete-call overhead against the
 same standard target. These measurements must not replace or relax the lazy
 storage candidate's existing elapsed acceptance gates.
+
+The source-built probe at `d1b0fa0` succeeds in both Python modes, with one
+observed native call each and all 1,024 raw pair deltas retained. Median pair
+cycle deltas are 2,127 and 2,121; observed wall intervals average 835 and 753
+nanoseconds per measured query, including loop/storage work. These are own-
+thread environment observations, not a solver measurement or guaranteed query
+cost. No system profiler is started.
+
+The next experiment should sample one of every four frozen-policy reads.
+Balancing offsets 0..3 across the same request covers all read positions over
+four repetitions while bounding queries. Any extrapolation must distinguish
+raw observed cycles, empirical clock overhead and estimated uninstrumented
+shares. Preserve all raw calibration data and independently gate observer
+overhead before using the result to select another optimization.

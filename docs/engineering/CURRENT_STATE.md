@@ -71,6 +71,19 @@ This justifies investigating exact lazy holding bitmaps before extending
 learning lifetimes. The existing two-epoch limit and all resource ceilings
 remain unchanged.
 
+The opt-in [lazy holding-bitmap candidate](../lazy-catalog-bitmaps.md) now passes
+full52 twelve-case arithmetic/storage parity normally and optimized, including
+a shared-board/opponent-holding change that promotes 217 public blocks. Its
+Catalog reservation decreases from 185,908 to 167,680 logical words without
+changing ceilings or information identity. Component and whole-walk Windows,
+Linux and sanitizer checks pass at `04e6c11`. Both complete-call elapsed
+studies miss their unchanged nonregression gates; this is an exact storage
+candidate, not an accepted runtime improvement. The revised membership path
+also passes local parity. The next investigation is
+[bounded own-thread compute observation](../joint-thread-cycles.md), rather
+than further kernel tuning without attribution. Longer learning and quality
+remain unadmitted.
+
 The [immutable two-board policy session](../native-frozen-policy-session.md)
 shares native template/catalog/import/readback under one cumulative request.
 Normal/optimized conformance checks both raw results independently, including

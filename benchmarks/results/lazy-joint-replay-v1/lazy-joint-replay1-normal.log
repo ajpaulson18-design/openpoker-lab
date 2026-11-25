@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_lazy_joint_packet.py", line 285, in <module>
+    print(json.dumps(replay(parser.parse_args().packet), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_lazy_joint_packet.py", line 209, in replay
+    objects, captured, authentication = authenticate(loaded, helper, known)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_lazy_joint_packet.py", line 161, in authenticate
+    require(any(built == old for old, _source in native[built['target']]), 'lazy every successful build linked to original run')
+                                                 ~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'virtual-weighted-joint-single-pass'

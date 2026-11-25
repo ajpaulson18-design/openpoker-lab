@@ -42,6 +42,8 @@ jobs:
               for kind in ('catalog', 'joint', 'epoch'):
                   for mode in ('normal', 'optimized'):
                       output.write(f'LAZY_{kind.upper()}_{mode.upper()}_PATH={base / ("lazy-" + kind + "-" + mode)}\n')
+              for mode in ('normal', 'optimized'):
+                  output.write(f'THREAD_CYCLE_{mode.upper()}_PATH={base / ("thread-cycle-" + mode)}\n')
           PY
       - name: Check feasible peak states and complete native frame
         env:
@@ -71,6 +73,22 @@ jobs:
           OPENPOKER_NATIVE_LAZY_JOINT_DIR: ${{ env.LAZY_JOINT_OPTIMIZED_PATH }}
           OPENPOKER_NATIVE_LAZY_EPOCH_DIR: ${{ env.LAZY_EPOCH_OPTIMIZED_PATH }}
         run: python -O -B -m unittest tests.test_lazy_joint_forecast tests.test_native_lazy_joint -v
+      - name: Build own-thread counter capability probe on Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target current-thread-cycle-probe --output-dir "$RUNNER_TEMP/thread-cycle-build"
+          echo "OPENPOKER_NATIVE_THREAD_CYCLE_EXE=$RUNNER_TEMP/thread-cycle-build/native-current-thread-cycle-probe.exe" >> "$GITHUB_ENV"
+      - name: Observe own-thread counter without constructing a solver
+        if: runner.os == 'Windows'
+        env:
+          OPENPOKER_NATIVE_THREAD_CYCLE_DIR: ${{ env.THREAD_CYCLE_NORMAL_PATH }}
+        run: python -B -m unittest tests.test_native_thread_cycles -v
+      - name: Repeat counter observation with optimized Python
+        if: runner.os == 'Windows'
+        env:
+          OPENPOKER_NATIVE_THREAD_CYCLE_DIR: ${{ env.THREAD_CYCLE_OPTIMIZED_PATH }}
+        run: python -O -B -m unittest tests.test_native_thread_cycles -v
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -84,10 +102,14 @@ jobs:
             ${{ runner.temp }}/eager-whole-build/*.json
             ${{ runner.temp }}/lazy-epoch-build/*.log
             ${{ runner.temp }}/lazy-epoch-build/*.json
+            ${{ runner.temp }}/thread-cycle-build/*.log
+            ${{ runner.temp }}/thread-cycle-build/*.json
             ${{ env.LAZY_CATALOG_NORMAL_PATH }}/**
             ${{ env.LAZY_CATALOG_OPTIMIZED_PATH }}/**
             ${{ env.LAZY_JOINT_NORMAL_PATH }}/**
             ${{ env.LAZY_JOINT_OPTIMIZED_PATH }}/**
             ${{ env.LAZY_EPOCH_NORMAL_PATH }}/**
             ${{ env.LAZY_EPOCH_OPTIMIZED_PATH }}/**
+            ${{ env.THREAD_CYCLE_NORMAL_PATH }}/**
+            ${{ env.THREAD_CYCLE_OPTIMIZED_PATH }}/**
           if-no-files-found: warn

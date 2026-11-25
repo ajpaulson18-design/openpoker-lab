@@ -120,7 +120,7 @@ RSS claim. Do not change these gates after observing timing.
 
 At `b5c0f97`, both Python modes pass twelve candidate requests, eight real
 parser rejections, twelve fresh eager baseline calls and five corruption
-refusals. Each matrix records32 actual native calls; the associated epoch
+refusals. Each matrix records 32 actual native calls; the associated epoch
 guard records one additional call. All ten applicable eager outputs equal the
 published single-pass wires. Candidate normalization equals the eager wire
 hash after independent arithmetic and storage verification. The complete
@@ -164,3 +164,29 @@ is accepted runtime nonregression. The candidate remains explicit and opt-in.
 Pause further kernel tuning until a [bounded own-thread CPU investigation](joint-thread-cycles.md)
 distinguishes the cost families inside the walk. Neither logical metadata
 savings nor source-level simplification substitutes for that measurement.
+
+## Preserved evidence and saved replay
+
+The [immutable pooled packet](../benchmarks/results/lazy-joint-foundation-v1/manifest.json)
+preserves 662 original native process receipts, the first verifier refusal,
+both predicate versions, both elapsed misses and both own-thread API probes.
+Its 113 exact shared objects preserve original source/stdout bytes with
+per-path references. Stored expansion is 20,870,864 bytes under the unchanged
+80-MiB cap; references do not trigger duplicate extraction or code execution.
+
+The [maintained reader](../scripts/replay_lazy_joint_packet.py) authenticates
+the archive/object inventory, original source/build/process links and current
+mathematical closure before numerical imports. Fresh normal/optimized replay
+checks the latest twelve-case all-row/storage matrix and both component frames,
+then rederives both elapsed failures and predicate stream parity. It invokes
+zero native or archived-source calls. Reports are byte-identical, SHA-256
+`a06a6a8b3700e74de0c17ac9489a9cb069d3b0a2e5659c339a285762c9262e48`.
+Older partial, epoch and hardware-probe records receive authentication only;
+the reader does not claim fresh hardware observation.
+
+[Replay observations](../benchmarks/results/lazy-joint-replay-v1/post-run-index.json)
+retain the first pre-numerical refusal: the initial authenticator omitted the
+paired eager build registry entry. The correction links its complete shared
+source map explicitly. Two mutation tests produce four normal/optimized child
+refusals before mathematical imports. No raw policy, mathematical authority,
+resource cap or failed timing gate was rewritten.

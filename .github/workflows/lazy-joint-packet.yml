@@ -1,0 +1,32 @@
+name: Lazy joint saved evidence
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  saved-only:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Replay exact mathematics, storage and both elapsed misses without native calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_lazy_joint_packet > "$RUNNER_TEMP/lazy-joint-replay-normal.json"
+          python -O -B -m scripts.replay_lazy_joint_packet > "$RUNNER_TEMP/lazy-joint-replay-optimized.json"
+      - name: Refuse changed pooled evidence before numerical imports
+        run: python -B -m unittest tests.test_lazy_packet_admission -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lazy-joint-saved-replay-${{ matrix.os }}
+          path: ${{ runner.temp }}/lazy-joint-replay-*.json
+          if-no-files-found: warn
