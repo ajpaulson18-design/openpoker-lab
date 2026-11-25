@@ -70,7 +70,7 @@ def run(output):
         for label,module,args in (('tests','unittest',['tests.test_opponent_action_sampling_forecast','-v']),
                                   ('worksheet','scripts.forecast_opponent_action_sampling',[])):
             receipt=run_bounded_child([sys.executable,'-I','-S','-B',*(['-O'] if optimized else []),'-c',bootstrap,str(ROOT),module,*args],
-                b'',output/(label+'-'+mode),stdout_limit=1<<20,stderr_limit=1<<20,timeout=90)
+                b'',output/(label+'-'+mode),stdout_limit=1<<20,stderr_limit=65536,timeout=90)
             records.append({'label':label,'mode':mode,'receipt':receipt})
             need((receipt['status'],receipt['actual_exit_observed'],receipt['returncode'],receipt['failures'])==('exited',True,0,[]),'study original child failed; no retry')
     normal=(output/'worksheet-normal/stdout.bin').read_bytes();optimized=(output/'worksheet-optimized/stdout.bin').read_bytes()
