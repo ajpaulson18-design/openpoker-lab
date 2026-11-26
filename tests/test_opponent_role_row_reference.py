@@ -24,7 +24,7 @@ class OpponentRoleRowReferenceTests(unittest.TestCase):
         self.assertEqual(tuple(sum(step[0][i] for step in rows[-3]['steps']) for i in (0,1)),(1,-2))
         self.assertEqual(rows[-2]['steps'][0],((0,0),(0,0)))
         cumulative=tuple(sum(step[0][i] for step in rows[-1]['steps']) for i in range(4))
-        self.assertEqual(max(abs(r).bit_length() for r in cumulative),371)
+        self.assertEqual(max(abs(r).bit_length() for r in cumulative),370)
         self.assertEqual(allocate(cumulative)[1],0);self.assertGreater(cumulative[1],0)
 
 

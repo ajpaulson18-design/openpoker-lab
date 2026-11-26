@@ -1,0 +1,74 @@
+name: Native compact role rows
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  role-rows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Admit saved original source and independently replay all row images
+        shell: bash
+        run: |
+          python -B -m scripts.replay_opponent_role_rows > "$RUNNER_TEMP/role-replay-normal.json"
+          python -O -B -m scripts.replay_opponent_role_rows > "$RUNNER_TEMP/role-replay-optimized.json"
+          python -B -m unittest tests.test_opponent_role_row_reference tests.test_opponent_role_rows_admission -v
+      - name: Build explicit component from current committed source
+        shell: bash
+        run: python -B -m scripts.build_opponent_role_rows --output-dir "$RUNNER_TEMP/role-row-build" ${{ matrix.flags }}
+      - name: Verify fresh compact and canonical native images in both modes
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          python -B -m scripts.run_opponent_role_rows "$RUNNER_TEMP/role-row-build/native-opponent-role-row-controls$suffix" ../role-row-normal > "$RUNNER_TEMP/role-fresh-normal.json"
+          python -O -B -m scripts.run_opponent_role_rows "$RUNNER_TEMP/role-row-build/native-opponent-role-row-controls$suffix" ../role-row-optimized > "$RUNNER_TEMP/role-fresh-optimized.json"
+          python -B - <<'PY'
+          from pathlib import Path
+          base=Path.cwd().parent
+          assert (base/'role-row-normal/matrix/stdout.bin').read_bytes()==(base/'role-row-optimized/matrix/stdout.bin').read_bytes()
+          PY
+      - name: Stage bounded evidence under one absolute artifact root
+        if: always()
+        shell: python
+        run: |
+          import os,shutil
+          from pathlib import Path
+          temp=Path(os.environ['RUNNER_TEMP']);out=temp/'role-row-evidence';out.mkdir(exist_ok=True)
+          base=Path.cwd().parent
+          for name in ('role-row-normal','role-row-optimized'):
+              source=base/name
+              if source.is_dir():shutil.copytree(source,out/name)
+          source=temp/'role-row-build'
+          if source.is_dir():
+              target=out/'build';target.mkdir()
+              for name in ('source-identity.json','build.log','build-failure.json','compiler-version.log','native-exact-build-manifest.json'):
+                  if (source/name).is_file():shutil.copyfile(source/name,target/name)
+              if (source/'source').is_dir():shutil.copytree(source/'source',target/'source')
+          for path in temp.glob('role-*.json'):shutil.copyfile(path,out/path.name)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compact-role-row-evidence-${{ matrix.label }}
+          path: ${{ runner.temp }}/role-row-evidence
+          if-no-files-found: warn

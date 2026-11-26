@@ -42,7 +42,11 @@ def run(exe,output):
             need(len(payload)<=116000,'role row named file input cap');path=output/(label+'-payload.bin')
             with path.open('xb') as stream:stream.write(payload)
             need(not arguments,'role row explicit file transport arguments');arguments=('--request-file',str(path))
-        receipt=run_bounded_child([str(exe),*arguments],b'',output/label,stdout_limit=131072,stderr_limit=65536,timeout=180)
+        command=[str(exe),*arguments];invocation={'command':command,'executable_sha256':sha(exe),
+            'build_manifest_sha256':sha256(identity[0]).hexdigest(),'stdin_bytes':0,
+            'payload_bytes':len(payload),'payload_sha256':sha256(payload).hexdigest()}
+        with (output/(label+'-invocation.json')).open('x') as stream:json.dump(invocation,stream,indent=2)
+        receipt=run_bounded_child(command,b'',output/label,stdout_limit=131072,stderr_limit=65536,timeout=180)
         records.append({'label':label,'payload_sha256':sha256(payload).hexdigest(),'payload_bytes':len(payload),'receipt':receipt})
         need((receipt['status'],receipt['actual_exit_observed'],receipt['returncode'],receipt['failures'])==
              ('exited',True,expected,[]) and authenticate(exe,ROOT,TARGET)==identity and

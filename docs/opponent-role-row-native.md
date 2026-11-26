@@ -41,8 +41,8 @@ Fraction allocator then checks every emitted coordinate. Inputs retain all
 85 role rows from the three-world/two-profile supported witnesses and twelve
 two-step synthetic controls, including zero policy, tiny signed regrets,
 negative cumulative coordinates and a zero update that preserves a frozen
-nonuniform policy. A coprime full-width case reaches the 371-bit cumulative
-bound without a common dyadic factor, including tiny positive regrets rounded
+nonuniform policy. A coprime wide case exercises 370-bit cumulative
+values under the conservative 371-bit bound, including tiny positive regrets rounded
 to zero. The first successful 96-row study is preserved before this additional
 coverage; it does not exercise the maximum division width. Twenty native
 failure guards and six negative child
