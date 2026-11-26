@@ -1,0 +1,10 @@
+test_homogeneity_signs_ties_and_tiny_positive_zero (tests.test_opponent_role_row_reference.OpponentRoleRowReferenceTests.test_homogeneity_signs_ties_and_tiny_positive_zero) ... ok
+test_named_transcript_inventory_and_bounded_protocol (tests.test_opponent_role_row_reference.OpponentRoleRowReferenceTests.test_named_transcript_inventory_and_bounded_protocol) ... ok
+test_two_step_signed_cumulative_and_zero_update_cases (tests.test_opponent_role_row_reference.OpponentRoleRowReferenceTests.test_two_step_signed_cumulative_and_zero_update_cases) ... ok
+test_changed_manifest (tests.test_opponent_role_rows_admission.OpponentRolePacketAdmissionTests.test_changed_manifest) ... ok
+test_changed_objects (tests.test_opponent_role_rows_admission.OpponentRolePacketAdmissionTests.test_changed_objects) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 9.803s
+
+OK

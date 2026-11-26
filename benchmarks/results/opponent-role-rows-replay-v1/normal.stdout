@@ -1,0 +1,243 @@
+{
+  "status": "compact-role-row-evidence-replayed",
+  "original_source_closures": {
+    "build-1": {
+      "head": "7025adf1fe6543f83fa5ae5d4b3b77c09bbc5003",
+      "files": 11
+    },
+    "build-2": {
+      "head": "61305c2d66f799f88fdfd77966983f4cd10340bb",
+      "files": 11
+    },
+    "study-1/normal": {
+      "head": "7025adf1fe6543f83fa5ae5d4b3b77c09bbc5003",
+      "files": 68
+    },
+    "study-1/optimized": {
+      "head": "7025adf1fe6543f83fa5ae5d4b3b77c09bbc5003",
+      "files": 68
+    },
+    "study-2/normal": {
+      "head": "61305c2d66f799f88fdfd77966983f4cd10340bb",
+      "files": 68
+    },
+    "study-2/optimized": {
+      "head": "61305c2d66f799f88fdfd77966983f4cd10340bb",
+      "files": 68
+    },
+    "study-3/normal": {
+      "head": "37b94a602b0497a033362e4a46bc7ebd84cda791",
+      "files": 68
+    },
+    "study-3/optimized": {
+      "head": "37b94a602b0497a033362e4a46bc7ebd84cda791",
+      "files": 68
+    },
+    "study-4/normal": {
+      "head": "2c18650f9902c027fd25a95be94d221129ceeb25",
+      "files": 68
+    },
+    "study-4/optimized": {
+      "head": "2c18650f9902c027fd25a95be94d221129ceeb25",
+      "files": 68
+    }
+  },
+  "original_native_processes": 50,
+  "original_invocation_records": 16,
+  "older_invocation_limit": "34 earlier process receipts lack separate argv records; captured controller/build source reconstructs their command, not a raw original argv receipt.",
+  "results": [
+    {
+      "version": 2,
+      "mode": "normal",
+      "fresh": {
+        "rows": 96,
+        "images": 107,
+        "named_witness_rows": 85,
+        "synthetic_rows": 11,
+        "negative_cumulative_coordinates": 43,
+        "positive_regrets_quantized_to_zero": 0,
+        "max_observed_regret_bits": 368,
+        "max_observed_average_bits": 53,
+        "native_counters": {
+          "work": 253572,
+          "compact_quantizer_work": 33412,
+          "canonical_quantizer_work": 34452,
+          "compact_input_bits": 368,
+          "canonical_input_bits": 628,
+          "compact_peak_forecast_bits": 107,
+          "canonical_peak_forecast_bits": 107,
+          "rows": 96,
+          "steps": 107,
+          "forecast": 4100608
+        },
+        "output_sha256": "6f443c80e27f97be0ba8d57647fc474a53d7b23cf8d030ff90ad715fcdf3ef41",
+        "rng_calls": 0,
+        "attempted_training": false,
+        "quality_gate": null,
+        "scope": "Compact/canonical arithmetic and rational allocation on named transcript rows plus two-step synthetic controls. No History/role lease, native world traversal, stochastic learning or timing improvement."
+      }
+    },
+    {
+      "version": 2,
+      "mode": "optimized",
+      "fresh": {
+        "rows": 96,
+        "images": 107,
+        "named_witness_rows": 85,
+        "synthetic_rows": 11,
+        "negative_cumulative_coordinates": 43,
+        "positive_regrets_quantized_to_zero": 0,
+        "max_observed_regret_bits": 368,
+        "max_observed_average_bits": 53,
+        "native_counters": {
+          "work": 253572,
+          "compact_quantizer_work": 33412,
+          "canonical_quantizer_work": 34452,
+          "compact_input_bits": 368,
+          "canonical_input_bits": 628,
+          "compact_peak_forecast_bits": 107,
+          "canonical_peak_forecast_bits": 107,
+          "rows": 96,
+          "steps": 107,
+          "forecast": 4100608
+        },
+        "output_sha256": "6f443c80e27f97be0ba8d57647fc474a53d7b23cf8d030ff90ad715fcdf3ef41",
+        "rng_calls": 0,
+        "attempted_training": false,
+        "quality_gate": null,
+        "scope": "Compact/canonical arithmetic and rational allocation on named transcript rows plus two-step synthetic controls. No History/role lease, native world traversal, stochastic learning or timing improvement."
+      }
+    },
+    {
+      "version": 3,
+      "mode": "normal",
+      "fresh": {
+        "rows": 97,
+        "images": 109,
+        "named_witness_rows": 85,
+        "synthetic_rows": 12,
+        "negative_cumulative_coordinates": 43,
+        "positive_regrets_quantized_to_zero": 2,
+        "max_observed_regret_bits": 370,
+        "max_observed_average_bits": 53,
+        "native_counters": {
+          "work": 265256,
+          "compact_quantizer_work": 41000,
+          "canonical_quantizer_work": 42120,
+          "compact_input_bits": 370,
+          "canonical_input_bits": 630,
+          "compact_peak_forecast_bits": 421,
+          "canonical_peak_forecast_bits": 421,
+          "rows": 97,
+          "steps": 109,
+          "forecast": 4100608
+        },
+        "output_sha256": "aa6b9b2f5c9b18440f925f01170aebce3188bf5c5e2bc32541153ce82748dbfa",
+        "rng_calls": 0,
+        "attempted_training": false,
+        "quality_gate": null,
+        "scope": "Compact/canonical arithmetic and rational allocation on named transcript rows plus two-step synthetic controls. No History/role lease, native world traversal, stochastic learning or timing improvement."
+      }
+    },
+    {
+      "version": 3,
+      "mode": "optimized",
+      "fresh": {
+        "rows": 97,
+        "images": 109,
+        "named_witness_rows": 85,
+        "synthetic_rows": 12,
+        "negative_cumulative_coordinates": 43,
+        "positive_regrets_quantized_to_zero": 2,
+        "max_observed_regret_bits": 370,
+        "max_observed_average_bits": 53,
+        "native_counters": {
+          "work": 265256,
+          "compact_quantizer_work": 41000,
+          "canonical_quantizer_work": 42120,
+          "compact_input_bits": 370,
+          "canonical_input_bits": 630,
+          "compact_peak_forecast_bits": 421,
+          "canonical_peak_forecast_bits": 421,
+          "rows": 97,
+          "steps": 109,
+          "forecast": 4100608
+        },
+        "output_sha256": "aa6b9b2f5c9b18440f925f01170aebce3188bf5c5e2bc32541153ce82748dbfa",
+        "rng_calls": 0,
+        "attempted_training": false,
+        "quality_gate": null,
+        "scope": "Compact/canonical arithmetic and rational allocation on named transcript rows plus two-step synthetic controls. No History/role lease, native world traversal, stochastic learning or timing improvement."
+      }
+    },
+    {
+      "version": 4,
+      "mode": "normal",
+      "fresh": {
+        "rows": 97,
+        "images": 109,
+        "named_witness_rows": 85,
+        "synthetic_rows": 12,
+        "negative_cumulative_coordinates": 43,
+        "positive_regrets_quantized_to_zero": 2,
+        "max_observed_regret_bits": 370,
+        "max_observed_average_bits": 53,
+        "native_counters": {
+          "work": 265256,
+          "compact_quantizer_work": 41000,
+          "canonical_quantizer_work": 42120,
+          "compact_input_bits": 370,
+          "canonical_input_bits": 630,
+          "compact_peak_forecast_bits": 421,
+          "canonical_peak_forecast_bits": 421,
+          "rows": 97,
+          "steps": 109,
+          "forecast": 4100608
+        },
+        "output_sha256": "aa6b9b2f5c9b18440f925f01170aebce3188bf5c5e2bc32541153ce82748dbfa",
+        "rng_calls": 0,
+        "attempted_training": false,
+        "quality_gate": null,
+        "scope": "Compact/canonical arithmetic and rational allocation on named transcript rows plus two-step synthetic controls. No History/role lease, native world traversal, stochastic learning or timing improvement."
+      }
+    },
+    {
+      "version": 4,
+      "mode": "optimized",
+      "fresh": {
+        "rows": 97,
+        "images": 109,
+        "named_witness_rows": 85,
+        "synthetic_rows": 12,
+        "negative_cumulative_coordinates": 43,
+        "positive_regrets_quantized_to_zero": 2,
+        "max_observed_regret_bits": 370,
+        "max_observed_average_bits": 53,
+        "native_counters": {
+          "work": 265256,
+          "compact_quantizer_work": 41000,
+          "canonical_quantizer_work": 42120,
+          "compact_input_bits": 370,
+          "canonical_input_bits": 630,
+          "compact_peak_forecast_bits": 421,
+          "canonical_peak_forecast_bits": 421,
+          "rows": 97,
+          "steps": 109,
+          "forecast": 4100608
+        },
+        "output_sha256": "aa6b9b2f5c9b18440f925f01170aebce3188bf5c5e2bc32541153ce82748dbfa",
+        "rng_calls": 0,
+        "attempted_training": false,
+        "quality_gate": null,
+        "scope": "Compact/canonical arithmetic and rational allocation on named transcript rows plus two-step synthetic controls. No History/role lease, native world traversal, stochastic learning or timing improvement."
+      }
+    }
+  ],
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "rng_calls": 0,
+  "attempted_training": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 3093324,
+  "scope": "Saved compact/canonical images and independent rational allocations, all original raw/Git/build/process admission. No native execution, role lease, whole walk, stochastic learning, timing or quality."
+}

@@ -2,7 +2,7 @@
 
 Status: original native component execution passes in both Python modes,
 following the passed [conditional moment gate](opponent-action-moment-gate.md).
-Saved replay and portable CI are separate gates. No shared trainer, History,
+Fresh saved replay passes in both modes; portable CI is a separate gate. No shared trainer, History,
 Catalog, Store or default is changed.
 
 The proven per-transcript role scales are `R/2^365` and `A/2^52`; canonical
@@ -105,3 +105,14 @@ invocations before importing current row mathematics. It then reconstructs
 all input rows and validates every saved R/A/policy/resource coordinate.
 This numerical component still cannot certify visited History roles, bind
 sample tickets, extend the native learning lifetime or establish quality.
+
+At reader source `ac61121`, both saved-only replays pass with identical full
+JSON. All eight original source closures, both builds and 50 original native
+process receipts authenticate before the current reference reconstructs the
+two matrix sizes and every coordinate. Five independent reference/admission
+tests pass, including four changed-packet refusals before numerical imports;
+documentation validation passes. The complete
+[post-run replay index](../benchmarks/results/opponent-role-rows-replay-v1/index.json)
+preserves the paired reports, checks and actual exits. Configured fresh
+Windows/Linux/sanitizer CI also runs the original guards and all eight calls
+per mode from current source; its result must be verified separately.
