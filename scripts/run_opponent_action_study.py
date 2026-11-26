@@ -21,8 +21,8 @@ def git(*args):
     need(result.returncode==0 and len(result.stdout)<=8<<20,'study read-only Git lookup');return result.stdout
 
 
-def closure():
-    pending=list(ROOTS);sources={}
+def closure(roots=ROOTS):
+    pending=list(roots);sources={}
     def module(parts):
         if not parts or parts[0] not in ('pokerlab','scripts','tests'):return
         for depth in range(1,len(parts)+1):
