@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 92129,
+      "expanded_bytes": 220743,
+      "file": "observations.zip",
+      "manifest_sha256": "cec24d358fc3ed8d3391adb2e1a738b6f453d5c0242551050247fc72487fd6a6",
+      "members": 123,
+      "sha256": "af268aa3b4e0f50cea744e0f5484e1fc50f4758553bc1be00e9fa272eaaba070"
+    },
+    {
+      "bytes": 29782,
+      "expanded_bytes": 55978,
+      "file": "builds.zip",
+      "manifest_sha256": "1fb972397b9a78a748163d7b95b147ca519bd5c1f0738baeb0899642b880d5c2",
+      "members": 41,
+      "sha256": "d68c2941deb865b548aee68bdfd544d319e73917b40ceff9c0fc797ca22303e9"
+    },
+    {
+      "bytes": 717921,
+      "expanded_bytes": 1412120,
+      "file": "objects.zip",
+      "manifest_sha256": "c844efd7af9aae0f7b9c4f77762864f2e5cde0392b32451cb2fe55bc2848576a",
+      "members": 45,
+      "sha256": "9ee79c4d17fb0b7d563c1ab1189c92d19eae388db050887fc5833476f665f109"
+    }
+  ],
+  "exact_shared_objects": 44,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "c0386a5b3b632e8b1fa9ac9c61a58efcb2a2ab52c04d5944792d1fb65ca9c9a1",
+  "scope": "Original scoped role facade component evidence. No archived source execution, recursive branch proof, native sampled whole walk, random training, speed or quality.",
+  "stored_expanded_bytes": 1688841,
+  "version": "opponent-role-epoch-package-v1"
+}

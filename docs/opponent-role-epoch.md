@@ -1,7 +1,7 @@
 # Callback-scoped native role lease
 
-Status: source-frozen component implementation; original execution acceptance
-is pending. The [integration contract](opponent-role-integration-contract.md)
+Status: original native component execution passes in both Python modes.
+The [integration contract](opponent-role-integration-contract.md)
 still requires a complete native sampled walk and independent literal-history
 transcript parity before whole-game admission.
 
@@ -58,7 +58,7 @@ inside the original global caps. No limit is increased or lifetime counter
 reset to claim admission. Separate fresh owners are independent synthetic
 guard scenarios, not pieces of one longer learning run.
 
-Designed execution checks cover 44 real refusals, three compile-time scope
+Executed checks cover 44 real refusals, three compile-time scope
 checks, two evolving root updates, average-only and regret-only BB visits,
 and distinct full histories sharing one numeric source. The latter must
 produce three unique cached rows. A deliberate destruction/reconstruction at
@@ -70,7 +70,42 @@ An independent Python Fraction allocator and scalar model check every emitted
 R/A/policy coordinate, exact cached-read/stage/commit ledgers, all resource
 columns and seven altered frames. Complete source capture and original
 process/build/invocation receipts precede both modes' execution. Saved-only
-replay and portable native/sanitizer CI are later acceptance checks.
+replay and portable native/sanitizer CI remain separate acceptance checks.
+
+## Original execution evidence
+
+MSVC 19.44 builds frozen source `629ee780793626b72ac830649eb7f5631287874d`
+successfully. Controller source `7f6eb50` captures 43 complete files before
+imports. Both original native children exit zero; each passes all 44 runtime
+refusals, three compile-time scope checks and seven altered-frame controls.
+The independent reference verifies 114 R/A/policy coordinates and every
+resource/cache/stage/commit column. No checks are skipped or retried.
+
+The two evolving root updates retain signed negatives and move the Q52 image
+from `(1,0,0,0)` to `(5/8,1/8,1/4,0)`. Their seven role encounters use four
+actual frozen reads and three cache hits. The second world's BB regret role
+is absent while its average role remains present. In a separate source-alias
+witness, numeric vertex 17 has distinct ordinals `149250245712` and
+`192199918672`: both remain separate rows, yielding three unique cached rows
+including the root. These are synthetic scoped visits, not full poker walks.
+
+The maximum declared component forecast (204 rows, full1326 holding allowance)
+is 17,686,848 work, 61,312 entries and 10,202,026 payload bits, including the
+existing Store and borrowed Catalog/History charges. Extra facade work is
+2,144,768 and extra History work 19,584. The entire synthetic validation
+program separately reserves 167,571,584 work, 373,994 entries and 40,124,788
+payload bits, inside the original global caps. None is a runtime/RSS measure
+or complete sampled-game admission.
+
+Both complete native frames are byte-identical (SHA256
+`9089a43a7174274c5c07c1b9a2b9594d85a1d86826e92b0cc92a8eebc4667d2f`).
+The [immutable packet](../benchmarks/results/opponent-role-epoch-v1/manifest.json)
+preserves every raw source, frame, policy, mutation input, invocation,
+compiler/build record and original process receipt. The
+[saved-only reader](../scripts/replay_opponent_role_epoch.py) admits every
+original source against Git and checks the build/executable/process link
+before importing current independent arithmetic. It never executes archived
+source or a native binary. Its acceptance must be recorded separately.
 
 These synthetic producers exercise role authorization; they do not establish
 recursive branch completeness or a sampled poker trajectory. Root role marks

@@ -4,7 +4,8 @@ Status: implementation contract after the independently replayed
 [conditional moments](opponent-action-moment-gate.md) and
 [native compact-row arithmetic](opponent-role-row-native.md). The native
 [role lease facade](opponent-role-epoch.md) is implemented as a source-frozen
-component with original execution acceptance pending. The complete sampled
+component with paired-mode original native guards and independent arithmetic
+accepted. Saved replay/portable CI remain separate gates. The complete sampled
 walk below is not implemented or admitted.
 
 ## Architectural choice and evidence

@@ -2,6 +2,17 @@
 
 ## Unified solver foundation in development
 
+The [shared Store role facade](../opponent-role-epoch.md) now passes paired
+original native component execution: 44 refusal guards, three compile-time
+scope checks, seven parser mutations and independent R/A/policy/resource
+verification. A bound chance owner creates the callback-scoped certificate;
+the existing Store remains the only numerical policy owner. Full-history
+cache keys preserve distinct rows sharing a numeric source, while role bits
+separate regrets from averages. Stale/foreign tokens, recycled Store addresses
+and caught or late producer failures cannot authorize publication. The
+maximum component forecast fits unchanged caps. These synthetic phases do
+not establish complete native sampled traversal or saved-policy quality.
+
 The [native compact-row gate](../opponent-role-row-native.md) passes paired
 original execution over 85 authenticated role-witness rows and twelve
 synthetic cases (109 cumulative images). Every exact R/A/policy coordinate
