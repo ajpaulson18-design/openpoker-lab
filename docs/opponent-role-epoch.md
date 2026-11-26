@@ -105,7 +105,17 @@ compiler/build record and original process receipt. The
 [saved-only reader](../scripts/replay_opponent_role_epoch.py) admits every
 original source against Git and checks the build/executable/process link
 before importing current independent arithmetic. It never executes archived
-source or a native binary. Its acceptance must be recorded separately.
+source or a native binary.
+
+At reader source `9dfe901`, fresh normal/optimized saved replays pass with
+identical full reports (SHA256
+`3f996d522eb757a9253db69e4e2d2e59a5dd8fe890ed4a3ed1f636b1bd98402f`).
+Both current references and all seven altered frames are checked after
+authenticating every original 31-file build and both 43-file study snapshots.
+Two additional packet-admission tests pass four refusals across modes before
+numerical imports; documentation validation also passes. Complete logs and
+actual exits are in the [derived replay index](../benchmarks/results/opponent-role-epoch-replay-v1/index.json).
+Configured fresh Windows/Linux/sanitizer CI must be verified separately.
 
 These synthetic producers exercise role authorization; they do not establish
 recursive branch completeness or a sampled poker trajectory. Root role marks

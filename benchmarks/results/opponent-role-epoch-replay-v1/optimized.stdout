@@ -1,0 +1,147 @@
+{
+  "status": "shared-store-role-component-replayed",
+  "authentication": {
+    "build": {
+      "head": "629ee780793626b72ac830649eb7f5631287874d",
+      "files": 31
+    },
+    "normal": {
+      "head": "7f6eb50e9bd062dd52468578a31cf9a1c7e6f247",
+      "files": 43
+    },
+    "optimized": {
+      "head": "7f6eb50e9bd062dd52468578a31cf9a1c7e6f247",
+      "files": 43
+    }
+  },
+  "original_native_processes": 2,
+  "fresh": {
+    "status": "shared-store-role-component-exact",
+    "runtime_refusal_guards": 44,
+    "static_scope_checks": 3,
+    "independently_checked_R_A_policy_coordinates": 114,
+    "good_committed_epochs": 5,
+    "forecasts": {
+      "full": [
+        2144768,
+        19584,
+        17686848,
+        13312,
+        860778,
+        61312,
+        10202026,
+        3057280,
+        4896000,
+        7451712,
+        117504,
+        15522496,
+        48000,
+        9341248
+      ],
+      "small": [
+        37376,
+        576,
+        260400,
+        448,
+        37482,
+        3424,
+        4210618,
+        44896,
+        72000,
+        103824,
+        1728,
+        222448,
+        2976,
+        4173136
+      ]
+    },
+    "probe_forecast": [
+      167571584,
+      373994,
+      40124788,
+      10043392
+    ],
+    "receipts": {
+      "both": [
+        25408,
+        7,
+        4,
+        3,
+        4,
+        14,
+        2,
+        2,
+        7,
+        4,
+        2,
+        2,
+        7
+      ],
+      "average-only": [
+        12608,
+        3,
+        2,
+        1,
+        2,
+        7,
+        1,
+        2,
+        7,
+        2,
+        1,
+        2,
+        7
+      ],
+      "regret-only": [
+        12608,
+        3,
+        2,
+        1,
+        2,
+        7,
+        1,
+        2,
+        7,
+        2,
+        1,
+        2,
+        7
+      ],
+      "shared-source": [
+        17536,
+        4,
+        3,
+        1,
+        3,
+        10,
+        1,
+        3,
+        10,
+        3,
+        1,
+        3,
+        10
+      ]
+    },
+    "alias": [
+      17,
+      149250245712,
+      192199918672,
+      1,
+      3
+    ],
+    "native_rng_calls": 0,
+    "attempted_training": false,
+    "quality_gate": null,
+    "scope": "Synthetic row role/owner/certificate lifetime and canonical shared-Store transitions. No complete native sampled traversal, recursive branch proof, longer learning, timing or quality."
+  },
+  "parser_mutations": 7,
+  "output_sha256": "9089a43a7174274c5c07c1b9a2b9594d85a1d86826e92b0cc92a8eebc4667d2f",
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "rng_calls": 0,
+  "attempted_training": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 1688841,
+  "scope": "Original scoped role facade synthetic states and ledgers independently replayed after complete source/build/process admission. No archived code, recursive branch proof, sampled whole walk, longer lifetime, speed or quality."
+}
