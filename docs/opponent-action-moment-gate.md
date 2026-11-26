@@ -188,7 +188,11 @@ preserves all logs and the first reader refusal: its check incorrectly
 required optional modules in the captured static closure to execute. The
 corrected reader authenticates all 25 mathematical files and separately
 records current modules actually executed. Original numerical source and
-evidence remain unchanged. Windows/Linux CI is a further execution check.
+evidence remain unchanged. Both complete moment-evidence CI jobs now pass at
+`e36c67c` (Windows and Linux), including both replay modes, admission controls
+and artifact uploads. The next [native compact-row gate](opponent-role-row-native.md)
+tests scale homogeneity through the unchanged Quantizer before a genuine
+role lease and whole native traversal are integrated.
 
 No RNG, native training, larger lifetime, improved wall time, unrestricted
 heads-up NLHE readiness or saved-policy quality is established. The next
