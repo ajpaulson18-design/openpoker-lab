@@ -2,6 +2,8 @@
 #include "../../native/opponent_role_row.hpp"
 #include <array>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #ifdef _WIN32
 #include <fcntl.h>
@@ -16,10 +18,10 @@ class Bytes {
     std::vector<unsigned char> data_;
     std::size_t offset_=0;
 public:
-    explicit Bytes(bool input=false) {
+    explicit Bytes(std::istream* input=nullptr) {
         if(input) {
             char c;
-            while(std::cin.get(c)) {
+            while(input->get(c)) {
                 r::require(data_.size()<input_cap,"role row input cap");
                 data_.push_back(static_cast<unsigned char>(c));
             }
@@ -94,13 +96,24 @@ void guards() {
 }
 int main(int argc,char** argv) {
     try {
-        r::require(argc==1 || (argc==2 && std::strcmp(argv[1],"--guards")==0),"role row explicit arguments");
-        if(argc==2){guards();return 0;}
+        const bool guard=argc==2 && std::strcmp(argv[1],"--guards")==0;
+        const bool file=argc==3 && std::strcmp(argv[1],"--request-file")==0;
+        r::require(argc==1 || guard || file,"role row explicit arguments");
+        if(guard){guards();return 0;}
         const auto plan=r::forecast({}); // before request arrays or Quantizer
 #ifdef _WIN32
         r::require(_setmode(_fileno(stdin),_O_BINARY)!=-1 && _setmode(_fileno(stdout),_O_BINARY)!=-1,"role row binary streams");
 #endif
-        Bytes input(true),output;input.expect("OPLRQ001");const auto count=input.word();
+        std::ifstream request_file;
+        if(file) {
+            const std::filesystem::path path(argv[2]);
+            r::require(std::strlen(argv[2])<=1024 && std::filesystem::is_regular_file(path) &&
+                !std::filesystem::is_symlink(path) && std::filesystem::file_size(path)<=input_cap,
+                "role row bounded regular input file");
+            request_file.open(path,std::ios::binary);r::require(bool(request_file),"role row request file open");
+        }
+        Bytes input(file?static_cast<std::istream*>(&request_file):&std::cin),output;
+        input.expect("OPLRQ001");const auto count=input.word();
         r::require(count && count<=r::maximum_rows,"role row request count");
         r::Owner compact;q::Limits canonical_limits;canonical_limits.work=5'000'000;
         canonical_limits.integer_bits=704;canonical_limits.entries=r::entries_cap;canonical_limits.integer_payload_bits=r::payload_cap;

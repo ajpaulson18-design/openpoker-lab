@@ -30,16 +30,23 @@ def run(exe,output):
     identity=authenticate(exe,ROOT,TARGET);rows=request_rows();request=encode(rows)
     protocol={'head':head,'python_optimized':sys.flags.optimize,'native_calls':8,'automatic_retries':0,'rows':len(rows),
         'request_bytes':len(request),'request_sha256':sha256(request).hexdigest(),'request_cap':116000,'output_cap':131072,
+        'transport':'Bounded regular external file; unchanged shared runner stdin cap. Full raw file bytes and command retained.',
         'scope':'Source/build-admitted compact/canonical row arithmetic. No role lease, History walk, RNG, learning, timing or quality.'}
     (output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')
     (output/'row-origins.json').write_text(json.dumps([row['origin'] for row in rows],indent=2)+'\n')
     records=[]
     def call(label,payload,arguments=(),expected=0):
         need(authenticate(exe,ROOT,TARGET)==identity,'role row source/build before child')
-        receipt=run_bounded_child([str(exe),*arguments],payload,output/label,stdout_limit=131072,stderr_limit=65536,timeout=180)
-        records.append({'label':label,'receipt':receipt})
+        path=None
+        if payload:
+            need(len(payload)<=116000,'role row named file input cap');path=output/(label+'-payload.bin')
+            with path.open('xb') as stream:stream.write(payload)
+            need(not arguments,'role row explicit file transport arguments');arguments=('--request-file',str(path))
+        receipt=run_bounded_child([str(exe),*arguments],b'',output/label,stdout_limit=131072,stderr_limit=65536,timeout=180)
+        records.append({'label':label,'payload_sha256':sha256(payload).hexdigest(),'payload_bytes':len(payload),'receipt':receipt})
         need((receipt['status'],receipt['actual_exit_observed'],receipt['returncode'],receipt['failures'])==
-             ('exited',True,expected,[]) and authenticate(exe,ROOT,TARGET)==identity,'role row original child exit/source drift')
+             ('exited',True,expected,[]) and authenticate(exe,ROOT,TARGET)==identity and
+             (path is None or path.read_bytes()==payload),'role row original child exit/source/input drift')
         raw=(output/label/'stdout.bin').read_bytes();err=(output/label/'stderr.bin').read_bytes()
         need((not err if expected==0 else bool(err) and not raw),'role row original streams')
         return raw

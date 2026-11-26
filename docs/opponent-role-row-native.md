@@ -29,6 +29,11 @@ entries and payload limits are reduce-only and smaller than the old general
 Quantizer limits. The whole component envelope includes 13,312 entries and
 882,352 payload bits. Fixed probe input/output bounds are 116,000/131,072
 bytes; this is not whole-game admission or measured memory.
+The shared process runner's 1,025-byte pipe-input limit remains unchanged:
+the probe reads an explicitly named regular external file under its existing
+116,000-byte input cap, with every raw payload and before/after identity saved.
+The first attempt's guards pass, then its oversized pipe request refuses
+before the matrix launches. Both original mode attempts remain preserved.
 
 The probe must compare compact cumulative R/A and policy units with a second
 unchanged native Quantizer using the canonical carriers. A separate Python
