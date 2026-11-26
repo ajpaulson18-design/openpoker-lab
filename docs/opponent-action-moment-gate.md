@@ -2,8 +2,9 @@
 
 Status: original conditional mathematical experiment passed in both Python
 modes at `a8df89a33eda4399aa420d60f9fde3b10947b746`. Its immutable packet is
-preserved; saved replay acceptance and native implementation remain separate
-gates. This is a conditional operator result, not a quality certificate.
+preserved and fresh saved-only replay passes in both modes. Native
+implementation remains a separate gate. This is a conditional operator
+result, not a quality certificate.
 
 The [structural worksheet](opponent-action-sampling-study.md) justifies this
 test: a two-target proposal could visit far fewer branches than the current
@@ -175,6 +176,19 @@ separate stdlib decoder checks physical headers, complete sorted row/slot
 coverage, coordinate variances, Q52 centering, average ratios, compact
 divisibility and every saved proposal factor. Fresh current mathematics must
 then reconstruct all bytes; archived source is never executed.
+
+At reader source `70e5771`, both saved replays and all eight fresh independent
+controls pass. Their complete JSON outputs are byte-identical (SHA256
+`090ae016277646ca1ea2acf71b5b31b4e641e328394cb23cf25735ae84958cc8`).
+Three additional admission tests cover four pre-numerical packet refusals
+across both modes and inconsistent raw units, second moments, proposal factors
+and truncated/trailing frames. Documentation validation passes. The
+[post-run index](../benchmarks/results/opponent-action-moments-replay-v1/index.json)
+preserves all logs and the first reader refusal: its check incorrectly
+required optional modules in the captured static closure to execute. The
+corrected reader authenticates all 25 mathematical files and separately
+records current modules actually executed. Original numerical source and
+evidence remain unchanged. Windows/Linux CI is a further execution check.
 
 No RNG, native training, larger lifetime, improved wall time, unrestricted
 heads-up NLHE readiness or saved-policy quality is established. The next

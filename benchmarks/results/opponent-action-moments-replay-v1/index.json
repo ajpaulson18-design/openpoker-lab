@@ -1,0 +1,78 @@
+{
+  "kind": "post-run derived evidence index; not an original execution receipt",
+  "reader_source_head": "70e5771",
+  "original_source_head": "a8df89a33eda4399aa420d60f9fde3b10947b746",
+  "actual_exits": {
+    "normal": 0,
+    "optimized": 0,
+    "admission": 0,
+    "docs": 0
+  },
+  "first_refusal": "Static captured closure incorrectly required all optional modules to execute. Raw replay and independent checks completed before import-identity refusal. No numeric source or original packet changed.",
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "attempted_training": false,
+  "quality_gate": null,
+  "files": {
+    "admission.exit": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "admission.stderr": {
+      "bytes": 670,
+      "sha256": "243f6805846f206e2bbc6eb01bfb5fd7d6fa32a9e138bc86aae5fdf565313e60"
+    },
+    "admission.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs.exit": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "docs.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs.stdout": {
+      "bytes": 93,
+      "sha256": "c3d361c264193b9d98276489ff7a45d5e3ddcbbc0b90bb9ffcd1a6f34406986f"
+    },
+    "first-refusal-normal.exit": {
+      "bytes": 3,
+      "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04"
+    },
+    "first-refusal-normal.json": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "first-refusal-normal.stderr": {
+      "bytes": 1040,
+      "sha256": "ef3ae1084f354930cd985536ac9a0283969283216906e719b2e467012bad2b66"
+    },
+    "normal.exit": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "normal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "normal.stdout": {
+      "bytes": 48931,
+      "sha256": "090ae016277646ca1ea2acf71b5b31b4e641e328394cb23cf25735ae84958cc8"
+    },
+    "optimized.exit": {
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    "optimized.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "optimized.stdout": {
+      "bytes": 48931,
+      "sha256": "090ae016277646ca1ea2acf71b5b31b4e641e328394cb23cf25735ae84958cc8"
+    }
+  }
+}

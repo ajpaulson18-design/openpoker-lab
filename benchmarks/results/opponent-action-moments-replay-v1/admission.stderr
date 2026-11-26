@@ -1,0 +1,8 @@
+test_changed_manifest_precedes_numerical_imports (tests.test_opponent_action_moments_admission.MomentPacketAdmissionTests.test_changed_manifest_precedes_numerical_imports) ... ok
+test_changed_objects_precedes_numerical_imports (tests.test_opponent_action_moments_admission.MomentPacketAdmissionTests.test_changed_objects_precedes_numerical_imports) ... ok
+test_raw_units_second_moments_and_proposal_factors_are_checked (tests.test_opponent_action_moments_admission.MomentPacketAdmissionTests.test_raw_units_second_moments_and_proposal_factors_are_checked) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 10.165s
+
+OK
