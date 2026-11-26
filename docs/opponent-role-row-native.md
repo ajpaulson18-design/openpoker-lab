@@ -116,3 +116,14 @@ documentation validation passes. The complete
 preserves the paired reports, checks and actual exits. Configured fresh
 Windows/Linux/sanitizer CI also runs the original guards and all eight calls
 per mode from current source; its result must be verified separately.
+
+At `07e46bb`, both complete fresh-source Linux and Windows row jobs pass
+(run `45876102533`, jobs `140103450781` and `140103451285`), including saved
+admission/replay, current native compilation, all guards/negative requests in
+both modes and artifact publication. The sanitizer result is not included in
+this checkpoint; queueing a job is not an execution result.
+
+The next [native role integration contract](opponent-role-integration-contract.md)
+keeps the existing Store as the single policy owner, retains canonical storage
+initially, and separates role/ticket correctness from later compact persistence
+and cost-to-quality acceptance.
