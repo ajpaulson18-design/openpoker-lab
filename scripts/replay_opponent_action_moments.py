@@ -100,13 +100,19 @@ def replay(packet=PACKET):
                      side==files[f'study/case-{index}-normal/witness.bin'],'moment fresh complete raw/second/witness replay')
             result=unittest.TextTestRunner(stream=StringIO()).run(unittest.defaultTestLoader.loadTestsFromModule(controls))
             need(result.testsRun==8 and result.wasSuccessful() and not result.skipped,'moment fresh eight independent controls')
+            executed=[]
             for name in math_before:
                 module=name[:-3].replace('/','.');module=module[:-9] if module.endswith('.__init__') else module
                 imported=sys.modules.get(module)
-                need(imported is not None and Path(imported.__file__).resolve()==(ROOT/name).resolve(),'moment current import identity')
+                if imported is not None:
+                    need(Path(imported.__file__).resolve()==(ROOT/name).resolve(),'moment current import identity: '+name)
+                    executed.append(name)
+            need({'tests/test_opponent_action_moments.py','tests/virtual_opponent_action_moments.py',
+                  'tests/virtual_opponent_action_worlds.py'}<=set(executed),'moment required current references executed')
             need(bootstrap()==before and current_math()==math_before and load()[2]==pins,'moment final evidence/source drift')
             return {'status':'conditional-opponent-action-moments-replayed','original_source_head':ORIGIN,
-                'original_source_files':28,'current_mathematical_files':25,'original_python_children':8,'fresh_tests':8,
+                'original_source_files':28,'current_mathematical_files':25,'executed_current_files':sorted(executed),
+                'original_python_children':8,'fresh_tests':8,
                 'layouts':layouts,'cases':reports,'native_calls':0,'rng_calls':0,'archived_source_executed':False,
                 'attempted_training':False,'quality_gate':None,'stored_expanded_bytes':manifest['stored_expanded_bytes'],
                 'scope':'Exact conditional first/second R/A moments and deterministic transcript factors for three named full52 worlds. No full1326 moment-law admission, native sampler, timing, convergence or quality.'}

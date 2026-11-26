@@ -38,7 +38,7 @@ class MomentPacketAdmissionTests(unittest.TestCase):
         report=helper.decode(files['study/case-0-normal/summary.json']);self.assertEqual(parse(wire,side,report)['tables'],4)
         # First table: header, two root moment pairs, first row descriptor.
         first_slot=176+88+2*(88+168)+40
-        changed=bytearray(wire);struct.pack_into('<Q',changed,first_slot,Q:=1<<52)
+        changed=bytearray(wire);struct.pack_into('<Q',changed,first_slot,1<<52)
         with self.assertRaisesRegex(ValueError,'grid/center/average ratio'):parse(bytes(changed),side,report)
         # A positive raw expected average cannot have zero marginal second moment.
         changed=bytearray(wire);a2=first_slot+8+88+168+48;changed[a2:a2+96]=b'\0'*96
