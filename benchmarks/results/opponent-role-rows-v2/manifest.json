@@ -1,0 +1,48 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 84494,
+      "expanded_bytes": 136005,
+      "file": "first-refusal.zip",
+      "manifest_sha256": "336abaa9b3eda57555d983832423cef1ba45e40b1f9b9ab8a8758a37c177c1e7",
+      "members": 157,
+      "sha256": "c7b5c11fea6d73593e1706e40cf407a6f8993ba7d7650d3f0f50a58ab3bddba2"
+    },
+    {
+      "bytes": 370216,
+      "expanded_bytes": 1486868,
+      "file": "observations.zip",
+      "manifest_sha256": "4374d5d741fc70163610f62b208057027e8b47914e055060a5fd9350d3b26511",
+      "members": 695,
+      "sha256": "1c330840cc94095bc9dc752b4c6b47548908ac5b25f8cc416343550e025f66f4"
+    },
+    {
+      "bytes": 28781,
+      "expanded_bytes": 57921,
+      "file": "builds.zip",
+      "manifest_sha256": "ca40ef2af6feb66c9e44e48b93a50e051d07e8f1e0e7559168da287fc8275aa4",
+      "members": 42,
+      "sha256": "88348222ffb2a53ffd745f59d69aa01d6db106150ecd1fdfe773bef7e8c041ba"
+    },
+    {
+      "bytes": 764657,
+      "expanded_bytes": 1412530,
+      "file": "objects.zip",
+      "manifest_sha256": "08b2b18f80eecf9b6b34b1bfd96b05aa5a94f3feface370b674ae89862e81950",
+      "members": 77,
+      "sha256": "12cdfd37c3373d3811c26e147517f3a8a28fcea93a1464cea5a635bbe95158cc"
+    }
+  ],
+  "exact_shared_objects": 76,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "3d3a5105200f51817d37a4dda8f41952c37f6d589a38cb6f96837f888e25f8ac",
+  "scope": "Original compact/canonical row arithmetic evidence. No code execution during packaging, History role authority, native whole walk, stochastic learning, timing or quality.",
+  "stored_expanded_bytes": 3093324,
+  "version": "opponent-role-rows-package-v1"
+}

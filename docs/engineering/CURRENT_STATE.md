@@ -2,6 +2,16 @@
 
 ## Unified solver foundation in development
 
+The [native compact-row gate](../opponent-role-row-native.md) passes paired
+original execution over 85 authenticated role-witness rows and twelve
+synthetic cases (109 cumulative images). Every exact R/A/policy coordinate
+agrees with the canonical native comparator and independent rational
+allocation. No shared solver owner/default changes. Compact input widths
+decrease, but both Quantizers still reach the same 421-bit division forecast
+after exact common-power cancellation. This supports compact representation,
+not a division speedup. All first refusals and raw evidence are preserved;
+History role ownership, native traversal integration and quality remain open.
+
 The [conditional moment gate](../opponent-action-moment-gate.md) now passes
 all raw R/A first moments against the unchanged four-street literal authority
 on three named full52 worlds, two frozen profiles and two proposals. All

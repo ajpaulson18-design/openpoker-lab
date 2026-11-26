@@ -1,8 +1,9 @@
 # Compact policy-role row arithmetic gate
 
-Status: source design for an explicit native component, following the passed
-[conditional moment gate](opponent-action-moment-gate.md). Execution acceptance
-is separate. No shared trainer, History, Catalog, Store or default is changed.
+Status: original native component execution passes in both Python modes,
+following the passed [conditional moment gate](opponent-action-moment-gate.md).
+Saved replay and portable CI are separate gates. No shared trainer, History,
+Catalog, Store or default is changed.
 
 The proven per-transcript role scales are `R/2^365` and `A/2^52`; canonical
 expected/full-walk scales remain `2^625` and `2^364`. Multiplying every signed
@@ -62,3 +63,45 @@ the unchanged compiler/dependency engine and captures every introduced source
 against committed Git before compilation. The [study controller](../scripts/run_opponent_role_rows.py)
 captures its complete source before mathematical imports and all eight native
 calls. No archived source or RNG is used.
+
+## Original executed result
+
+MSVC 19.44 builds the component successfully from frozen source `61305c2`.
+The initial 96-row study and its later wide-case extension pass in both modes.
+The final invocation-recording controller at `2c18650` captures 68 files before
+imports. Its eight calls per mode pass all 20 native guards, the 97-row matrix,
+six real input/argument refusals and an altered-result decoder control.
+Three independent Python allocation/input tests also pass.
+
+The expanded matrix contains 109 cumulative images: every R/A/policy coordinate
+matches the canonical native comparator and independent Fraction allocator.
+Forty-three emitted regret coordinates remain negative and two positive
+regrets quantize to zero. Maximum observed cumulative R/A widths are 370/53
+bits, below the conservative 371/54 bounds. All complete numeric frames agree
+across modes and the final two controller versions (SHA256
+`aa6b9b2f5c9b18440f925f01170aebce3188bf5c5e2bc32541153ce82748dbfa`).
+
+Candidate modeled work is 265,256 under the frozen 4,100,608 component forecast.
+Compact/canonical Quantizer input widths are 370/630, but both peak division
+forecasts are 421 bits after common-power cancellation. Their modeled
+Quantizer work is 41,000/42,120; the difference is bounded pre-division scans,
+not a measured reduction in division cost or elapsed time. Canonical validation
+uses its separate unchanged five-million allowance; the candidate forecast is
+not a combined whole-game budget.
+
+The [complete immutable packet](../benchmarks/results/opponent-role-rows-v2/manifest.json)
+preserves 50 original native process receipts: both pipe refusals, the first
+96-row pass and both expanded passes, with all inputs, raw policies, source
+and build records. The first [34-process packaging](../benchmarks/results/opponent-role-rows-v1/manifest.json)
+is also preserved. The newest 16 calls have separate raw argv/payload/executable
+invocation records. Earlier receipts lack separate argv records: their captured
+controller and authenticated build reconstruct the command. This is a
+provenance limitation, not a fabricated original invocation receipt. Neither
+packet contains executable binaries or runs archived source.
+
+The [saved-only reader](../scripts/replay_opponent_role_rows.py) must authenticate
+every original source closure and build, process streams/exits and latest
+invocations before importing current row mathematics. It then reconstructs
+all input rows and validates every saved R/A/policy/resource coordinate.
+This numerical component still cannot certify visited History roles, bind
+sample tickets, extend the native learning lifetime or establish quality.

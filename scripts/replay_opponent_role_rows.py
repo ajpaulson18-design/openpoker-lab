@@ -8,9 +8,9 @@ from tempfile import TemporaryDirectory
 
 ROOT=Path(__file__).resolve().parents[1]
 PACKET=ROOT/'benchmarks/results/opponent-role-rows-v2'
-PIN=(0,'PENDING')
+PIN=(1780,'d9ae359a6c04eef60e5c1dbfcb22368ea0e07e29244856f9ab83f8442fab2945')
 ORIGINS={1:'7025adf1fe6543f83fa5ae5d4b3b77c09bbc5003',2:'61305c2d66f799f88fdfd77966983f4cd10340bb',
-         3:'37b94a602b0497a033362e4a46bc7ebd84cda791',4:'PENDING'}
+         3:'37b94a602b0497a033362e4a46bc7ebd84cda791',4:'2c18650f9902c027fd25a95be94d221129ceeb25'}
 MATH=('tests/opponent_role_row_reference.py','scripts/opponent_action_moment_frame.py')
 
 
@@ -28,7 +28,7 @@ def replay(packet=PACKET):
         return prior,result
     before=bootstrap();need(not any(n=='tests' or n.startswith(('tests.','pokerlab')) for n in sys.modules),'role fresh reference process')
     def load():return archive.load(packet,helper,pin=PIN,version='opponent-role-rows',
-        labels=('first-refusal','observations','builds','objects'),packager='package_opponent_role_rows1.py.txt')
+        labels=('first-refusal','observations','builds','objects'),packager='package_opponent_role_rows2.py.txt')
     manifest,loaded,pins=load();objects=helper.GitObjects();identities={}
     def sources(files,prefix,origin,count=None):
         identity=helper.decode(files[prefix+'/source-identity.json']);hashes=identity['raw_sha256']
