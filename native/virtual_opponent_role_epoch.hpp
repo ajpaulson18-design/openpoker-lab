@@ -229,6 +229,12 @@ public:
             }catch(...){owner_.failed_=true;throw;}
         }
         [[nodiscard]] std::size_t current_target() const {check();return target_;}
+        void require_world(const Certificate& certificate) const {
+            try {
+                check();certificate.require_active();
+                require(&certificate==&certificate_,"role epoch foreign active world certificate");
+            }catch(...){owner_.failed_=true;throw;}
+        }
     };
 
     template<class Callback> void apply_world(std::uint64_t private_ticket,std::uint64_t board_rank,Callback&& callback) {
