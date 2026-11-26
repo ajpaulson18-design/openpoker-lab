@@ -38,10 +38,14 @@ before the matrix launches. Both original mode attempts remain preserved.
 The probe must compare compact cumulative R/A and policy units with a second
 unchanged native Quantizer using the canonical carriers. A separate Python
 Fraction allocator then checks every emitted coordinate. Inputs retain all
-85 role rows from the three-world/two-profile supported witnesses and eleven
+85 role rows from the three-world/two-profile supported witnesses and twelve
 two-step synthetic controls, including zero policy, tiny signed regrets,
 negative cumulative coordinates and a zero update that preserves a frozen
-nonuniform policy. Twenty native failure guards and six negative child
+nonuniform policy. A coprime full-width case reaches the 371-bit cumulative
+bound without a common dyadic factor, including tiny positive regrets rounded
+to zero. The first successful 96-row study is preserved before this additional
+coverage; it does not exercise the maximum division width. Twenty native
+failure guards and six negative child
 requests preserve actual exits and private-output behavior. Both Python
 modes must emit identical numeric frames.
 

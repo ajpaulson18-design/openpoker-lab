@@ -62,6 +62,12 @@ def synthetic_rows():
     # A zero raw update preserves an explicitly frozen nonuniform image.
     result.append({'origin':{'synthetic':'zero-update'},'initial':(1,Q-1),
                    'steps':(((0,0),(0,0)),((0,0),(1,Q-1)))})
+    # No large common dyadic factor: exercise the full compact/canonical
+    # division widths, positive regrets that round to zero, and 371-bit sums.
+    upper=16*D;first=(0,upper-1,upper-3,1);initial=(Q,0,0,0)
+    next_units=allocate(first);need(next_units==(0,Q//2,Q//2,0),'row adversarial tie image')
+    result.append({'origin':{'synthetic':'full-width-coprime'},'initial':initial,
+        'steps':((first,initial),((0,-(upper-5),upper-5,-1),next_units))})
     return result
 
 
