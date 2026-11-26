@@ -1,7 +1,9 @@
 # Conditional opponent-action moments and role contracts
 
-Status: source-frozen experiment design. Mathematical execution, raw frame
-acceptance and native implementation remain separate gates.
+Status: original conditional mathematical experiment passed in both Python
+modes at `a8df89a33eda4399aa420d60f9fde3b10947b746`. Its immutable packet is
+preserved; saved replay acceptance and native implementation remain separate
+gates. This is a conditional operator result, not a quality certificate.
 
 The [structural worksheet](opponent-action-sampling-study.md) justifies this
 test: a two-target proposal could visit far fewer branches than the current
@@ -129,8 +131,53 @@ Separate bounded binary witnesses preserve all selected roles and proposal
 factors. Both Python modes must agree byte for byte, with complete committed
 source capture, original child exits and raw-byte drift checks.
 
-No archived code, RNG, native training, larger lifetime, improved wall time,
-unrestricted heads-up NLHE readiness or saved-policy quality is established
-by this planned experiment. A successful gate would justify the next explicit
-native contract and resource forecast, followed by measured cost to the same
-independently verified quality.
+## Executed original result
+
+All eight original Python children exited zero: eight independent tests and
+three case emitters in each mode. The complete source capture contains 28
+files. Every saved frame, witness and summary agrees byte for byte between
+normal and optimized modes. Across three physical worlds, two profiles and
+two schemes, all 24,936 first-moment R/A coordinates equal the unchanged
+literal authority. The same number of marginal second moments is preserved.
+The small pure-map enumerator separately checks the analytic recurrence;
+three-world second moments alone are not an independent enumeration proof.
+
+| Named world | Sign | Moment work | Cumulative bit cells | Witness bytes |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | tie | 219,552 | 104,148,092 | 30,320 |
+| 1 | SB loss | 219,610 | 104,552,426 | 30,704 |
+| 2 | SB win | 219,529 | 104,473,695 | 30,320 |
+
+Each case records 450,002 logical moment entries, maximum integer forecast
+2,688 bits, and a 1,767,712-byte full table frame. The complete three-case
+source/math/I/O reservation is 477,785,568 work, 3,183,731 entries and
+10,498,244,736 bit cells, inside the original global ceilings. The rejected
+allowance increase was unnecessary: actual moment bit-cell use is below the
+original one-billion allowance in every case. These are modeled counters,
+not measured memory or wall time.
+
+On the visible-hash profile, the role candidate's conditional sum of regret
+variances divided by the uniform candidate's is approximately 0.6642, 0.6655
+and 0.5586. Average variance ratios are 0.2061, 0.2717 and 0.2816. Expected
+role traversal visits are about 43.67, 41.96 and 41.11. These specific fixed
+profiles support pursuing the role contract; they do not prove universally
+lower variance or lower cost to equal learning quality. The uniform-profile
+average variance ratio is about 0.2675. Policy-dependent encounter counts
+must not replace the prior uniform proposal's million-world worksheet.
+
+The original raw tables, proposal-factor witnesses, all 28 captured sources,
+receipts, and original packaging source are in
+[`opponent-action-moments-v1`](../benchmarks/results/opponent-action-moments-v1/manifest.json).
+The maintained [saved reader](../scripts/replay_opponent_action_moments.py)
+authenticates its literal packet pin, Git objects, every original raw source
+and all eight process exits before importing current numerical code. A
+separate stdlib decoder checks physical headers, complete sorted row/slot
+coverage, coordinate variances, Q52 centering, average ratios, compact
+divisibility and every saved proposal factor. Fresh current mathematics must
+then reconstruct all bytes; archived source is never executed.
+
+No RNG, native training, larger lifetime, improved wall time, unrestricted
+heads-up NLHE readiness or saved-policy quality is established. The next
+justified milestone is an explicit native policy-role contract and complete
+resource forecast, then independent raw transcript parity and measured cost
+to the same independently verified quality.

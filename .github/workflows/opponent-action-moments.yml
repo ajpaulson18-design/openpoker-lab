@@ -1,0 +1,31 @@
+name: Conditional opponent action moments
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  moment-evidence:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Admit all sources and replay exact moments and transcript factors
+        shell: bash
+        run: |
+          python -B -m scripts.replay_opponent_action_moments > "$RUNNER_TEMP/opponent-moments-normal.json"
+          python -O -B -m scripts.replay_opponent_action_moments > "$RUNNER_TEMP/opponent-moments-optimized.json"
+          python -B -m unittest tests.test_opponent_action_moments_admission -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: opponent-moment-evidence-${{ matrix.os }}
+          path: ${{ runner.temp }}/opponent-moments-*.json
+          if-no-files-found: warn

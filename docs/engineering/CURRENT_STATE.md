@@ -2,15 +2,27 @@
 
 ## Unified solver foundation in development
 
+The [conditional moment gate](../opponent-action-moment-gate.md) now passes
+all raw R/A first moments against the unchanged four-street literal authority
+on three named full52 worlds, two frozen profiles and two proposals. All
+24,936 first-moment coordinates, marginal second moments and supported
+transcript factors are preserved in paired-mode source-frozen evidence.
+Independent small pure-map enumeration validates the analytic recurrence.
+Policy-role averaging repairs the zero-opponent-prefix bias and supports
+compact per-transcript denominators `2^365`/`2^52`, without forming a global
+proposal product. Original resource ceilings are unchanged. This justifies
+an explicit native role/read contract next; it is not full1326 moment-law
+admission, a native sampler, faster learning, longer lifetime or solved quality.
+
 The [opponent-action structural study](../opponent-action-sampling-study.md)
 now passes independent normal/optimized controls on the same four-street
 numeric template. A fixed uniform menu proposal projects 52.6156 expected
 visits (367 componentwise worst bound) for two target traversals, against the
 current full walk's 1,105. At one million uniform worlds, projected seen rows
 remain about 20.4 million versus roughly 427 million for full walks. This
-warrants an all-coordinate estimator/variance proof, not native adoption.
-No sampled R/A operator, timing, longer lifetime or saved-policy quality is
-admitted. Policy-proportional role-split averaging is a separate candidate;
+warrants the conditional estimator/variance gate above, not native adoption.
+No native sampled R/A operator, timing, longer lifetime or saved-policy quality
+is admitted. Policy-proportional role-split averaging is a separate candidate;
 its law must not borrow this uniform proposal's encounter figures.
 
 The [own-thread CPU diagnostic](../joint-thread-cycles.md) now passes exact
