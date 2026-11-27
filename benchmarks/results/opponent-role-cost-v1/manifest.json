@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 417208,
+      "expanded_bytes": 625872,
+      "file": "observations.zip",
+      "manifest_sha256": "aad83b132cc646bb216e48d7b7c708cebd8393193ec26fe7c82abde12ff8279f",
+      "members": 993,
+      "sha256": "807dd9fbfeabdc80b73b803cbf63e942766aab69aa1ae06a97aa7ededea482d8"
+    },
+    {
+      "bytes": 13457,
+      "expanded_bytes": 34203,
+      "file": "builds.zip",
+      "manifest_sha256": "8007a155b6979b50543da06f363c6428d272f0b9fd47b8b8d097989c13252c83",
+      "members": 10,
+      "sha256": "5b479c13ba0e12cb8b85c487dd57b8a38b02ffbdd3648d2e0e192e97be2e3f1b"
+    },
+    {
+      "bytes": 1048865,
+      "expanded_bytes": 3576030,
+      "file": "objects.zip",
+      "manifest_sha256": "0342975f2673d5a7497fcc75837d075edd22173f1ec6ca047936d956a2e63220",
+      "members": 101,
+      "sha256": "2a2a5bc0ad02e66cab99b94d7d9eb19e184e9b834b44a56f7d75e3b833fcaf78"
+    }
+  ],
+  "exact_shared_objects": 100,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "25d8b9db68040676f0f383e9a004b1f9366deb870eeefc3bde8e3beb18c533b8",
+  "scope": "Raw source-frozen different-estimator T2 complete-call costs, all per-estimator policies and first refusals; no stable/equal-quality speed claim.",
+  "stored_expanded_bytes": 4236105,
+  "version": "opponent-role-cost-package-v1"
+}
