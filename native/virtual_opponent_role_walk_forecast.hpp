@@ -29,7 +29,7 @@ struct Forecast {
     Raw raw{};
     std::uint64_t history=0,chance=0,component=0,parent=0,work=0,entries=0,payload=0,output=output_upper;
 };
-inline constexpr std::uint64_t expansion_slot_work=64+t::copy_cost(631)+t::copy_cost(366);
+inline const std::uint64_t expansion_slot_work=64+t::copy_cost(631)+t::copy_cost(366);
 inline Forecast domain(r::PersistentCarrier persistent=r::PersistentCarrier::canonical,bool observe_storage=false) {
     t::require((persistent==r::PersistentCarrier::canonical || persistent==r::PersistentCarrier::compact) &&
         (persistent==r::PersistentCarrier::canonical || observe_storage),"compact role requires explicit storage observation contract");
