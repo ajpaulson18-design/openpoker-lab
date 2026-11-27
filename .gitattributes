@@ -289,3 +289,5 @@ benchmarks/results/opponent-role-walk-v1/** -text
 /benchmarks/results/opponent-role-walk-replay-v1/** -text
 /benchmarks/results/opponent-role-cost-v1/** -text
 /benchmarks/results/opponent-role-cost-replay-v1/** -text
+/benchmarks/results/opponent-role-storage-audit-v1/** -text
+/benchmarks/results/opponent-role-storage-audit-expected-v1/** -text

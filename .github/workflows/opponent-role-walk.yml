@@ -37,6 +37,22 @@ jobs:
           python -B -m scripts.replay_opponent_role_cost > "$RUNNER_TEMP/role-walk-cost-normal.json"
           python -O -B -m scripts.replay_opponent_role_cost > "$RUNNER_TEMP/role-walk-cost-optimized.json"
           python -B -m unittest tests.test_opponent_role_cost_packet_admission -v
+      - name: Reproduce lossless persistent-carrier audit against frozen outcomes
+        shell: bash
+        run: |
+          python -B -m scripts.audit_opponent_role_storage ../role-storage-normal > "$RUNNER_TEMP/role-walk-storage-normal.json"
+          python -O -B -m scripts.audit_opponent_role_storage ../role-storage-optimized > "$RUNNER_TEMP/role-walk-storage-optimized.json"
+          python -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path.cwd().parent
+          expected=json.loads(Path('benchmarks/results/opponent-role-storage-audit-expected-v1/expected.json').read_bytes())
+          expected.pop('source_head')
+          for mode in ('normal','optimized'):
+              fresh=json.loads((root/('role-storage-'+mode)/'result.json').read_bytes())
+              fresh.pop('source_head')
+              if fresh!=expected:raise ValueError('lossless role-storage audit differs: '+mode)
+          PY
       - name: Build explicit whole walk and independent scalar controls
         shell: bash
         run: |
@@ -69,6 +85,8 @@ jobs:
           root=Path.cwd().parent
           for path in root.glob('role-walk-*-profile-*'):
               if path.is_dir():shutil.copytree(path,out/path.name)
+          for name in ('role-storage-normal','role-storage-optimized'):
+              if (root/name).is_dir():shutil.copytree(root/name,out/name)
           for name in ('role-walk-build','role-walk-controls-build'):
               source=temp/name
               if source.is_dir():

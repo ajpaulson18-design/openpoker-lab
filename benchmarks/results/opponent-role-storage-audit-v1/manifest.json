@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 146272,
+      "expanded_bytes": 614222,
+      "file": "observations.zip",
+      "manifest_sha256": "e3aabc42b1ce717f4beda3ceb6a6ce76b85d367c5446cf18002bbcb701a1c099",
+      "members": 175,
+      "sha256": "8f1effd1d21e1d90e4a35f423ad463c23688574e3851d9de107d361a3e5cfc5b"
+    },
+    {
+      "bytes": 4595,
+      "expanded_bytes": 9316,
+      "file": "builds.zip",
+      "manifest_sha256": "4f169d33b73d4d579f8df356cc8c0a06c47a6f9064f4ae5d161c61161645c7f5",
+      "members": 4,
+      "sha256": "fefe5725ff42163e998dad623c6aa8b7e16b377c48f8ea588f8a31ab1aa04926"
+    },
+    {
+      "bytes": 229722,
+      "expanded_bytes": 722189,
+      "file": "objects.zip",
+      "manifest_sha256": "d65ed9f152b002a992379a507ffdd26023d0cd25a19fa3f8500acd4213fbe93a",
+      "members": 58,
+      "sha256": "e42c4ef92b0ccc2d7398777bdbb3fb629eddff9054dff3be904bb533065644ca"
+    }
+  ],
+  "exact_shared_objects": 57,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "cd7ef93a8f2add275ba72f59c90e934f0c5b6f585557b2bb223a30f7105bb8c9",
+  "scope": "Original read-only lossless prospective storage audit, complete raw/Git source maps and compact images. Compact Store not implemented; T2 and quality gates unchanged.",
+  "stored_expanded_bytes": 1345727,
+  "version": "opponent-role-storage-package-v1"
+}

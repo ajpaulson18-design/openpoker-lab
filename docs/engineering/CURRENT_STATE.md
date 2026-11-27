@@ -34,6 +34,17 @@ speedup is admitted. Paired saved-only cost replay passes with identical
 reports and no native/archived-code calls. Next resolve persistent-state
 scaling and random-stream ownership before longer learning or quality claims.
 
+The [persistent-role representation audit](../opponent-role-persistent-storage.md)
+now independently replays the native states and checks exact lossless carrier
+conversion over 24 snapshots/2,452 R/A coordinates in both Python modes.
+Removing the canonical 260/312 padding bits reduces summed integer magnitude
+cells 680,510 to 243,294 and the same-descriptor logical row model 1,701,054
+to 1,263,838 (25.70%). Every signed coordinate roundtrips exactly and policies
+stay unchanged. These are finite-trace logical models, not native memory/RSS
+or speed. The compact persistent Store is not yet implemented; next integrate
+the explicit representation inside the same tested owner under unchanged
+T2/global caps, then measure native layout and complete calls separately.
+
 The [shared Store role facade](../opponent-role-epoch.md) now passes paired
 original native component execution: 44 refusal guards, three compile-time
 scope checks, seven parser mutations and independent R/A/policy/resource
