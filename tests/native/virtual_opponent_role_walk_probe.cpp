@@ -14,6 +14,17 @@ namespace r=w::r;
 namespace p=t::prepared;
 using Integer=t::Integer;
 namespace {
+#ifdef OPENPOKER_OPPONENT_ROLE_STORAGE
+inline constexpr bool observe_storage=true;
+#else
+inline constexpr bool observe_storage=false;
+#endif
+#ifdef OPENPOKER_OPPONENT_ROLE_COMPACT
+static_assert(observe_storage,"compact storage target must declare its observation protocol");
+inline constexpr auto persistent=r::PersistentCarrier::compact;
+#else
+inline constexpr auto persistent=r::PersistentCarrier::canonical;
+#endif
 class Input final {
     std::vector<unsigned char> raw_;
     std::size_t at_=0;
@@ -77,13 +88,26 @@ void raw_world(Output& out,unsigned epoch,const r::Certificate& sample,const w::
     out.word(work);out.word(walk.rows().size());out.word(walk.slots());
 }
 void snapshot(Output& out,unsigned epoch,r::Store& owner,r::c::Catalog& catalog,r::h::History& history,
-              p::PreparedPublicChance& chance) {
+              p::PreparedPublicChance& chance,std::uint64_t& parent,std::uint64_t& conversion,std::uint64_t& observation) {
     out.magic("OPLRSN01");out.word(epoch);out.word(owner.storage_receipt().current_rows);out.word(owner.storage_receipt().current_slots);
-    std::size_t rows=0,slots=0;
+    std::size_t rows=0,slots=0;std::uint64_t used=0,capacity=0;
+    if constexpr(observe_storage){parent+=512;observation+=512;}
+    if constexpr(persistent==r::PersistentCarrier::compact){parent+=512;conversion+=512;}
     owner.visit_committed([&](auto id,std::span<const Integer> rr,std::span<const Integer> aa,std::span<const std::uint64_t> units) {
         const auto info=catalog.view(id);++rows;slots+=units.size();
         words(out,std::array<std::uint64_t,5>{info.actor,info.holding_index,info.public_ordinal,info.source_menu_ref,units.size()});
-        for(std::size_t a=0;a<units.size();++a){out.integer(rr[a],11,true);out.integer(aa[a],6,false);out.word(units[a]);}
+        for(std::size_t a=0;a<units.size();++a) {
+            if constexpr(observe_storage) {
+                parent+=64;observation+=64;
+                used+=rr[a].backend().size()+aa[a].backend().size();
+                capacity+=rr[a].backend().capacity()+aa[a].backend().capacity();
+            }
+            if constexpr(persistent==r::PersistentCarrier::compact) {
+                parent+=f::expansion_slot_work;conversion+=f::expansion_slot_work;
+                out.integer(rr[a]<<260,11,true);out.integer(aa[a]<<312,6,false);
+            } else {out.integer(rr[a],11,true);out.integer(aa[a],6,false);}
+            out.word(units[a]);
+        }
     });
     t::require(rows==owner.storage_receipt().current_rows && slots==owner.storage_receipt().current_slots,"role complete committed snapshot");
     out.magic("OPLRRC01");const auto& x=owner.receipt();const auto& s=owner.storage_receipt();const auto& c=catalog.receipt();
@@ -92,11 +116,15 @@ void snapshot(Output& out,unsigned epoch,r::Store& owner,r::c::Catalog& catalog,
         s.current_rows,s.pending_rows,s.current_slots,s.pending_slots,s.peak_payload_bits});
     words(out,std::array<std::uint64_t,8>{c.work,c.lookups,c.public_blocks,c.information_rows_seen,c.action_slots_seen,c.menus,c.metadata_entries,c.metadata_payload_bits});
     out.word(history.receipt().work);const auto& q=chance.receipt();words(out,std::array<std::uint64_t,3>{q.modeled_work,q.rank_calls,q.joint_ticket_queries});
+    if constexpr(observe_storage) {
+        out.magic("OPLRSM01");words(out,std::array<std::uint64_t,7>{epoch,rows,slots,
+            std::numeric_limits<boost::multiprecision::limb_type>::digits,2*slots,used,capacity});
+    }
 }
 }
 int main(int argc,char** argv) {
     try {
-        t::require(argc==2,"one explicit bounded role ticket file required");const auto model=f::domain();
+        t::require(argc==2,"one explicit bounded role ticket file required");const auto model=f::domain(persistent,observe_storage);
         Input input{std::filesystem::path(argv[1])};input.magic();const auto version=input.word(),profile=input.word(),epochs=input.word();
         t::require(version==1 && profile<2 && epochs==2,"unsupported role profile/version/lifetime");
         std::array<std::array<std::uint64_t,2>,2> selectors{};
@@ -129,23 +157,28 @@ int main(int argc,char** argv) {
         history_limits.owned_bytes=t::history_bytes;history_limits.depth=15;
         r::h::History history(source,deck,history_limits);r::c::Catalog catalog(history,{1326,1326},model.catalog);
         r::Store owner(catalog,history,chance,{1326,1326},model.role_limits);Output out;
-        out.magic("OPLROW01");words(out,std::array<std::uint64_t,28>{1,profile,52,1326,1326,2,t::grid,365,52,625,364,704,181,
+        out.magic(observe_storage?"OPLRSW01":"OPLROW01");words(out,std::array<std::uint64_t,28>{observe_storage?2U:1U,profile,52,1326,1326,2,t::grid,365,52,625,364,704,181,
             model.work,model.entries,model.payload,model.output,f::input_cap,model.catalog.max_work,model.history,model.chance,model.component,model.parent,
             model.catalog.max_lookups,model.catalog.max_metadata_entries,model.role.own_work,model.role.storage.component_work,model.role.work});
         words(out,std::array<std::uint64_t,6>{model.raw.scale,model.raw.mix,model.raw.regret,model.raw.average,model.raw.stage,model.raw.walk});
-        std::uint64_t parent=1044096;
+        if constexpr(observe_storage)words(out,std::array<std::uint64_t,6>{1,static_cast<std::uint64_t>(persistent),
+            persistent==r::PersistentCarrier::compact?365U:625U,persistent==r::PersistentCarrier::compact?52U:364U,
+            persistent==r::PersistentCarrier::compact?371U:649U,persistent==r::PersistentCarrier::compact?54U:382U});
+        std::uint64_t parent=1044096,conversion=0,observation=0;
         for(unsigned i=0;i<2;++i) {
             owner.apply_world(selectors[i][0],selectors[i][1],[&](r::Store::Epoch& epoch,const r::Certificate& sample) {
                 w::Walk walk(source,history,epoch,sample,{tapes[i][0],tapes[i][1]},model.raw);walk.run();raw_world(out,i+1,sample,walk);
                 for(const auto value:walk.actual_work())parent+=value;
             });
-            snapshot(out,i+1,owner,catalog,history,chance);
+            snapshot(out,i+1,owner,catalog,history,chance,parent,conversion,observation);
         }
         t::require(!owner.failed() && parent<=model.parent && history.receipt().work<=model.history &&
             catalog.receipt().work<=model.catalog.max_work && chance.receipt().modeled_work==model.chance &&
             owner.storage_receipt().work+owner.storage_receipt().quantizer_work+owner.receipt().own_work<=model.component,
             "role complete native actual owner ledgers");
-        out.magic("OPLRFN01");out.word(parent);out.word(out.size()+8); // length includes this final size word
+        out.magic(observe_storage?"OPLRSF01":"OPLRFN01");out.word(parent);
+        if constexpr(observe_storage){out.word(conversion);out.word(observation);}
+        out.word(out.size()+8); // length includes this final size word
 #ifdef _WIN32
         t::require(_setmode(_fileno(stdout),_O_BINARY)!=-1,"role binary stdout mode");
 #endif

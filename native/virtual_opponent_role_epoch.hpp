@@ -16,12 +16,14 @@ using Integer=e::Integer;
 using Certificate=p::PreparedPublicChance::JointTicketCertificate;
 using Key=std::tuple<std::size_t,std::size_t,std::size_t>;
 inline constexpr std::size_t maximum_rows=204,maximum_slots=816,maximum_encounters=204;
+enum class PersistentCarrier { canonical, compact };
 
 struct Limits {
     std::size_t rows=maximum_rows,slots=maximum_slots,encounters=maximum_encounters;
     std::size_t catalog_blocks=408,holding_count=1326;
     std::uint64_t work=e::work_cap;
     std::size_t entries=e::entries_cap,payload_bits=e::payload_bits_cap;
+    PersistentCarrier persistent=PersistentCarrier::canonical;
 };
 struct Forecast {
     e::Limits storage_limits{};
@@ -37,7 +39,8 @@ inline Forecast forecast(Limits l) {
     require(l.rows && l.rows<=maximum_rows && l.slots>=2 && l.slots<=maximum_slots &&
         l.encounters>=2 && l.encounters<=maximum_encounters && l.catalog_blocks && l.catalog_blocks<=408 &&
         l.holding_count && l.holding_count<=1326 && l.work && l.work<=e::work_cap &&
-        l.entries && l.entries<=e::entries_cap && l.payload_bits && l.payload_bits<=e::payload_bits_cap,
+        l.entries && l.entries<=e::entries_cap && l.payload_bits && l.payload_bits<=e::payload_bits_cap &&
+        (l.persistent==PersistentCarrier::canonical || l.persistent==PersistentCarrier::compact),
         "role epoch reduce-only limits");
     Forecast f;auto& s=f.storage_limits;
     s.max_stage_rows=l.rows;s.max_stage_slots=l.slots;s.max_rows_touched=2*l.rows;s.max_slots_touched=2*l.slots;
@@ -117,7 +120,9 @@ public:
     Store(c::Catalog& catalog,h::History& history,p::PreparedPublicChance& chance,std::array<std::size_t,2> hands,Limits limits={})
         :limits_(admit(catalog,history,chance,hands,limits)),forecast_(forecast(limits_)),history_(history),chance_(chance),hands_(hands),
          identity_(std::make_shared<Identity>()),
-         storage_(catalog,history,hands,forecast_.storage_limits,e::ArithmeticContract::weighted_joint_single_pass) {charge(512);}
+         storage_(catalog,history,hands,forecast_.storage_limits,
+            limits_.persistent==PersistentCarrier::compact?e::ArithmeticContract::weighted_joint_role_compact:
+                e::ArithmeticContract::weighted_joint_single_pass) {charge(512);}
     Store(const Store&)=delete;Store& operator=(const Store&)=delete;
     [[nodiscard]] bool failed() const {return failed_ || storage_.failed() || chance_.failed();}
     [[nodiscard]] const Receipt& receipt() const {return receipt_;}
@@ -222,7 +227,10 @@ public:
                 }
                 require(dot==0,"role epoch regret not centered");
                 std::array<Integer,4> rr{},aa{};
-                for(std::size_t a=0;a<k;++a){rr[a]=regrets[a]<<260;aa[a]=Integer(averages[a])<<312;}
+                for(std::size_t a=0;a<k;++a) {
+                    if(owner_.limits_.persistent==PersistentCarrier::compact){rr[a]=regrets[a];aa[a]=averages[a];}
+                    else {rr[a]=regrets[a]<<260;aa[a]=Integer(averages[a])<<312;}
+                }
                 lease_.stage(token.id_,std::span(rr).first(k),std::span(aa).first(k),
                     owner_.storage_.average_denominator_value(),owner_.storage_.regret_denominator_value());
                 cached.staged=true;++staged_;++owner_.receipt_.staged_rows;owner_.receipt_.staged_slots+=k;

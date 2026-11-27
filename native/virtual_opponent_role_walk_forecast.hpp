@@ -13,6 +13,11 @@ inline constexpr std::uint64_t input_cap=4096,summary_cap=16384;
 inline constexpr std::uint64_t output_upper=512+2*(768+64*204+72*816+64*204)+40*612+144*2448+512;
 inline constexpr std::uint64_t raw_entries=56*204+8*204+1105+64*19+64;
 inline constexpr std::uint64_t raw_payload=3'140'970;
+// Exact maximum for the unchanged canonical snapshot layout plus explicit
+// representation header, two storage observations and extended parent footer.
+inline constexpr std::uint64_t storage_wire_upper=280+48+2*(432+48*204+72*816+64*204+32+32+296+64)+
+    40*612+144*2448+40;
+static_assert(storage_wire_upper<=output_upper,"storage observation must fit the original output cap");
 struct Raw {
     std::uint64_t scale=0,mix=0,regret=0,average=0,stage=0,walk=0;
     [[nodiscard]] std::uint64_t work() const{return scale+mix+regret+average+stage+walk;}
@@ -24,8 +29,11 @@ struct Forecast {
     Raw raw{};
     std::uint64_t history=0,chance=0,component=0,parent=0,work=0,entries=0,payload=0,output=output_upper;
 };
-inline Forecast domain() {
-    Forecast f;f.role=r::forecast(f.role_limits);
+inline constexpr std::uint64_t expansion_slot_work=64+t::copy_cost(631)+t::copy_cost(366);
+inline Forecast domain(r::PersistentCarrier persistent=r::PersistentCarrier::canonical,bool observe_storage=false) {
+    t::require((persistent==r::PersistentCarrier::canonical || persistent==r::PersistentCarrier::compact) &&
+        (persistent==r::PersistentCarrier::canonical || observe_storage),"compact role requires explicit storage observation contract");
+    Forecast f;f.role_limits.persistent=persistent;f.role=r::forecast(f.role_limits);
     auto& cat=f.catalog;cat.max_public_blocks=408;cat.max_information_rows_seen=408;
     cat.max_action_slots_seen=1632;cat.max_menus=408;cat.max_holding_count=1326;
     // Two Catalog calls per unique read, one validating stage, and at most
@@ -48,6 +56,8 @@ inline Forecast domain() {
     f.chance=Prepared::weighted_joint_setup_work_bound(1326,1326)+2*Prepared::weighted_joint_ticket_work_bound(1326,1326);
     f.component=f.role.storage.component_work+f.role.own_work;
     f.parent=1'040'000+4096+2*x.work();
+    if(observe_storage)f.parent+=2*512+3*816*64;
+    if(persistent==r::PersistentCarrier::compact)f.parent+=2*512+3*816*expansion_slot_work;
     f.work=t::template_cap+cat.max_work+f.history+f.chance+f.component+f.parent+16*(f.output+input_cap);
     f.entries=131072+cat.max_metadata_entries+f.role.entries+12000+Prepared::weighted_joint_ticket_entries_bound()+
         (32*1105+1)+16384+raw_entries+f.output+4096;

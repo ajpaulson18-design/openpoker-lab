@@ -41,7 +41,7 @@ enum class ErrorKind { invalid_limits, owner_mismatch, failed_owner, active_leas
                        lease_generation, incomplete_walk, row_or_menu, duplicate_stage,
                        epoch_limit, arithmetic, resource_limit, quantizer };
 enum class ArithmeticContract { uniform_public_proof9, true_joint_proof9, weighted_joint_fixed_tree,
-                                weighted_joint_single_pass };
+                                weighted_joint_single_pass, weighted_joint_role_compact };
 enum class ProposalLaw { uniform_public, weighted_river, true_joint };
 class Error final : public std::runtime_error {
     ErrorKind kind_;
@@ -263,9 +263,11 @@ private:
         if (arithmetic!=ArithmeticContract::uniform_public_proof9 &&
             arithmetic!=ArithmeticContract::true_joint_proof9 &&
             arithmetic!=ArithmeticContract::weighted_joint_fixed_tree &&
-            arithmetic!=ArithmeticContract::weighted_joint_single_pass)
+            arithmetic!=ArithmeticContract::weighted_joint_single_pass &&
+            arithmetic!=ArithmeticContract::weighted_joint_role_compact)
             throw Error(ErrorKind::invalid_limits,"unknown sparse arithmetic contract");
-        const auto expected=arithmetic==ArithmeticContract::weighted_joint_single_pass?1U:2U;
+        const auto expected=(arithmetic==ArithmeticContract::weighted_joint_single_pass ||
+            arithmetic==ArithmeticContract::weighted_joint_role_compact)?1U:2U;
         if (limits.policy_reads_per_row!=expected)
             throw Error(ErrorKind::invalid_limits,"sparse read count differs from arithmetic contract");
         return arithmetic;
@@ -327,22 +329,27 @@ private:
         receipt_.peak_payload_bits = std::max(receipt_.peak_payload_bits,
             current_payload_bits_ + pending_payload_bits_ + 2'048 * (staged_ids_.size()));
     }
-    static void validate_entry(const Entry& entry, std::size_t actions) {
+    [[nodiscard]] bool compact_role() const noexcept {
+        return arithmetic_==ArithmeticContract::weighted_joint_role_compact;
+    }
+    [[nodiscard]] std::size_t regret_width() const noexcept {return compact_role()?371:649;}
+    [[nodiscard]] std::size_t average_width() const noexcept {return compact_role()?54:382;}
+    void validate_entry(const Entry& entry, std::size_t actions) const {
         if (entry.regrets.size() != actions || entry.averages.size() != actions ||
             entry.units.size() != actions || !actions || actions > action_limit)
             throw Error(ErrorKind::row_or_menu, "sparse strategy entry/menu width");
         Integer positive_sum = 0;
         std::uint64_t unit_sum = 0;
         for (std::size_t i = 0; i < actions; ++i) {
-            if (magnitude_bits(entry.regrets[i]) > 649 || entry.averages[i] < 0 ||
-                magnitude_bits(entry.averages[i]) > 382)
+            if (magnitude_bits(entry.regrets[i]) > regret_width() || entry.averages[i] < 0 ||
+                magnitude_bits(entry.averages[i]) > average_width())
                 throw Error(ErrorKind::arithmetic, "sparse strategy cumulative integer bound");
             if (entry.regrets[i] > 0) positive_sum += entry.regrets[i];
             if (entry.units[i] > grid - unit_sum)
                 throw Error(ErrorKind::arithmetic, "sparse strategy policy partition overflow");
             unit_sum += entry.units[i];
         }
-        if (magnitude_bits(positive_sum) > 651 || unit_sum != grid)
+        if (magnitude_bits(positive_sum) > regret_width()+2 || unit_sum != grid)
             throw Error(ErrorKind::arithmetic, "sparse strategy positive sum or policy partition");
     }
     Entry default_entry(std::size_t actions) const {
@@ -534,7 +541,8 @@ public:
         const auto& catalog_receipt = catalog_owner.receipt();
         const auto required_catalog_lookups = limits.max_reads * 2 + limits.max_epochs * limits.max_stage_rows;
         const bool weighted=arithmetic_==ArithmeticContract::weighted_joint_fixed_tree ||
-            arithmetic_==ArithmeticContract::weighted_joint_single_pass;
+            arithmetic_==ArithmeticContract::weighted_joint_single_pass ||
+            arithmetic_==ArithmeticContract::weighted_joint_role_compact;
         const bool dimensions_ok=weighted ?
             (declared_hand_counts[0] && declared_hand_counts[1] &&
              declared_hand_counts[0]<=limits.catalog_max_holding_count &&
@@ -558,6 +566,7 @@ public:
     [[nodiscard]] ArithmeticContract arithmetic_contract() const noexcept { return arithmetic_; }
     [[nodiscard]] const Integer& regret_denominator_value() const {
         if (arithmetic_==ArithmeticContract::uniform_public_proof9) return regret_denominator;
+        if (compact_role()) {static const Integer role=Integer(1)<<365;return role;}
         // Immutable scalar constants fit the existing fixed scratch/metadata
         // envelope. Legacy construction never initializes these joint values.
         static const Integer joint=Integer(1)<<625;
@@ -565,6 +574,7 @@ public:
     }
     [[nodiscard]] const Integer& average_denominator_value() const {
         if (arithmetic_==ArithmeticContract::uniform_public_proof9) return average_denominator;
+        if (compact_role()) {static const Integer role=Integer(1)<<52;return role;}
         static const Integer joint=Integer(1)<<364;
         return joint;
     }
@@ -659,7 +669,7 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
                 Integer(average_denominator) % raw_average_denominator != 0))
             reject(ErrorKind::arithmetic, "sparse raw denominator outside exact fixed contract");
         const Integer average_factor = average_denominator_value() / raw_average_denominator;
-        if (magnitude_bits(average_factor) > 317)
+        if (magnitude_bits(average_factor) > (compact_role()?1U:317U))
             reject(ErrorKind::arithmetic, "sparse average scale bound");
         const auto predicted_entries = current_.size() + pending_.size() + staged_ids_.size() +
             lease.observed_.size() + 2;
@@ -673,11 +683,12 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
         Entry next = old == current_.end() ? default_entry(raw_regrets.size()) : old->second;
         Integer regret_dot=0,raw_mass=0;
         for(std::size_t i=0;i<actions;++i) {
-            if(magnitude_bits(raw_regrets[i])>648 || raw_averages[i]<0 || magnitude_bits(raw_averages[i])>383)
+            if(magnitude_bits(raw_regrets[i])>(compact_role()?370U:648U) || raw_averages[i]<0 ||
+                magnitude_bits(raw_averages[i])>(compact_role()?53U:383U))
                 reject(ErrorKind::arithmetic,"sparse raw integer exceeds source bound");
             regret_dot+=raw_regrets[i]*next.units[i];
             raw_mass+=raw_averages[i];
-            if(magnitude_bits(regret_dot)>703 || magnitude_bits(raw_mass)>383)
+            if(magnitude_bits(regret_dot)>(compact_role()?426U:703U) || magnitude_bits(raw_mass)>(compact_role()?55U:383U))
                 reject(ErrorKind::arithmetic,"sparse raw row accumulation bound");
         }
         if(regret_dot!=0)reject(ErrorKind::arithmetic,"raw regret does not center on the leased policy");
@@ -687,24 +698,24 @@ inline void Store::stage_impl(EpochLease& lease, RowId id, std::span<const Integ
         const bool regret_changed = std::any_of(raw_regrets.begin(), raw_regrets.end(),
                                                 [](const Integer& x) { return x != 0; });
         for (std::size_t i = 0; i < raw_regrets.size(); ++i) {
-            if (magnitude_bits(raw_regrets[i]) > 648 || raw_averages[i] < 0 ||
-                magnitude_bits(raw_averages[i]) > 383)
+            if (magnitude_bits(raw_regrets[i]) > (compact_role()?370U:648U) || raw_averages[i] < 0 ||
+                magnitude_bits(raw_averages[i]) > (compact_role()?53U:383U))
                 reject(ErrorKind::arithmetic, "sparse raw integer exceeds source bound");
             next.regrets[i] += raw_regrets[i];
             const Integer average_delta = raw_averages[i] * average_factor;
-            if (magnitude_bits(average_delta) > 382)
+            if (magnitude_bits(average_delta) > average_width())
                 reject(ErrorKind::arithmetic, "sparse converted average bound");
             next.averages[i] += average_delta;
         }
         next.payload_bits = entry_payload_bits(next);
         Integer positive_sum = 0;
         for (std::size_t i = 0; i < next.regrets.size(); ++i) {
-            if (magnitude_bits(next.regrets[i]) > 649 || next.averages[i] < 0 ||
-                magnitude_bits(next.averages[i]) > 382)
+            if (magnitude_bits(next.regrets[i]) > regret_width() || next.averages[i] < 0 ||
+                magnitude_bits(next.averages[i]) > average_width())
                 reject(ErrorKind::arithmetic, "sparse cumulative integer bound before quantization");
             if (next.regrets[i] > 0) positive_sum += next.regrets[i];
         }
-        if (magnitude_bits(positive_sum) > 651)
+        if (magnitude_bits(positive_sum) > regret_width()+2)
             reject(ErrorKind::arithmetic, "sparse positive regret sum bound");
         if (regret_changed) {
             const auto before = quantizer_.receipt();
