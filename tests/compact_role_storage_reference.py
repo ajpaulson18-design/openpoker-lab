@@ -24,21 +24,24 @@ def unwrap(raw,request,profile,selectors,rule,mode):
     need(got==tuple(expected),'compact storage independent complete resource header')
     need(r.words(6)==(1,mode,365 if mode else 625,52 if mode else 364,371 if mode else 649,54 if mode else 382),
          'compact storage explicit persistent carrier contract')
-    normalized=bytearray(b'OPLROW01'+struct.pack('<34Q',*header(profile)));metrics=[]
+    normalized=bytearray(b'OPLROW01'+struct.pack('<34Q',*header(profile)));metrics=[];metric_offsets=[];root_offsets=[];regret_offsets=[]
     for epoch in (1,2):
         start=r.at;r.magic(b'OPLRWO01');h=r.words(18);nr,ns,nc=h[15:]
         need(h[0]==epoch and 0<nr<=204 and 2*nr<=ns<=4*nr and nc<=204,'compact storage raw bounded extents')
-        r.take(280);slots=0
+        root_offsets.append(r.at);r.take(280);slots=0
         for _ in range(nr):
             m=r.words(6);k=m[4];need(2<=k<=4,'compact storage raw bounded menu');r.take(72*k);slots+=k
         need(slots==ns,'compact storage complete raw slots');r.take(64*nc);r.magic(b'OPLREN01');r.words(3)
         r.magic(b'OPLRSN01');step,count,total=r.words(3)
         need(step==epoch and count<=204*epoch and 2*count<=total<=4*count,'compact storage bounded snapshot')
-        slots=0
+        slots=0;first_regret=None
         for _ in range(count):
-            m=r.words(5);k=m[4];need(2<=k<=4,'compact storage snapshot bounded menu');r.take(144*k);slots+=k
+            m=r.words(5);k=m[4];need(2<=k<=4,'compact storage snapshot bounded menu')
+            if first_regret is None:first_regret=r.at
+            r.take(144*k);slots+=k
+        regret_offsets.append(first_regret)
         need(slots==total,'compact storage complete snapshot slots');r.magic(b'OPLRRC01');r.words(36)
-        normalized.extend(raw[start:r.at]);r.magic(b'OPLRSM01');metric=r.words(7)
+        normalized.extend(raw[start:r.at]);metric_offsets.append(r.at);r.magic(b'OPLRSM01');metric=r.words(7)
         need(metric[:3]==(epoch,count,total) and metric[3] in (32,64) and metric[4]==2*total and
              metric[5]<=metric[6]<=2*total*4*max(2,(649+metric[3]-1)//metric[3]),
              'compact storage bounded backend capacity census');metrics.append(metric)
@@ -85,7 +88,8 @@ def unwrap(raw,request,profile,selectors,rule,mode):
     receipts(tuple(checked))
     return records,bytes(normalized),{'native_forecast':model,'storage':storage,
         'parent_actual':parent,'actual_expansion_work':expansion,'actual_observation_work':observation,
-        'raw_wire_bytes':len(raw),'normalized_wire_bytes':len(normalized),'mode':mode},admission
+        'raw_wire_bytes':len(raw),'normalized_wire_bytes':len(normalized),'mode':mode,
+        'transport_offsets':{'storage':metric_offsets,'roots':root_offsets,'snapshot_regrets':regret_offsets}},admission
 
 
 def verify(raw,request,profile,selectors,rule,mode):
