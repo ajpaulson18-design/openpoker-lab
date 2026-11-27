@@ -135,7 +135,8 @@ def replay(packet=PACKET):
     with TemporaryDirectory(prefix='role-walk-replay-cache-',dir=ROOT.parent) as cache:
         sys.pycache_prefix=cache;sys.dont_write_bytecode=True
         try:
-            from tests.virtual_role_walk_wire_reference import verify,verify_controls,parse,receipts,request_tapes
+            from tests.virtual_role_walk_wire_reference import verify_controls,parse,receipts,request_tapes,compare
+            from tests.virtual_role_walk_reference import Context,plan
             fresh=[];scalar=verify_controls(files[matrix[0]+'/controls/stdout.bin'])
             for prefix in matrix:
                 other=prefix.replace('/normal/','/optimized/');protocol=helper.decode(files[prefix+'/protocol.json'])
@@ -144,28 +145,24 @@ def replay(packet=PACKET):
                      files[prefix+'/controls/stdout.bin']==files[matrix[0]+'/controls/stdout.bin']==files[other+'/controls/stdout.bin'],
                      'role walk complete paired-mode original byte identity')
                 selectors=tuple(tuple(x) for x in protocol['selectors']);profile=protocol['profile'];rule=protocol['rule']
-                report=verify(files[prefix+'/native/stdout.bin'],files[prefix+'/request.bin'],profile,selectors,rule)
+                request=files[prefix+'/request.bin'];admission=plan(profile,selectors,rule)
+                tapes=request_tapes(request,profile,selectors)
+                records=parse(files[prefix+'/native/stdout.bin'],profile,selectors,tapes);receipts(records)
+                ctx=Context(profile,selectors,rule);ctx.run()
+                report=compare(records,request,ctx,admission,len(files[prefix+'/native/stdout.bin']))
                 for mode_prefix in (prefix,other):
                     original=helper.decode(files[mode_prefix+'/result.json'])
                     need(all(original[k]==helper.decode(json.dumps(v).encode()) for k,v in report.items()),
                          'role walk fresh complete numerical/ledger outcome')
                     altered=[n for n in files if n.startswith(mode_prefix+'/mutations/')]
                     need(len(altered)==5,'role walk complete original altered-frame inventory')
-                    # Original controls already compared the valid-width numeric
-                    # corruption to the literal state. Recheck framing/ledger
-                    # corruptions here; the saved numeric coordinate is required
-                    # to differ at exactly the first retained regret byte.
                     for name in altered:
                         body=files[name]
-                        if name.endswith('/committed-regret.bin'):
-                            valid=files[mode_prefix+'/native/stdout.bin'];at=valid.index(b'OPLRSN01')+72
-                            expected=bytearray(valid);expected[at]^=1
-                            need(body==bytes(expected),'role walk preserved committed-regret mutation')
-                        else:
-                            try:
-                                parsed=parse(body,profile,selectors,request_tapes(files[mode_prefix+'/request.bin'],profile,selectors));receipts(parsed)
-                            except ValueError:pass
-                            else:raise ValueError('role walk saved altered framing/ledger accepted')
+                        try:
+                            parsed=parse(body,profile,selectors,tapes);receipts(parsed)
+                            compare(parsed,request,ctx,admission,len(body))
+                        except ValueError:pass
+                        else:raise ValueError('role walk saved altered numeric/framing/ledger accepted')
                 fresh.append(report)
             first=matrix[0]
             for version in (1,2):
