@@ -1,0 +1,11 @@
+test_all_foreign_domains_refuse_before_physical_preparation (tests.test_virtual_role_walk_admission.RoleWalkAdmissionTests.test_all_foreign_domains_refuse_before_physical_preparation) ... ok
+test_each_complete_reference_limit_refuses_before_physical_preparation (tests.test_virtual_role_walk_admission.RoleWalkAdmissionTests.test_each_complete_reference_limit_refuses_before_physical_preparation) ... ok
+test_invalid_wire_refuses_before_reference_context (tests.test_virtual_role_walk_admission.RoleWalkAdmissionTests.test_invalid_wire_refuses_before_reference_context) ... ok
+test_nonzero_regrets_cannot_cancel_under_their_own_centered_matching_policy (tests.test_virtual_role_walk_admission.RoleWalkAdmissionTests.test_nonzero_regrets_cannot_cancel_under_their_own_centered_matching_policy) ... ok
+test_changed_manifest (tests.test_opponent_role_walk_packet_admission.RoleWalkPacketAdmissionTests.test_changed_manifest) ... ok
+test_changed_objects (tests.test_opponent_role_walk_packet_admission.RoleWalkPacketAdmissionTests.test_changed_objects) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 9.074s
+
+OK

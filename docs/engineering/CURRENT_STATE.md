@@ -2,6 +2,23 @@
 
 ## Unified solver foundation in development
 
+The [native full four-street role walk](../opponent-role-four-street-walk.md)
+now passes twelve full1326-range named cases in both Python modes through the
+shared History/Catalog/chance/Store owners. Supplied deterministic Q52 tickets
+drive both target passes and two actual signed-regret commits. All 6,780
+numeric coordinates per mode agree with independent literal histories,
+explicit rational reaches and the full physical joint law; paired native
+streams match byte for byte. Original evidence retains 342 native processes,
+both compiler/reporting failures, and every raw policy. Saved-only replay
+passes both modes with identical reports and no native or archived-code calls.
+The complete request fits unchanged caps. This is deterministic T2 research,
+with no RNG, longer lifetime, timing/equal-quality or solved-quality claim.
+An independent retention argument and 772-vector controls show that nonzero
+rows cannot disappear under coupled centered regret matching. Long-run
+numerical storage remains a scaling gate; the old eleven-card exhaustive
+refusal is unchanged. Fresh Windows/Linux/sanitizer CI is configured and its
+current result remains separate from local evidence.
+
 The [shared Store role facade](../opponent-role-epoch.md) now passes paired
 original native component execution: 44 refusal guards, three compile-time
 scope checks, seven parser mutations and independent R/A/policy/resource
