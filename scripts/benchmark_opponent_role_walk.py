@@ -54,8 +54,9 @@ def benchmark(baseline,candidate,output):
          'role cost same compiler and integer dependency')
     def flags(record):return ['<owned-boost-include>' if x.startswith(('/I','-I')) else x for x in record['flags']]
     baseflags=flags(identities['baseline'][1]);trialflags=flags(identities['candidate'][1])
-    need(baseflags in ([*trialflags,'/DOPENPOKER_JOINT_SINGLE_PASS'],[*trialflags,'-DOPENPOKER_JOINT_SINGLE_PASS']),
-         'role cost unchanged optimization/warning flags and declared baseline macro')
+    need(baseflags in ([*trialflags,'/DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH','/DOPENPOKER_JOINT_SINGLE_PASS'],
+                       [*trialflags,'-DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH','-DOPENPOKER_JOINT_SINGLE_PASS']),
+         'role cost unchanged optimization/warning flags and exact weighted/single-pass baseline target macros')
     for mode,identity in identities.items():(output/(mode+'-build.json')).write_bytes(identity[0])
     expected={'baseline':[],'candidate':[]};requests=[]
     for label,selectors,rule in CASES:
