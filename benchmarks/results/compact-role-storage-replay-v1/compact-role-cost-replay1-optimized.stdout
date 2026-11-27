@@ -1,0 +1,31 @@
+{
+  "status": "same-policy-compact-storage-whole-call-replayed",
+  "original_native_processes": 260,
+  "original_unit_children": 2,
+  "paired_elapsed_ratios": [
+    0.9502654166775762,
+    0.7095015210777122,
+    1.0196071408299865,
+    1.2111315392186344,
+    0.935786396870353,
+    0.8891674156997341,
+    0.826767491763784,
+    1.2241992215261728
+  ],
+  "median_compact_canonical_ratio": 0.9430259067739646,
+  "pairs_above_1_10": 2,
+  "whole_call_nonregression_gate_pass": true,
+  "ratio_range": [
+    0.7095015210777122,
+    1.2241992215261728
+  ],
+  "same_exact_numeric_policies": true,
+  "same_wire_sizes": true,
+  "independent_state_cases": 12,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "quality_gate": null,
+  "supported_native_epochs": 2,
+  "stored_expanded_bytes": 3283440,
+  "scope": "All original same-policy storage pairs and exact current mathematical replay. One uncontrolled-load host; no allocator/RSS, stable/universal throughput, longer learning or quality admission."
+}

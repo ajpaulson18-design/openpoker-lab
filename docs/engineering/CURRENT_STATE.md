@@ -2,6 +2,20 @@
 
 ## Unified solver foundation in development
 
+The [compact persistent role Store](../compact-role-persistent-store.md)
+now passes original local native execution with one policy authority. An
+explicit contract retains R/A on compact scales; canonical defaults stay
+unchanged. Both twelve-case matrices pass all 6,780 numeric coordinates per
+representation, and every fresh default wire matches historical bytes.
+Native R/A backend capacity totals fall from 29,792 to 16,192 limbs across
+24 separate snapshots; this is a partial backend observation, not total
+memory/RSS. The frozen 260-call same-policy comparison passes its original
+nonregression gate (median ratio 0.943026, two pairs above 1.10), with all
+observations preserved. Independent saved state/timing replay passes both
+Python modes with no native or archived-code calls. Solver ceilings and T2
+lifetime remain unchanged; new cross-platform CI is configured and requires
+fresh verification before further acceptance.
+
 The [native full four-street role walk](../opponent-role-four-street-walk.md)
 now passes twelve full1326-range named cases in both Python modes through the
 shared History/Catalog/chance/Store owners. Supplied deterministic Q52 tickets
@@ -41,9 +55,10 @@ Removing the canonical 260/312 padding bits reduces summed integer magnitude
 cells 680,510 to 243,294 and the same-descriptor logical row model 1,701,054
 to 1,263,838 (25.70%). Every signed coordinate roundtrips exactly and policies
 stay unchanged. These are finite-trace logical models, not native memory/RSS
-or speed. The compact persistent Store is not yet implemented; next integrate
-the explicit representation inside the same tested owner under unchanged
-T2/global caps, then measure native layout and complete calls separately.
+or speed. The subsequent same-owner implementation above adds native backend
+observations and a separately frozen complete-call comparison under unchanged
+T2/global caps. Longer-run state/export schedules and random-stream ownership
+remain separate architectural gates.
 
 The [shared Store role facade](../opponent-role-epoch.md) now passes paired
 original native component execution: 44 refusal guards, three compile-time

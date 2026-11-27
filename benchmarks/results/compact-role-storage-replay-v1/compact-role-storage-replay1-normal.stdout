@@ -1,0 +1,994 @@
+{
+  "status": "same-owner-compact-role-storage-replayed",
+  "cases": 12,
+  "numeric_coordinates_per_representation": 6780,
+  "original_native_processes": 390,
+  "original_unit_children": 2,
+  "first_compile_failures": 3,
+  "compiled_unexecuted_control_builds": 1,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "rng_calls": 0,
+  "quality_gate": null,
+  "supported_native_epochs": 2,
+  "authentication": {
+    "role-storage-canonical-build1": {
+      "head": "8524f827a32ebeeeaf90ed09dcb970f1bc1890aa",
+      "files": 35
+    },
+    "role-storage-canonical-build2": {
+      "head": "4915735b8850d64ad04411bc66ff71fdb211d612",
+      "files": 35
+    },
+    "role-storage-compact-build1": {
+      "head": "8524f827a32ebeeeaf90ed09dcb970f1bc1890aa",
+      "files": 35
+    },
+    "role-storage-compact-build2": {
+      "head": "4915735b8850d64ad04411bc66ff71fdb211d612",
+      "files": 35
+    },
+    "role-storage-controls-build1": {
+      "head": "8524f827a32ebeeeaf90ed09dcb970f1bc1890aa",
+      "files": 35
+    },
+    "role-storage-controls-build2": {
+      "head": "4915735b8850d64ad04411bc66ff71fdb211d612",
+      "files": 35
+    },
+    "role-storage-controls-build3": {
+      "head": "e05aa85ad1d203c21fc8d28e8d742327b6ad961b",
+      "files": 35
+    },
+    "opponent-role-default-regression-build1": {
+      "head": "4915735b8850d64ad04411bc66ff71fdb211d612",
+      "files": 33
+    },
+    "study/normal": {
+      "head": "e05aa85ad1d203c21fc8d28e8d742327b6ad961b",
+      "files": 96
+    },
+    "matrix/normal/profile-0-same-world": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-0-boundaries": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-0-shared-flop-future": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-0-sb-loss": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-0-sb-win": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-0-shared-board-distinct-holding": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-1-same-world": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-1-boundaries": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-1-shared-flop-future": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-1-sb-loss": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-1-sb-win": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/normal/profile-1-shared-board-distinct-holding": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "study/optimized": {
+      "head": "e05aa85ad1d203c21fc8d28e8d742327b6ad961b",
+      "files": 96
+    },
+    "matrix/optimized/profile-0-same-world": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-0-boundaries": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-0-shared-flop-future": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-0-sb-loss": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-0-sb-win": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-0-shared-board-distinct-holding": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-1-same-world": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-1-boundaries": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-1-shared-flop-future": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-1-sb-loss": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-1-sb-win": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "matrix/optimized/profile-1-shared-board-distinct-holding": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 96
+    },
+    "units": {
+      "head": "93aae969b436ae73a667f8bc18b54d4d568d7bbd",
+      "files": 17
+    }
+  },
+  "totals_across_separate_snapshots": {
+    "canonical_used": 23074,
+    "compact_used": 9238,
+    "canonical_capacity": 29792,
+    "compact_capacity": 16192
+  },
+  "fresh": [
+    {
+      "case": "profile-0-same-world",
+      "canonical": {
+        "wire_sha256": "1fb4c5bd9c278147c15d5ffff727e0dfa8e24f9dbd8117b878a55ef861233006",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 19,
+            "slots": 65,
+            "limb_bits": 32,
+            "integer_objects": 130,
+            "native_used_limbs": 1017,
+            "native_capacity_limbs": 1412,
+            "canonical_magnitude_bits": 29214,
+            "compact_magnitude_bits": 8518,
+            "native_store_peak_logical_payload_bits": 150110,
+            "actual_quantizer_work": 4432,
+            "canonical_quantizer_work": 4432
+          },
+          {
+            "epoch": 2,
+            "rows": 36,
+            "slots": 117,
+            "limb_bits": 32,
+            "integer_objects": 234,
+            "native_used_limbs": 1999,
+            "native_capacity_limbs": 2696,
+            "canonical_magnitude_bits": 58186,
+            "compact_magnitude_bits": 17886,
+            "native_store_peak_logical_payload_bits": 359144,
+            "actual_quantizer_work": 10948,
+            "canonical_quantizer_work": 10948
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "b0f793954fd3c312d98f9ce3df3a26ae2a06ba2b864567d933b159bc00d6638d",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 19,
+            "slots": 65,
+            "limb_bits": 32,
+            "integer_objects": 130,
+            "native_used_limbs": 359,
+            "native_capacity_limbs": 712,
+            "canonical_magnitude_bits": 29214,
+            "compact_magnitude_bits": 8518,
+            "native_store_peak_logical_payload_bits": 129414,
+            "actual_quantizer_work": 4240,
+            "canonical_quantizer_work": 4432
+          },
+          {
+            "epoch": 2,
+            "rows": 36,
+            "slots": 117,
+            "limb_bits": 32,
+            "integer_objects": 234,
+            "native_used_limbs": 719,
+            "native_capacity_limbs": 1356,
+            "canonical_magnitude_bits": 58186,
+            "compact_magnitude_bits": 17886,
+            "native_store_peak_logical_payload_bits": 298148,
+            "actual_quantizer_work": 10516,
+            "canonical_quantizer_work": 10948
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-0-boundaries",
+      "canonical": {
+        "wire_sha256": "5c3352a18d51e0802a90469da289b1f72e9c8f0d026c8eb26feabccfae2f6116",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 7,
+            "slots": 18,
+            "limb_bits": 32,
+            "integer_objects": 36,
+            "native_used_limbs": 380,
+            "native_capacity_limbs": 472,
+            "canonical_magnitude_bits": 11334,
+            "compact_magnitude_bits": 4366,
+            "native_store_peak_logical_payload_bits": 95578,
+            "actual_quantizer_work": 2356,
+            "canonical_quantizer_work": 2356
+          },
+          {
+            "epoch": 2,
+            "rows": 14,
+            "slots": 36,
+            "limb_bits": 32,
+            "integer_objects": 72,
+            "native_used_limbs": 760,
+            "native_capacity_limbs": 944,
+            "canonical_magnitude_bits": 22668,
+            "compact_magnitude_bits": 8732,
+            "native_store_peak_logical_payload_bits": 122400,
+            "actual_quantizer_work": 4712,
+            "canonical_quantizer_work": 4712
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "d3aac750d3e40e4a899ba45ad00cff9ceda555c771bba2b258c8fa6619139a71",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 7,
+            "slots": 18,
+            "limb_bits": 32,
+            "integer_objects": 36,
+            "native_used_limbs": 160,
+            "native_capacity_limbs": 264,
+            "canonical_magnitude_bits": 11334,
+            "compact_magnitude_bits": 4366,
+            "native_store_peak_logical_payload_bits": 89754,
+            "actual_quantizer_work": 2308,
+            "canonical_quantizer_work": 2356
+          },
+          {
+            "epoch": 2,
+            "rows": 14,
+            "slots": 36,
+            "limb_bits": 32,
+            "integer_objects": 72,
+            "native_used_limbs": 320,
+            "native_capacity_limbs": 528,
+            "canonical_magnitude_bits": 22668,
+            "compact_magnitude_bits": 8732,
+            "native_store_peak_logical_payload_bits": 109608,
+            "actual_quantizer_work": 4616,
+            "canonical_quantizer_work": 4712
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-0-shared-flop-future",
+      "canonical": {
+        "wire_sha256": "11128cc7bef20f81a72b9226840caea5c289503b2eb5977ffd6af1061f137b53",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1193,
+            "native_capacity_limbs": 1494,
+            "canonical_magnitude_bits": 35506,
+            "compact_magnitude_bits": 13770,
+            "native_store_peak_logical_payload_bits": 228738,
+            "actual_quantizer_work": 6820,
+            "canonical_quantizer_work": 6820
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1231,
+            "native_capacity_limbs": 1526,
+            "canonical_magnitude_bits": 36770,
+            "compact_magnitude_bits": 14514,
+            "native_store_peak_logical_payload_bits": 228738,
+            "actual_quantizer_work": 10320,
+            "canonical_quantizer_work": 10320
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "0e2df42663768c981dd489fdf5d58fdd421f08e5d0473058c5859eeb8fb7a5eb",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 507,
+            "native_capacity_limbs": 856,
+            "canonical_magnitude_bits": 35506,
+            "compact_magnitude_bits": 13770,
+            "native_store_peak_logical_payload_bits": 208146,
+            "actual_quantizer_work": 6756,
+            "canonical_quantizer_work": 6820
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 529,
+            "native_capacity_limbs": 880,
+            "canonical_magnitude_bits": 36770,
+            "compact_magnitude_bits": 14514,
+            "native_store_peak_logical_payload_bits": 208146,
+            "actual_quantizer_work": 10176,
+            "canonical_quantizer_work": 10320
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-0-sb-loss",
+      "canonical": {
+        "wire_sha256": "1f85e0c3ce2e3e9550714b39a422f5e5d0ef0d485e1310144fad5deffc154d37",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 509,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 14889,
+            "compact_magnitude_bits": 5165,
+            "native_store_peak_logical_payload_bits": 115235,
+            "actual_quantizer_work": 2408,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 509,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 14919,
+            "compact_magnitude_bits": 5195,
+            "native_store_peak_logical_payload_bits": 154533,
+            "actual_quantizer_work": 4816,
+            "canonical_quantizer_work": 4816
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "824949e0ce6c4a9c09dfb0b0370455e107e04b7d68e7c6f0187c93e456653d12",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 201,
+            "native_capacity_limbs": 364,
+            "canonical_magnitude_bits": 14889,
+            "compact_magnitude_bits": 5165,
+            "native_store_peak_logical_payload_bits": 107279,
+            "actual_quantizer_work": 2376,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 201,
+            "native_capacity_limbs": 364,
+            "canonical_magnitude_bits": 14919,
+            "compact_magnitude_bits": 5195,
+            "native_store_peak_logical_payload_bits": 136853,
+            "actual_quantizer_work": 4752,
+            "canonical_quantizer_work": 4816
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-0-sb-win",
+      "canonical": {
+        "wire_sha256": "cee3b58bf0e9f25e26de7437f52f5527be93d9ac43816919d36e91a2c1a6dad3",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1199,
+            "native_capacity_limbs": 1500,
+            "canonical_magnitude_bits": 35678,
+            "compact_magnitude_bits": 13942,
+            "native_store_peak_logical_payload_bits": 228912,
+            "actual_quantizer_work": 5696,
+            "canonical_quantizer_work": 5696
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1237,
+            "native_capacity_limbs": 1532,
+            "canonical_magnitude_bits": 36958,
+            "compact_magnitude_bits": 14702,
+            "native_store_peak_logical_payload_bits": 228912,
+            "actual_quantizer_work": 7920,
+            "canonical_quantizer_work": 7920
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "fd1469559db373736be1d4ee1c85cb5e606fcbdf7f5046cccd4cc9d7f6a0662f",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 513,
+            "native_capacity_limbs": 856,
+            "canonical_magnitude_bits": 35678,
+            "compact_magnitude_bits": 13942,
+            "native_store_peak_logical_payload_bits": 208320,
+            "actual_quantizer_work": 5696,
+            "canonical_quantizer_work": 5696
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 535,
+            "native_capacity_limbs": 880,
+            "canonical_magnitude_bits": 36958,
+            "compact_magnitude_bits": 14702,
+            "native_store_peak_logical_payload_bits": 208320,
+            "actual_quantizer_work": 7920,
+            "canonical_quantizer_work": 7920
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-0-shared-board-distinct-holding",
+      "canonical": {
+        "wire_sha256": "5920016abd1a908d48a4699a246e3a4ff159fc9bf43b0ff561f72261e2941351",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 509,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 14873,
+            "compact_magnitude_bits": 5149,
+            "native_store_peak_logical_payload_bits": 115217,
+            "actual_quantizer_work": 2408,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 21,
+            "slots": 54,
+            "limb_bits": 32,
+            "integer_objects": 108,
+            "native_used_limbs": 994,
+            "native_capacity_limbs": 1304,
+            "canonical_magnitude_bits": 29260,
+            "compact_magnitude_bits": 9708,
+            "native_store_peak_logical_payload_bits": 186149,
+            "actual_quantizer_work": 7400,
+            "canonical_quantizer_work": 7400
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "c02b7f669c3947687f474e87613e09287cb57de4e43acf62a6d17d3bce61de75",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 201,
+            "native_capacity_limbs": 364,
+            "canonical_magnitude_bits": 14873,
+            "compact_magnitude_bits": 5149,
+            "native_store_peak_logical_payload_bits": 107261,
+            "actual_quantizer_work": 2376,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 21,
+            "slots": 54,
+            "limb_bits": 32,
+            "integer_objects": 108,
+            "native_used_limbs": 374,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 29260,
+            "compact_magnitude_bits": 9708,
+            "native_store_peak_logical_payload_bits": 163633,
+            "actual_quantizer_work": 7272,
+            "canonical_quantizer_work": 7400
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-1-same-world",
+      "canonical": {
+        "wire_sha256": "de177a8c73fc731a6ffd2e0dc411d863a99b01511b8ecaec3d56d5253c48e050",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 19,
+            "slots": 65,
+            "limb_bits": 32,
+            "integer_objects": 130,
+            "native_used_limbs": 1017,
+            "native_capacity_limbs": 1412,
+            "canonical_magnitude_bits": 29214,
+            "compact_magnitude_bits": 8518,
+            "native_store_peak_logical_payload_bits": 150110,
+            "actual_quantizer_work": 4432,
+            "canonical_quantizer_work": 4432
+          },
+          {
+            "epoch": 2,
+            "rows": 36,
+            "slots": 117,
+            "limb_bits": 32,
+            "integer_objects": 234,
+            "native_used_limbs": 1999,
+            "native_capacity_limbs": 2696,
+            "canonical_magnitude_bits": 58186,
+            "compact_magnitude_bits": 17886,
+            "native_store_peak_logical_payload_bits": 359144,
+            "actual_quantizer_work": 10948,
+            "canonical_quantizer_work": 10948
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "d0a7fb0e7f53e5431d9ef49059fefbdd2c5d4a6108ec39a2be6bf8606a29c05c",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 19,
+            "slots": 65,
+            "limb_bits": 32,
+            "integer_objects": 130,
+            "native_used_limbs": 359,
+            "native_capacity_limbs": 712,
+            "canonical_magnitude_bits": 29214,
+            "compact_magnitude_bits": 8518,
+            "native_store_peak_logical_payload_bits": 129414,
+            "actual_quantizer_work": 4240,
+            "canonical_quantizer_work": 4432
+          },
+          {
+            "epoch": 2,
+            "rows": 36,
+            "slots": 117,
+            "limb_bits": 32,
+            "integer_objects": 234,
+            "native_used_limbs": 719,
+            "native_capacity_limbs": 1356,
+            "canonical_magnitude_bits": 58186,
+            "compact_magnitude_bits": 17886,
+            "native_store_peak_logical_payload_bits": 298148,
+            "actual_quantizer_work": 10516,
+            "canonical_quantizer_work": 10948
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-1-boundaries",
+      "canonical": {
+        "wire_sha256": "e9ff8ea1e9c004b38f4353de1cd8a7faad7e2c8691c2db57dd600edcf463ab47",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 7,
+            "slots": 18,
+            "limb_bits": 32,
+            "integer_objects": 36,
+            "native_used_limbs": 380,
+            "native_capacity_limbs": 472,
+            "canonical_magnitude_bits": 11334,
+            "compact_magnitude_bits": 4366,
+            "native_store_peak_logical_payload_bits": 95578,
+            "actual_quantizer_work": 2356,
+            "canonical_quantizer_work": 2356
+          },
+          {
+            "epoch": 2,
+            "rows": 14,
+            "slots": 36,
+            "limb_bits": 32,
+            "integer_objects": 72,
+            "native_used_limbs": 760,
+            "native_capacity_limbs": 944,
+            "canonical_magnitude_bits": 22668,
+            "compact_magnitude_bits": 8732,
+            "native_store_peak_logical_payload_bits": 122400,
+            "actual_quantizer_work": 4712,
+            "canonical_quantizer_work": 4712
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "fabcb19c93ffa17ad84d3b88d6a4fbdfa565c2c6e2ecd4b6306af89ab58e206b",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 7,
+            "slots": 18,
+            "limb_bits": 32,
+            "integer_objects": 36,
+            "native_used_limbs": 160,
+            "native_capacity_limbs": 264,
+            "canonical_magnitude_bits": 11334,
+            "compact_magnitude_bits": 4366,
+            "native_store_peak_logical_payload_bits": 89754,
+            "actual_quantizer_work": 2308,
+            "canonical_quantizer_work": 2356
+          },
+          {
+            "epoch": 2,
+            "rows": 14,
+            "slots": 36,
+            "limb_bits": 32,
+            "integer_objects": 72,
+            "native_used_limbs": 320,
+            "native_capacity_limbs": 528,
+            "canonical_magnitude_bits": 22668,
+            "compact_magnitude_bits": 8732,
+            "native_store_peak_logical_payload_bits": 109608,
+            "actual_quantizer_work": 4616,
+            "canonical_quantizer_work": 4712
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-1-shared-flop-future",
+      "canonical": {
+        "wire_sha256": "f99322979c2811bfb0258f608b45ff258ce31c4f94382ed892a37249eae5fdac",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1193,
+            "native_capacity_limbs": 1494,
+            "canonical_magnitude_bits": 35506,
+            "compact_magnitude_bits": 13770,
+            "native_store_peak_logical_payload_bits": 228738,
+            "actual_quantizer_work": 6820,
+            "canonical_quantizer_work": 6820
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1231,
+            "native_capacity_limbs": 1526,
+            "canonical_magnitude_bits": 36770,
+            "compact_magnitude_bits": 14514,
+            "native_store_peak_logical_payload_bits": 228738,
+            "actual_quantizer_work": 10320,
+            "canonical_quantizer_work": 10320
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "489e9a0de597649994baf8a28bca8522f664f239bb3cd2e845f2ae4b944cdb2e",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 507,
+            "native_capacity_limbs": 856,
+            "canonical_magnitude_bits": 35506,
+            "compact_magnitude_bits": 13770,
+            "native_store_peak_logical_payload_bits": 208146,
+            "actual_quantizer_work": 6756,
+            "canonical_quantizer_work": 6820
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 529,
+            "native_capacity_limbs": 880,
+            "canonical_magnitude_bits": 36770,
+            "compact_magnitude_bits": 14514,
+            "native_store_peak_logical_payload_bits": 208146,
+            "actual_quantizer_work": 10176,
+            "canonical_quantizer_work": 10320
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-1-sb-loss",
+      "canonical": {
+        "wire_sha256": "d49a6b49110ca1be84a6b808071ae4a215ee671d82db9df5d08c60d4e0c4c32e",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 509,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 14889,
+            "compact_magnitude_bits": 5165,
+            "native_store_peak_logical_payload_bits": 115235,
+            "actual_quantizer_work": 2408,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 509,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 14919,
+            "compact_magnitude_bits": 5195,
+            "native_store_peak_logical_payload_bits": 154533,
+            "actual_quantizer_work": 4816,
+            "canonical_quantizer_work": 4816
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "5ad8e74cc55d7fb642df42d77d801cba9d5a980180613278fad792425ca5b068",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 201,
+            "native_capacity_limbs": 364,
+            "canonical_magnitude_bits": 14889,
+            "compact_magnitude_bits": 5165,
+            "native_store_peak_logical_payload_bits": 107279,
+            "actual_quantizer_work": 2376,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 201,
+            "native_capacity_limbs": 364,
+            "canonical_magnitude_bits": 14919,
+            "compact_magnitude_bits": 5195,
+            "native_store_peak_logical_payload_bits": 136853,
+            "actual_quantizer_work": 4752,
+            "canonical_quantizer_work": 4816
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-1-sb-win",
+      "canonical": {
+        "wire_sha256": "8c331a5d7caef3af3c7f2558de1fb41c5f40d00914de94546d8f8512c8f0c300",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1199,
+            "native_capacity_limbs": 1500,
+            "canonical_magnitude_bits": 35678,
+            "compact_magnitude_bits": 13942,
+            "native_store_peak_logical_payload_bits": 228912,
+            "actual_quantizer_work": 5696,
+            "canonical_quantizer_work": 5696
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 1237,
+            "native_capacity_limbs": 1532,
+            "canonical_magnitude_bits": 36958,
+            "compact_magnitude_bits": 14702,
+            "native_store_peak_logical_payload_bits": 228912,
+            "actual_quantizer_work": 7920,
+            "canonical_quantizer_work": 7920
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "72b9feee1f14e72fc353885c7fe7da12d2622777d159c2531bafc7b12590c668",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 513,
+            "native_capacity_limbs": 856,
+            "canonical_magnitude_bits": 35678,
+            "compact_magnitude_bits": 13942,
+            "native_store_peak_logical_payload_bits": 208320,
+            "actual_quantizer_work": 5696,
+            "canonical_quantizer_work": 5696
+          },
+          {
+            "epoch": 2,
+            "rows": 25,
+            "slots": 59,
+            "limb_bits": 32,
+            "integer_objects": 118,
+            "native_used_limbs": 535,
+            "native_capacity_limbs": 880,
+            "canonical_magnitude_bits": 36958,
+            "compact_magnitude_bits": 14702,
+            "native_store_peak_logical_payload_bits": 208320,
+            "actual_quantizer_work": 7920,
+            "canonical_quantizer_work": 7920
+          }
+        ]
+      }
+    },
+    {
+      "case": "profile-1-shared-board-distinct-holding",
+      "canonical": {
+        "wire_sha256": "e54ee29d918553132587c89d0fda6cb0e549502a005b44063fcb6ae160e4cefc",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 509,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 14873,
+            "compact_magnitude_bits": 5149,
+            "native_store_peak_logical_payload_bits": 115217,
+            "actual_quantizer_work": 2408,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 21,
+            "slots": 54,
+            "limb_bits": 32,
+            "integer_objects": 108,
+            "native_used_limbs": 994,
+            "native_capacity_limbs": 1304,
+            "canonical_magnitude_bits": 29260,
+            "compact_magnitude_bits": 9708,
+            "native_store_peak_logical_payload_bits": 186149,
+            "actual_quantizer_work": 7400,
+            "canonical_quantizer_work": 7400
+          }
+        ]
+      },
+      "compact": {
+        "wire_sha256": "73d2539eaa31505dcbaa443c91041e6709523f2c00e840ef5f77f37999e58cf2",
+        "storage": [
+          {
+            "epoch": 1,
+            "rows": 11,
+            "slots": 29,
+            "limb_bits": 32,
+            "integer_objects": 58,
+            "native_used_limbs": 201,
+            "native_capacity_limbs": 364,
+            "canonical_magnitude_bits": 14873,
+            "compact_magnitude_bits": 5149,
+            "native_store_peak_logical_payload_bits": 107261,
+            "actual_quantizer_work": 2376,
+            "canonical_quantizer_work": 2408
+          },
+          {
+            "epoch": 2,
+            "rows": 21,
+            "slots": 54,
+            "limb_bits": 32,
+            "integer_objects": 108,
+            "native_used_limbs": 374,
+            "native_capacity_limbs": 672,
+            "canonical_magnitude_bits": 29260,
+            "compact_magnitude_bits": 9708,
+            "native_store_peak_logical_payload_bits": 163633,
+            "actual_quantizer_work": 7272,
+            "canonical_quantizer_work": 7400
+          }
+        ]
+      }
+    }
+  ],
+  "stored_expanded_bytes": 13942531,
+  "scope": "Exact same-Store carriers and current literal parent mathematics. Used limbs independently exact; capacity is authenticated original native observation with plausibility bounds. No allocator/RSS, runtime, longer-lifetime or solved-quality admission."
+}

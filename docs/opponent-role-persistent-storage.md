@@ -38,7 +38,9 @@ integer magnitude payload and 25.70% of the unchanged-descriptor logical row
 model. Descriptors remain substantial. These are representation models;
 they do not measure allocator capacity, object overhead, peak memory/RSS
 or runtime, and cannot forecast a million-observation policy from twelve
-deterministic traces. The existing Store is unchanged.
+deterministic traces. That audit did not change the Store. The subsequent
+[same-owner implementation and measured acceptance](compact-role-persistent-store.md)
+are recorded separately, including exact historical-default parity.
 
 Original raw/Git source maps, exact converted images and both outcomes are
 preserved in the [immutable audit packet](../benchmarks/results/opponent-role-storage-audit-v1/manifest.json).
