@@ -292,3 +292,4 @@ benchmarks/results/opponent-role-walk-v1/** -text
 /benchmarks/results/opponent-role-storage-audit-v1/** -text
 /benchmarks/results/opponent-role-storage-audit-expected-v1/** -text
 /benchmarks/results/compact-role-storage-v1/** -text
+/benchmarks/results/compact-role-storage-cost-v1/** -text

@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 605286,
+      "expanded_bytes": 942920,
+      "file": "observations.zip",
+      "manifest_sha256": "7340a4b32612f0867737b932531db07e5f38157d5f1ffd596efc9311bd31d7e3",
+      "members": 1491,
+      "sha256": "1994346119194aebb777c28dcac494e2782e133017133ed71f2024a2e58bb1b5"
+    },
+    {
+      "bytes": 56016,
+      "expanded_bytes": 90552,
+      "file": "builds.zip",
+      "manifest_sha256": "aa5b4a83805f8da8b4ae1ae29666279315e98dc7f900fcaa038fd2d092d00f26",
+      "members": 82,
+      "sha256": "c553a87ec2df1635d2d10c388497508f00954215759bf7a96b7d838dd2254485"
+    },
+    {
+      "bytes": 931632,
+      "expanded_bytes": 2249968,
+      "file": "objects.zip",
+      "manifest_sha256": "5540638373355bb395f5297c24a16c3ed1c2cbc863c031e9dd1d5bb85ddcb750",
+      "members": 106,
+      "sha256": "29f31698f4dae718bfa5b30f77fec272b7492fb79aa64c5ca7a817f618464a63"
+    }
+  ],
+  "exact_shared_objects": 105,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "982bd23ad6bbf3da147afcea6454bb901da45630a87431243f8900df4b548259",
+  "scope": "All original same-policy compact storage timings and complete sources/policies. Original nonregression rule retained; no whole-memory, stable throughput or solved-quality admission.",
+  "stored_expanded_bytes": 3283440,
+  "version": "compact-role-cost-package-v1"
+}
