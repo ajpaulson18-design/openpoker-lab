@@ -34,6 +34,9 @@ jobs:
           python -B -m scripts.replay_opponent_role_walk > "$RUNNER_TEMP/role-walk-replay-normal.json"
           python -O -B -m scripts.replay_opponent_role_walk > "$RUNNER_TEMP/role-walk-replay-optimized.json"
           python -B -m unittest tests.test_virtual_role_walk_admission tests.test_opponent_role_walk_packet_admission -v
+          python -B -m scripts.replay_opponent_role_cost > "$RUNNER_TEMP/role-walk-cost-normal.json"
+          python -O -B -m scripts.replay_opponent_role_cost > "$RUNNER_TEMP/role-walk-cost-optimized.json"
+          python -B -m unittest tests.test_opponent_role_cost_packet_admission -v
       - name: Build explicit whole walk and independent scalar controls
         shell: bash
         run: |

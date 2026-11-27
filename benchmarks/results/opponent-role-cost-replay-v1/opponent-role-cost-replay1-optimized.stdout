@@ -1,0 +1,54 @@
+{
+  "status": "role-walk-complete-call-cost-replayed",
+  "original_native_processes": 136,
+  "pre_observation_refusals": 2,
+  "paired_elapsed_ratios": [
+    0.1694685684004524,
+    0.6030649579862417,
+    0.6145265131706186,
+    0.08934534316971766,
+    0.8126556751049927,
+    0.3175044888035289,
+    0.16532550695938253,
+    2.8522884087288243
+  ],
+  "median_candidate_baseline_ratio": 0.4602847233948853,
+  "candidate_faster_pairs": 7,
+  "cost_gate_pass": true,
+  "ratio_range": [
+    0.08934534316971766,
+    2.8522884087288243
+  ],
+  "fresh": [
+    {
+      "case": "same-world",
+      "baseline_wire_sha256": "7c0caec3459a3efe65a431c4fc6bc21f8d2b51fb7252fa389972895186546f34",
+      "candidate_wire_sha256": "23f075f37ed946c493069b3e32aa3c40ef3124bc4c1987c7e94d9a5d722dc264",
+      "candidate_numeric_coordinates": 1096
+    },
+    {
+      "case": "sb-loss",
+      "baseline_wire_sha256": "26a83c36861afd1fbf136a48f97e934a15445c2b62bdda84cc83aabe039b8d3b",
+      "candidate_wire_sha256": "44e9fc62bae715766d4786f1318bf29cf7b4c868b5b3cc95e7be2f66191b7987",
+      "candidate_numeric_coordinates": 352
+    },
+    {
+      "case": "sb-win",
+      "baseline_wire_sha256": "17a0202f5a6b67dbb6af283b4bcd07a7276b01a01e6aa0784df66489f8d659dc",
+      "candidate_wire_sha256": "a4e50bd99746bc7a1178a5c437e4c6737552a2b563331f0f5079fcebb5f69bb7",
+      "candidate_numeric_coordinates": 610
+    },
+    {
+      "case": "shared-board-distinct-holding",
+      "baseline_wire_sha256": "47f17ef5181f57bdbc3135b1eb182c6f491f886cf071b48726c53dd642bebeca",
+      "candidate_wire_sha256": "74596ab4d66813f6a8214d03d79f24ad611742e134beafc22269830ef78dd8d8",
+      "candidate_numeric_coordinates": 448
+    }
+  ],
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "equal_quality_speedup_admitted": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 4236105,
+  "scope": "Different deterministic T2 estimators and transport sizes; one uncontrolled-load host. Gate passes its frozen rule; high dispersion does not establish stable throughput or equal-quality solving speed."
+}

@@ -16,8 +16,23 @@ with no RNG, longer lifetime, timing/equal-quality or solved-quality claim.
 An independent retention argument and 772-vector controls show that nonzero
 rows cannot disappear under coupled centered regret matching. Long-run
 numerical storage remains a scaling gate; the old eleven-card exhaustive
-refusal is unchanged. Fresh Windows/Linux/sanitizer CI is configured and its
-current result remains separate from local evidence.
+refusal is unchanged. At `98f21a6`, all three complete role-walk CI jobs pass:
+Windows 140701586449, Linux 140701586759 and sanitized 140701586736,
+run 46056927692. Each executes saved replay/admission, fresh source builds,
+both full twelve-case matrices and artifact publication. The shared-role
+workflow and full test suite also pass at that head. The standalone Windows
+full-deck chance translation unit remains a separate compiler-failure gate;
+the entire PR is not globally green.
+
+The [complete-call role/full cost study](../opponent-role-walk-cost.md)
+retains 136 original processes and both initial pre-observation refusals.
+Each estimator's full wire is independently verified; they use the same
+physical schedule but produce different updates and output sizes. Its frozen
+cost rule passes (median ratio 0.460285, seven of eight pairs faster), with
+large dispersion 0.089345..2.852288. No stable-throughput or equal-quality
+speedup is admitted. Paired saved-only cost replay passes with identical
+reports and no native/archived-code calls. Next resolve persistent-state
+scaling and random-stream ownership before longer learning or quality claims.
 
 The [shared Store role facade](../opponent-role-epoch.md) now passes paired
 original native component execution: 44 refusal guards, three compile-time

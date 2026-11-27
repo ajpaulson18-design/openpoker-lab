@@ -87,7 +87,10 @@ build, invocation and process closure before numerical imports. It then
 reconstructs all twelve cases using current literal mathematics. Cross-platform
 builds, sanitizer execution and original matrix reproduction have a dedicated
 [workflow](../.github/workflows/opponent-role-walk.yml); its current statuses
-must be checked separately from local success.
+must be checked separately from local success. At `98f21a6`, all three
+complete jobs pass: Windows 140701586449, Linux 140701586759 and
+sanitized 140701586736, run 46056927692. This includes artifact publication
+and fresh original execution, not only saved replay.
 
 At reader `007c462d9abf14a47de54179f04a9d9e36019bed`, normal and optimized
 saved-only reports are byte-identical with SHA256
@@ -126,5 +129,8 @@ encounter/variance behavior, convergence, visible-information saved-policy
 quality and cost at equal quality remain open. The old eleven-card exhaustive
 State/Quantizer/parent refusal remains unchanged. This full52 two-observation
 path does not admit that exhaustive schedule or realistic unrestricted NLHE.
-The next architectural decision must measure storage growth and useful
-learning per unit cost before extending the lifetime or changing ownership.
+The [subsequent complete-call cost study](opponent-role-walk-cost.md) passes
+its frozen named-request rule with substantial timing dispersion. It does
+not establish stable throughput or cost at equal quality. The next
+architectural decision must measure storage growth and useful learning per
+unit cost before extending the lifetime or changing ownership.
