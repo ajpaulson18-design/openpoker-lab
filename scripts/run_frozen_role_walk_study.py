@@ -12,7 +12,7 @@ from scripts.build_frozen_role_walk import register, TARGET, CONTROLS, SOURCES
 def run(executable,controls,output,profile,selectors,rule):
     executable=Path(executable).resolve();controls=Path(controls).resolve();output=Path(output).resolve();register()
     need(output.parent==ROOT.parent.resolve() and not output.exists(),'role walk fresh external study directory')
-    names=closure(('scripts/run_frozen_role_walk_study.py','tests/virtual_role_walk_wire_reference.py',
+    names=closure(('scripts/run_frozen_role_walk_study.py','scripts/run_frozen_role_walk_matrix.py','tests/virtual_role_walk_wire_reference.py',
         'tests/test_native_exact_reach.py','tests/virtual_frozen_run_control.py'))
     for name in (*SOURCES[TARGET],*SOURCES[CONTROLS],
         'third_party/boost-multiprecision-1.92.0/manifest.json',
