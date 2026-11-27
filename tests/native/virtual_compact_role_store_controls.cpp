@@ -56,24 +56,24 @@ int main(int argc,char**) {
             Fixture fixture(history);
             for(unsigned step=0;step<2;++step) {
                 fixture.owner.apply_world(0,0,[&](r::Store::Epoch& epoch,const r::Certificate& sample) {
-                    r::Store::Token token;std::array<std::uint64_t,2> averages{};
+                    r::Store::Token token;std::array<std::uint64_t,4> averages{};
                     for(unsigned target=0;target<2;++target) {
                         const auto row=epoch.observe(history.root(),0,sample.holding_indices()[0]);
-                        r::require(row.units.size()==2,"compact Store root menu");token=row.token;
+                        r::require(row.units.size()==4,"compact Store root menu");token=row.token;
                         std::copy(row.units.begin(),row.units.end(),averages.begin());epoch.finish_target(target);
                     }
-                    epoch.seal();const std::array<Integer,2> regrets=step?std::array<Integer,2>{0,2*dr}:std::array<Integer,2>{dr,-dr};
+                    epoch.seal();const std::array<Integer,4> regrets=step?std::array<Integer,4>{0,2*dr,0,0}:std::array<Integer,4>{dr,-dr,0,0};
                     epoch.stage(token,regrets,averages);
                 });
                 std::size_t rows=0;
                 fixture.owner.visit_committed([&](auto,std::span<const Integer> rr,std::span<const Integer> aa,std::span<const std::uint64_t> units) {
-                    ++rows;r::require(rr.size()==2 && aa.size()==2 && units.size()==2,"compact Store complete exported row");
-                    const std::array<Integer,2> expected_r=step?std::array<Integer,2>{dr,dr}:std::array<Integer,2>{dr,-dr};
-                    const std::array<Integer,2> expected_a=step?std::array<Integer,2>{3*da/2,da/2}:std::array<Integer,2>{da/2,da/2};
-                    const std::array<std::uint64_t,2> expected_units=step?std::array<std::uint64_t,2>{t::grid/2,t::grid/2}:std::array<std::uint64_t,2>{t::grid,0};
-                    for(std::size_t a=0;a<2;++a)r::require(rr[a]==expected_r[a] && aa[a]==expected_a[a] && units[a]==expected_units[a],
+                    ++rows;r::require(rr.size()==4 && aa.size()==4 && units.size()==4,"compact Store complete exported row");
+                    const std::array<Integer,4> expected_r=step?std::array<Integer,4>{dr,dr,0,0}:std::array<Integer,4>{dr,-dr,0,0};
+                    const std::array<Integer,4> expected_a=step?std::array<Integer,4>{5*da/4,da/4,da/4,da/4}:std::array<Integer,4>{da/4,da/4,da/4,da/4};
+                    const std::array<std::uint64_t,4> expected_units=step?std::array<std::uint64_t,4>{t::grid/2,t::grid/2,0,0}:std::array<std::uint64_t,4>{t::grid,0,0,0};
+                    for(std::size_t a=0;a<4;++a)r::require(rr[a]==expected_r[a] && aa[a]==expected_a[a] && units[a]==expected_units[a],
                         "compact Store exact evolving state/policy");
-                    output<<"ROW "<<step+1;for(std::size_t a=0;a<2;++a)output<<' '<<rr[a]<<' '<<aa[a]<<' '<<units[a];output<<'\n';
+                    output<<"ROW "<<step+1;for(std::size_t a=0;a<4;++a)output<<' '<<rr[a]<<' '<<aa[a]<<' '<<units[a];output<<'\n';
                 });
                 r::require(rows==1 && fixture.owner.receipt().commits==step+1,"compact Store complete exact commit/export");
             }
@@ -87,9 +87,9 @@ int main(int argc,char**) {
         for(std::size_t guard=0;guard<labels.size();++guard)refuses(labels[guard],[&] {
             Fixture fixture(history);e::Store owner(fixture.catalog,history,{2,2},sl,e::ArithmeticContract::weighted_joint_role_compact);
             auto lease=owner.begin_epoch(e::ProposalLaw::true_joint);const auto view=lease.frozen_policy(history.root(),0,0);
-            r::require(view.units.size()==2 && owner.regret_denominator_value()==dr && owner.average_denominator_value()==da,
+            r::require(view.units.size()==4 && owner.regret_denominator_value()==dr && owner.average_denominator_value()==da,
                 "compact Store private denominator/read contract");
-            lease.seal_raw_walk(1,2,1);std::array<Integer,2> rr{0,0},aa{da/2,da/2};Integer ar=da,rg=dr;
+            lease.seal_raw_walk(1,4,1);std::array<Integer,4> rr{0,0,0,0},aa{da/4,da/4,da/4,da/4};Integer ar=da,rg=dr;
             if(guard==0)rg=Integer(1)<<625;
             if(guard==1)ar=Integer(1)<<364;
             if(guard==2){rr[0]=Integer(1)<<370;rr[1]=-rr[0];}
@@ -100,7 +100,7 @@ int main(int argc,char**) {
             catch(...){r::require(owner.failed() && owner.receipt().commits==0,"compact Store rejection published state");throw;}
         });
         r::require(history.receipt().work<=t::history_cap,"compact Store cumulative shared History work");
-        output<<"COMPACT_STORE_PASS 2 12 10\n";const auto raw=output.str();r::require(raw.size()<=65536,"compact Store output cap");
+        output<<"COMPACT_STORE_PASS 2 24 10\n";const auto raw=output.str();r::require(raw.size()<=65536,"compact Store output cap");
         std::cout<<raw;return 0;
     }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 2;}
 }

@@ -105,19 +105,20 @@ def verify_controls(raw):
     budget=(43000000+42000000+9*(1000000+cat_work+2*role[2])+1000000+16*65536,
         131072+35361+9*(12000+cat_words+2*role[5])+65536+16384,
         131072*64+(8<<20)+9*((1<<20)+64*cat_words+2*role[6])+(1<<22)+8*65536)
-    need(lines[0]=='COMPACT_STORE_BUDGET '+' '.join(map(str,budget)) and lines[-1]=='COMPACT_STORE_PASS 2 12 10',
+    need(lines[0]=='COMPACT_STORE_BUDGET '+' '.join(map(str,budget)) and lines[-1]=='COMPACT_STORE_PASS 2 24 10',
          'compact storage controls complete admission/footer')
     rows={};guards=set()
     for line in lines[1:-1]:
         values=line.split()
         if values[0]=='ROW':
-            need(len(values)==8,'compact storage controls complete numeric row');step=int(values[1])
+            need(len(values)==14,'compact storage controls complete numeric row');step=int(values[1])
             need(step not in rows,'compact storage controls unique step');rows[step]=tuple(map(int,values[2:]))
         else:
             need(len(values)==3 and values[0]=='GUARD' and values[2]=='PASS' and values[1] not in guards,
                  'compact storage controls real guard result');guards.add(values[1])
-    expected={1:(D,Q//2,Q,-D,Q//2,0),2:(D,3*Q//2,Q//2,D,Q//2,Q//2)}
+    expected={1:(D,Q//4,Q,-D,Q//4,0,0,Q//4,0,0,Q//4,0),
+        2:(D,5*Q//4,Q//2,D,Q//4,Q//2,0,Q//4,0,0,Q//4,0)}
     need(rows==expected and guards=={'unknown-persistent','compact-without-observation','two-policy-reads',
         'unknown-arithmetic','canonical-regret-scale','canonical-average-scale','wide-regret','wide-average',
         'negative-average','uncentered-regret'},'compact storage independent exact synthetic transitions/guards')
-    return {'steps':2,'numeric_coordinates':12,'runtime_guards':10,'complete_budget':budget}
+    return {'steps':2,'numeric_coordinates':24,'runtime_guards':10,'complete_budget':budget}
