@@ -99,7 +99,7 @@ class Walk final {
         auto& row=rows_[static_cast<std::size_t>(index)];
         t::require(row.actor==actor && row.holding==view.descriptor.holding_index && row.ordinal==view.descriptor.history_ordinal && row.source==source && row.actions==k &&
             std::equal(view.units.begin(),view.units.end(),row.units.begin()),"role raw bound-world directory identity");
-        row.roles|=1U<<target;t::require(row.roles==view.roles,"role raw/facade target role agreement");
+        row.roles|=std::uint64_t{1}<<target;t::require(row.roles==view.roles,"role raw/facade target role agreement");
         if(actor!=target) {
             charge(Family::average,64+16*k);const auto at=counts_.tickets[target];
             t::require(at<tapes_[target].size() && choices_.size()<204,"role raw action tape exhausted");const auto ticket=tapes_[target][at];
