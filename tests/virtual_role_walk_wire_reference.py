@@ -219,10 +219,10 @@ def verify(raw, request, profile, selectors, rule):
     # range/template preparation and the independent mathematical walk.
     receipts(records)
     ctx=Context(profile,selectors,rule);ctx.run()
-    return compare(records,request,ctx,admission)
+    return compare(records,request,ctx,admission,len(raw))
 
 
-def compare(records,request,ctx,admission):
+def compare(records,request,ctx,admission,wire_bytes):
     """Compare an already independently generated request without a second law build.
 
     Original studies generate the admitted literal request before native launch;
@@ -246,7 +246,7 @@ def compare(records,request,ctx,admission):
     return {'contract':'opponent-role-four-street-literal-v1','profile':ctx.profile,'selectors':ctx.selectors,'rule':ctx.rule,
         'executed_signed_regret_epochs':2,'production_calls':0,'rng_calls':0,'quality_gate':None,
         'all_numeric_coordinates':coordinates,'raw_rows':[len(r['raw']) for r in records],
-        'retained_rows':[len(r['snapshot']) for r in records],'wire_bytes':len(raw),
+        'retained_rows':[len(r['snapshot']) for r in records],'wire_bytes':wire_bytes,
         'native_forecast':admission['native'],'sample_reference_receipt':ctx.meter.receipt(),
         'ledger_scope':'Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS.'}
 

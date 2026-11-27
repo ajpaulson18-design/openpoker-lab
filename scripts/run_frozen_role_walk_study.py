@@ -61,7 +61,7 @@ def run(executable,controls,output,profile,selectors,rule):
     (output/'independent-state.json').write_text(json.dumps(state,indent=2)+'\n')
     raw=invoke('native',executable,TARGET,(path,))
     tapes=request_tapes(request,profile,selectors);records=parse(raw,profile,selectors,tapes);receipts(records)
-    report=compare(records,request,ctx,ctx.admission)
+    report=compare(records,request,ctx,ctx.admission,len(raw))
     # Framing, forecast, root, and committed numeric corruptions are distinct.
     changed=[('truncated',raw[:-1]),('trailing',raw+b'\0')]
     for label,offset in (('forecast',8+13*8),('target-root',280+8+18*8),
@@ -71,7 +71,7 @@ def run(executable,controls,output,profile,selectors,rule):
     for label,body in changed:
         (output/'mutations'/(label+'.bin')).write_bytes(body)
         try:
-            altered=parse(body,profile,selectors,tapes);receipts(altered);compare(altered,request,ctx,ctx.admission)
+            altered=parse(body,profile,selectors,tapes);receipts(altered);compare(altered,request,ctx,ctx.admission,len(body))
         except ValueError:pass
         else:raise ValueError('role walk altered evidence accepted: '+label)
     bad=[]
