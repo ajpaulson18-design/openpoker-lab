@@ -117,7 +117,10 @@ def replay(packet=PACKET):
     with TemporaryDirectory(prefix='role-row-depth-replay-', dir=ROOT.parent) as temporary:
         output = Path(temporary).resolve()
         need(output.parent == ROOT.parent.resolve() and output.name.startswith('role-row-depth-replay-'), 'row depth owned replay scratch')
-        output.rmdir(); fresh = audit(output)
+        output.rmdir(); audit(output)
+        # Compare the actual serialized report to the stored serialized
+        # report: JSON arrays/object keys normalize Python tuples/int keys.
+        fresh = helper.decode((output/'result.json').read_bytes())
         need({k: v for k, v in fresh.items() if k != 'source_head'} == {k: v for k, v in primary.items() if k != 'source_head'},
              'row depth complete current independent structural and numerical replay')
         for name in ('row-carriers.json', 'structural-powers.json', 'independent-state-replay.json'):
