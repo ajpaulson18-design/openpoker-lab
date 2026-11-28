@@ -4,8 +4,12 @@ The explicit compact research target now retains smaller R/A integers in
 the same sparse Store that already owns all policies. It keeps the canonical
 default and the fixed two-epoch lifetime. Exact native state comparison,
 historical-default byte parity, independent saved replay and a frozen
-same-policy complete-call cost study pass locally. Cross-platform status
-must be verified separately before broader acceptance.
+same-policy complete-call cost study pass locally. At `45fad5d`, fresh
+Windows, Linux and ASan/UBSan jobs all pass in
+[run 46085258753](https://github.com/ajpaulson18-design/openpoker-lab/actions/runs/46085258753):
+jobs 140793226611, 140793226796 and 140793226858. Each builds both carriers,
+controls and the historical default, executes both twelve-case matrices,
+performs saved state/cost replay and publishes complete artifacts.
 
 This implements the boundary selected by the
 [lossless representation audit](opponent-role-persistent-storage.md),
@@ -171,7 +175,11 @@ reports are byte-identical with SHA256
 The [cross-platform workflow](../.github/workflows/compact-role-storage.yml)
 builds both storage variants, controls and the original default, then repeats
 both complete matrices, admission checks and saved-only replays. Its current
-head must pass independently of these local results. Canonical defaults,
+head must pass independently of these local results. The separate Windows
+chance workflow still fails while compiling `virtual_dyadic_history_controls.cpp`
+with MSVC 19.52, exit `3221225725` (`0xC00000FD`), before component execution
+(run 46085258607, job 140793225846). This is not a globally green PR.
+Canonical defaults,
 T2 lifetime, old eleven-card exhaustive refusal, RNG ownership and
 saved-policy quality gates remain unchanged. Next derive a bounded longer-run
 state/export schedule and a reproducible random-stream contract before

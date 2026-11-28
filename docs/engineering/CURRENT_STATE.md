@@ -13,8 +13,11 @@ memory/RSS. The frozen 260-call same-policy comparison passes its original
 nonregression gate (median ratio 0.943026, two pairs above 1.10), with all
 observations preserved. Independent saved state/timing replay passes both
 Python modes with no native or archived-code calls. Solver ceilings and T2
-lifetime remain unchanged; new cross-platform CI is configured and requires
-fresh verification before further acceptance.
+lifetime remain unchanged. At `45fad5d`, new compact workflow 46085258753
+passes Windows 140793226611, Linux 140793226796 and sanitized 140793226858,
+including both fresh twelve-case matrices and saved replays. The separate
+Windows chance workflow still fails compiling the History control translation
+unit with MSVC 19.52/`0xC00000FD` before execution; the PR is not globally green.
 
 The [native full four-street role walk](../opponent-role-four-street-walk.md)
 now passes twelve full1326-range named cases in both Python modes through the
