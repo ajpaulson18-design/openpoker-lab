@@ -106,8 +106,15 @@ int main() {
         const std::vector<WeightedHand> sb6{{{48,49},kOne},{{48,50},kOne},{{48,51},kOne}},bb6{{{44,45},kOne},{{44,46},kOne},{{44,47},kOne}};
         Plan g6(shared_reconvergent_graph(),sb6,bb6,std::vector<SelectedBoard>{{{1,2,3,0,4}}},10); require(g6.group().size()==6,"G6 fixture"); check_frame_parity(g6);
         {
-            std::vector<SelectedBoard> chance_boards; std::array<std::uint8_t,3> suits{1,2,3};
-            do { SelectedBoard b{{suits[0],static_cast<graph::Card>(4+suits[1]),static_cast<graph::Card>(8+suits[2]),12,16}}; std::sort(b.cards.begin(),b.cards.begin()+3); chance_boards.push_back(b); } while(std::next_permutation(suits.begin(),suits.end()));
+            std::vector<SelectedBoard> chance_boards;
+            constexpr std::array<std::array<std::uint8_t,3>,6> suit_orders{{
+                {1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,1,2},{3,2,1}}};
+            for (const auto& suits : suit_orders) {
+                SelectedBoard board{{suits[0],static_cast<graph::Card>(4+suits[1]),
+                    static_cast<graph::Card>(8+suits[2]),12,16}};
+                std::sort(board.cards.begin(),board.cards.begin()+3);
+                chance_boards.push_back(board);
+            }
             std::vector<std::string> labels;
             for(const auto& board:chance_boards) labels.push_back(graph::detail::card_text(board.cards[0])+graph::detail::card_text(board.cards[1])+graph::detail::card_text(board.cards[2]));
             std::sort(labels.begin(),labels.end()); std::vector<graph::Branch> branches; for(const auto& label:labels) branches.emplace_back(label,1);

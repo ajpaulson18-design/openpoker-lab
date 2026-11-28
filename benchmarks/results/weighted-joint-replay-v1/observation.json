@@ -1,0 +1,36 @@
+{
+  "schema": "weighted-current-replay-observation-v1",
+  "files": {
+    "weighted-packet-replay1-normal.log": {
+      "bytes": 1849,
+      "sha256": "c22a943a862cca03690d79fc69c10a64286a5c15780a870180c62f4d0c4221de",
+      "source_commit_prefix": "3b505e7",
+      "observed_outer_exit": 1,
+      "scope": "Source-authentication refusal before numerical imports: abbreviated Git identity."
+    },
+    "weighted-packet-replay2-normal.log": {
+      "bytes": 32997,
+      "sha256": "4cd7738d7f7d2e051b4cc51a033b1b60fb64009d09a7663b28f8a84672825de7",
+      "source_commit_prefix": "7259240",
+      "observed_outer_exit": 0,
+      "scope": "Fresh primary full52 arithmetic and timing replay; no native/archive execution."
+    },
+    "weighted-packet-replay2-optimized.log": {
+      "bytes": 32997,
+      "sha256": "4cd7738d7f7d2e051b4cc51a033b1b60fb64009d09a7663b28f8a84672825de7",
+      "source_commit_prefix": "7259240",
+      "observed_outer_exit": 0,
+      "scope": "Optimized-Python fresh primary full52 arithmetic and timing replay; no native/archive execution."
+    },
+    "weighted-packet-admission1.log": {
+      "bytes": 453,
+      "sha256": "ac99be9633c64a1586ea7fb1aaa922123ddb8dc5bde0e27e108ca3128556684c",
+      "source_commit_prefix": "7259240",
+      "observed_outer_exit": 0,
+      "scope": "Two tampering tests/four child refusals before numerical imports."
+    }
+  },
+  "provenance": "Byte-for-byte post-run report copies and actual exits observed by root tool processes. This is not a new pre-run raw capture.",
+  "immutable_packet_manifest_sha256": "4aa3f0406a5b8cf422f1739ea78fa59b9d50f6e32b650f02ed4a0dc684f1eb64",
+  "fresh_scope": "Both primary full52 matrices and paired timing arithmetic only; other evidence authentication scope remains explicit."
+}

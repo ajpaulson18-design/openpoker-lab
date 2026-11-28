@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 59555,
+      "expanded_bytes": 360666,
+      "file": "observations.zip",
+      "manifest_sha256": "e299174367142a27dd9921b49682e39cf56cb5ce7d0b0659d8417131698d70c1",
+      "members": 77,
+      "sha256": "3be21c239802dfdab9883ccfdfba40f0af38a6291d74b6c036963872bee17027"
+    },
+    {
+      "bytes": 4712,
+      "expanded_bytes": 9657,
+      "file": "builds.zip",
+      "manifest_sha256": "456896715296f52365fc1cfa019fcb686150d98c65fd59ed8bf496687f948740",
+      "members": 4,
+      "sha256": "dec611704b4627f8655e73d24d2b9246b4e1f6083e91e47a8b20e6f4c423e747"
+    },
+    {
+      "bytes": 380439,
+      "expanded_bytes": 5736127,
+      "file": "objects.zip",
+      "manifest_sha256": "5b3941172e313aff0582ad1f3e1ad0e935eaefcf7bdd6fa3b45531226f617db9",
+      "members": 33,
+      "sha256": "7ba9eed9d22a4a5ac7d87177b40981b3019d136f302766397ac48ba8ef65fa7a"
+    }
+  ],
+  "exact_shared_objects": 32,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "021d047813aeb37ea143e60f5aa8d55b639092d6facfbf724d0daf999d7a7267",
+  "scope": "Original conditional first/second moments, all raw policy coordinates and supported transcript factors. No archived code execution, global chance variance, native sampler, learning quality or unrestricted NLHE admission.",
+  "stored_expanded_bytes": 6106450,
+  "version": "opponent-moments-package-v1"
+}

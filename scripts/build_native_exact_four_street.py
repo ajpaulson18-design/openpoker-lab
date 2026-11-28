@@ -19,7 +19,19 @@ DEPENDENCY = ROOT / "third_party/boost-multiprecision-1.92.0"
 DEPENDENCY_MANIFEST_SHA256 = "4d6f33341887e35a0c29e9dc5da2a326d546427940c2b16b485db0c61b042555"
 HEADER_ARCHIVE_SHA256 = "33c422ab3ebfa9e86c62f41f372ec2b9c2cefa303f1885391aa4d8250ef2f831"
 LICENSE_SHA256 = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
-TARGETS = {"converter": ("native-exact-binary64-probe", (
+TARGETS = {
+    "prepared-weighted-joint-controls": ("native-prepared-weighted-joint-controls", (
+        "tests/native/prepared_weighted_joint_ticket_controls.cpp", "native/prepared_public_chance.hpp",
+        "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
+    "training-phase-profile-controls": ("native-training-phase-profile-controls", (
+        "tests/native/training_phase_profile_controls.cpp", "native/training_phase_profile.hpp", "native/training_phase_trace.hpp")),
+    "dyadic-policy-division-controls": ("native-dyadic-policy-division-controls", (
+        "tests/native/dyadic_policy_division_controls.cpp", "native/dyadic_policy_division.hpp", "native/exact_binary64.hpp")),
+    "factored-dyadic-controls": ("native-factored-dyadic-controls", (
+        "tests/native/factored_dyadic_controls.cpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/exact_binary64.hpp")),
+    "packed-signed-update-controls": ("native-packed-signed-update-controls", (
+        "tests/native/packed_signed_update_controls.cpp", "native/packed_signed_update.hpp", "native/exact_binary64.hpp")),
+    "converter": ("native-exact-binary64-probe", (
     "native/exact_binary64_probe.cpp", "native/exact_binary64.hpp")),
     "kernel": ("native-exact-selected-vectors", (
         "native/exact_selected_kernel_probe.cpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
@@ -71,9 +83,10 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-training": ("native-virtual-dyadic-training-probe", (
         "native/virtual_dyadic_training_probe.cpp", "native/virtual_dyadic_training.hpp",
+        "native/training_phase_profile.hpp", "native/training_phase_trace.hpp",
         "native/prepared_public_chance.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_dyadic_state.hpp",
-        "native/virtual_dyadic_paged_image.hpp",
-        "native/dyadic_policy.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
+        "native/virtual_dyadic_paged_image.hpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/packed_signed_update.hpp",
+        "native/dyadic_policy.hpp", "native/dyadic_policy_division.hpp", "native/virtual_betting_template.hpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-history-controls": ("native-virtual-dyadic-history-controls", (
         "tests/native/virtual_dyadic_history_controls.cpp", "native/virtual_dyadic_history.hpp",
@@ -81,14 +94,14 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "virtual-dyadic-state-controls": ("native-virtual-dyadic-state-controls", (
         "tests/native/virtual_dyadic_state_controls.cpp", "native/virtual_dyadic_state.hpp",
-        "native/virtual_dyadic_paged_image.hpp",
-        "native/dyadic_policy.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
+        "native/virtual_dyadic_paged_image.hpp", "native/factored_dyadic.hpp", "native/factored_execution.hpp", "native/packed_signed_update.hpp",
+        "native/dyadic_policy.hpp", "native/dyadic_policy_division.hpp", "native/virtual_dyadic_history.hpp", "native/virtual_betting_template.hpp",
         "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "prepared-public-chance-controls": ("native-prepared-public-chance-controls", (
         "tests/native/prepared_public_chance_controls.cpp", "native/prepared_public_chance.hpp",
         "native/full_deck_public_chance.hpp", "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
     "dyadic-policy-controls": ("native-dyadic-policy-controls", (
-        "tests/native/dyadic_policy_controls.cpp", "native/dyadic_policy.hpp", "native/exact_binary64.hpp")),
+        "tests/native/dyadic_policy_controls.cpp", "native/dyadic_policy.hpp", "native/dyadic_policy_division.hpp", "native/exact_binary64.hpp")),
     "full-deck-prefix-fold-controls": ("native-full-deck-prefix-fold-controls", (
         "tests/native/full_deck_prefix_fold_controls.cpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp")),
@@ -104,6 +117,119 @@ TARGETS = {"converter": ("native-exact-binary64-probe", (
         "native/full_deck_public_chance_probe.cpp", "native/full_deck_public_chance.hpp",
         "native/exact_selected_kernel.hpp", "native/exact_binary64.hpp",
         "scripts/build_native_full_deck_public_chance.py"))}
+
+
+TARGETS["virtual-dyadic-training-profile"] = (
+    "native-virtual-dyadic-training-profile-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-staged-pages"] = (
+    "native-virtual-dyadic-training-staged-pages-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-terminal-buffer"] = (
+    "native-virtual-dyadic-training-terminal-buffer-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-allin-reach"] = (
+    "native-virtual-dyadic-training-allin-reach-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-mixed-policy-cache"] = (
+    "native-virtual-dyadic-training-mixed-policy-cache-probe", TARGETS["virtual-dyadic-training"][1])
+TARGETS["virtual-dyadic-training-factored-average"] = (
+    "native-virtual-dyadic-training-factored-average-probe", TARGETS["virtual-dyadic-training"][1])
+
+
+TARGETS["virtual-frozen-policy-state-controls"] = (
+    "native-virtual-frozen-policy-state-controls",
+    ("tests/native/virtual_frozen_policy_state_controls.cpp", "native/virtual_frozen_policy_snapshot.hpp",
+     *TARGETS["virtual-dyadic-training"][1][1:]),
+)
+TARGETS["virtual-frozen-grid-update-preflight"] = (
+    "native-virtual-frozen-grid-update-preflight",
+    ("tests/native/virtual_frozen_grid_preflight.cpp", "native/virtual_frozen_grid_update_forecast.hpp", "native/virtual_frozen_proposal.hpp",
+     *TARGETS["virtual-dyadic-training"][1][1:]),
+)
+TARGETS["virtual-frozen-grid-raw-update"] = (
+    "native-virtual-frozen-grid-raw-update",
+    ("tests/native/virtual_frozen_grid_raw_probe.cpp", "native/virtual_frozen_grid_raw.hpp",
+     "native/virtual_frozen_policy_snapshot.hpp", "native/virtual_frozen_grid_update_forecast.hpp",
+     "native/virtual_frozen_proposal.hpp", *TARGETS["virtual-dyadic-training"][1][1:]),
+)
+TARGETS["virtual-frozen-policy-session"] = (
+    "native-virtual-frozen-policy-session",
+    ("tests/native/virtual_frozen_policy_session_probe.cpp", "native/virtual_frozen_policy_session_forecast.hpp",
+     *TARGETS["virtual-frozen-grid-raw-update"][1][1:]),
+)
+
+# One shared full-history identity contract is included by every State owner.
+# Extend complete source manifests explicitly; old archived manifests stay frozen.
+TARGETS["virtual-strategy-catalog-controls"] = (
+    "native-virtual-strategy-catalog-controls",
+    ("tests/native/virtual_strategy_catalog_controls.cpp", "native/virtual_strategy_catalog.hpp",
+     *TARGETS["virtual-dyadic-training"][1][1:]),
+)
+TARGETS['virtual-lazy-catalog-controls'] = (
+    'native-virtual-lazy-catalog-controls',
+    ('tests/native/virtual_lazy_catalog_controls.cpp', *TARGETS['virtual-strategy-catalog-controls'][1]),
+)
+TARGETS["virtual-sparse-epoch-controls"] = (
+    "native-virtual-sparse-epoch-controls",
+    ("tests/native/virtual_sparse_epoch_controls.cpp", "native/virtual_sparse_strategy_epoch.hpp",
+     "native/virtual_strategy_catalog.hpp", *TARGETS["virtual-frozen-grid-raw-update"][1][1:]),
+)
+TARGETS["virtual-sparse-two-epoch"] = (
+    "native-virtual-sparse-two-epoch",
+    ("tests/native/virtual_sparse_two_epoch_probe.cpp", "native/virtual_sparse_two_epoch_forecast.hpp",
+     *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
+)
+TARGETS["virtual-joint-epoch-controls"] = (
+    "native-virtual-joint-epoch-controls",
+    ("tests/native/virtual_joint_epoch_controls.cpp", *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
+)
+TARGETS["virtual-joint-chance-controls"] = (
+    "native-virtual-joint-chance-controls",
+    ("tests/native/virtual_joint_chance_controls.cpp", *TARGETS["prepared-public-chance-controls"][1][1:]),
+)
+TARGETS["virtual-joint-two-epoch"] = (
+    "native-virtual-joint-two-epoch",
+    ("tests/native/virtual_joint_two_epoch_probe.cpp", "native/virtual_joint_sample_raw.hpp",
+     "native/virtual_joint_two_epoch_forecast.hpp", *TARGETS["virtual-sparse-epoch-controls"][1][1:]),
+)
+TARGETS['virtual-weighted-joint-two-epoch'] = (
+    'native-virtual-weighted-joint-two-epoch', TARGETS['virtual-joint-two-epoch'][1])
+TARGETS['virtual-weighted-joint-single-pass'] = (
+    'native-virtual-weighted-joint-single-pass', TARGETS['virtual-joint-two-epoch'][1])
+TARGETS['virtual-weighted-joint-single-pass-lazy'] = (
+    'native-virtual-weighted-joint-single-pass-lazy', TARGETS['virtual-joint-two-epoch'][1])
+TARGETS['virtual-single-pass-epoch-controls'] = (
+    'native-virtual-single-pass-epoch-controls',
+    ('tests/native/virtual_single_pass_epoch_controls.cpp', *TARGETS['virtual-joint-epoch-controls'][1][1:]))
+TARGETS['virtual-lazy-epoch-controls'] = (
+    'native-virtual-lazy-epoch-controls',
+    ('tests/native/virtual_lazy_epoch_controls.cpp', *TARGETS['virtual-single-pass-epoch-controls'][1]))
+TARGETS['current-thread-cycle-probe'] = (
+    'native-current-thread-cycle-probe', ('tests/native/current_thread_cycle_probe.cpp',))
+TARGETS['joint-thread-cycle-controls'] = (
+    'native-joint-thread-cycle-controls',
+    ('tests/native/joint_thread_cycle_controls.cpp', 'native/joint_thread_cycle_recorder.hpp'))
+for _base in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy'):
+    TARGETS[_base + '-cycles'] = ('native-' + _base + '-cycles',
+        (*TARGETS[_base][1], 'native/joint_thread_cycle_recorder.hpp'))
+TARGETS['virtual-weighted-joint-single-pass-arithmetic-cycles'] = (
+    'native-virtual-weighted-joint-single-pass-arithmetic-cycles',
+    (*TARGETS['virtual-weighted-joint-single-pass-cycles'][1], 'native/joint_arithmetic_cycle_recorder.hpp'))
+TARGETS['joint-arithmetic-cycle-controls'] = (
+    'native-joint-arithmetic-cycle-controls',
+    ('tests/native/joint_arithmetic_cycle_controls.cpp', 'native/joint_arithmetic_cycle_recorder.hpp',
+     'native/joint_thread_cycle_recorder.hpp'))
+TARGETS['virtual-weighted-joint-single-pass-arithmetic-light-cycles'] = (
+    'native-virtual-weighted-joint-single-pass-arithmetic-light-cycles',
+    (*TARGETS['virtual-weighted-joint-single-pass'][1], 'native/joint_thread_cycle_recorder.hpp',
+     'native/joint_arithmetic_light_recorder.hpp'))
+TARGETS['joint-arithmetic-light-controls'] = (
+    'native-joint-arithmetic-light-controls',
+    ('tests/native/joint_arithmetic_cycle_controls.cpp', 'native/joint_arithmetic_light_recorder.hpp',
+     'native/joint_thread_cycle_recorder.hpp'))
+for _base in ('virtual-joint-two-epoch', 'virtual-weighted-joint-two-epoch'):
+    TARGETS[_base + '-profile'] = ('native-' + _base + '-profile',
+        (*TARGETS[_base][1], 'native/joint_phase_recorder.hpp'))
+for _target, (_helper, _sources) in tuple(TARGETS.items()):
+    if "native/virtual_dyadic_state.hpp" in _sources:
+        TARGETS[_target] = (_helper, tuple(dict.fromkeys((*_sources, "native/virtual_information_identity.hpp"))))
 
 
 def _hash(raw):
@@ -186,6 +312,8 @@ def _extract(directory, headers):
 def build(output_directory, *, target="converter", sanitize=False):
     _need(type(target) is str and target in TARGETS, "Unsupported native exact build target")
     _need(type(sanitize) is bool, "Native exact sanitize selection must be boolean")
+    _need((target != 'current-thread-cycle-probe' and not target.endswith('-cycles')) or os.name == 'nt',
+          'Current-thread cycle probe requires Windows; no alternate clock fallback')
     directory = Path(output_directory).resolve()
     _need(directory != ROOT and ROOT not in directory.parents, "Native exact builds must be outside the source checkout")
     if sanitize and os.name == "nt":
@@ -213,6 +341,20 @@ def build(output_directory, *, target="converter", sanitize=False):
     if os.name == "nt":
         flags = ["/nologo", "/std:c++20", "/O2", "/W4", "/WX", "/EHsc", "/MT", "/fp:strict",
                  "/DBOOST_MP_STANDALONE", "/I" + str(include)]
+        if target == "virtual-dyadic-training-profile":
+            flags.append("/DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
+        if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer",
+                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache",
+                      "virtual-dyadic-training-factored-average"):
+            flags.append("/DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-factored-average":
+            flags.append("/DOPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY")
+        if target == "virtual-dyadic-training-mixed-policy-cache":
+            flags.append("/DOPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY")
+        if target == "virtual-dyadic-training-allin-reach":
+            flags.append("/DOPENPOKER_TRAINING_ALLIN_REACH_STUDY")
+        if target == "virtual-dyadic-training-terminal-buffer":
+            flags.append("/DOPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY")
         command = [compiler, *flags, str(ROOT / sources[0]),
                    "/Fo" + str(directory / (helper + ".obj")), "/Fe" + str(executable)]
         version_command = [compiler]
@@ -221,8 +363,52 @@ def build(output_directory, *, target="converter", sanitize=False):
                  "-ffp-contract=off", "-fno-fast-math", "-DBOOST_MP_STANDALONE", "-I" + str(include)]
         if sanitize:
             flags.extend(("-g", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"))
+        if target == "virtual-dyadic-training-profile":
+            flags.append("-DOPENPOKER_TRAINING_PHASE_DIAGNOSTICS")
+        if target in ("virtual-dyadic-training-staged-pages", "virtual-dyadic-training-terminal-buffer",
+                      "virtual-dyadic-training-allin-reach", "virtual-dyadic-training-mixed-policy-cache",
+                      "virtual-dyadic-training-factored-average"):
+            flags.append("-DOPENPOKER_TRAINING_STAGED_PAGE_STUDY")
+        if target == "virtual-dyadic-training-factored-average":
+            flags.append("-DOPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY")
+        if target == "virtual-dyadic-training-mixed-policy-cache":
+            flags.append("-DOPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY")
+        if target == "virtual-dyadic-training-allin-reach":
+            flags.append("-DOPENPOKER_TRAINING_ALLIN_REACH_STUDY")
+        if target == "virtual-dyadic-training-terminal-buffer":
+            flags.append("-DOPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY")
         command = [compiler, *flags, str(ROOT / sources[0]), "-o", str(executable)]
         version_command = [compiler, "--version"]
+    if target in ('virtual-weighted-joint-two-epoch', 'virtual-weighted-joint-two-epoch-profile',
+                  'virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy',
+                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles',
+                  'virtual-weighted-joint-single-pass-arithmetic-cycles', 'virtual-weighted-joint-single-pass-arithmetic-light-cycles'):
+        definition = '/DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH' if os.name == 'nt' else '-DOPENPOKER_WEIGHTED_JOINT_TWO_EPOCH'
+        flags.append(definition)
+        # Append before the source/object/link arguments on either compiler.
+        command.insert(len(flags), definition)
+    if target in ('virtual-joint-two-epoch-profile', 'virtual-weighted-joint-two-epoch-profile'):
+        definition = '/DOPENPOKER_JOINT_PHASE_PROFILE' if os.name == 'nt' else '-DOPENPOKER_JOINT_PHASE_PROFILE'
+        flags.append(definition)
+        command.insert(len(flags), definition)
+    if target in ('virtual-weighted-joint-single-pass', 'virtual-weighted-joint-single-pass-lazy',
+                  'virtual-weighted-joint-single-pass-cycles', 'virtual-weighted-joint-single-pass-lazy-cycles',
+                  'virtual-weighted-joint-single-pass-arithmetic-cycles', 'virtual-weighted-joint-single-pass-arithmetic-light-cycles'):
+        definition = '/DOPENPOKER_JOINT_SINGLE_PASS' if os.name == 'nt' else '-DOPENPOKER_JOINT_SINGLE_PASS'
+        flags.append(definition)
+        command.insert(len(flags), definition)
+    if target in ('virtual-weighted-joint-single-pass-lazy', 'virtual-weighted-joint-single-pass-lazy-cycles'):
+        definition = '/DOPENPOKER_JOINT_LAZY_CATALOG' if os.name == 'nt' else '-DOPENPOKER_JOINT_LAZY_CATALOG'
+        flags.append(definition)
+        command.insert(len(flags), definition)
+    if target.endswith('-cycles') or target == 'joint-arithmetic-light-controls':
+        macro = ('OPENPOKER_JOINT_ARITHMETIC_LIGHT_CYCLES' if target.endswith('-arithmetic-light-cycles') or target == 'joint-arithmetic-light-controls' else
+                 'OPENPOKER_JOINT_ARITHMETIC_CYCLES' if target.endswith('-arithmetic-cycles') else 'OPENPOKER_JOINT_THREAD_CYCLES')
+        definition = ('/D' if os.name == 'nt' else '-D') + macro
+        flags.append(definition)
+        command.insert(len(flags), definition)
+        if target == 'joint-arithmetic-light-controls' and os.name != 'nt':
+            flags.append('-pthread');command.insert(len(flags), '-pthread')
     version = subprocess.run(version_command, capture_output=True, env=environment, timeout=30)
     (directory / "compiler-version.log").write_bytes(version.stdout + version.stderr)
     try:
@@ -242,7 +428,12 @@ def build(output_directory, *, target="converter", sanitize=False):
     _need(_hash(_bounded_read(Path(compiler),64 * 1024 * 1024)) == compiler_sha256,
           "Native exact compiler changed during compilation")
     manifest = {"contract": "native-exact-build-v1", "target": target,
-        "scope": ("Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
+        "scope": ("Dedicated diagnostic trainer build; profiling hooks are absent from the standard trainer."
+                  if target == "virtual-dyadic-training-profile" else "Bounded coarse training phase recorder controls; no solver quality claim."
+                  if target == "training-phase-profile-controls" else "Bounded exact policy-grid division controls."
+                  if target == "dyadic-policy-division-controls" else "Bounded exact factored value arithmetic controls."
+                  if target == "factored-dyadic-controls" else "Bounded packed signed limb updates."
+                  if target == "packed-signed-update-controls" else "Converter boundary test helper only; not a poker kernel/trainer or accepted native solving backend."
                   if target == "converter" else "Exact selected vector test helper only; not a trainer or accepted native solving backend."
                   if target == "kernel" else "Graph-only public-history index conformance helper; no trainer integration or capacity admission."
                   if target == "history-index" else "Numeric Q/prefix routing conformance helper; no trainer or larger-capacity acceptance."
@@ -254,9 +445,30 @@ def build(output_directory, *, target="converter", sanitize=False):
                   if target == "full-deck-chance-preflight" else "Exact rational opponent-reach component controls only; no sampler, changing-policy trainer or whole-game acceptance."
                   if target == "full-deck-exact-reach-controls" else "Exact visible-prefix fold payoff controls only; changing-policy training and quality remain open."
                   if target == "full-deck-prefix-fold-controls" else "Prepared q=1 public-chance contraction controls only; no cumulative whole-game training or quality admission."
-                  if target == "prepared-public-chance-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
+                  if target == "prepared-public-chance-controls" else "Weighted compact joint-ticket component controls only; no RNG, learner, full52 solver admission or quality."
+                  if target == "prepared-weighted-joint-controls" else "Compact literal-history cursor controls only; persistent policy/training/quality acceptance remains separate."
                   if target == "virtual-dyadic-history-controls" else "Persistent exact dyadic state and staged sweep controls only; whole poker training and quality remain open."
-                  if target == "virtual-dyadic-state-controls" else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
+                  if target == "virtual-dyadic-state-controls" else "Frozen Q52 policy import/read conformance only; no update, training, solver or capacity acceptance."
+                  if target == "virtual-frozen-policy-state-controls" else "Provisional frozen Q52 raw-update architecture envelope only; no policy import, ranking, contraction, update, training or capacity admission."
+                  if target == "virtual-frozen-grid-update-preflight" else "Fixed-policy Q52 per-board raw values/regrets/averages study only; no clipping, State update, sampled training, quality or wider capacity acceptance."
+                  if target == "virtual-frozen-grid-raw-update" else "Two-board immutable Q52 session only; no policy transition, clipping, training, quality or wider capacity acceptance."
+                  if target == "virtual-frozen-policy-session" else "Sparse full-history strategy catalog identity/menu controls only; no policies, numerical state, training or wider physical support."
+                  if target == "virtual-strategy-catalog-controls" else "Opt-in exact first-holding-inline Catalog identity and reservation controls only; no whole-game coupling, timing, lifetime or quality admission."
+                  if target == 'virtual-lazy-catalog-controls' else "Synthetic sparse vanilla epoch component controls only; no whole-game changing-policy run, sampled trainer, quality or wider admission."
+                  if target == "virtual-sparse-epoch-controls" else "Uniform PROOF9 two-board sparse signed-regret epochs only; no RNG, convergence, solved quality or wider capacity acceptance."
+                  if target == "virtual-sparse-two-epoch" else "Synthetic true-joint arithmetic epoch controls only; no whole-game training, RNG, quality or wider admission."
+                  if target == "virtual-joint-epoch-controls" else "Fixed PROOF9 exact joint-ticket and selected-pair chance controls only; no RNG, trainer, quality or wider admission."
+                  if target == "virtual-joint-chance-controls" else "Deterministic PROOF9 two-joint-observation sparse signed-regret epochs only; no RNG, convergence, solved quality or full-range admission."
+                  if target == "virtual-joint-two-epoch" else "Deterministic full52 two-joint-observation fixed-tree sparse epochs on named uniform/1..7 profiles; no RNG, long learning, quality or unrestricted NLHE admission."
+                  if target == "virtual-weighted-joint-two-epoch" else "Bounded diagnostic joint phase clocks; standard binary wire must match and paired overhead is an independent gate."
+                  if target in ('virtual-joint-two-epoch-profile', 'virtual-weighted-joint-two-epoch-profile') else "Opt-in full52 single-global-value walk T2 candidate; independent arithmetic/resource/performance acceptance required, no long learning or quality claim."
+                  if target == 'virtual-weighted-joint-single-pass' else "Opt-in exact lazy Catalog single-global-pass full52 T2 candidate; no longer lifetime, universal performance or quality admission."
+                  if target == 'virtual-weighted-joint-single-pass-lazy' else "Synthetic lazy Catalog/Store contract and exact single-row commit controls only; no whole-game or quality admission."
+                  if target == 'virtual-lazy-epoch-controls' else "Windows own-thread CPU-cycle API microprobe only; no solver, system profiler, timing acceptance or quality."
+                  if target == 'current-thread-cycle-probe' else "Bounded sampled own-thread CPU diagnostic; exact wire parity and overhead gate remain separate. No quality or realistic-game admission."
+                  if target.endswith('-cycles') else "Synthetic clock controls of the actual bounded cycle recorder; no solver timing or quality claim."
+                  if target in ('joint-thread-cycle-controls', 'joint-arithmetic-cycle-controls', 'joint-arithmetic-light-controls') else "Synthetic single-pass read/arithmetic/lease guards only; no full-game or quality admission."
+                  if target == 'virtual-single-pass-epoch-controls' else "Explicit PROOF9 q=1 two-sweep training candidate; whole-game source acceptance and saved policy quality are separate gates."
                   if target == "virtual-dyadic-training" else "Finite dyadic policy allocation controls only; cumulative training admission and quality remain open."
                   if target == "dyadic-policy-controls" else "Card-free virtual betting template probe only; no chance, strategy, trainer or solver acceptance."
                   if target == "virtual-betting-template" else "Card-free template rounding and admission controls only; no solver acceptance."

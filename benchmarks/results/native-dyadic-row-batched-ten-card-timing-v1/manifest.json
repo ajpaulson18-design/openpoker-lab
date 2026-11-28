@@ -1,0 +1,299 @@
+{
+  "all_complete_streams_and_checkpoint_images_exact": true,
+  "archive": {
+    "bytes": 16360837,
+    "members": 99,
+    "name": "verification.zip",
+    "sha256": "e0578811ec81dd9cb79c5e421cddc68a52e80375949be85122458bff80be6c14"
+  },
+  "configuration": {
+    "executable_sha256": "e2a1d0148d704db5484030888927c6687d060599a427ef5a92e46827b0440abd",
+    "native_executable": "C:\\Users\\pauls\\Documents\\Codex\\2026-10-26\\files-pasted-by-the-user-i\\work\\dyrow-ten-cohort1\\build\\native-virtual-dyadic-training-probe.exe",
+    "order": [
+      [
+        "phase",
+        "row"
+      ],
+      [
+        "row",
+        "phase"
+      ],
+      [
+        "phase",
+        "row"
+      ],
+      [
+        "row",
+        "phase"
+      ]
+    ],
+    "pairs": 4,
+    "scope": "same frozen executable and host, alternating admitted modes, complete native calls and streamed transport",
+    "source_head": "7a85266f488ad66849cdc67c98aefd4006f7902b",
+    "source_study_manifest": {
+      "bytes": 23212,
+      "sha256": "145381a9eb7eaf940ad166210b45cfbf28c5b04b0120fadcfd5e37e112bea5eb"
+    }
+  },
+  "imported_source_closure": {
+    "tests/virtual_dyadic_sweep_capture.py": "ae1af546a1e5bbc695c3247f1c32512c186e31eb7a056416ea38efc89ed07992",
+    "tests/virtual_frozen_run_control.py": "deb0c226420891ca77603dc9e4ef44cbda9dbc0dc3a5d6ab1d4af05bf9f8e51f"
+  },
+  "limits": "one Windows host and this ten-card T2 fixture, four alternating pairs",
+  "median_paired_ratio": 0.9454721306223448,
+  "median_seconds": {
+    "phase": 6.52294274995802,
+    "row": 6.000946499989368
+  },
+  "numerical_evidence_manifest": {
+    "bytes": 23212,
+    "sha256": "145381a9eb7eaf940ad166210b45cfbf28c5b04b0120fadcfd5e37e112bea5eb"
+  },
+  "numerical_evidence_publication": "bc1819a2f298854ef8fd04e73352c114f2e5a33e",
+  "observations": [
+    {
+      "memory": {
+        "peak_commit_bytes": 1925120,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "phase",
+      "paging": {
+        "cache_hits": 1123934,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 1967462,
+        "read_words": 6130244,
+        "stage_calls": 1124264,
+        "synthetic_read_calls": 843198,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 1,
+      "request": "TRAIN_TEN_PHASE_PAYLOAD",
+      "retained_sha256": "a971ef27c33300cc792d08a7d9735156f677ee803e81101b24a524616d92145a",
+      "seconds": 6.399493600009009,
+      "wire_sha256": "ff6597f49ff53d8a82cd5033a55ee11c99730f4e0e04fd128a8484d2047ca960"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1929216,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "row",
+      "paging": {
+        "cache_hits": 476612,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 834372,
+        "read_words": 6130244,
+        "stage_calls": 476784,
+        "synthetic_read_calls": 357588,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 1,
+      "request": "TRAIN_TEN_ROW_BATCHED",
+      "retained_sha256": "f7ddb67454566210d244d6992d8e17c28cd3baf56eaa5ac7ba71b2906f78ec89",
+      "seconds": 6.488666399964131,
+      "wire_sha256": "ed4d100bc2f8cc5a8cb3211f3fe630569147ab6e7a2e07c14aa2bd7b092ca919"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1937408,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "row",
+      "paging": {
+        "cache_hits": 476612,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 834372,
+        "read_words": 6130244,
+        "stage_calls": 476784,
+        "synthetic_read_calls": 357588,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 2,
+      "request": "TRAIN_TEN_ROW_BATCHED",
+      "retained_sha256": "f7ddb67454566210d244d6992d8e17c28cd3baf56eaa5ac7ba71b2906f78ec89",
+      "seconds": 5.810342299984768,
+      "wire_sha256": "ed4d100bc2f8cc5a8cb3211f3fe630569147ab6e7a2e07c14aa2bd7b092ca919"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1925120,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "phase",
+      "paging": {
+        "cache_hits": 1123934,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 1967462,
+        "read_words": 6130244,
+        "stage_calls": 1124264,
+        "synthetic_read_calls": 843198,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 2,
+      "request": "TRAIN_TEN_PHASE_PAYLOAD",
+      "retained_sha256": "a971ef27c33300cc792d08a7d9735156f677ee803e81101b24a524616d92145a",
+      "seconds": 6.703700099955313,
+      "wire_sha256": "ff6597f49ff53d8a82cd5033a55ee11c99730f4e0e04fd128a8484d2047ca960"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1925120,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "phase",
+      "paging": {
+        "cache_hits": 1123934,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 1967462,
+        "read_words": 6130244,
+        "stage_calls": 1124264,
+        "synthetic_read_calls": 843198,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 3,
+      "request": "TRAIN_TEN_PHASE_PAYLOAD",
+      "retained_sha256": "a971ef27c33300cc792d08a7d9735156f677ee803e81101b24a524616d92145a",
+      "seconds": 6.64639189990703,
+      "wire_sha256": "ff6597f49ff53d8a82cd5033a55ee11c99730f4e0e04fd128a8484d2047ca960"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1929216,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "row",
+      "paging": {
+        "cache_hits": 476612,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 834372,
+        "read_words": 6130244,
+        "stage_calls": 476784,
+        "synthetic_read_calls": 357588,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 3,
+      "request": "TRAIN_TEN_ROW_BATCHED",
+      "retained_sha256": "f7ddb67454566210d244d6992d8e17c28cd3baf56eaa5ac7ba71b2906f78ec89",
+      "seconds": 6.016568599967286,
+      "wire_sha256": "ed4d100bc2f8cc5a8cb3211f3fe630569147ab6e7a2e07c14aa2bd7b092ca919"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1929216,
+        "peak_working_set_bytes": 4984832,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "row",
+      "paging": {
+        "cache_hits": 476612,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 834372,
+        "read_words": 6130244,
+        "stage_calls": 476784,
+        "synthetic_read_calls": 357588,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 4,
+      "request": "TRAIN_TEN_ROW_BATCHED",
+      "retained_sha256": "f7ddb67454566210d244d6992d8e17c28cd3baf56eaa5ac7ba71b2906f78ec89",
+      "seconds": 5.98532440001145,
+      "wire_sha256": "ed4d100bc2f8cc5a8cb3211f3fe630569147ab6e7a2e07c14aa2bd7b092ca919"
+    },
+    {
+      "memory": {
+        "peak_commit_bytes": 1925120,
+        "peak_working_set_bytes": 4980736,
+        "source": "windows.K32GetProcessMemoryInfo"
+      },
+      "mode": "phase",
+      "paging": {
+        "cache_hits": 1123934,
+        "cache_misses": 1498,
+        "completed_sweeps": 2,
+        "logical_read_words": 10555076,
+        "physical_read_requests": 1498,
+        "physical_write_requests": 18836,
+        "read_calls": 1967462,
+        "read_words": 6130244,
+        "stage_calls": 1124264,
+        "synthetic_read_calls": 843198,
+        "synthetic_read_words": 4629632,
+        "write_words": 5925444
+      },
+      "pair": 4,
+      "request": "TRAIN_TEN_PHASE_PAYLOAD",
+      "retained_sha256": "a971ef27c33300cc792d08a7d9735156f677ee803e81101b24a524616d92145a",
+      "seconds": 6.072119600023143,
+      "wire_sha256": "ff6597f49ff53d8a82cd5033a55ee11c99730f4e0e04fd128a8484d2047ca960"
+    }
+  ],
+  "outer_exit_observation": "Codex process session 13321 completed with exit code zero",
+  "paired_row_to_phase_ratios": [
+    1.0139343525486135,
+    0.866736610133186,
+    0.9052383143478864,
+    0.9857059468968032
+  ],
+  "pairs": 4,
+  "quality_evidence": "native-dyadic-row-batched-ten-card-accepted-v1",
+  "raw_source_stable": true,
+  "seconds": {
+    "phase": [
+      6.399493600009009,
+      6.703700099955313,
+      6.64639189990703,
+      6.072119600023143
+    ],
+    "row": [
+      6.488666399964131,
+      5.810342299984768,
+      6.016568599967286,
+      5.98532440001145
+    ]
+  },
+  "source_files": 2536,
+  "source_head": "7a85266f488ad66849cdc67c98aefd4006f7902b",
+  "status": "same_executable_alternating_timing_complete",
+  "training_invocations": 8
+}

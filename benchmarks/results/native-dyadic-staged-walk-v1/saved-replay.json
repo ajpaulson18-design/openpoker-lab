@@ -1,0 +1,240 @@
+{
+  "captures": {
+    "capture-1.json.gz": {
+      "external_seed_samples": 40,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 8,
+        "chance_contraction": 9,
+        "pager_flush_dirty": 0,
+        "pager_stage": 2,
+        "state_stage_direct": 4,
+        "state_stage_row": 17,
+        "terminal": 21,
+        "walk": 60
+      },
+      "samples": 98,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 51,
+      "unknown_seed_samples": 0,
+      "walk_observations": 60
+    },
+    "capture-2.json.gz": {
+      "external_seed_samples": 37,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 12,
+        "chance_contraction": 12,
+        "pager_flush_dirty": 0,
+        "pager_stage": 2,
+        "state_stage_direct": 6,
+        "state_stage_row": 14,
+        "terminal": 24,
+        "walk": 62
+      },
+      "samples": 100,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 50,
+      "unknown_seed_samples": 0,
+      "walk_observations": 62
+    },
+    "capture-3.json.gz": {
+      "external_seed_samples": 49,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 10,
+        "chance_contraction": 10,
+        "pager_flush_dirty": 0,
+        "pager_stage": 3,
+        "state_stage_direct": 7,
+        "state_stage_row": 9,
+        "terminal": 25,
+        "walk": 63
+      },
+      "samples": 101,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 45,
+      "unknown_seed_samples": 0,
+      "walk_observations": 63
+    },
+    "capture-4.json.gz": {
+      "external_seed_samples": 47,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 10,
+        "chance_contraction": 10,
+        "pager_flush_dirty": 0,
+        "pager_stage": 6,
+        "state_stage_direct": 6,
+        "state_stage_row": 20,
+        "terminal": 20,
+        "walk": 65
+      },
+      "samples": 104,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 46,
+      "unknown_seed_samples": 0,
+      "walk_observations": 65
+    },
+    "capture-5.json.gz": {
+      "external_seed_samples": 47,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 15,
+        "chance_contraction": 15,
+        "pager_flush_dirty": 0,
+        "pager_stage": 4,
+        "state_stage_direct": 3,
+        "state_stage_row": 14,
+        "terminal": 26,
+        "walk": 62
+      },
+      "samples": 99,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 43,
+      "unknown_seed_samples": 0,
+      "walk_observations": 62
+    },
+    "capture-6.json.gz": {
+      "external_seed_samples": 45,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 10,
+        "chance_contraction": 10,
+        "pager_flush_dirty": 0,
+        "pager_stage": 5,
+        "state_stage_direct": 9,
+        "state_stage_row": 16,
+        "terminal": 18,
+        "walk": 62
+      },
+      "samples": 105,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 53,
+      "unknown_seed_samples": 0,
+      "walk_observations": 62
+    },
+    "capture-7.json.gz": {
+      "external_seed_samples": 43,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 9,
+        "chance_contraction": 9,
+        "pager_flush_dirty": 0,
+        "pager_stage": 5,
+        "state_stage_direct": 9,
+        "state_stage_row": 16,
+        "terminal": 24,
+        "walk": 66
+      },
+      "samples": 103,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 54,
+      "unknown_seed_samples": 0,
+      "walk_observations": 66
+    },
+    "capture-8.json.gz": {
+      "external_seed_samples": 43,
+      "matching_public_ranges": {
+        "chance_contract": 1,
+        "chance_contraction": 1,
+        "pager_flush_dirty": 1,
+        "pager_stage": 1,
+        "state_stage_direct": 2,
+        "state_stage_row": 2,
+        "terminal": 3,
+        "walk": 3
+      },
+      "nested_walk_context_counts": {
+        "chance_contract": 8,
+        "chance_contraction": 8,
+        "pager_flush_dirty": 0,
+        "pager_stage": 4,
+        "state_stage_direct": 6,
+        "state_stage_row": 13,
+        "terminal": 19,
+        "walk": 64
+      },
+      "samples": 101,
+      "scope": "periodic primary-thread wall-time observations; nested labels and aliases",
+      "seed_without_tracked_label": 54,
+      "unknown_seed_samples": 0,
+      "walk_observations": 64
+    }
+  },
+  "classification_correction": "The initial controller matched only a non-template Chance contract prefix. Saved-only replay additionally matches the current template contract symbol. Initial counts remain retained.",
+  "producer_calls": 0,
+  "totals": {
+    "chance_contract": 82,
+    "chance_contraction": 83,
+    "pager_flush_dirty": 0,
+    "pager_stage": 31,
+    "state_stage_direct": 50,
+    "state_stage_row": 119,
+    "terminal": 177,
+    "walk": 504
+  }
+}

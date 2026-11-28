@@ -1,0 +1,825 @@
+{
+  "status": "sparse-two-epoch-packets-exact",
+  "results": {
+    "normal": {
+      "status": "exact",
+      "archive_sha256": "0f8fb2ebc6a707346996ee7bf9ba73799ba5873c2961e4821bc4969c3fd4d269",
+      "members_authenticated": 146,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-two-epoch-rows-exact",
+          "cases": [
+            {
+              "case": "different-pairs",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "numeric_rows": 868,
+                  "numeric_slots": 2078,
+                  "policy_sha256": "c542a89350f852950a7a410067668c1662d59928c572c7314df952932b6b95a4",
+                  "root": [
+                    "-1862127049667763285146941927502630491285831979976893754788610393569124964688301366397783266515183038245671573915745737075190273",
+                    "19170623094917209369605543932950360155023735805964155359254815062957767945853029028930487102751743260580145148725677390823424"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 677
+                }
+              ],
+              "work_actual": 108096909,
+              "work_forecast": 136367150,
+              "output_bytes": 505056,
+              "policy_reads": 1760,
+              "staged_rows": 880,
+              "quantized_rows": 677,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "reversed",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "90fdf3ed68c5d7751cb3229be21ed90d999acc63d824cee3f44dd354478a3d0c",
+                  "root": [
+                    "-5818311745402775912543166539442343574342607992934354625885346540322319444325107960224032793707381203785400437253949503443138675",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 868,
+                  "numeric_slots": 2078,
+                  "policy_sha256": "d9665a42e5a42030c2efb0d85b3fe45da41feacfb02860f88b29724f75c49014",
+                  "root": [
+                    "-275066396117502484829995087759521091101861591034656139869290242784976606896525693330048008833375492446873606122984473464048439",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 676
+                }
+              ],
+              "work_actual": 108094411,
+              "work_forecast": 136367150,
+              "output_bytes": 505056,
+              "policy_reads": 1760,
+              "staged_rows": 880,
+              "quantized_rows": 676,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "same-board",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 443
+                }
+              ],
+              "work_actual": 102208998,
+              "work_forecast": 136367150,
+              "output_bytes": 340480,
+              "policy_reads": 1760,
+              "staged_rows": 880,
+              "quantized_rows": 443,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "zero-shared-turn",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    24
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 160,
+                  "raw_slots": 402,
+                  "quantized_rows": 434
+                }
+              ],
+              "work_actual": 89662010,
+              "work_forecast": 136367150,
+              "output_bytes": 340480,
+              "policy_reads": 1200,
+              "staged_rows": 600,
+              "quantized_rows": 434,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "zero-flop-first",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    24,
+                    32,
+                    33
+                  ],
+                  "numeric_rows": 12,
+                  "numeric_slots": 30,
+                  "policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 12,
+                  "raw_slots": 30,
+                  "quantized_rows": 0
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "90fdf3ed68c5d7751cb3229be21ed90d999acc63d824cee3f44dd354478a3d0c",
+                  "root": [
+                    "-5818311745402775912543166539442343574342607992934354625885346540322319444325107960224032793707381203785400437253949503443138675",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                }
+              ],
+              "work_actual": 77764342,
+              "work_forecast": 136367150,
+              "output_bytes": 175904,
+              "policy_reads": 904,
+              "staged_rows": 452,
+              "quantized_rows": 434,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 4,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "maximum-stage",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "numeric_rows": 530,
+                  "numeric_slots": 1282,
+                  "policy_sha256": "bf265c33aa29b839499213f2e8f28f479c7181a92eb0c49b08a1514386b62ca6",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 530,
+                  "raw_slots": 1282,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "numeric_rows": 530,
+                  "numeric_slots": 1282,
+                  "policy_sha256": "bf265c33aa29b839499213f2e8f28f479c7181a92eb0c49b08a1514386b62ca6",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 530,
+                  "raw_slots": 1282,
+                  "quantized_rows": 443
+                }
+              ],
+              "work_actual": 112604231,
+              "work_forecast": 136367150,
+              "output_bytes": 413344,
+              "policy_reads": 2120,
+              "staged_rows": 1060,
+              "quantized_rows": 443,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            }
+          ],
+          "successful_observed_requests": 6,
+          "rejected_observed_requests": 7,
+          "epochs_per_request": 2,
+          "rng_calls": 0,
+          "scope": "Uniform PROOF9 two-board sparse signed-regret epochs only; no RNG, convergence, solved quality or wider capacity acceptance.",
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "observed_source_head": "41ae6727523abec3044bd32ae93b321d8d2b5bed",
+          "active_source_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239",
+            "tests/virtual_sparse_two_epoch_reference.py": "bafc0eed0a8dc4a4e5235771365eac0edd1ba2384144f685aeb8eb865835acd3",
+            "tests/virtual_sparse_two_epoch_forecast_reference.py": "5f67644ba12dc976f24a57268112e064822da67261d4046e6601c6f1624ff52f",
+            "tests/virtual_native_sparse_two_epoch_reference.py": "38a783fc7aac04fd23c58a32fd5183b7158ba54997baa6845f08533bae226178",
+            "scripts/replay_sparse_two_epoch.py": "95227ff60fb1a490675fe11e84130f5a21183f946a6d98453828976cfa93f10a",
+            "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "stdout_sha256": {
+            "different-pairs": "39093fd7d7cfe77c9697d0d4b2a5ce6d0247312eb44b33e02e5540e119dd5974",
+            "reversed": "dab2ded5d4a1bd49475e4a05c94271846d31d03a31fca2b72998f1a012ef27f3",
+            "same-board": "e4c7c8480e06691d2f6968980414341ed036b12d8170798237a63ef0e55327c7",
+            "zero-shared-turn": "eb59e408dc6da229d8912e4cb46d2a8b411a225aef7d4707ee87abc9e763081a",
+            "zero-flop-first": "d7e5724ef984b0fdb3ac354251009708aad8eaf269ffca316475c81815d19fb6",
+            "maximum-stage": "c99409d59d55227250bec86e9d39c2946a890fe9e52e0b6e07c204359f698fee"
+          },
+          "invocation_receipts": "saved controller commands and observed exits/streams; no independent syscall attestation"
+        }
+      ]
+    },
+    "optimized": {
+      "status": "exact",
+      "archive_sha256": "7250a203c4946f969f70df2e039808044fcdd3171737db988227d9ee211dc1d5",
+      "members_authenticated": 146,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-two-epoch-rows-exact",
+          "cases": [
+            {
+              "case": "different-pairs",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "numeric_rows": 868,
+                  "numeric_slots": 2078,
+                  "policy_sha256": "c542a89350f852950a7a410067668c1662d59928c572c7314df952932b6b95a4",
+                  "root": [
+                    "-1862127049667763285146941927502630491285831979976893754788610393569124964688301366397783266515183038245671573915745737075190273",
+                    "19170623094917209369605543932950360155023735805964155359254815062957767945853029028930487102751743260580145148725677390823424"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 677
+                }
+              ],
+              "work_actual": 108096909,
+              "work_forecast": 136367150,
+              "output_bytes": 505056,
+              "policy_reads": 1760,
+              "staged_rows": 880,
+              "quantized_rows": 677,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "reversed",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "90fdf3ed68c5d7751cb3229be21ed90d999acc63d824cee3f44dd354478a3d0c",
+                  "root": [
+                    "-5818311745402775912543166539442343574342607992934354625885346540322319444325107960224032793707381203785400437253949503443138675",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 868,
+                  "numeric_slots": 2078,
+                  "policy_sha256": "d9665a42e5a42030c2efb0d85b3fe45da41feacfb02860f88b29724f75c49014",
+                  "root": [
+                    "-275066396117502484829995087759521091101861591034656139869290242784976606896525693330048008833375492446873606122984473464048439",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 676
+                }
+              ],
+              "work_actual": 108094411,
+              "work_forecast": 136367150,
+              "output_bytes": 505056,
+              "policy_reads": 1760,
+              "staged_rows": 880,
+              "quantized_rows": 676,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "same-board",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 443
+                }
+              ],
+              "work_actual": 102208998,
+              "work_forecast": 136367150,
+              "output_bytes": 340480,
+              "policy_reads": 1760,
+              "staged_rows": 880,
+              "quantized_rows": 443,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "zero-shared-turn",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    24
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 160,
+                  "raw_slots": 402,
+                  "quantized_rows": 434
+                }
+              ],
+              "work_actual": 89662010,
+              "work_forecast": 136367150,
+              "output_bytes": 340480,
+              "policy_reads": 1200,
+              "staged_rows": 600,
+              "quantized_rows": 434,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "zero-flop-first",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    16,
+                    17,
+                    24,
+                    32,
+                    33
+                  ],
+                  "numeric_rows": 12,
+                  "numeric_slots": 30,
+                  "policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 12,
+                  "raw_slots": 30,
+                  "quantized_rows": 0
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "numeric_rows": 440,
+                  "numeric_slots": 1054,
+                  "policy_sha256": "90fdf3ed68c5d7751cb3229be21ed90d999acc63d824cee3f44dd354478a3d0c",
+                  "root": [
+                    "-5818311745402775912543166539442343574342607992934354625885346540322319444325107960224032793707381203785400437253949503443138675",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "raw_rows": 440,
+                  "raw_slots": 1054,
+                  "quantized_rows": 434
+                }
+              ],
+              "work_actual": 77764342,
+              "work_forecast": 136367150,
+              "output_bytes": 175904,
+              "policy_reads": 904,
+              "staged_rows": 452,
+              "quantized_rows": 434,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 4,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            },
+            {
+              "case": "maximum-stage",
+              "status": "two-epochs-all-rows-exact",
+              "epochs": [
+                {
+                  "epoch": 1,
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "numeric_rows": 530,
+                  "numeric_slots": 1282,
+                  "policy_sha256": "bf265c33aa29b839499213f2e8f28f479c7181a92eb0c49b08a1514386b62ca6",
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "raw_rows": 530,
+                  "raw_slots": 1282,
+                  "quantized_rows": 434
+                },
+                {
+                  "epoch": 2,
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "numeric_rows": 530,
+                  "numeric_slots": 1282,
+                  "policy_sha256": "bf265c33aa29b839499213f2e8f28f479c7181a92eb0c49b08a1514386b62ca6",
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "raw_rows": 530,
+                  "raw_slots": 1282,
+                  "quantized_rows": 443
+                }
+              ],
+              "work_actual": 112604231,
+              "work_forecast": 136367150,
+              "output_bytes": 413344,
+              "policy_reads": 2120,
+              "staged_rows": 1060,
+              "quantized_rows": 443,
+              "implicit_policy_rows": 24420,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "scope": "two selected uniform PROOF9 observations; no RNG, convergence, solved quality or wider admission"
+            }
+          ],
+          "successful_observed_requests": 6,
+          "rejected_observed_requests": 7,
+          "epochs_per_request": 2,
+          "rng_calls": 0,
+          "scope": "Uniform PROOF9 two-board sparse signed-regret epochs only; no RNG, convergence, solved quality or wider capacity acceptance.",
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "observed_source_head": "41ae6727523abec3044bd32ae93b321d8d2b5bed",
+          "active_source_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239",
+            "tests/virtual_sparse_two_epoch_reference.py": "bafc0eed0a8dc4a4e5235771365eac0edd1ba2384144f685aeb8eb865835acd3",
+            "tests/virtual_sparse_two_epoch_forecast_reference.py": "5f67644ba12dc976f24a57268112e064822da67261d4046e6601c6f1624ff52f",
+            "tests/virtual_native_sparse_two_epoch_reference.py": "38a783fc7aac04fd23c58a32fd5183b7158ba54997baa6845f08533bae226178",
+            "scripts/replay_sparse_two_epoch.py": "95227ff60fb1a490675fe11e84130f5a21183f946a6d98453828976cfa93f10a",
+            "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "stdout_sha256": {
+            "different-pairs": "39093fd7d7cfe77c9697d0d4b2a5ce6d0247312eb44b33e02e5540e119dd5974",
+            "reversed": "dab2ded5d4a1bd49475e4a05c94271846d31d03a31fca2b72998f1a012ef27f3",
+            "same-board": "e4c7c8480e06691d2f6968980414341ed036b12d8170798237a63ef0e55327c7",
+            "zero-shared-turn": "eb59e408dc6da229d8912e4cb46d2a8b411a225aef7d4707ee87abc9e763081a",
+            "zero-flop-first": "d7e5724ef984b0fdb3ac354251009708aad8eaf269ffca316475c81815d19fb6",
+            "maximum-stage": "c99409d59d55227250bec86e9d39c2946a890fe9e52e0b6e07c204359f698fee"
+          },
+          "invocation_receipts": "saved controller commands and observed exits/streams; no independent syscall attestation"
+        }
+      ]
+    },
+    "development": {
+      "status": "exact",
+      "archive_sha256": "025cb20f121e009bf2bf049987147d28f7c3651b09e7029dbcb91c1a1a8a1c0d",
+      "members_authenticated": 35,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "compile-failure-source-authenticated",
+          "compiler_returncode": 2,
+          "original_raw_checkout_attestation": false,
+          "numerical_pass_claimed": false
+        }
+      ]
+    }
+  },
+  "active_bootstrap": {
+    "head": "0a78f99a35a9aa986786b4d1214b65445accc29b",
+    "raw_sha256": {
+      "scripts/replay_sparse_two_epoch_packet.py": "f00cb33008f2741465aed3098a8c69c701c7e5511724ff74a2a0944171c03681",
+      "scripts/replay_sparse_two_epoch.py": "95227ff60fb1a490675fe11e84130f5a21183f946a6d98453828976cfa93f10a",
+      "scripts/replay_native_policy_packet.py": "de47a3fe586b0b1323fda524d2efac0d1077deff4b8d85ecb67215002c0b1e6b",
+      "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+      "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+    }
+  },
+  "candidate_calls": 0,
+  "archived_source_executed": false,
+  "binary_claim": "native executable bytes and compiler object bytes are not packaged; native build metadata retains executable SHA-256 and complete source hash links",
+  "scope": "two deterministic uniform PROOF9 observations per request; no RNG, convergence, solved-quality, N11, realistic-range, RSS, or runtime claim",
+  "python_imports": "fresh process and empty bytecode-cache prefix"
+}

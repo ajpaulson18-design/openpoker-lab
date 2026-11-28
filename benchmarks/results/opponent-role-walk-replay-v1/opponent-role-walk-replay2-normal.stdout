@@ -1,0 +1,1053 @@
+{
+  "status": "full-four-street-role-walk-replayed",
+  "cases": 12,
+  "numeric_coordinates": 6780,
+  "original_native_processes": 342,
+  "original_unit_children": 2,
+  "original_compile_failures": 2,
+  "original_report_failures": 2,
+  "authentication": {
+    "four-street-build-1": {
+      "head": "c327043151de8f50e9479c3180f8751a6551d2a0",
+      "files": 33
+    },
+    "four-street-build-2": {
+      "head": "c0f3f8245cf8a2e2ea57f81556dce6c2fcc8a2a5",
+      "files": 33
+    },
+    "walk-controls-build-1": {
+      "head": "c327043151de8f50e9479c3180f8751a6551d2a0",
+      "files": 33
+    },
+    "walk-controls-build-2": {
+      "head": "c0f3f8245cf8a2e2ea57f81556dce6c2fcc8a2a5",
+      "files": 33
+    },
+    "reference-check": {
+      "head": "c327043151de8f50e9479c3180f8751a6551d2a0",
+      "files": 12
+    },
+    "units": {
+      "head": "9dbeedb9e9acba0c7104ca1f0ecd5fade70fa805",
+      "files": 16
+    },
+    "study-1/normal": {
+      "head": "7ea1224300176a5bd337d5dc044e9fe9a71ccc41",
+      "files": 53
+    },
+    "study-2/normal": {
+      "head": "7433f3351f5dd129c89eb53432cd15a001b1e1c8",
+      "files": 53
+    },
+    "matrix/normal/profile-0-same-world": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-0-boundaries": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-0-shared-flop-future": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-0-sb-loss": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-0-sb-win": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-0-shared-board-distinct-holding": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-1-same-world": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-1-boundaries": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-1-shared-flop-future": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-1-sb-loss": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-1-sb-win": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/normal/profile-1-shared-board-distinct-holding": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "study-1/optimized": {
+      "head": "7ea1224300176a5bd337d5dc044e9fe9a71ccc41",
+      "files": 53
+    },
+    "study-2/optimized": {
+      "head": "7433f3351f5dd129c89eb53432cd15a001b1e1c8",
+      "files": 53
+    },
+    "matrix/optimized/profile-0-same-world": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-0-boundaries": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-0-shared-flop-future": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-0-sb-loss": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-0-sb-win": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-0-shared-board-distinct-holding": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-1-same-world": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-1-boundaries": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-1-shared-flop-future": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-1-sb-loss": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-1-sb-win": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    },
+    "matrix/optimized/profile-1-shared-board-distinct-holding": {
+      "head": "56f40ab73833204c0d4926d04fa43cba5c2800eb",
+      "files": 54
+    }
+  },
+  "scalar_controls": {
+    "queries": 48,
+    "signed_codec_numbers": 7,
+    "runtime_guards": 8,
+    "complete_forecast": [
+      89513104,
+      344585,
+      28514522
+    ]
+  },
+  "fresh": [
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 0,
+      "selectors": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "rule": "first",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 1096,
+      "raw_rows": [
+        19,
+        36
+      ],
+      "retained_rows": [
+        19,
+        36
+      ],
+      "wire_bytes": 49112,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 109173,
+        "entries": 499010,
+        "created_bits": 2073454,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 1429,
+          "literal_role_visits": 14336,
+          "ticket_cdf": 4928,
+          "state_and_allocator": 53120
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 0,
+      "selectors": [
+        [
+          1624349,
+          34246079
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "rule": "last",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 274,
+      "raw_rows": [
+        7,
+        7
+      ],
+      "retained_rows": [
+        7,
+        14
+      ],
+      "wire_bytes": 14408,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 50012,
+        "entries": 499010,
+        "created_bits": 526442,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 444,
+          "literal_role_visits": 4608,
+          "ticket_cdf": 896,
+          "state_and_allocator": 8704
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 0,
+      "selectors": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "rule": "middle",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 610,
+      "raw_rows": [
+        25,
+        10
+      ],
+      "retained_rows": [
+        25,
+        25
+      ],
+      "wire_bytes": 30208,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 67969,
+        "entries": 499010,
+        "created_bits": 1372064,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 961,
+          "literal_role_visits": 10624,
+          "ticket_cdf": 1952,
+          "state_and_allocator": 19072
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 0,
+      "selectors": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "rule": "alternating",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 352,
+      "raw_rows": [
+        11,
+        11
+      ],
+      "retained_rows": [
+        11,
+        11
+      ],
+      "wire_bytes": 17376,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 57804,
+        "entries": 499010,
+        "created_bits": 820727,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 556,
+          "literal_role_visits": 6144,
+          "ticket_cdf": 1408,
+          "state_and_allocator": 14336
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 0,
+      "selectors": [
+        [
+          124950,
+          0
+        ],
+        [
+          124950,
+          0
+        ]
+      ],
+      "rule": "middle",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 610,
+      "raw_rows": [
+        25,
+        10
+      ],
+      "retained_rows": [
+        25,
+        25
+      ],
+      "wire_bytes": 30208,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 67969,
+        "entries": 499010,
+        "created_bits": 1362232,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 961,
+          "literal_role_visits": 10624,
+          "ticket_cdf": 1952,
+          "state_and_allocator": 19072
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 0,
+      "selectors": [
+        [
+          0,
+          2140425
+        ],
+        [
+          1,
+          2140425
+        ]
+      ],
+      "rule": "alternating",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 448,
+      "raw_rows": [
+        11,
+        14
+      ],
+      "retained_rows": [
+        11,
+        21
+      ],
+      "wire_bytes": 22216,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 61419,
+        "entries": 499010,
+        "created_bits": 966908,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 715,
+          "literal_role_visits": 7808,
+          "ticket_cdf": 1664,
+          "state_and_allocator": 15872
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 1,
+      "selectors": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "rule": "first",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 1096,
+      "raw_rows": [
+        19,
+        36
+      ],
+      "retained_rows": [
+        19,
+        36
+      ],
+      "wire_bytes": 49112,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 109173,
+        "entries": 499010,
+        "created_bits": 2073454,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 1429,
+          "literal_role_visits": 14336,
+          "ticket_cdf": 4928,
+          "state_and_allocator": 53120
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 1,
+      "selectors": [
+        [
+          25908875,
+          34246079
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "rule": "last",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 274,
+      "raw_rows": [
+        7,
+        7
+      ],
+      "retained_rows": [
+        7,
+        14
+      ],
+      "wire_bytes": 14408,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 50012,
+        "entries": 499010,
+        "created_bits": 526442,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 444,
+          "literal_role_visits": 4608,
+          "ticket_cdf": 896,
+          "state_and_allocator": 8704
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 1,
+      "selectors": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "rule": "middle",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 610,
+      "raw_rows": [
+        25,
+        10
+      ],
+      "retained_rows": [
+        25,
+        25
+      ],
+      "wire_bytes": 30208,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 67969,
+        "entries": 499010,
+        "created_bits": 1372064,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 961,
+          "literal_role_visits": 10624,
+          "ticket_cdf": 1952,
+          "state_and_allocator": 19072
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 1,
+      "selectors": [
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "rule": "alternating",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 352,
+      "raw_rows": [
+        11,
+        11
+      ],
+      "retained_rows": [
+        11,
+        11
+      ],
+      "wire_bytes": 17376,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 57804,
+        "entries": 499010,
+        "created_bits": 820727,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 556,
+          "literal_role_visits": 6144,
+          "ticket_cdf": 1408,
+          "state_and_allocator": 14336
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 1,
+      "selectors": [
+        [
+          1966603,
+          0
+        ],
+        [
+          1966603,
+          0
+        ]
+      ],
+      "rule": "middle",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 610,
+      "raw_rows": [
+        25,
+        10
+      ],
+      "retained_rows": [
+        25,
+        25
+      ],
+      "wire_bytes": 30208,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 67969,
+        "entries": 499010,
+        "created_bits": 1362232,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 961,
+          "literal_role_visits": 10624,
+          "ticket_cdf": 1952,
+          "state_and_allocator": 19072
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    },
+    {
+      "contract": "opponent-role-four-street-literal-v1",
+      "profile": 1,
+      "selectors": [
+        [
+          0,
+          2140425
+        ],
+        [
+          4,
+          2140425
+        ]
+      ],
+      "rule": "alternating",
+      "executed_signed_regret_epochs": 2,
+      "production_calls": 0,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "all_numeric_coordinates": 448,
+      "raw_rows": [
+        11,
+        14
+      ],
+      "retained_rows": [
+        11,
+        21
+      ],
+      "wire_bytes": 22216,
+      "native_forecast": {
+        "work": 124410460,
+        "entries": 978410,
+        "payload": 49838772,
+        "output": 549280,
+        "input": 4096,
+        "catalog_work": 11185120,
+        "history_work": 4711568,
+        "chance_work": 43715840,
+        "component_work": 10098048,
+        "parent_work": 2845868,
+        "catalog_lookups": 1836,
+        "catalog_words": 153208,
+        "role_own_work": 2144768,
+        "store_component_work": 7953280,
+        "role_combined_work": 17686848,
+        "raw": [
+          5715,
+          30292,
+          199143,
+          26112,
+          471040,
+          168584
+        ]
+      },
+      "sample_reference_receipt": {
+        "limits": {
+          "work": 1000000,
+          "entries": 500000,
+          "integer_bits": 4096,
+          "created_bits": 227840000
+        },
+        "work": 61419,
+        "entries": 499010,
+        "created_bits": 966908,
+        "max_forecast_bits": 1408,
+        "counters": {
+          "literal_path_setup": 35360,
+          "fraction_operations": 715,
+          "literal_role_visits": 7808,
+          "ticket_cdf": 1664,
+          "state_and_allocator": 15872
+        }
+      },
+      "ledger_scope": "Exact raw work, role, Store work/reads/commits/quantizer, Catalog and chance; bounded monotone Store payload peak and History work. Logical models, not RSS."
+    }
+  ],
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "rng_calls": 0,
+  "quality_gate": null,
+  "stored_expanded_bytes": 10717746,
+  "scope": "Current exact full1326 law and literal direct-reach reference replay all deterministic T2 native updates. No RNG/convergence, longer lifetime, timing, eleven-card or unrestricted NLHE admission."
+}

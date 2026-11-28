@@ -1,0 +1,34 @@
+name: Joint epoch immutable evidence replay
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  joint-packet:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Replay authenticated saved policies and raw updates
+        run: python -B -X "pycache_prefix=${{ runner.temp }}/joint-packet-normal" -m scripts.replay_joint_two_epoch_packet > joint-packet-normal.json 2> joint-packet-normal.stderr.log
+      - name: Repeat replay with optimized Python
+        run: python -O -B -X "pycache_prefix=${{ runner.temp }}/joint-packet-optimized" -m scripts.replay_joint_two_epoch_packet > joint-packet-optimized.json 2> joint-packet-optimized.stderr.log
+      - name: Reject corruption before numerical imports in both Python modes
+        run: python -B -m unittest tests.test_joint_packet_admission -v > joint-packet-admission.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joint-two-epoch-packet-${{ matrix.os }}
+          path: |
+            joint-packet-*.json
+            joint-packet-*.stderr.log
+            joint-packet-admission.log
+          if-no-files-found: warn

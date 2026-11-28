@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 2445977,
+      "expanded_bytes": 8595302,
+      "file": "observations.zip",
+      "manifest_sha256": "84e842fe67ee9cf559516ceef5a2176280459cf59f4c643d27b541845176b818",
+      "members": 3897,
+      "sha256": "22ffabf65127178d6acee7237540e1f429b0eb826210c20bad777266214993ea"
+    },
+    {
+      "bytes": 102929,
+      "expanded_bytes": 169234,
+      "file": "builds.zip",
+      "manifest_sha256": "95d81f33893c57ab7c1d64ce23dab42ee124bd3b9ea353a8810810986a34bc78",
+      "members": 164,
+      "sha256": "19203bf225b4db5c9890ed227f1382a1825e4bb0926f67bdeec99edfad077ae3"
+    },
+    {
+      "bytes": 808015,
+      "expanded_bytes": 1953210,
+      "file": "objects.zip",
+      "manifest_sha256": "05ea33c2e86b29c12204ec2ba4b05c86cc5006d9a891fdfa543e8f5e86f8d5ee",
+      "members": 74,
+      "sha256": "e84fe744427f10a94d729d5ba5cfc7983df4943aac0c7482f6a3d65c478ce6d6"
+    }
+  ],
+  "exact_shared_objects": 73,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "d2bbe3834bbb57ad4fb8181f8dfd4c115b312a5daad25ac141f9703d8fc1512b",
+  "scope": "Original full four-street role traversal updates and mathematical/physical evidence, both first compiler and report failures. Deterministic T2 research only; quality_gate=null.",
+  "stored_expanded_bytes": 10717746,
+  "version": "opponent-role-walk-package-v1"
+}

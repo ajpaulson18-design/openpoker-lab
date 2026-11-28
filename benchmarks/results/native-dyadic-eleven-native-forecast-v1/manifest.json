@@ -1,0 +1,80 @@
+{
+  "archive": {
+    "bytes": 1408335,
+    "members": 868,
+    "path": "verification.zip",
+    "sha256": "b01aa3d03cb4f8fe9b1bf9f8696cef901ea057e7d96e7ad5d930268e6eea67ef"
+  },
+  "failed_comparison_caps": [
+    "state",
+    "quantizer",
+    "composed"
+  ],
+  "forecast": {
+    "D_bits": 639,
+    "compact_retained_bytes": 9614478,
+    "comparison_caps": {
+      "chance": 450000000,
+      "composed": 2150000000,
+      "history": 100000000,
+      "quantizer": 520000000,
+      "state": 300000000
+    },
+    "composed_entries": 635684,
+    "composed_payload_bits": 23045888,
+    "d5": 420,
+    "deck_cards": 11,
+    "directory_page_limit": 24350,
+    "entries": 621312,
+    "normalizer": 29,
+    "page_image_words": 9724202,
+    "page_read_words": 20750932,
+    "page_requests": 3801720,
+    "page_write_requests": 59328,
+    "page_write_words": 19448404,
+    "payload_bits": 22126080,
+    "quality_gate": null,
+    "quantizer_terms": [
+      0,
+      286195384,
+      727950888
+    ],
+    "rank_calls": 0,
+    "rank_calls_per_training": 144,
+    "rank_planes": 56,
+    "rows": 380172,
+    "slots": 892910,
+    "stage_arithmetic_work": 201610088,
+    "status": "FORECAST_ONLY",
+    "training_admitted": false,
+    "training_invocations": 0,
+    "value_bits": 646,
+    "wire_bytes": 165201774,
+    "work": {
+      "chance": 448157615,
+      "composed": 5954402351,
+      "history": 98688160,
+      "numerical": 4574605415,
+      "parent": 2308449784,
+      "quantizer": 1014146272,
+      "state": 662607040,
+      "template": 42556544
+    }
+  },
+  "hand_rank_calls": 0,
+  "native_train_request_rejected": true,
+  "normal_optimized_forecast_identical": true,
+  "quality_gate": null,
+  "scope": "compiled forecast only",
+  "scratch_request_rejected": true,
+  "skips": 0,
+  "source_closure_files": 56,
+  "source_files": 2592,
+  "source_head": "affeca296c9f3cd95694f89ba3bfce0198cf27ab",
+  "storage_status": "projected envelope extended from N10; eleven-card owners remain unadmitted",
+  "tests_per_mode": 37,
+  "training_admitted": false,
+  "training_invocations": 0,
+  "version": "native-dyadic-eleven-native-forecast-v1",
+  "work_status": "prior independent Chance ledger plus independently reconstructed tree, row, History and integer work schedules"
+}

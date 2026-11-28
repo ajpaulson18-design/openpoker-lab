@@ -227,3 +227,74 @@ benchmarks/results/native-cfrplus-rematch-v1.json -text
 /benchmarks/results/update-proof-census-failures-v1/** -text
 /benchmarks/results/virtual-betting-template-development-v1/** -text
 /benchmarks/results/virtual-betting-template-v1/** -text
+
+# Preserve the native walk CPU samples and independent count replay.
+/benchmarks/results/native-dyadic-walk-cpu-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-dyadic-walk-cpu-v1/*.json.gz binary
+
+# Preserve the staged-page timing protocol and admitted pager receipts.
+/benchmarks/results/native-dyadic-staged-pages-v1/** -text whitespace=cr-at-eol
+
+# Preserve exact Chance contraction output and timing evidence.
+/benchmarks/results/native-dyadic-contraction-output-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-dyadic-contraction-output-v1/*.bin.gz binary
+
+# Preserve the two trainer comparisons and the exact full-width reach packet.
+/benchmarks/results/native-dyadic-allin-weighted-reach-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-dyadic-allin-weighted-reach-v1/**/*.bin.gz binary
+
+# Preserve the exact mixed-policy cache receipts and quantizer decomposition.
+/benchmarks/results/native-dyadic-mixed-policy-cache-v1/** -text whitespace=cr-at-eol
+
+# Preserve factored-average timing and independently reconstructed parent work.
+/benchmarks/results/native-dyadic-factored-average-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-dyadic-factored-average-v1/*.zip binary
+
+# Preserve staged-walk timing, source bindings and normalized wall-time observations.
+/benchmarks/results/native-dyadic-staged-walk-v1/** -text whitespace=cr-at-eol
+/benchmarks/results/native-dyadic-staged-walk-v1/*.gz binary
+/benchmarks/results/native-dyadic-staged-walk-v1/*.zip binary
+
+# Preserve manifests and all saved members of the frozen sparse and target-board packets.
+/benchmarks/results/sparse-strategy-catalog-v1/** -text
+/benchmarks/results/sparse-epoch-component-v1/** -text
+/benchmarks/results/sparse-two-epoch-v1/** -text
+/benchmarks/results/target-board-reference-v1/** -text
+/benchmarks/results/joint-chance-sample-v1/** -text
+/benchmarks/results/joint-two-epoch-v1/** -text
+/benchmarks/results/joint-two-epoch-replay-v1/** -text
+/benchmarks/results/weighted-joint-foundation-v1/** -text
+/benchmarks/results/weighted-joint-replay-v1/** -text
+/benchmarks/results/joint-single-pass-v1/** -text
+/benchmarks/results/joint-single-pass-replay-v1/** -text
+/benchmarks/results/joint-learning-lifetime-v1/** -text
+/benchmarks/results/lazy-joint-foundation-v1/** -text
+/benchmarks/results/lazy-joint-replay-v1/** -text
+/benchmarks/results/joint-thread-cycles-v1/** -text
+/benchmarks/results/joint-thread-cycles-replay-v1/** -text
+/benchmarks/results/joint-arithmetic-cycles-v1/** -text
+/benchmarks/results/joint-arithmetic-cycles-replay-v1/** -text
+/benchmarks/results/joint-arithmetic-light-v1/** -text
+/benchmarks/results/joint-arithmetic-light-replay-v1/** -text
+/benchmarks/results/opponent-action-study-v1/** -text
+/benchmarks/results/opponent-action-replay-v1/** -text
+/benchmarks/results/opponent-action-moments-v1/** -text
+/benchmarks/results/opponent-action-moments-replay-v1/** -text
+/benchmarks/results/opponent-role-rows-v1/** -text
+/benchmarks/results/opponent-role-rows-v2/** -text
+/benchmarks/results/opponent-role-rows-replay-v1/** -text
+/benchmarks/results/opponent-role-epoch-v1/** -text
+/benchmarks/results/opponent-role-epoch-replay-v1/** -text
+benchmarks/results/opponent-role-walk-v1/** -text
+/benchmarks/results/opponent-role-walk-replay-v1/** -text
+/benchmarks/results/opponent-role-cost-v1/** -text
+/benchmarks/results/opponent-role-cost-replay-v1/** -text
+/benchmarks/results/opponent-role-storage-audit-v1/** -text
+/benchmarks/results/opponent-role-storage-audit-expected-v1/** -text
+/benchmarks/results/compact-role-storage-v1/** -text
+/benchmarks/results/compact-role-storage-cost-v1/** -text
+/benchmarks/results/compact-role-storage-replay-v1/** -text
+/benchmarks/results/role-row-depth-v1/** -text
+/benchmarks/results/role-row-depth-replay-v1/** -text
+/benchmarks/results/role-training-frontier-v1/** -text
+/benchmarks/results/role-training-frontier-replay-v1/** -text

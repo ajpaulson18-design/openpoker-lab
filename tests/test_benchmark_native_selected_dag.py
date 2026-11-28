@@ -12,7 +12,7 @@ class NativeDagStudyTests(unittest.TestCase):
         self.assertEqual([row[1] for row in study._schedule()],
             ["python", "native", "native", "python", "python", "native", "python", "native", "python", "native"])
         for backend in ("python", "native"):
-            with patch.dict(study.os.environ, {"OPENPOKER_NATIVE_SELECTED_DAG_EXE": "chosen-helper"}), \
+            with patch.object(study.os, "environ", {**study.os.environ, "OPENPOKER_NATIVE_SELECTED_DAG_EXE": "chosen-helper"}), \
                  patch.object(study, "_request", return_value=object()), \
                  patch.object(study, "solve_four_street_operator", return_value={}) as solve, \
                  patch.object(study, "_rss", return_value=456):
@@ -25,7 +25,7 @@ class NativeDagStudyTests(unittest.TestCase):
     def test_first_failure_preserves_streams_and_never_retries(self):
         with TemporaryDirectory(dir=study.ROOT.parent) as parent:
             output = Path(parent) / "study"
-            with patch.dict(study.os.environ, {"OPENPOKER_NATIVE_SELECTED_DAG_EXE": "chosen-helper"}), \
+            with patch.object(study.os, "environ", {**study.os.environ, "OPENPOKER_NATIVE_SELECTED_DAG_EXE": "chosen-helper"}), \
                  patch.object(study, "_identity", return_value={"commit": "frozen", "status": "", "sha256": {}}), \
                  patch.object(study, "executable_identity", return_value={"protocol": "DAG"}), \
                  patch.object(study.subprocess, "run", return_value=SimpleNamespace(returncode=2, stdout=b"partial", stderr=b"failed")) as run:

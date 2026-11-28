@@ -2,6 +2,293 @@
 
 ## Unified solver foundation in development
 
+The [longer-run frontier](../role-training-frontier.md) now independently
+reproduces current framing/width/Catalog bounds with zero preparation.
+At N=3, ticket input projects 5,024/4,096 bytes and repeated snapshots exceed
+the 549,280-byte reservation while existing 371/54 compact widths still fit.
+Packed input and a final-only snapshot postpone some bounds but do not supply
+complete future admission. All four original source-frozen children pass,
+with identical paired worksheet bytes and preserved commands/sources. Next
+saved-only replay also passes both modes at `302c51b`, report SHA256
+`c8534ebf...`, with five accounting/domain/packet methods passing per mode.
+Prioritize a complete bounded state/checkpoint and reproducible stream contract;
+local value-width optimization is a separate measured arithmetic candidate.
+No lifetime or resource ceilings change; the eleven-card refusal stays fixed.
+
+The [structural per-row carrier audit](../role-row-depth-carriers.md) proves
+that exact regret denominators depend on remaining own decisions, including
+the current one. Paired source-frozen audits preserve every raw/cumulative
+value and Q52 policy: across 24 separate snapshots, magnitude bits decrease
+prospectively from 243,294 to 147,614 and used-limb models from 9,238 to 6,130.
+This is not a native row-specific carrier, capacity/RSS or runtime result;
+normalized Quantizer division widths stay unchanged. Both first incomplete
+metadata and complete primary studies remain preserved. Saved-only reader
+`6c57e7b` passes both Python modes with identical report hash `8769b897...`;
+five original structural/packet-admission methods pass per mode. Both first serialized
+report-comparison failures remain in the linked receipts. Fresh cross-platform
+run 46089133508 first fails on Linux derived-file LF/CRLF transport after math;
+the decoded job log remains preserved. Head `858f094` accepts only exact LF or
+CRLF forms of derived reports, rejecting numeric, whitespace and mixed-newline
+changes. Six methods pass per Python mode; fresh run 46089758687 is pending.
+
+The [compact persistent role Store](../compact-role-persistent-store.md)
+now passes original local native execution with one policy authority. An
+explicit contract retains R/A on compact scales; canonical defaults stay
+unchanged. Both twelve-case matrices pass all 6,780 numeric coordinates per
+representation, and every fresh default wire matches historical bytes.
+Native R/A backend capacity totals fall from 29,792 to 16,192 limbs across
+24 separate snapshots; this is a partial backend observation, not total
+memory/RSS. The frozen 260-call same-policy comparison passes its original
+nonregression gate (median ratio 0.943026, two pairs above 1.10), with all
+observations preserved. Independent saved state/timing replay passes both
+Python modes with no native or archived-code calls. Solver ceilings and T2
+lifetime remain unchanged. At `45fad5d`, new compact workflow 46085258753
+passes Windows 140793226611, Linux 140793226796 and sanitized 140793226858,
+including both fresh twelve-case matrices and saved replays. The separate
+Windows chance workflow still fails compiling the History control translation
+unit with MSVC 19.52/`0xC00000FD` before execution; the PR is not globally green.
+The full Python suite also passes at `45fad5d` on 3.11/3.12/3.13 (run
+46085258640, jobs 140793226015/140793225958/140793225714).
+
+The [native full four-street role walk](../opponent-role-four-street-walk.md)
+now passes twelve full1326-range named cases in both Python modes through the
+shared History/Catalog/chance/Store owners. Supplied deterministic Q52 tickets
+drive both target passes and two actual signed-regret commits. All 6,780
+numeric coordinates per mode agree with independent literal histories,
+explicit rational reaches and the full physical joint law; paired native
+streams match byte for byte. Original evidence retains 342 native processes,
+both compiler/reporting failures, and every raw policy. Saved-only replay
+passes both modes with identical reports and no native or archived-code calls.
+The complete request fits unchanged caps. This is deterministic T2 research,
+with no RNG, longer lifetime, timing/equal-quality or solved-quality claim.
+An independent retention argument and 772-vector controls show that nonzero
+rows cannot disappear under coupled centered regret matching. Long-run
+numerical storage remains a scaling gate; the old eleven-card exhaustive
+refusal is unchanged. At `98f21a6`, all three complete role-walk CI jobs pass:
+Windows 140701586449, Linux 140701586759 and sanitized 140701586736,
+run 46056927692. Each executes saved replay/admission, fresh source builds,
+both full twelve-case matrices and artifact publication. The shared-role
+workflow and full test suite also pass at that head. The standalone Windows
+full-deck chance translation unit remains a separate compiler-failure gate;
+the entire PR is not globally green.
+
+The [complete-call role/full cost study](../opponent-role-walk-cost.md)
+retains 136 original processes and both initial pre-observation refusals.
+Each estimator's full wire is independently verified; they use the same
+physical schedule but produce different updates and output sizes. Its frozen
+cost rule passes (median ratio 0.460285, seven of eight pairs faster), with
+large dispersion 0.089345..2.852288. No stable-throughput or equal-quality
+speedup is admitted. Paired saved-only cost replay passes with identical
+reports and no native/archived-code calls. Next resolve persistent-state
+scaling and random-stream ownership before longer learning or quality claims.
+
+The [persistent-role representation audit](../opponent-role-persistent-storage.md)
+now independently replays the native states and checks exact lossless carrier
+conversion over 24 snapshots/2,452 R/A coordinates in both Python modes.
+Removing the canonical 260/312 padding bits reduces summed integer magnitude
+cells 680,510 to 243,294 and the same-descriptor logical row model 1,701,054
+to 1,263,838 (25.70%). Every signed coordinate roundtrips exactly and policies
+stay unchanged. These are finite-trace logical models, not native memory/RSS
+or speed. The subsequent same-owner implementation above adds native backend
+observations and a separately frozen complete-call comparison under unchanged
+T2/global caps. Longer-run state/export schedules and random-stream ownership
+remain separate architectural gates.
+
+The [shared Store role facade](../opponent-role-epoch.md) now passes paired
+original native component execution: 44 refusal guards, three compile-time
+scope checks, seven parser mutations and independent R/A/policy/resource
+verification. A bound chance owner creates the callback-scoped certificate;
+the existing Store remains the only numerical policy owner. Full-history
+cache keys preserve distinct rows sharing a numeric source, while role bits
+separate regrets from averages. Stale/foreign tokens, recycled Store addresses
+and caught or late producer failures cannot authorize publication. The
+maximum component forecast fits unchanged caps. These synthetic phases do
+not establish complete native sampled traversal or saved-policy quality.
+
+The [native compact-row gate](../opponent-role-row-native.md) passes paired
+original execution over 85 authenticated role-witness rows and twelve
+synthetic cases (109 cumulative images). Every exact R/A/policy coordinate
+agrees with the canonical native comparator and independent rational
+allocation. No shared solver owner/default changes. Compact input widths
+decrease, but both Quantizers still reach the same 421-bit division forecast
+after exact common-power cancellation. This supports compact representation,
+not a division speedup. All first refusals and raw evidence are preserved;
+History role ownership, native traversal integration and quality remain open.
+
+The [conditional moment gate](../opponent-action-moment-gate.md) now passes
+all raw R/A first moments against the unchanged four-street literal authority
+on three named full52 worlds, two frozen profiles and two proposals. All
+24,936 first-moment coordinates, marginal second moments and supported
+transcript factors are preserved in paired-mode source-frozen evidence.
+Independent small pure-map enumeration validates the analytic recurrence.
+Policy-role averaging repairs the zero-opponent-prefix bias and supports
+compact per-transcript denominators `2^365`/`2^52`, without forming a global
+proposal product. Original resource ceilings are unchanged. This justifies
+an explicit native role/read contract next; it is not full1326 moment-law
+admission, a native sampler, faster learning, longer lifetime or solved quality.
+
+The [opponent-action structural study](../opponent-action-sampling-study.md)
+now passes independent normal/optimized controls on the same four-street
+numeric template. A fixed uniform menu proposal projects 52.6156 expected
+visits (367 componentwise worst bound) for two target traversals, against the
+current full walk's 1,105. At one million uniform worlds, projected seen rows
+remain about 20.4 million versus roughly 427 million for full walks. This
+warrants the conditional estimator/variance gate above, not native adoption.
+No native sampled R/A operator, timing, longer lifetime or saved-policy quality
+is admitted. Policy-proportional role-split averaging is a separate candidate;
+its law must not borrow this uniform proposal's encounter figures.
+
+The [own-thread CPU diagnostic](../joint-thread-cycles.md) now passes exact
+all-row wire parity across four requests/four offsets in both Python modes and
+its fixed observer-overhead gate (260 calls; median ratio 1.01435, two pairs
+above 1.10). Sampled frozen-policy reads account for a median empirically
+corrected proxy of 20.3% of walk cycles on this fixture. Most walk cost remains
+unattributed; staging is also substantial. Preserve the 304-process immutable
+packet and both previous lazy-storage elapsed misses. A separate four-family
+arithmetic observer passes all-row parity and synthetic controls but misses
+its own unchanged overhead gate (median 1.29551, six pairs above 1.10). Its
+532-process packet and saved replay preserve that failure; arithmetic helper
+shares are not admitted. A typed-TLS revision also passes all-row/guard checks
+but misses the same gate (median 1.19879, seven pairs above 1.10). Both original
+misses are immutable; stop per-helper observer tuning and next separate Store
+staging from row joins using the admitted coarse evidence. Branch-work changes
+also require independent unbiasedness/variance/storage proof. This is CPU
+evidence, not faster solver code, longer learning, quality or eleven-card
+admission. At `33a108f`, lazy component/whole checks pass Windows/Linux/sanitizers,
+and saved numerical/storage replay passes Windows and Linux. The broader
+standalone Windows History compiler crash remains separate and unresolved.
+
+The [sparse catalog and policy epochs](../sparse-policy-epochs.md) separate
+full-history identity from numerical policy storage. The native catalog keeps
+encountered public blocks and declared seen holding indices; its local controls
+and the legacy State/complete-training regressions pass. The independent
+reference checks two signed vanilla-regret transitions and exact average
+scales. The native Store now couples to the exact four-street walk for two
+selected uniform PROOF9 observations. Six normal/optimized requests agree with
+independent cumulative R/A, roots and all-row policy reconstruction; seven
+invalid requests reject without output. Source-frozen saved replay passes,
+and the complete request stays within existing modeled caps. Windows, Linux
+and sanitized epoch CI pass at `8652d5d`.
+Longer learning, sampling, quality and realistic-range resource gates remain
+open. Generic holding indices do not imply physical support or eleven-card
+admission.
+
+The same epoch work now has a separate exact target-public-board proposal proof:
+two full frozen Q52 policies match the literal joint raw expectation in every
+slot, with normal/optimized saved-table replay. It proves a fixture-specific
+regret second-moment bound, without a native sampler or learning-quality claim.
+The [next architecture gate](../joint-chance-sampling-foundation.md) samples a
+private pair together with a board, aiming to remove the full-hand per-board
+update cost while keeping the same raw mathematical targets. The deterministic
+joint-sample reference now passes seven normal/optimized controls, including
+full-coordinate expectations for two frozen Q52 policies. Native coupling now
+also passes six complete two-observation requests and seven real selector
+rejections, normally and optimized, with all-row independent saved replay.
+The path ranks only selected holdings and performs no weighted contractions.
+Legacy shared-owner numerical streams remain exact. The new path passes
+Windows, Linux and sanitizer checks at `2920bdc`; its source-inclusive immutable
+evidence is published separately. Realistic-range preparation, longer learning,
+RNG and saved-policy quality remain open. The older Windows standalone History
+compiler failure is still unresolved.
+
+The [weighted-range preparation design](../joint-chance-weighted-range-design.md)
+keeps the existing resource ceilings and implements a compact ticket-only purpose
+on the same Prepared owner. Local normal/optimized component controls pass on
+full52 uniform and weighted ranges. Generic selected-world reference gates also
+pass. The shared native walk now also passes six full52 two-observation cases
+and eight selector rejections normally and optimized, with independent
+retained-row arithmetic replay. This fixed-tree T2 witness is not longer
+learning or saved-policy quality. Its 162.9-million-work whole forecast stays
+inside the existing caps; the old eleven-card exhaustive refusal is unchanged.
+Full52 two-observation
+admission would leave a much larger lifetime-storage gate: the fixed template
+has approximately 15.9 trillion possible exact information rows with complete
+positive ranges. Measure retained sparse-union growth before longer learning;
+reassess validated compression or abstraction when that forecast fails.
+
+The opt-in [single global-value joint walk](../joint-single-pass-walk.md)
+removes duplicate conditional-value traversal across the two seats while
+preserving simultaneous updates and every exact numerical coordinate.
+Local ten-case tie/loss/win coverage passes in both Python modes, alongside
+typed read-contract guards and legacy N9 regressions. A frozen 132-call,
+three-world comparison passes its predeclared gate with median elapsed ratio
+0.846840 and seven of eight pairs faster. This is one host and a fixed-tree
+T2 mix, not longer learning or solved quality. The original two-pass baseline
+and historical evidence remain explicit. Windows/Linux/sanitizer jobs pass,
+and source-authenticated saved replay passes in both Python modes without
+native execution.
+
+The [uniform lifetime worksheet](../joint-learning-lifetime.md) independently
+checks both-seat physical marginals and bounds encountered identities without
+confusing them with nonzero numerical retention. At 100 iid uniform worlds,
+the present Catalog ledger's expected lower bound exceeds two million words;
+at one million worlds, expected encountered rows are about 427 million.
+This justifies investigating exact lazy holding bitmaps before extending
+learning lifetimes. The existing two-epoch limit and all resource ceilings
+remain unchanged.
+
+The opt-in [lazy holding-bitmap candidate](../lazy-catalog-bitmaps.md) now passes
+full52 twelve-case arithmetic/storage parity normally and optimized, including
+a shared-board/opponent-holding change that promotes 217 public blocks. Its
+Catalog reservation decreases from 185,908 to 167,680 logical words without
+changing ceilings or information identity. Component and whole-walk Windows,
+Linux and sanitizer checks pass at `04e6c11`. Both complete-call elapsed
+studies miss their unchanged nonregression gates; this is an exact storage
+candidate, not an accepted runtime improvement. The revised membership path
+also passes local parity. The next investigation is
+[bounded own-thread compute observation](../joint-thread-cycles.md), rather
+than further kernel tuning without attribution. Longer learning and quality
+remain unadmitted.
+
+The [immutable two-board policy session](../native-frozen-policy-session.md)
+shares native template/catalog/import/readback under one cumulative request.
+Normal/optimized conformance checks both raw results independently, including
+order changes, replacement and zero-target prefix averages. Its complete
+request stays within the existing caps. Dedicated Windows/Linux/sanitizer and
+saved-archive checks pass. A matched cold-setup comparison yields a 0.5105
+median elapsed ratio, eight of eight pairs faster, on its named fixture.
+This is separate from evolving-policy training and the unresolved eleven-card
+State/quantizer/storage barriers. Broader Windows component compilation remains
+under investigation.
+
+The [native fixed-policy raw operator](../native-frozen-grid-raw.md) now passes
+twenty complete raw cases and six rejection controls normally and optimized,
+with exact independent regrets/averages/root replay. It reuses the same History,
+immutable State and Prepared owners; State numerical values are not updated.
+This is raw arithmetic conformance, without sampled training, quality, timing
+acceptance or eleven-card capability. Repeated full-policy preparation and
+persistent sparse/paged learning lifetimes remain the scaling gates.
+
+The [shared native snapshot, forecast and exact-reach contracts](../native-frozen-grid-shared-owners.md)
+preserve complete output parity while moving the validated code into reusable
+headers. A complete existing ten-card training wire and checkpoint regression
+also passes after reach extraction. That shared-owner packet establishes parity;
+the separate raw-operator packet above establishes fixed-policy raw arithmetic.
+Neither establishes new capacity or a speed improvement.
+
+The [provisional native Q52 update envelope](../frozen-grid-update-envelope.md)
+matches independent rank-free geometry and word-ledger equations for all 2,520
+boards under two proposal laws. Its largest proposed V2 request is 312,947,940
+modeled work units under the unchanged 500-million cap. The preflight itself
+keeps update admission false. The separate producer above now executes and
+meters the schedule with independent raw-row replay for twenty cases; it does
+not establish evolving-policy training or resolve eleven-card State/quantizer failures.
+
+The opt-in [native immutable policy State boundary](../native-frozen-policy-state.md)
+adds complete external Q52 import and bounded read lifetime through the existing
+History/State owners. It is resident-only conformance work, with no raw update,
+training, speedup or larger-game capacity acceptance. The separate workflow
+retains Windows, Linux and sanitizer checks and saved-only independent replay.
+
+The [frozen Q52 update reference](../frozen-grid-update-reference.md) connects
+the accepted trainer's policy representation to independent whole-game raw
+regret/average expectation checks. Two profiles under two proposal laws match
+all 24,420 rows exactly, with saved-only replay. A 421-bit per-board witness
+exceeds the old frozen probe's 384-bit cap. The separate State boundary and
+raw operator above now validate native input and raw arithmetic using the
+existing wider carrier; the old refusal remains preserved. No sampled learner,
+larger native capacity or new quality result is claimed.
+
 The explicit [two-sweep native trainer](../native-dyadic-two-sweep.md)
 now connects exact chance, reach and payoff operators to changing-policy
 four-street CFR+ training. Its production traversal does not retain complete
@@ -26,6 +313,23 @@ they do not establish convergence or unrestricted full-deck NLHE support.
 Larger-game work, integer/payload admission and scalable independent
 verification remain open. PR #285 is the integration review; development
 publication and merge acceptance are separate gates.
+
+The [ten-card initial-policy profile](../native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)
+uses State's fresh zero image to build the first sweep's uniform policy.
+It retires 119,196 synthetic regret reads and 49,726,752 modeled work units
+with matching policy and checkpoint bytes. The projected eleven-card
+State and quantizer work remain above their caps.
+
+The [N9 32-sweep study](../native-dyadic-quality32.md#frozen-result-and-preserved-target-miss)
+passes recovered source-only replay of every checkpoint and the complete wire
+hash. Fixed-game exploitability improves from 2.242 at T4 to 0.397 at T32;
+the predeclared 0.1-big-blind target remains a miss. The original controller
+interruption and fresh zero-producer recovery are preserved.
+
+The [linear-weight 32-sweep study](../native-dyadic-linear32.md#frozen-result)
+passed the same fixed-game quality target at 0.08004 big blinds. All 32
+current policies and root values match the equal-weight study. Independently
+replayed checkpoints and the full output hash verify the weighted average.
 
 ## Earlier component records
 
@@ -1034,3 +1338,49 @@ The [completed 8x8 accuracy record](../native-river-range-quality-results.md) pr
 ## Blocker-sensitive AK/KK source counts
 
 One [complete seven-stage physical observation](../preflop-ak-kk-basis-results.md) passed exact native/best-five agreement for three new AK/KK suit classes after current-build all-five conformance and published AA calibration. The original reports and thirteen small raw streams retain all 783 stable source identities and both build identities. These are source counts only; 84-pair joint-suit transport and strategy accuracy remain separate prerequisites. No shared solver or Coach behavior changes.
+
+## Compact exact training evidence
+
+The [compact numerical transport](../native-dyadic-two-sweep.md#compact-exact-numerical-transport)
+passes a frozen ten-card training and independent replay study. It
+preserves the complete legacy numerical stream through exact expansion,
+records additional encoder work within the existing cap, and reduces
+retained numerical output by 68.4 percent. The eleven-card output-size
+projection fits the current ceiling. Whole-request work admission
+and eleven-card quality remain unresolved.
+
+## Factored exact traversal
+
+The opt-in ten-card profile keeps powers of two implicit in traversal
+values and updates packed regret and average words directly. Both sweep
+checkpoints, the complete compact stream, and independent replay match
+the earlier two-sweep result. The additional scalar work reservation
+leaves 12,626,222 units in the existing ten-card budget. The eleven-card
+work limits remain open.
+[Factored training contract](../native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
+
+## Checked History traversal
+
+The factored ten-card trainer has an opt-in checked cursor that preserves
+complete physical board order and literal betting paths. Its exact
+History reservation is 62.9 million work units. Independent saved replay
+matches the earlier numerical result and checkpoints. The eleven-card
+History projection is 185.7 million units against the 100-million cap.
+[Checked History contract](../native-dyadic-two-sweep.md#checked-history-cursor)
+
+The ten-card visit profile reduces the verified History schedule to
+34.7 million units. Its eleven-card rank-free projection is 98.7 million
+against the 100-million History cap. Wider training remains gated by
+State, quantizer and aggregate work admission.
+[Visit reuse evidence](../native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
+
+The opt-in equal-weight quantizer preserves exact largest-remainder
+allocation and avoids 60.8 percent of wide divisions on the verified
+two-sweep ten-card fixture. Its whole-request forecast allows every
+potentially mixed row to use the generic path.
+[Equal-weight quantizer](../native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
+
+The owned State row snapshot reuses the frozen policy and authenticated
+row descriptor during staging. On the ten-card fixture, it eliminates
+238,392 directory lookups and 238,392 policy loads across two sweeps.
+[Snapshot contract](../native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)

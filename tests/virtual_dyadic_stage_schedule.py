@@ -3,6 +3,7 @@
 This models write calls, not operating-system I/O. It imports no native producer
 or its pager. One invocation covers initialization and all requested sweeps.
 """
+from collections import OrderedDict
 from functools import lru_cache
 from itertools import combinations
 
@@ -13,18 +14,34 @@ from tests.virtual_frozen_update_reference import _template_case, scaled_proof9_
 PAGE_WORDS = 4096
 
 
-def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
+def stage_schedule(*, ten_card=False, eleven_card=False, virtual_zero=False, sweeps=2,
+                   batch_rows=False, quality32=False, zero_policy_bootstrap=False,
+                   initial_packed_stage=False, read_pages=8, dirty_pages=1):
     """Return independently reconstructed direct and dirty-run write receipts.
 
-    The dirty-run model owns one page buffer per field. A page change flushes
-    only contiguous marked runs. Both fields share one global coverage bitmap,
+    The dirty-run model evicts the least-recently-used page in each field.
+    A flush writes only contiguous marked runs. Both fields share a coverage bitmap,
     including when their extents occupy the same physical page. No hand ranking,
     strategy arithmetic, training, file writes, or production code is used.
     """
-    if sweeps!=2 and (sweeps not in (3,4) or ten_card or not virtual_zero):
+    if type(eleven_card) is not bool or (ten_card and eleven_card):
+        raise ValueError('select at most one expanded deck size')
+    if type(quality32) is not bool or (quality32 and (ten_card or eleven_card or not virtual_zero or sweeps!=32 or not batch_rows)):
+        raise ValueError('quality32 requires the exact nine-card virtual-zero row-batched T32 schedule')
+    if type(batch_rows) is not bool or (batch_rows and not (quality32 or (ten_card or eleven_card) and virtual_zero and sweeps==2)):
+        raise ValueError('row batching requires the named expanded virtual-zero T2 schedule')
+    if type(zero_policy_bootstrap) is not bool or (zero_policy_bootstrap and (quality32 or not batch_rows)):
+        raise ValueError('initial policy bootstrap requires the expanded row-batched virtual-zero schedule')
+    if type(initial_packed_stage) is not bool or (initial_packed_stage and not zero_policy_bootstrap):
+        raise ValueError('initial packed staging requires the first-policy bootstrap')
+    if not quality32 and sweeps!=2 and (sweeps not in (3,4) or ten_card or eleven_card or not virtual_zero):
         raise ValueError('unsupported staged sweep schedule')
-    deck = tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
-    if len(set(deck)) != (10 if ten_card else 9):
+    if (type(read_pages) is not int or type(dirty_pages) is not int or
+            not 1 <= dirty_pages <= 5 or read_pages + dirty_pages != 9 or
+            (dirty_pages != 1 and not (initial_packed_stage and (ten_card or eleven_card)))):
+        raise ValueError('unsupported pager geometry')
+    deck = tuple(sorted((*PROOF9, *range(11-len(PROOF9))))) if eleven_card else tuple(sorted((*PROOF9, 0))) if ten_card else tuple(PROOF9)
+    if len(set(deck)) != (11 if eleven_card else 10 if ten_card else 9):
         raise ValueError('unexpected named deck')
     template = build_reference_template(_template_case())
     ranges = scaled_proof9_ranges()
@@ -52,7 +69,7 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
 
     if suffix(template.root) != 12:
         raise ValueError('unexpected decision horizon')
-    value_bits = 644 if ten_card else 642
+    value_bits = 646 if eleven_card else 644 if ten_card or quality32 else 642
     average_words = regret_words = rows = slots = 0
     postorder = []
     preorder = []
@@ -96,13 +113,14 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
         postorder.extend(current)
 
     visit(template.root, (), (0, 0))
-    expected = ((119196, 281066, 1295812, 1666910) if ten_card else
+    expected = ((380172, 892910, 4188150, 5536052) if eleven_card else
+                (119196, 281066, 1295812, 1666910) if ten_card else
                 (24420, 58164, 258694, 348036))
     if (rows, slots, average_words, regret_words) != expected or len(postorder) != rows:
         raise ValueError('independent row or extent census differs')
     image_words = average_words + regret_words
     seen = bytearray((image_words + 7) // 8)
-    dirty = [None, None]
+    dirty = [OrderedDict(), OrderedDict()]
     runs = flushed_words = stage_calls = 0
 
     def flush(buffer):
@@ -128,24 +146,31 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
         while count:
             page, at = divmod(offset, PAGE_WORDS)
             extent = min(count, PAGE_WORDS - at)
-            old = dirty[field]
-            if old is None or old[0] != page:
-                flush(old)
-                old = (page, 0)
+            pending = dirty[field]
+            old = pending.pop(page, None)
+            if old is None:
+                if len(pending) == dirty_pages:
+                    flush(pending.popitem(last=False))
+                old = 0
             marks = ((1 << extent) - 1) << at
-            if old[1] & marks:
+            if old & marks:
                 raise ValueError('dirty buffer overlap')
-            dirty[field] = (page, old[1] | marks)
+            pending[page] = old | marks
             offset += extent
             count -= extent
 
     for avg_offset, regret_offset, avg_stride, regret_stride, menu in postorder:
-        for action in range(menu):
-            stage(1, average_words + regret_offset + action * regret_stride, regret_stride)
-            stage(0, avg_offset + action * avg_stride, avg_stride)
-    for buffer in dirty:
-        flush(buffer)
-    if (stage_calls, flushed_words) != (2 * slots, image_words):
+        if batch_rows:
+            stage(1, average_words + regret_offset, menu * regret_stride)
+            stage(0, avg_offset, menu * avg_stride)
+        else:
+            for action in range(menu):
+                stage(1, average_words + regret_offset + action * regret_stride, regret_stride)
+                stage(0, avg_offset + action * avg_stride, avg_stride)
+    for field in dirty:
+        for buffer in field.items():
+            flush(buffer)
+    if (stage_calls, flushed_words) != (2 * (rows if batch_rows else slots), image_words):
         raise ValueError('incomplete staged image')
     if any(byte != 255 for byte in seen[:-1]):
         raise ValueError('coverage gap')
@@ -158,20 +183,28 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
               'per_sweep_dirty_runs': runs, 'direct_write_calls': initial_calls + sweeps*stage_calls,
               'batched_write_calls': initial_calls + sweeps*runs,
               'written_words': (sweeps+int(not virtual_zero))*image_words, 'sweeps': sweeps}
-    expected_calls = ((1124264, 18836, 5925444) if ten_card else
+    expected_calls = ((1_520_688, 59_328, 19_448_404) if eleven_card else
+                      (1124264, 18836, 5925444) if ten_card else
                       (232656, 3954, 1213460)) if virtual_zero else (
                       (1124988, 19560, 8888166) if ten_card else (232805, 4103, 1820190))
     if sweeps==3:
         expected_calls = (348984, 5931, 1820190)
     elif sweeps==4:
         expected_calls = (465312, 7908, 2426920)
-    if (result['direct_write_calls'], result['batched_write_calls'], result['written_words']) != expected_calls:
+    if batch_rows:
+        expected_calls = ((1_520_688, 59_328, 19_448_404) if eleven_card else
+                          (476784, 18836, 5925444))
+    if quality32:
+        expected_calls = (1_562_880,63_264,19_415_360)
+    observed_writes = (result['direct_write_calls'], result['batched_write_calls'], result['written_words'])
+    if (observed_writes[::2] != expected_calls[::2] or
+            (dirty_pages == 1 and observed_writes[1] != expected_calls[1])):
         raise ValueError('independent stage schedule differs from fixed fixture')
     if virtual_zero:
-        # Two eight-page direct-mapped banks; zero-image accesses are logical
+        # Two direct-mapped banks; zero-image accesses are logical
         # reads but do not populate or touch the physical cache. Commits
         # invalidate all tags, including before the export phase.
-        tags = [None] * 16
+        tags = [None] * (2 * read_pages)
         logical_reads = logical_words = virtual_reads = virtual_words = 0
         misses = hits = physical_words = 0
         epochs = []
@@ -182,13 +215,13 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
             before = (logical_reads, logical_words, virtual_reads, virtual_words,
                       hits, misses, physical_words)
             for avg_offset, regret_offset, avg_stride, regret_stride, menu in records:
-                for action in range(menu):
+                for action in range(1 if batch_rows else menu):
                     for field in fields:
                         if field == 0:
-                            offset, count = avg_offset + action * avg_stride, avg_stride
+                            offset, count = avg_offset + action * avg_stride, avg_stride * (menu if batch_rows else 1)
                         else:
                             offset = average_words + regret_offset + action * regret_stride
-                            count = regret_stride
+                            count = regret_stride * (menu if batch_rows else 1)
                         logical_reads += 1
                         logical_words += count
                         if zero:
@@ -198,7 +231,7 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
                         end = offset + count
                         while offset < end:
                             page, at = divmod(offset, PAGE_WORDS)
-                            slot = field * 8 + page % 8
+                            slot = field * read_pages + page % read_pages
                             if tags[slot] == page:
                                 hits += 1
                             else:
@@ -213,9 +246,11 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
                                    (name, *(a - b for a, b in zip(after, before))))))
 
         for sweep in range(1, sweeps+1):
-            epoch(f'sweep_{sweep}_policy', preorder, (1,), zero=sweep == 1)
-            epoch(f'sweep_{sweep}_stage', postorder, (1, 0), zero=sweep == 1)
-            tags[:] = [None] * 16
+            policy_rows = () if zero_policy_bootstrap and sweep == 1 else preorder
+            epoch(f'sweep_{sweep}_policy', policy_rows, (1,), zero=sweep == 1)
+            staged_reads = () if initial_packed_stage and sweep == 1 else postorder
+            epoch(f'sweep_{sweep}_stage', staged_reads, (1, 0), zero=sweep == 1)
+            tags[:] = [None] * len(tags)
         epoch('export_average', preorder, (0,))
         result.update({'read_epochs': epochs, 'logical_read_calls': logical_reads,
                        'logical_read_words': logical_words, 'virtual_read_calls': virtual_reads,
@@ -228,6 +263,18 @@ def stage_schedule(*, ten_card=False, virtual_zero=False, sweeps=2):
             expected_reads = (581640,3122992,174492,954766,548,2223164)
         elif sweeps==4:
             expected_reads = (756132,4077758,174492,954766,790,3203674)
-        if actual_reads != expected_reads:
+        if batch_rows:
+            expected_reads = ((2_661_204,34_708_658,1_140_516,15_260_254,5068,20_750_932) if eleven_card else
+                              (834372,10555076,357588,4629632,1498,6130244))
+        if quality32:
+            expected_reads = (2_368_740,30_811_206,73_260,954_766,7_566,30_657_954)
+        if zero_policy_bootstrap:
+            expected_reads = tuple(value - removed for value, removed in zip(
+                expected_reads, (rows, regret_words, rows, regret_words, 0, 0), strict=True))
+        if initial_packed_stage:
+            expected_reads = tuple(value - removed for value, removed in zip(
+                expected_reads, (2*rows, image_words, 2*rows, image_words, 0, 0), strict=True))
+        if (actual_reads[:4] != expected_reads[:4] or
+                (read_pages == 8 and actual_reads[4:] != expected_reads[4:])):
             raise ValueError(f'independent virtual-zero read schedule differs: {actual_reads}')
     return result

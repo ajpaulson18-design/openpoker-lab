@@ -1,0 +1,11 @@
+{
+  "status": "scalar-lifetime-worksheet-and-independent-controls-exact",
+  "source_head": "856167ccf12254204aa62d9823c32ed4c5d6d03a",
+  "worksheet_sha256": "366a5bfc0375efe35f402ffac31713ab0e536f689841fdb95bbe3f24ff716e5a",
+  "child_processes": 4,
+  "all_actual_exits_zero": true,
+  "native_calls": 0,
+  "attempted_training": false,
+  "scope": "Scalar uniform-law architecture forecast and independent physical/occupancy controls only."
+}
+

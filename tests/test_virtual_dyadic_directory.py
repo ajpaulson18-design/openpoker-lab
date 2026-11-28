@@ -27,9 +27,12 @@ class TinyFixture:
         raise ValueError('incorrect independent row identity')
 
 
-def tiny_trace():
+def tiny_trace(*, reuse_snapshot=False, **kwargs):
+    if type(reuse_snapshot) is not bool or kwargs:
+        raise ValueError('unexpected tiny trace profile')
+    logical_reads = 16 if reuse_snapshot else 20
     return {'rows': 2, 'slots': 4, 'page_rows': 128, 'cache_pages': 8,
-            'misses': 1, 'logical_reads': 20, 'hits': 19, 'read_bytes': 64,
+            'misses': 1, 'logical_reads': logical_reads, 'hits': logical_reads-1, 'read_bytes': 64,
             'write_calls': 1}
 
 
@@ -65,12 +68,37 @@ class DirectoryWireTests(unittest.TestCase):
     def write_rows(self):
         self.rows.write_bytes(b''.join(struct.pack('<4Q', *record) for record in self.records))
 
-    def verify(self):
-        return verify_row_directory(self.root, self.stream, self.admission)
+    def verify(self, *, reuse_snapshot=False):
+        return verify_row_directory(self.root, self.stream, self.admission,
+                                    reuse_snapshot=reuse_snapshot)
 
     def test_valid_independent_rows(self):
         result = self.verify()
         self.assertEqual((result['rows_bytes'], result['receipt']['read_rows']), (64, 2))
+
+    def test_valid_reused_snapshot_uses_reduced_read_schedule(self):
+        self.admission['row_directory_read_call_limit'] = 16
+        data = json.loads(self.receipt.read_text())
+        data.update(read_calls=16, cache_hits=15)
+        self.receipt.write_text(json.dumps(data))
+        result = self.verify(reuse_snapshot=True)
+        self.assertEqual((result['rows_bytes'], result['receipt']['read_calls'],
+                          result['receipt']['cache_hits']), (64, 16, 15))
+
+    def test_reused_snapshot_trace_mutation_is_rejected(self):
+        self.admission['row_directory_read_call_limit'] = 16
+        data = json.loads(self.receipt.read_text())
+        data.update(read_calls=16, cache_hits=15)
+        self.receipt.write_text(json.dumps(data))
+
+        def mutated_trace(*, reuse_snapshot=False, **kwargs):
+            trace = tiny_trace(reuse_snapshot=reuse_snapshot, **kwargs)
+            trace['hits'] -= 1
+            return trace
+
+        with patch('scripts.run_virtual_dyadic_training_cohort.directory_trace', mutated_trace):
+            with self.assertRaisesRegex(ValueError, 'row directory receipt differs'):
+                self.verify(reuse_snapshot=True)
 
     def test_corrupt_fields_and_overlap_are_rejected(self):
         for index, word, mask in ((0, 0, 1), (0, 1, 1 << 32), (1, 1, 2),

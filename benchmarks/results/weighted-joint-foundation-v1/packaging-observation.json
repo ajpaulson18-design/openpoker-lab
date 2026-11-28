@@ -1,0 +1,30 @@
+{
+  "schema": "weighted-joint-packaging-observation-v1",
+  "successful_packager_actual_exit": 0,
+  "first_packager_actual_exit": 1,
+  "first_attempt_destination_created": false,
+  "first_failure": "Strict LF/CRLF source reconstruction refused historical mixed-newline training_phase_profile.hpp. No native/math execution.",
+  "correction": "Recovered exact already-captured source bytes with recorded raw SHA and matching canonical Git content, retaining each source recovery in the manifest. No source rewritten and no limits raised.",
+  "failed_controller_reconstruction": "Post-run reconstruction has SHA46fe94e9f2f8d4486319ae89a52123c966aa1c2d28bab7ce56df04f237b5bb84, matching its hash observed before correction. This is not a new pre-run capture.",
+  "controller_copies": "Post-run copies; packaging never executes project math, native code or archived source.",
+  "manifest_sha256": "4aa3f0406a5b8cf422f1739ea78fa59b9d50f6e32b650f02ed4a0dc684f1eb64",
+  "outer_files": {
+    "packaging-controller.py.txt": {
+      "bytes": 14346,
+      "sha256": "89e6597c76b9241b5a0aa502e43d75243d7e61242d790bec4d6d8581e04cacb6"
+    },
+    "packaging-first-controller.py.txt": {
+      "bytes": 12952,
+      "sha256": "46fe94e9f2f8d4486319ae89a52123c966aa1c2d28bab7ce56df04f237b5bb84"
+    },
+    "packaging-first-source-auth-failure.log": {
+      "bytes": 692,
+      "sha256": "51af72161685b54ab00d577f2bcfa0303d0aaa619f69d39fe260f765db7dfe55"
+    },
+    "packaging-success.log": {
+      "bytes": 3054,
+      "sha256": "f243d30ae4f08f1153eba72842d5d5e70bf54d3ede1e41524bcd1cd76194d4c7"
+    }
+  },
+  "phase_stdout_objects": "Every exact stdout stream is recoverable from the original process path reference and shared object. All process receipts and varying diagnostic stderr bytes are retained."
+}

@@ -1,0 +1,104 @@
+name: Native four-street role walk
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  role-walk:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Admit original evidence and replay every exact retained coordinate
+        shell: bash
+        run: |
+          python -B -m scripts.replay_opponent_role_walk > "$RUNNER_TEMP/role-walk-replay-normal.json"
+          python -O -B -m scripts.replay_opponent_role_walk > "$RUNNER_TEMP/role-walk-replay-optimized.json"
+          python -B -m unittest tests.test_virtual_role_walk_admission tests.test_opponent_role_walk_packet_admission -v
+          python -B -m scripts.replay_opponent_role_cost > "$RUNNER_TEMP/role-walk-cost-normal.json"
+          python -O -B -m scripts.replay_opponent_role_cost > "$RUNNER_TEMP/role-walk-cost-optimized.json"
+          python -B -m unittest tests.test_opponent_role_cost_packet_admission -v
+      - name: Reproduce lossless persistent-carrier audit against frozen outcomes
+        shell: bash
+        run: |
+          python -B -m scripts.audit_opponent_role_storage ../role-storage-normal > "$RUNNER_TEMP/role-walk-storage-normal.json"
+          python -O -B -m scripts.audit_opponent_role_storage ../role-storage-optimized > "$RUNNER_TEMP/role-walk-storage-optimized.json"
+          python -B - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path.cwd().parent
+          expected=json.loads(Path('benchmarks/results/opponent-role-storage-audit-expected-v1/expected.json').read_bytes())
+          expected.pop('source_head')
+          for mode in ('normal','optimized'):
+              fresh=json.loads((root/('role-storage-'+mode)/'result.json').read_bytes())
+              fresh.pop('source_head')
+              if fresh!=expected:raise ValueError('lossless role-storage audit differs: '+mode)
+          PY
+      - name: Build explicit whole walk and independent scalar controls
+        shell: bash
+        run: |
+          python -B -m scripts.build_frozen_role_walk --target opponent-role-four-street --output-dir "$RUNNER_TEMP/role-walk-build" ${{ matrix.flags }}
+          python -B -m scripts.build_frozen_role_walk --target opponent-role-walk-controls --output-dir "$RUNNER_TEMP/role-walk-controls-build" ${{ matrix.flags }}
+      - name: Execute both complete twelve-case transcript matrices
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          python -B -m scripts.run_frozen_role_walk_matrix "$RUNNER_TEMP/role-walk-build/native-opponent-role-four-street$suffix" "$RUNNER_TEMP/role-walk-controls-build/native-opponent-role-walk-controls$suffix" ../role-walk-normal > "$RUNNER_TEMP/role-walk-fresh-normal.jsonl"
+          python -O -B -m scripts.run_frozen_role_walk_matrix "$RUNNER_TEMP/role-walk-build/native-opponent-role-four-street$suffix" "$RUNNER_TEMP/role-walk-controls-build/native-opponent-role-walk-controls$suffix" ../role-walk-optimized > "$RUNNER_TEMP/role-walk-fresh-optimized.jsonl"
+          python -B - <<'PY'
+          from pathlib import Path
+          from scripts.run_frozen_role_walk_matrix import cases
+          root=Path.cwd().parent
+          for label,_,_,_ in cases():
+              first=root/('role-walk-normal-'+label)
+              second=root/('role-walk-optimized-'+label)
+              for name in ('native/stdout.bin','request.bin','controls/stdout.bin'):
+                  if (first/name).read_bytes()!=(second/name).read_bytes():
+                      raise ValueError('paired-mode role wire differs: '+label+'/'+name)
+          PY
+      - name: Stage complete source and original process evidence
+        if: always()
+        shell: python
+        run: |
+          import os,shutil
+          from pathlib import Path
+          temp=Path(os.environ['RUNNER_TEMP']);out=temp/'role-walk-evidence';out.mkdir(exist_ok=True)
+          root=Path.cwd().parent
+          for path in root.glob('role-walk-*-profile-*'):
+              if path.is_dir():shutil.copytree(path,out/path.name)
+          for name in ('role-storage-normal','role-storage-optimized'):
+              if (root/name).is_dir():shutil.copytree(root/name,out/name)
+          for name in ('role-walk-build','role-walk-controls-build'):
+              source=temp/name
+              if source.is_dir():
+                  target=out/name;target.mkdir()
+                  for member in ('source-identity.json','build.log','build-failure.json','compiler-version.log','native-exact-build-manifest.json'):
+                      if (source/member).is_file():shutil.copyfile(source/member,target/member)
+                  if (source/'source').is_dir():shutil.copytree(source/'source',target/'source')
+          for pattern in ('role-walk-*.json','role-walk-*.jsonl'):
+              for path in temp.glob(pattern):shutil.copyfile(path,out/path.name)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: four-street-role-walk-${{ matrix.label }}
+          path: ${{ runner.temp }}/role-walk-evidence
+          if-no-files-found: warn

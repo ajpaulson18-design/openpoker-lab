@@ -1,0 +1,31 @@
+{
+  "version": "native-frozen-policy-state-evidence-v1",
+  "native_source_head": "a776062",
+  "observed_source_head": "5ae1757e560e249975a28c9f215cff47953eea9c",
+  "maintained_head": "ed5ee143bd4e1dda76c96621a16505def0c73374",
+  "scope": "complete resident Q52 import/read conformance; no raw update, training, quality, runtime or capacity improvement",
+  "native_cases_per_mode": 9,
+  "normal_tests": 5,
+  "optimized_tests": 5,
+  "read_rows_per_profile": 24420,
+  "slots_per_profile": 58164,
+  "native_rank_calls": 0,
+  "native_contractions": 0,
+  "native_training_sweeps": 0,
+  "native_quantizer_work": 0,
+  "legacy_control_tests": 11,
+  "legacy_stdout_bytes": 48753,
+  "legacy_stdout_sha256": "e939f1a865ac94fc791299a4c9b21fef19490a31fdc7615aa7d4954d3d47c26e",
+  "saved_replay_candidate_calls": 0,
+  "archived_source_executed": false,
+  "retained_failures": [
+    "oversized stdout declaration rejected before child launch",
+    "mixed historical header provenance refused before math replay"
+  ],
+  "legacy_before_source": "exact raw sources recovered from pinned PR325 packet; third-party source individually hash checked",
+  "legacy_after_builder_recovery": "remove only the newly added explicit target scope branch; exact original build manifest SHA required",
+  "system_build_inputs": "SDK/runtime/standard headers not exhaustively attested; bit reproducibility unproven",
+  "archive_bytes": 7733361,
+  "archive_sha256": "ecb72cd2bcbcdb1fb7089da6401ae558a4d71855daefdda86828b7c3817fbdd5",
+  "archive_members": 408
+}

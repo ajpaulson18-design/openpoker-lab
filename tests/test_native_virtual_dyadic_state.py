@@ -30,7 +30,8 @@ GUARDS = (
     'sealed_lookup_after_freeze', 'sealed_generic_registration', 'sealed_foreign_cursor',
     'sealed_invalid_shift', 'sealed_nondecision_cursor',
     'packed_nondivisible', 'packed_cumulative_width', 'packed_limb_census',
-    'scaled_wrong_shift', 'scaled_width', 'scaled_dense_mode', 'packed_regret_nondivisible',
+    'scaled_wrong_shift', 'scaled_coefficient_nonfactored', 'scaled_width', 'scaled_dense_mode',
+    'packed_regret_nondivisible',
 )
 
 
@@ -132,6 +133,17 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
             self.assertEqual(next(lines), ['LIFECYCLE','DONE',str(total)])
         self.assertEqual(list(lines), [])
 
+    def test_proof10_phase_payload_breakdown_and_legacy_parity(self):
+        rows=[line.split() for line in self.lines if line.startswith('PHASE_PAYLOAD ')]
+        self.assertEqual(len(rows),1)
+        _, old_entries, old_bits, new_entries, new_bits=rows[0]
+        self.assertEqual((int(old_entries),int(new_entries)),(200_886,200_886))
+        self.assertEqual(int(old_bits),1_168_510_748)
+        self.assertEqual(int(new_bits),8*(16_384+36_864+(410+388)*16+591_008+
+                                          119_196+1_024+88+256*11*8))
+        self.assertEqual(int(new_bits),6_398_880)
+        self.assertIn('PHASE_PAYLOAD_GUARDS PASS',self.lines)
+
     def test_two_sweeps_exact_mix_committed_masses_and_tagged_export(self):
         reference = build_reference_template(_template_case())
         root = reference.nodes[reference.root]
@@ -140,7 +152,9 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
         menus = [tuple(edge.token for edge in node.edges) for node in nodes]
         self.assertEqual(self.lines[0], 'VIRTUAL_DYADIC_STATE_V1')
         separate_controls = ('REJECT ', 'ACTION_STORAGE ', 'PACKED_AVERAGE ', 'PACKED_DUAL ',
-                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ', 'PROOF9_T4_GUARDS ')
+                             'SCALED_AVERAGE ', 'PAGED_IMAGE ', 'LIFECYCLE ', 'PROOF9_T4_GUARDS ',
+                             'PROOF9_Q32_STATE ', 'PROOF9_Q32_GUARDS ', 'PROOF9_Q32_PAGER ',
+                             'PHASE_PAYLOAD ' , 'PHASE_PAYLOAD_GUARDS ')
         rows = iter(line.split() for line in self.lines[1:] if not line.startswith(separate_controls))
         for shift in (104, 780, 1800):
             case, exponent, denominator = next(rows)
@@ -211,6 +225,15 @@ class NativeVirtualDyadicStateTests(unittest.TestCase):
     def test_proof9_t4_pager_profile_and_storage_delta(self):
         self.assertEqual([line for line in self.lines if line.startswith('PROOF9_T4_GUARDS ')],
                          ['PROOF9_T4_GUARDS 7 2 8 512'])
+
+    def test_proof9_q32_state_storage_and_page_crossing(self):
+        self.assertEqual([line.split() for line in self.lines if line.startswith('PROOF9_Q32_STATE ')],
+                         [['PROOF9_Q32_STATE','106399','241969528','PASS']])
+        pager=[line.split() for line in self.lines if line.startswith('PROOF9_Q32_PAGER ')]
+        self.assertEqual(len(pager),1)
+        self.assertEqual(pager[0][-1],'PASS')
+        self.assertEqual((int(pager[0][1]),int(pager[0][2]),int(pager[0][3])),(16384,4,151))
+        self.assertIn('PROOF9_Q32_GUARDS 8 PASS',self.lines)
 
     def test_paged_images_preserve_the_committed_sweep_until_complete(self):
         self.assertEqual([line for line in self.lines if line.startswith('PAGED_IMAGE ')],

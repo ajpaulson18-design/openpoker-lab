@@ -1,0 +1,73 @@
+name: Native shared Store role lease
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  role-epoch:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Admit original sources and replay role ownership and row mathematics
+        shell: bash
+        run: |
+          python -B -m scripts.replay_opponent_role_epoch > "$RUNNER_TEMP/role-epoch-replay-normal.json"
+          python -O -B -m scripts.replay_opponent_role_epoch > "$RUNNER_TEMP/role-epoch-replay-optimized.json"
+          python -B -m unittest tests.test_opponent_role_epoch_admission -v
+      - name: Build explicit facade against unchanged shared owners
+        shell: bash
+        run: python -B -m scripts.build_opponent_role_epoch --output-dir "$RUNNER_TEMP/role-epoch-build" ${{ matrix.flags }}
+      - name: Execute all scoped role, identity, publication and arithmetic controls
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          python -B -m scripts.run_opponent_role_epoch_study "$RUNNER_TEMP/role-epoch-build/native-opponent-role-epoch-controls$suffix" ../role-epoch-normal > "$RUNNER_TEMP/role-epoch-fresh-normal.json"
+          python -O -B -m scripts.run_opponent_role_epoch_study "$RUNNER_TEMP/role-epoch-build/native-opponent-role-epoch-controls$suffix" ../role-epoch-optimized > "$RUNNER_TEMP/role-epoch-fresh-optimized.json"
+          python -B - <<'PY'
+          from pathlib import Path
+          root=Path.cwd().parent
+          assert (root/'role-epoch-normal/native/stdout.bin').read_bytes()==(root/'role-epoch-optimized/native/stdout.bin').read_bytes()
+          PY
+      - name: Stage original bounded evidence under one artifact root
+        if: always()
+        shell: python
+        run: |
+          import os,shutil
+          from pathlib import Path
+          temp=Path(os.environ['RUNNER_TEMP']);out=temp/'role-epoch-evidence';out.mkdir(exist_ok=True)
+          root=Path.cwd().parent
+          for name in ('role-epoch-normal','role-epoch-optimized'):
+              if (root/name).is_dir():shutil.copytree(root/name,out/name)
+          source=temp/'role-epoch-build'
+          if source.is_dir():
+              target=out/'build';target.mkdir()
+              for name in ('source-identity.json','build.log','build-failure.json','compiler-version.log','native-exact-build-manifest.json'):
+                  if (source/name).is_file():shutil.copyfile(source/name,target/name)
+              if (source/'source').is_dir():shutil.copytree(source/'source',target/'source')
+          for path in temp.glob('role-epoch-*.json'):shutil.copyfile(path,out/path.name)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shared-store-role-evidence-${{ matrix.label }}
+          path: ${{ runner.temp }}/role-epoch-evidence
+          if-no-files-found: warn

@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+from fractions import Fraction
 import shutil
 import struct
 import time
@@ -16,7 +17,7 @@ from scripts.run_virtual_frozen_source_only import FIRST_STAGE, source_only_comm
 from scripts.verify_virtual_dyadic_training import EXPECTED_SHAPE, EXPECTED_TERMINAL_COMPLETIONS, FAMILIES, PARENT, SHAPE, TOTAL_BYTES, require
 from scripts.verify_virtual_dyadic_training import SPLIT_BYTES, SPLIT_IMAGE_BYTES, SPLIT_IMAGE_NAMES
 from scripts.verify_virtual_dyadic_training import TEN_CARD_IMAGE_BYTES, TEN_CARD_SHAPE, TEN_CARD_SPLIT_BYTES
-from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bounded_dyadic_probe
+from tests.virtual_frozen_run_control import RunClaim, run_bounded_child, run_bounded_dyadic_probe, run_bounded_quality32_replay, run_bounded_linear32_replay
 from tests.virtual_frozen_saved_review import unlinked_path
 from tests.virtual_frozen_source_guard import _git, capture_source, verify_source, require_source_bootstrap
 from tests.virtual_dyadic_stage_schedule import stage_schedule
@@ -24,6 +25,8 @@ from tests.virtual_dyadic_directory_trace import directory_trace
 from tests.virtual_dyadic_sweep_capture import sweep_stream_contract
 from tests.virtual_dyadic_training_reference import Fixture
 from scripts.verify_virtual_dyadic_training import compact_scales
+from scripts.verify_virtual_dyadic_training import phase_payload_bits, rank_index_costs
+from tests.virtual_dyadic_rank_trace import rank_trace
 
 ROOT=Path(__file__).resolve().parents[1]
 TARGET='virtual-dyadic-training'
@@ -192,11 +195,136 @@ def validate_bounded_proof9_admission(receipt,sweeps):
     return receipt
 
 
+def validate_quality32_admission(receipt,*,linear=False):
+    """Pin the named Q32 census independently of the native receipt."""
+    expected=exact_json((ROOT/'benchmarks/results/native-dyadic-proof9-four-sweep-accepted-v1/manifest.json').read_bytes())['admission']
+    expected.pop('proof9_t4');expected.pop('actual_admission_work')
+    components=dict(template=42_556_544,chance=395_628_627,history=218_731_616,
+                    state=720_265_152,quantizer=1_867_537_648,parent=2_363_985_314)
+    expected.update(protocol='DYADIC_T32_V1',proof9_quality32=True,requested_sweeps=32,
+        sparse_chance=True,single_division=True,row_batched=True,value_bits=644,
+        output_bytes=16_084_908,entries=270_172,payload_bits=255_885_592,
+        packed_average_work=288_075_648,packed_regret_work=503_205_120,
+        scaled_average_build_work=84_343_616,directory_work=60_901_056,
+        row_directory_page_limit=18_942,row_directory_read_call_limit=3_174_600,
+        policy_spill_work=49_728_064,page_write_request_limit=63_264,
+        page_write_word_limit=19_415_360,page_read_word_limit=30_657_954,
+        page_request_limit=3_931_620,paging_work=387_907_074,
+        general_quantizer_work=30*59_307_688,quantizer_terms=[10_606_272,32_153_808,45_546_928],
+        component_work=components,planned_total_work=sum(components.values()),
+        parent_allowance=5_800_000_000-sum(v for k,v in components.items() if k!='parent'),
+        parent_work=dict(geometry=3_000_000,visit=23_950_808,support=78_478_208,reach=172_547_904,
+                         value_add=164_041_920,terminal_scale=491_587_968,average=378_157_760,
+                         route=1_014_867_730,output=37_353_016),
+        sweep_stream=sweep_stream_contract(proof9_sweeps=32))
+    if linear:
+        expected.pop('proof9_quality32')
+        expected.update(protocol='DYADIC_L32_V1',proof9_linear32=True,
+            average_weight_sum=528,maximum_average_weight=32,
+            scaled_average_build_work=90_700_352,quantizer_terms=[10_606_272,32_153_808,45_600_688])
+        components['quantizer']+=53_760
+        components['parent']+=6_356_736
+        expected['parent_work']['average']+=6_356_736
+        expected['planned_total_work']=sum(components.values())
+        expected['parent_allowance']-=53_760
+    require(type(receipt) is dict and receipt.keys()==expected.keys()|{'actual_admission_work'} and
+            all(type(receipt[k]) is type(v) and receipt[k]==v for k,v in expected.items()),
+            'PROOF9 Q32 admission differs from independent fixed census')
+    require(type(receipt['actual_admission_work']) is int and
+            42_556_544<=receipt['actual_admission_work']<=45_556_544,
+            'Q32 admission geometry work')
+    require(sum(expected['parent_work'].values())==components['parent'] and
+            expected['planned_total_work']+expected['sweep_stream']['copy_work']<=5_800_000_000,
+            'Q32 composed transport admission')
+    return receipt
+
+
+# Each sweep stages two fields. Across both sweeps the trainer reads
+# seven extents and stages four per row in the new profile.
+ROW_BATCH_REQUEST_WORK=(16*11+8*4)*(281_066-119_196)
+ROW_BATCH_CODEC_WORDS=3*((644+63)//64)
+INDEXED_CACHE_WORK_DELTA=((rank_index_costs(17)['lookup']-2*17)*412_080+
+                          17*rank_index_costs(17)['update']+rank_index_costs(17)['setup'])
+
+
 def validate_admission(receipt,*,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
                        directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,
                        ten_virtual_zero=False,ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,
-                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,
-                       ten_sparse_chance=False,ten_single_division=False):
+                       ten_paged_directory=False,ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,proof9_quality32=False,proof9_linear32=False,
+                       ten_sparse_chance=False,ten_single_division=False,ten_phase_payload=False,
+                       ten_row_batched=False,ten_indexed_cache=False,ten_complement=False):
+    require(type(ten_complement) is bool and type(receipt) is dict and
+            (receipt.get('complement_division') is True if ten_complement else 'complement_division' not in receipt),
+            'complement division profile differs from requested admission')
+    if ten_complement:
+        earlier={key:value for key,value in receipt.items() if key!='complement_division'}
+        validate_admission(earlier,ten_indexed_cache=True)
+        return receipt
+    if ten_indexed_cache:
+        cost=rank_index_costs(17)
+        require(type(receipt) is dict and receipt.get('sorted_rank_index') is True,
+                'sorted rank index profile tag missing')
+        expected={'rank_lookup_work_per_query':cost['lookup'],'rank_index_entries':cost['entries'],
+                  'rank_index_update_work':cost['update'],'rank_index_setup_work':cost['setup'],
+                  'planned_total_work':1_696_642_046+INDEXED_CACHE_WORK_DELTA,
+                  'parent_allowance':1_185_397_984-INDEXED_CACHE_WORK_DELTA}
+        require(all(type(receipt.get(key)) is int and receipt[key]==value for key,value in expected.items()) and
+                type(receipt.get('component_work')) is dict and
+                receipt['component_work'].get('chance')==127_793_144+INDEXED_CACHE_WORK_DELTA,
+                'sorted rank index admission differs from independent fixed census')
+        removed={'sorted_rank_index','rank_index_entries','rank_index_update_work','rank_index_setup_work'}
+        earlier={key:value for key,value in receipt.items() if key not in removed}
+        earlier.update(rank_lookup_work_per_query=34,planned_total_work=1_696_642_046,
+                       parent_allowance=1_185_397_984)
+        earlier['component_work']=dict(receipt['component_work'],chance=127_793_144)
+        validate_admission(earlier,ten_row_batched=True)
+        return receipt
+    if ten_row_batched:
+        state_bits,composed=phase_payload_bits(119_196,644,row_batched=True)
+        require(type(receipt) is dict and receipt.get('row_batched') is True,
+                'row-batched profile tag missing')
+        expected={'page_request_limit':11*119_196,'paging_work':153_699_290-ROW_BATCH_REQUEST_WORK,
+                  'planned_total_work':1_730_311_006-ROW_BATCH_REQUEST_WORK,
+                  'entries':360_303+ROW_BATCH_CODEC_WORDS,'state_payload_bits':state_bits,'payload_bits':composed}
+        require(all(type(receipt.get(key)) is int and receipt[key]==value for key,value in expected.items()),
+                'row-batched admission differs from independent fixed census')
+        earlier={key:value for key,value in receipt.items() if key!='row_batched'}
+        earlier.update(page_request_limit=11*281_066,paging_work=153_699_290,
+                       planned_total_work=1_730_311_006,entries=360_303)
+        earlier['state_payload_bits'],earlier['payload_bits']=phase_payload_bits(119_196,644)
+        for owner,key,old_work in (('parent_work','route',351_878_474),('component_work','parent',765_708_990)):
+            group=receipt.get(owner)
+            require(type(group) is dict and type(group.get(key)) is int and group[key]==old_work-ROW_BATCH_REQUEST_WORK,
+                    'row-batched parent work differs from independent fixed census')
+            earlier[owner]=dict(group,**{key:old_work})
+        validate_admission(earlier,ten_phase_payload=True)
+        contract=receipt['sweep_stream']
+        require(composed+8*(contract['scratch_bytes']+contract['frame_header_bytes'])<=1_200_000_000,
+                'row-batched payload exceeds composed transport cap')
+        return receipt
+    if ten_phase_payload:
+        state_bits,composed=phase_payload_bits(119_196,644)
+        require(type(receipt) is dict and receipt.get('phase_payload') is True and
+                type(receipt.get('state_payload_bits')) is int and receipt['state_payload_bits']==state_bits and
+                type(receipt.get('payload_bits')) is int and receipt['payload_bits']==composed,
+                'phase payload differs from independent fixed census')
+        earlier={key:value for key,value in receipt.items() if key not in ('phase_payload','state_payload_bits')}
+        earlier['payload_bits']=1_182_148_028
+        validate_admission(earlier,ten_single_division=True)
+        contract=receipt['sweep_stream']
+        require(composed+8*(contract['scratch_bytes']+contract['frame_header_bytes'])<=1_200_000_000,
+                'phase payload exceeds composed transport cap')
+        return receipt
+    require(type(proof9_linear32) is bool,'linear32 admission mode must be boolean')
+    if proof9_linear32:
+        require(not any((paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,
+                         ten_buffered,ten_virtual_zero,ten_ordered_state,ten_row_coverage,ten_shared_policy,
+                         ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,proof9_quality32,
+                         ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache,ten_complement)),
+                'select the linear32 admission mode alone')
+        return validate_quality32_admission(receipt,linear=True)
+    if proof9_quality32:
+        return validate_quality32_admission(receipt)
     if proof9_t3 or proof9_t4:
         require(proof9_t3!=proof9_t4,'select one bounded PROOF9 admission')
         return validate_bounded_proof9_admission(receipt,4 if proof9_t4 else 3)
@@ -491,8 +619,38 @@ def verify_paging(directory,admission,stage=None):
         names|={'policy.bin','policy.json'}
     if admission.get('single_division',False):
         names.add('quantizer.json')
+    if admission.get('sorted_rank_index',False):
+        names.add('rank-index.json')
     require(set(item.name for item in directory.iterdir())==names,'unexpected paging artifact')
     return {'counts':receipt,'images':files}
+
+
+def verify_rank_index(directory,admission,replay,trace):
+    path=unlinked_path(directory/'rank-index.json')
+    require(path.is_file() and 0<path.stat().st_size<=1024,'rank index receipt extent')
+    record=exact_json(path.read_bytes())
+    fields={'capacity','entries','size','searches','updates','lookup_work','update_work','setup_work'}
+    require(type(record) is dict and record.keys()==fields and
+            all(type(value) is int and value>=0 for value in record.values()),'rank index receipt schema')
+    require(trace['native_calls']==trace['rank_calls']==0 and
+            all(record[key]==trace[key] for key in fields),'rank index differs from independent structural trace')
+    planes=admission['rank_cache_planes']
+    cost=rank_index_costs(planes)
+    chance=replay['chance_actual']
+    queries=chance['cache_hits']+chance['cache_misses']
+    require(queries==4*admission['showdown_contractions_per_pass'] and
+            (record['capacity'],record['entries'],record['size'],record['updates'],record['setup_work'])==
+            (planes,cost['entries'],planes,planes,cost['setup']) and
+            planes==chance['cache_misses'] and queries==trace['queries'] and
+            chance['cache_hits']==trace['cache_hits'] and chance['cache_evictions']==trace['cache_evictions'] and
+            chance['cache_lookup_work']==trace['parent_cache_lookup_work'] and
+            planes<=record['searches']<=queries and
+            record['lookup_work']==(cost['lookup']-2)*record['searches'] and
+            record['update_work']==cost['update']*planes and
+            chance['cache_lookup_work']==2*(queries-1)+record['lookup_work']+
+                record['update_work']+planes*(4*planes+64),
+            'rank index allocation, search or mutation charge differs')
+    return record
 
 
 def verify_division_receipt(directory,admission):
@@ -501,18 +659,19 @@ def verify_division_receipt(directory,admission):
     record=exact_json(path.read_bytes())
     require(type(record) is dict and record.keys()=={'combined_divisions'} and
             type(record['combined_divisions']) is int and
-            0<record['combined_divisions']<=2*admission['slots'],'combined division receipt differs')
+            0<record['combined_divisions']<=(32 if admission.get('proof9_quality32') or admission.get('proof9_linear32') else 2)*admission['slots'],'combined division receipt differs')
     return record
 
 
-def verify_policy_spill(directory,stream,admission):
+def verify_policy_spill(directory,stream,admission,*,reuse_snapshot=False):
+    passes=2 if reuse_snapshot else 3
     sweeps=admission['requested_sweeps']
-    if sweeps in (3,4):
+    if sweeps in (3,4,32):
         extent=sweep_stream_contract(proof9_sweeps=sweeps)['retained_bytes']
-        magic=f'OPLDST{sweeps}1'.encode('ascii')
+        magic=b'OPLDSL31' if admission.get('proof9_linear32') else b'OPLDSQ31' if sweeps==32 else f'OPLDST{sweeps}1'.encode('ascii')
     else:
         extent,magic=TEN_CARD_SPLIT_BYTES,b'OPLDTP01'
-    require(sweeps in (2,3,4) and admission['output_bytes']==extent and
+    require(sweeps in (2,3,4,32) and admission['output_bytes']==extent and
             stream.stat().st_size==extent,'policy spill scaffold byte bound')
     with stream.open('rb') as saved:
         raw=saved.read(extent+1)
@@ -540,7 +699,7 @@ def verify_policy_spill(directory,stream,admission):
     with policy.open('rb') as spilled:
         for sweep in range(sweeps):
             counts=dict(uniform_rows=0,pure_rows=0,mixed_rows=0,extent_words=0,write_words=0,
-                        read_calls=3*rows,mixed_read_calls=0,read_words=0)
+                        read_calls=passes*rows,mixed_read_calls=0,read_words=0)
             offset=0
             for menu in menus:
                 units=struct.unpack_from(f'<{menu}Q',raw,at)
@@ -559,17 +718,17 @@ def verify_policy_spill(directory,stream,admission):
                         require(spilled.read(8*(menu-1))==raw[at:at+8*(menu-1)],'policy spill word bytes differ')
                 offset+=menu-1
                 at+=8*menu
-            counts['mixed_read_calls']=3*counts['mixed_rows']
-            counts['read_words']=3*counts['write_words']
+            counts['mixed_read_calls']=passes*counts['mixed_rows']
+            counts['read_words']=passes*counts['write_words']
             expected.append(counts)
             at+=4*(1+11)*8
     require(expected==exact_json(receipt.read_bytes()) and size==8*expected[-1]['extent_words']
-            and 3*rows==admission['policy_spill_read_call_limit']
+            and passes*rows==admission['policy_spill_read_call_limit']
             and slots-rows==admission['policy_spill_word_limit'],'policy spill receipt differs from saved grids')
     return {'sweeps':expected,'retained_extent_bytes':size,'sha256':sha(policy)}
 
 
-def verify_row_directory(directory, stream, admission):
+def verify_row_directory(directory, stream, admission, *, reuse_snapshot=False):
     """Authenticate every immutable directory record against independent rows."""
     directory=unlinked_path(directory)
     require(directory.is_dir(),'row directory is missing')
@@ -580,7 +739,7 @@ def verify_row_directory(directory, stream, admission):
     receipt=exact_json(receipt_path.read_bytes())
     sweeps=admission.get('requested_sweeps',2)
     ten_card=sweeps==2
-    trace=directory_trace() if ten_card else directory_trace(ten_card=False,sweeps=sweeps)
+    trace=directory_trace(reuse_snapshot=reuse_snapshot) if ten_card else directory_trace(ten_card=False,sweeps=sweeps,quality32=sweeps==32)
     rows,slots=admission['rows'],admission['slots']
     require(trace['rows']==rows and trace['slots']==slots and trace['page_rows']==128
             and trace['cache_pages']==8 and trace['misses']==admission['row_directory_page_limit']
@@ -596,9 +755,9 @@ def verify_row_directory(directory, stream, admission):
     data=rows_path.read_bytes()
     require(len(data)==32*rows,'row directory length changed')
     digest=hashlib.sha256(data).hexdigest()
-    fixture=Fixture(ten_card=ten_card)
+    fixture=Fixture(quality32=True) if sweeps==32 else Fixture(ten_card=ten_card)
     scales=compact_scales(fixture)
-    value_bits=644 if ten_card else 642
+    value_bits=644 if ten_card or sweeps==32 else 642
     source_map={}
     reverse_map={}
     avg=reg=offset=0
@@ -635,7 +794,7 @@ def verify_row_directory(directory, stream, admission):
             'receipt_sha256':sha(receipt_path),'independent_trace':trace}
 
 
-def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
+def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False,row_batched=False):
     variant='buffered-ten-card' if virtual_zero else 'ten-card'
     directory=f'benchmarks/results/native-dyadic-{variant}-accepted-v1'
     manifest=f'{directory}/manifest.json'
@@ -654,6 +813,8 @@ def compare_buffered_ten(path,source,paging,images,*,virtual_zero=False):
     new_counts=paging['counts']
     invariant=('read_calls','logical_read_words','stage_calls','completed_sweeps') if virtual_zero else (
         key for key in new_counts if key!='physical_write_requests')
+    if row_batched:
+        invariant=('logical_read_words','completed_sweeps')
     require(images==replay['checkpoint_images'] and
             all(old_counts[key]==new_counts[key] for key in invariant),
             'buffered checkpoint or paging parity differs')
@@ -751,6 +912,227 @@ def compare_ten_card_work(source,replay,*,single_division=False):
             f'actual_{owner}_work_delta':observed-reference,f'actual_{owner}_work_improved':observed<reference}
 
 
+def compare_ten_card_payload(source,replay):
+    path='benchmarks/results/native-dyadic-single-division-ten-card-accepted-v1/manifest.json'
+    raw=(ROOT/path).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][path]['raw_sha256'],
+            'ten-card phase payload baseline source drift')
+    manifest=exact_json(raw)
+    require(manifest['status']=='accepted_ten_card_single_division_training_and_replay' and
+            manifest['source_head']=='56dd7350f5feb7c4c18893414d03e590a1e23960' and
+            manifest['training_invocations']==1 and manifest['operator']['returncode']==0 and
+            manifest['operator']['actual_exit_observed'] and manifest['operator']['raw_source_stable'],
+            'accepted ten-card single-division baseline required')
+    prior=manifest['saved_only_replay']
+    fields=('sweeps','profile_and_br','checkpoint_images','shape','work_plan','work_actual',
+            'parent_work_plan','parent_work_actual','chance_actual','planned_entries','combined_divisions')
+    require(all(replay[key]==prior[key] for key in fields),
+            'phase payload changed a shared result or work receipt')
+    return {'baseline_payload_bits':prior['planned_payload_bits'],
+            'phase_payload_bits':replay['planned_payload_bits'],'state_payload_bits':replay['state_payload_bits']}
+
+
+def compare_ten_card_row_batch(source,result,numeric,replay):
+    directory='benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'ten-card row-batched baseline source drift')
+    prior=exact_json(raw)
+    require(prior['status']=='accepted_ten_card_phase_payload_training_and_replay' and
+            prior['source_head']=='bab69e2c5831ae5705bae3cc88707ee39bb812b3' and
+            prior['training_invocations']==1 and prior['operator']['returncode']==0 and
+            prior['operator']['actual_exit_observed'] and prior['operator']['raw_source_stable'],
+            'accepted ten-card phase payload baseline required')
+    before=prior['saved_only_replay']
+    unchanged=('sweeps','profile_and_br','checkpoint_images','shape','chance_actual',
+               'combined_divisions','changed_current_rows','quality_gate')
+    require(all(before[key]==replay[key] for key in unchanged) and
+            all(prior[key]==result[key] for key in ('policy_spill','row_directory','quantizer')) and
+            prior['paging']['images']==result['paging']['images'],
+            'row batching changed exact training or nonpager owner receipts')
+    for group,owner in (('work_plan','parent'),('work_actual','parent'),
+                        ('parent_work_plan','route'),('parent_work_actual','route')):
+        expected=dict(before[group])
+        expected[owner]-=ROW_BATCH_REQUEST_WORK
+        require(replay[group]==expected,'row batching changed work outside the pager charge')
+    old_counts=prior['paging']['counts']
+    new_counts=result['paging']['counts']
+    differing={'read_calls','stage_calls','synthetic_read_calls','cache_hits'}
+    require({key for key in old_counts if old_counts[key]!=new_counts[key]}==differing,
+            'row batching changed pager traffic outside the logical request model')
+    archive_name=f'{directory}/verification.zip'
+    archive=ROOT/archive_name
+    identity=prior['archive']
+    require(archive.stat().st_size==identity['bytes']<=50<<20 and
+            sha(archive)==identity['sha256']==source['files'][archive_name]['raw_sha256'],
+            'phase payload baseline archive identity differs')
+    member='cohort/train_ten_phase_payload/stdout.bin'
+    current=numeric.read_bytes()
+    with ZipFile(archive) as zipped:
+        require(zipped.getinfo(member).file_size==TEN_CARD_SPLIT_BYTES,'phase baseline stream extent differs')
+        old=zipped.read(member)
+    require(len(current)==len(old) and hashlib.sha256(old).hexdigest()==before['saved_output_sha256'] and
+            current[:-520]==old[:-520] and current[-520:-512]==old[-520:-512]==b'OPLDTP02',
+            'row batching changed retained bytes outside the receipt footer')
+    return {'phase_baseline_head':prior['source_head'],'phase_baseline_paging':old_counts,
+            'row_batched_paging':new_counts,'modeled_work_saved':ROW_BATCH_REQUEST_WORK,
+            'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
+
+
+def compare_ten_card_index(source,result,path,replay):
+    directory='benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'indexed chance baseline source drift')
+    prior=exact_json(raw)
+    require(prior['status']=='accepted_ten_card_row_batched_training_and_replay' and
+            prior['source_head']=='7a85266f488ad66849cdc67c98aefd4006f7902b' and
+            prior['training_invocations']==1 and prior['operator']['returncode']==0 and
+            prior['operator']['actual_exit_observed'] and prior['operator']['raw_source_stable'],
+            'accepted row-batched baseline required')
+    before=prior['saved_only_replay']
+    fields=('sweeps','profile_and_br','checkpoint_images','shape','combined_divisions',
+            'changed_current_rows','quality_gate','planned_entries','planned_payload_bits',
+            'parent_work_plan','parent_work_actual','state_payload_bits')
+    require(all(before[key]==replay[key] for key in fields) and
+            all(prior[key]==result[key] for key in ('paging','row_directory','policy_spill','quantizer')),
+            'indexed cache changed a shared numerical result or owner receipt')
+    for group in ('work_plan','work_actual'):
+        require(all(before[group][owner]==value for owner,value in replay[group].items() if owner!='chance'),
+                'indexed cache changed work outside its owner')
+    changing={'setup_work','cache_lookup_work','peak_live_entries'}
+    require(all(before['chance_actual'][key]==value for key,value in replay['chance_actual'].items()
+                if key not in changing) and
+            replay['chance_actual']['setup_work']==before['chance_actual']['setup_work']+rank_index_costs(17)['setup'],
+            'indexed cache changed nonindex chance work or ranks')
+    archive_name=f'{directory}/verification.zip'
+    archive=ROOT/archive_name
+    require(archive.stat().st_size==prior['archive']['bytes']<=50<<20 and
+            sha(archive)==prior['archive']['sha256']==source['files'][archive_name]['raw_sha256'],
+            'row-batched baseline archive differs')
+    with ZipFile(archive) as zipped:
+        old=zipped.read('cohort/train_ten_row_batched/stdout.bin')
+    current=path.read_bytes()
+    require(len(current)==len(old)==TEN_CARD_SPLIT_BYTES and
+            hashlib.sha256(old).hexdigest()==before['saved_output_sha256'] and
+            current[:-520]==old[:-520] and current[-520:-512]==old[-520:-512]==b'OPLDTP02',
+            'indexed cache changed exact retained bytes outside work receipt')
+    return {'row_baseline_head':prior['source_head'],'baseline_chance_actual':before['chance_actual'],
+            'indexed_chance_actual':replay['chance_actual'],'chance_work_forecast_delta':INDEXED_CACHE_WORK_DELTA,
+            'numeric_sha256':hashlib.sha256(current[:-520]).hexdigest()}
+
+
+def compare_ten_card_complement(source,result,path,replay,*,checked_history_work=None,equal_quantizer_plan=None,reuse_snapshot=False,zero_policy_bootstrap=False,first_regret_bound=False,initial_packed_stage=False,stage_state_work=None):
+    directory='benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1'
+    manifest=f'{directory}/manifest.json'
+    raw=(ROOT/manifest).read_bytes()
+    require(hashlib.sha256(raw).hexdigest()==source['files'][manifest]['raw_sha256'],
+            'complement baseline manifest source drift')
+    prior=exact_json(raw)
+    require(prior['status']=='accepted_ten_card_indexed_cache_training_and_replay' and
+            prior['source_head']=='0122ce9de10bac680f3f8aad7d9d68173de7fab2' and
+            prior['training_invocations']==1 and prior['operator']['returncode']==0 and
+            prior['operator']['actual_exit_observed'] and prior['operator']['raw_source_stable'],
+            'accepted indexed ten-card baseline required')
+    before=prior['saved_only_replay']
+    fields=('sweeps','profile_and_br','checkpoint_images','shape','changed_current_rows',
+            'quality_gate','planned_entries','planned_payload_bits','parent_work_plan',
+            'parent_work_actual','state_payload_bits','work_plan','work_actual','chance_actual')
+    expected=before
+    if checked_history_work is not None:
+        require(type(checked_history_work) is int and 0<checked_history_work<before['work_actual']['history'],
+                'checked History budget must reduce realized work')
+        expected=dict(before,work_plan=dict(before['work_plan'],history=checked_history_work),
+            work_actual=dict(before['work_actual'],history=checked_history_work))
+    equal_receipt=replay.get('equal_quantizer')
+    rows, slots = before['shape']['rows'], before['shape']['slots']
+    removed_initial_work = 320*rows+48*slots if zero_policy_bootstrap else 0
+    if equal_quantizer_plan is not None:
+        require(checked_history_work is not None and type(equal_receipt) is dict and
+                0<equal_receipt['equal_divisions_avoided']<186_152 and
+                (first_regret_bound or equal_quantizer_plan+removed_initial_work>before['work_plan']['quantizer']),
+                'equal quantizer work or savings receipt differs')
+        expected=dict(expected,
+            work_plan=dict(expected['work_plan'],quantizer=equal_quantizer_plan),
+            work_actual=dict(expected['work_actual'],quantizer=equal_receipt['work']))
+    route_removed=(16*rows if zero_policy_bootstrap else 0)+(32*rows if initial_packed_stage else 0)
+    expected_paging=prior['paging']
+    if zero_policy_bootstrap:
+        for phase in ('plan','actual'):
+            work, parent = 'work_'+phase, 'parent_work_'+phase
+            state_work=before[work]['state']+32*rows if stage_state_work is None else stage_state_work
+            expected[work]=dict(expected[work],state=state_work,
+                                parent=before[work]['parent']-route_removed)
+            expected[parent]=dict(before[parent],route=before[parent]['route']-route_removed)
+        counts=dict(expected_paging['counts'])
+        for key in ('read_calls','synthetic_read_calls'):
+            counts[key]-=rows*(3 if initial_packed_stage else 1)
+        for key in ('logical_read_words','synthetic_read_words'):
+            counts[key]-=1_666_910+(2_962_722 if initial_packed_stage else 0)
+        expected_paging=dict(expected_paging,counts=counts)
+    io_fields=('sweep_capture',) if reuse_snapshot else ('row_directory','policy_spill','sweep_capture')
+    if reuse_snapshot:
+        require(prior['row_directory']['rows_sha256']==result['row_directory']['rows_sha256'] and
+                prior['policy_spill']['sha256']==result['policy_spill']['sha256'],
+                'reused snapshot directory or policy spill content differs')
+    require(all(expected[key]==replay[key] for key in fields) and
+            expected_paging==result['paging'] and all(prior[key]==result[key] for key in io_fields),
+            'complement changed saved training evidence or work receipts')
+    require(before['combined_divisions']==prior['quantizer']['combined_divisions']==325_666 and
+            replay['combined_divisions']==result['quantizer']['combined_divisions']==186_152-
+                (equal_receipt['equal_divisions_avoided'] if equal_quantizer_plan is not None else 0),
+            'complement division counts differ from the frozen ten-card census')
+    archive_name=f'{directory}/verification.zip'
+    archive=ROOT/archive_name
+    require(archive.stat().st_size==prior['archive']['bytes']<=50<<20 and
+            sha(archive)==prior['archive']['sha256']==source['files'][archive_name]['raw_sha256'],
+            'indexed ten-card baseline archive differs')
+    with ZipFile(archive) as zipped:
+        member=zipped.getinfo('cohort/train_ten_indexed_cache/stdout.bin')
+        require(member.file_size==TEN_CARD_SPLIT_BYTES,'indexed baseline stream extent differs')
+        old=zipped.read(member)
+    require(hashlib.sha256(old).hexdigest()==before['saved_output_sha256'],
+            'indexed retained numerical stream identity differs')
+    candidate=path.read_bytes()
+    if checked_history_work is not None:
+        expected_bytes=bytearray(old)
+        # Six plan words followed by six actual words at the start of the
+        # 512-byte footer payload. History is index 2 in both families.
+        for offset,key in ((496,'work_plan'),(448,'work_actual')):
+            require(int.from_bytes(old[-offset:-offset+8],'little')==before[key]['history'],
+                    'indexed History footer location differs')
+            expected_bytes[-offset:-offset+8]=checked_history_work.to_bytes(8,'little')
+        if equal_quantizer_plan is not None:
+            # Quantizer occupies index 4 of each six-word work family.
+            for offset,key in ((480,'work_plan'),(432,'work_actual')):
+                require(int.from_bytes(old[-offset:-offset+8],'little')==before[key]['quantizer'],
+                        'indexed quantizer footer location differs')
+                expected_bytes[-offset:-offset+8]=expected[key]['quantizer'].to_bytes(8,'little')
+        if zero_policy_bootstrap:
+            for offset,key,component in (
+                    (488,'work_plan','state'),(440,'work_actual','state'),
+                    (472,'work_plan','parent'),(424,'work_actual','parent'),
+                    (360,'parent_work_plan','route'),(288,'parent_work_actual','route')):
+                require(int.from_bytes(old[-offset:-offset+8],'little')==before[key][component],
+                        'indexed bootstrap footer location differs')
+                expected_bytes[-offset:-offset+8]=expected[key][component].to_bytes(8,'little')
+        old=expected_bytes
+    require(candidate==old and hashlib.sha256(candidate).hexdigest()==replay['saved_output_sha256'],
+            'retained numerical stream differs beyond admitted work counters')
+    return {'indexed_baseline_head':prior['source_head'],
+            'combined_divisions_before':before['combined_divisions'],
+            'combined_divisions_after':replay['combined_divisions'],
+            'combined_divisions_removed':before['combined_divisions']-replay['combined_divisions'],
+            'retained_sha256':replay['saved_output_sha256'],
+            'wire_sha256':(result['compact_sweep_capture']['wire_sha256'] if checked_history_work is not None
+                           else result['sweep_capture']['wire_sha256']),
+            **({'expected_history_footer_changes':2} if checked_history_work is not None else {}),
+            **({'expected_quantizer_footer_changes':2} if equal_quantizer_plan is not None else {}),
+            **({'expected_state_and_parent_footer_changes':6} if zero_policy_bootstrap else {})}
+
+
 def compare_proof9_t3_prefix(path,source,frames):
     manifest=f'{PROOF9_SPLIT_BASELINE}/manifest.json'
     raw=(ROOT/manifest).read_bytes()
@@ -827,27 +1209,36 @@ def compare_proof9_t4_prefix(path,source,frames):
 def run(output,expected_head,*,train=False,paired=False,packed=False,compact=False,scaled=False,sealed=False,paged=False,
         directory=False,rank_sets=False,split=False,ten_card=False,ten_buffered=False,ten_virtual_zero=False,
         ten_ordered_state=False,ten_row_coverage=False,ten_shared_policy=False,ten_paged_directory=False,
-        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,ten_sparse_chance=False,ten_single_division=False):
+        ten_sweep_stream=False,proof9_t3=False,proof9_t4=False,proof9_quality32=False,proof9_linear32=False,ten_sparse_chance=False,ten_single_division=False,
+        ten_phase_payload=False,ten_row_batched=False,ten_indexed_cache=False,ten_complement=False):
     require(require_source_bootstrap(ROOT)['interpreter']['optimize']==0,'fixed cohort requires normal source-only parent')
     modes=(paired,packed,compact,scaled,sealed,paged,directory,rank_sets,split,ten_card,ten_buffered,ten_virtual_zero,
-           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,
-           ten_sparse_chance,ten_single_division)
+           ten_ordered_state,ten_row_coverage,ten_shared_policy,ten_paged_directory,ten_sweep_stream,proof9_t3,proof9_t4,proof9_quality32,proof9_linear32,
+           ten_sparse_chance,ten_single_division,ten_phase_payload,ten_row_batched,ten_indexed_cache,ten_complement)
     require(type(train) is bool and all(type(flag) is bool for flag in modes) and sum(modes)<=1,
             'explicit fixed cohort mode')
     suffix=next((name for flag,name in zip(modes,('_PAIRED','_PACKED','_COMPACT','_SCALED','_SEALED','_PAGED',
                                                  '_DIRECTORY','_RANK_SETS','_SPLIT','_TEN','_TEN_BUFFERED',
                                                  '_TEN_VIRTUAL_ZERO','_TEN_ORDERED_STATE','_TEN_ROW_COVERAGE',
                                                  '_TEN_SHARED_POLICY','_TEN_PAGED_DIRECTORY','_TEN_SWEEP_STREAM',
-                                                 '_PROOF9_T3','_PROOF9_T4','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION')) if flag),'')
+                                                 '_PROOF9_T3','_PROOF9_T4','_PROOF9_Q32','_PROOF9_LINEAR32','_TEN_SPARSE_CHANCE','_TEN_SINGLE_DIVISION',
+                                                 '_TEN_PHASE_PAYLOAD','_TEN_ROW_BATCHED','_TEN_INDEXED_CACHE','_TEN_COMPLEMENT'),strict=True) if flag),'')
     paired=any(modes)
-    ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or ten_single_division
+    indexed_cache=ten_indexed_cache or ten_complement
+    row_batched=ten_row_batched or indexed_cache
+    phase_payload=ten_phase_payload or row_batched
+    counted_divisions=ten_single_division or phase_payload
+    ten_sweep_stream=ten_sweep_stream or ten_sparse_chance or counted_divisions
     ten_paged_directory=ten_paged_directory or ten_sweep_stream
     ten_shared_policy=ten_shared_policy or ten_paged_directory
     ten_row_coverage=ten_row_coverage or ten_shared_policy
     ten_ordered_state=ten_ordered_state or ten_row_coverage
     ten_virtual_zero=ten_virtual_zero or ten_ordered_state
     ten_card=ten_card or ten_buffered or ten_virtual_zero
-    proof9_sweeps=4 if proof9_t4 else 3 if proof9_t3 else 0
+    quality32=proof9_quality32 or proof9_linear32
+    proof9_sweeps=32 if quality32 else 4 if proof9_t4 else 3 if proof9_t3 else 0
+    row_batched=row_batched or quality32
+    counted_divisions=counted_divisions or quality32
     split=split or ten_card or bool(proof9_sweeps)
     shared_policy=ten_shared_policy or bool(proof9_sweeps)
     paged_directory=ten_paged_directory or bool(proof9_sweeps)
@@ -893,13 +1284,18 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
             bind_build(manifest,source,TARGET,output/'source',build_dir)
             return directory,receipt
         admitted,_=observed('ADMIT'+suffix)
-        admission=validate_admission(exact_json((admitted/'stdout.bin').read_bytes()),paired=paired,
-            packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
-            rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
-            ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
-            ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
-            proof9_t3=proof9_t3,proof9_t4=proof9_t4,ten_sparse_chance=ten_sparse_chance,
-            ten_single_division=ten_single_division)
+        receipt=exact_json((admitted/'stdout.bin').read_bytes())
+        if proof9_linear32:
+            admission=validate_admission(receipt,proof9_linear32=True)
+        else:
+            admission=validate_admission(receipt,paired=paired,
+                packed=packed,compact=compact,scaled=scaled,sealed=sealed,paged=paged,directory=directory,
+                rank_sets=rank_sets,split=split,ten_card=ten_card,ten_buffered=ten_buffered,ten_virtual_zero=ten_virtual_zero,
+                ten_ordered_state=ten_ordered_state,ten_row_coverage=ten_row_coverage,ten_shared_policy=ten_shared_policy,
+                ten_paged_directory=ten_paged_directory,ten_sweep_stream=ten_sweep_stream,
+                proof9_t3=proof9_t3,proof9_t4=proof9_t4,proof9_quality32=proof9_quality32,ten_sparse_chance=ten_sparse_chance,
+                ten_single_division=ten_single_division,ten_phase_payload=ten_phase_payload,
+                ten_row_batched=ten_row_batched,ten_indexed_cache=ten_indexed_cache,ten_complement=ten_complement)
         save(output/'admission.json',admission)
         verify_source(ROOT,source)
         result={'head':expected_head,'mode':'train' if train else 'admit','admission':admission,
@@ -908,16 +1304,28 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     'fixed reduced PROOF10/T2 only' if ten_card else 'fixed reduced PROOF9/T2 only',
                 'outer_exit_and_final_bootstrap':'required separately'}
         if train:
-            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero) if ten_buffered or ten_virtual_zero else None
+            schedule=stage_schedule(ten_card=True,virtual_zero=ten_virtual_zero,batch_rows=row_batched
+                                    ) if ten_buffered or ten_virtual_zero else None
             if proof9_sweeps:
-                schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps)
+                schedule=stage_schedule(virtual_zero=True,sweeps=proof9_sweeps,batch_rows=quality32,quality32=quality32)
                 require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
                          schedule['logical_read_calls']+proof9_sweeps*schedule['per_sweep_stage_calls'])==
                         (admission['page_write_word_limit'],admission['page_read_word_limit'],
                          admission['page_write_request_limit'],admission['page_request_limit']),
                         'independent bounded PROOF9 pager schedule differs before training')
+            if indexed_cache:
+                result['rank_index_trace']=rank_trace()
+                require(result['rank_index_trace']['queries']==4*admission['showdown_contractions_per_pass'],
+                        'independent rank cache trace differs before training')
+                save(output/'rank-index-trace.json',result['rank_index_trace'])
+            if row_batched and not quality32:
+                require((schedule['written_words'],schedule['physical_read_words'],schedule['batched_write_calls'],
+                         schedule['logical_read_calls']+2*schedule['per_sweep_stage_calls'])==
+                        (admission['page_write_word_limit'],admission['page_read_word_limit'],
+                         admission['page_write_request_limit'],admission['page_request_limit']),
+                        'independent row-batched pager schedule differs before training')
             if paged_directory:
-                trace=directory_trace(ten_card=not proof9_sweeps,sweeps=proof9_sweeps or 2)
+                trace=directory_trace(ten_card=not proof9_sweeps,sweeps=proof9_sweeps or 2,quality32=quality32)
                 require(trace['misses']==admission['row_directory_page_limit'] and
                         trace['logical_reads']==admission['row_directory_read_call_limit'],
                         'independent row directory trace differs before training')
@@ -942,14 +1350,22 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 command.append('--rank-sets')
             if ten_card:
                 command.append('--ten-card')
-            if ten_single_division:
+            if counted_divisions:
                 command.append('--count-policy-divisions')
+            if phase_payload:
+                command.append('--phase-payload')
+            if row_batched and not quality32:
+                command.append('--row-batched')
+            if indexed_cache:
+                command.append('--indexed-cache')
+            if ten_complement:
+                command.append('--complement-divisions')
             if proof9_sweeps:
-                command.append(f'--proof9-t{proof9_sweeps}')
+                command.append('--proof9-linear32' if proof9_linear32 else '--proof9-quality32' if quality32 else f'--proof9-t{proof9_sweeps}')
             if split:
                 pages=output/'page-images'
                 paging=verify_paging(pages,admission,schedule)
-                if ten_single_division:
+                if counted_divisions:
                     result['quantizer']=verify_division_receipt(pages,admission)
                 if shared_policy:
                     result['policy_spill']=verify_policy_spill(pages,raw,admission)
@@ -969,15 +1385,16 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     frames=result['sweep_capture']['frames']
                     result['checkpoint_inputs']['sweep_epochs']=frames
                     compare=compare_proof9_t4_prefix if proof9_t4 else compare_proof9_t3_prefix
-                    comparison=compare(raw,source,frames)
+                    comparison=({'scope':'Separately named N9 T32 average schedule; independent exact replay required'} if quality32 else compare(raw,source,frames))
                     comparison['native_observation']={
                         'duration_seconds':process['duration_seconds'],'memory':process.get('memory')}
                     result[f'proof9_t{proof9_sweeps}_comparison']=comparison
                     result['independent_stage_schedule']=schedule
                 save(output/'checkpoint-inputs.json',result['checkpoint_inputs'])
                 if ten_buffered or ten_virtual_zero:
-                    comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero)
-                    label='single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
+                    comparison=compare_buffered_ten(raw,source,paging,images,virtual_zero=ten_virtual_zero,
+                                                    row_batched=row_batched)
+                    label='complement' if ten_complement else 'indexed_cache' if ten_indexed_cache else 'row_batched' if ten_row_batched else 'phase_payload' if ten_phase_payload else 'single_division' if ten_single_division else 'sparse_chance' if ten_sparse_chance else 'sweep_stream' if ten_sweep_stream else 'paged_directory' if ten_paged_directory else 'shared_policy' if ten_shared_policy else 'row_coverage' if ten_row_coverage else (
                         'ordered_state' if ten_ordered_state else 'virtual_zero' if ten_virtual_zero else 'buffered')
                     comparison[label+'_native_observation']={'duration_seconds':process['duration_seconds'],
                                                              'memory':process.get('memory')}
@@ -989,12 +1406,14 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                     command.extend(['--page-images',str(pages),'--sweep-image-sha256',*(image['sha256'] for image in images)])
             save(output/'saved-review-command.json',command)
             replay_dir=output/'saved-review'
-            observed_replay=run_bounded_child(command,b'',replay_dir,stdout_limit=65536)
+            observed_replay=(run_bounded_linear32_replay(command,b'',replay_dir) if proof9_linear32 else
+                             run_bounded_quality32_replay(command,b'',replay_dir) if proof9_quality32 else
+                             run_bounded_child(command,b'',replay_dir,stdout_limit=65536))
             require_exit(observed_replay,replay_dir)
             compiled=check_verifier_bootstrap(receipt_path,source)
             numeric=exact_json((replay_dir/'stdout.bin').read_bytes())
-            sweep_word={0:'two',3:'three',4:'four'}[proof9_sweeps]
-            replay_status=f'saved_{sweep_word}_sweep_exact_replay_pass'
+            sweep_word={0:'two',3:'three',4:'four',32:'quality32'}[proof9_sweeps]
+            replay_status='saved_linear32_exact_replay_pass' if proof9_linear32 else 'saved_quality32_exact_replay_pass' if proof9_quality32 else f'saved_{sweep_word}_sweep_exact_replay_pass'
             require(numeric['status']==replay_status and numeric['saved_output_sha256']==digest
                     and numeric['work_plan']==admission['component_work'] and numeric['parent_work_plan']==admission['parent_work']
                     and numeric['planned_entries']==admission['entries'] and numeric['planned_payload_bits']==admission['payload_bits']
@@ -1007,19 +1426,46 @@ def run(output,expected_head,*,train=False,paired=False,packed=False,compact=Fal
                 result['sparse_chance_comparison'].update(compare_ten_card_work(source,numeric))
             if ten_single_division:
                 result['single_division_comparison'].update(compare_ten_card_work(source,numeric,single_division=True))
+            if ten_phase_payload:
+                result['phase_payload_comparison'].update(compare_ten_card_payload(source,numeric))
+            if counted_divisions:
                 require(numeric['combined_divisions']==result['quantizer']['combined_divisions'] and
                         result['quantizer']==verify_division_receipt(output/'page-images',admission),
                         'independent combined division count differs')
             result.update(training_invocations=1,saved_only_replay=numeric,saved_review_compiled_sources=compiled,
                           training_stdout_sha256=digest,quality_gate=None)
+            if quality32:
+                require(numeric['wire_sha256']==process['sweep_capture']['wire_sha256'] and
+                        numeric['wire_bytes']==admission['sweep_stream']['wire_bytes'],
+                        'Q32 independent full wire reconstruction differs from captured transport')
+                gate=numeric['quality_gate']
+                value=numeric['profile_and_br']['exploitability']
+                exact=Fraction(int(value['numerator']),int(value['denominator']))
+                passed=exact<=Fraction(1,10)
+                require(gate=={'metric':'exploitability_bb','threshold':{'numerator':'1','denominator':'10'},
+                               'status':'pass' if passed else 'miss','passed':passed},
+                        'Q32 exact quality target differs from replay')
+                result.update(status=replay_status,quality_gate=gate,
+                              exactness_accepted=True)
             if uses_paging:
                 result['paging']=verify_paging(output/'page-images',admission,schedule)
+            if indexed_cache:
+                result['rank_index']=verify_rank_index(output/'page-images',admission,numeric,result['rank_index_trace'])
+                if ten_complement:
+                    result['complement_comparison'].update(compare_ten_card_complement(source,result,raw,numeric))
+                else:
+                    result['indexed_cache_comparison'].update(compare_ten_card_index(source,result,raw,numeric))
+            if ten_row_batched:
+                result['row_batched_comparison'].update(compare_ten_card_row_batch(source,result,raw,numeric))
             if shared_policy:
                 require(result['policy_spill']==verify_policy_spill(output/'page-images',raw,admission),
                         'policy spill bytes changed after independent replay')
             if paged_directory:
                 require(result['row_directory']==verify_row_directory(output/'page-images-rows',raw,admission),
                         'row directory changed after independent replay')
+            if indexed_cache:
+                require(result['rank_index']==verify_rank_index(output/'page-images',admission,numeric,result['rank_index_trace']),
+                        'rank index receipt changed after independent replay')
             if split:
                 require(numeric['checkpoint_images']==images and result['paging']==paging and sha(raw)==digest,
                         'split checkpoint bytes changed after saved replay')
@@ -1091,9 +1537,46 @@ def main():
     modes.add_argument('--ten-sweep-stream',action='store_true')
     modes.add_argument('--ten-sparse-chance',action='store_true')
     modes.add_argument('--ten-single-division',action='store_true')
+    modes.add_argument('--ten-phase-payload',action='store_true')
+    modes.add_argument('--ten-row-batched',action='store_true')
+    modes.add_argument('--ten-indexed-cache',action='store_true')
+    modes.add_argument('--ten-complement',action='store_true')
+    modes.add_argument('--ten-compact-wire',action='store_true')
+    modes.add_argument('--ten-factored',action='store_true')
+    modes.add_argument('--ten-checked-history',action='store_true')
+    modes.add_argument('--ten-history-visit',action='store_true')
+    modes.add_argument('--ten-equal-quantizer',action='store_true')
+    modes.add_argument('--ten-reuse-snapshot',action='store_true')
+    modes.add_argument('--ten-zero-policy-bootstrap',action='store_true')
+    modes.add_argument('--ten-first-regret-bound',action='store_true')
+    modes.add_argument('--ten-initial-packed-stage',action='store_true')
+    modes.add_argument('--ten-bounded-stage-width',action='store_true')
+    modes.add_argument('--ten-pair-complement',action='store_true')
+    modes.add_argument('--ten-bounded-division',action='store_true')
     modes.add_argument('--proof9-t3',action='store_true')
     modes.add_argument('--proof9-t4',action='store_true')
+    modes.add_argument('--proof9-quality32',action='store_true')
+    modes.add_argument('--proof9-linear32',action='store_true')
+    parser.add_argument('--profile-phases',action='store_true')
     args=parser.parse_args()
+    require(not args.profile_phases or args.train and args.ten_bounded_division,
+            'phase profiling requires the named bounded-division training request')
+    pair_complement=args.ten_pair_complement or args.ten_bounded_division
+    bounded_stage_width=args.ten_bounded_stage_width or pair_complement
+    first_regret_bound=args.ten_first_regret_bound or args.ten_initial_packed_stage or bounded_stage_width
+    zero_policy_bootstrap=args.ten_zero_policy_bootstrap or first_regret_bound
+    reuse_snapshot=args.ten_reuse_snapshot or zero_policy_bootstrap
+    equal_quantizer=args.ten_equal_quantizer or reuse_snapshot
+    history_visit=args.ten_history_visit or equal_quantizer
+    checked_history=args.ten_checked_history or history_visit
+    if args.ten_compact_wire or args.ten_factored or checked_history:
+        from scripts.run_virtual_dyadic_compact_cohort import run_compact
+        print(json.dumps(run_compact(args.output,args.expected_head,train=args.train,
+            factored=args.ten_factored or checked_history,checked_history=checked_history,
+            history_visit=history_visit,equal_quantizer=equal_quantizer,reuse_snapshot=reuse_snapshot,
+            zero_policy_bootstrap=zero_policy_bootstrap,first_regret_bound=first_regret_bound,
+            initial_packed_stage=args.ten_initial_packed_stage,bounded_stage_width=bounded_stage_width,pair_complement=pair_complement,bounded_division=args.ten_bounded_division,profile_phases=args.profile_phases),sort_keys=True))
+        return
     print(json.dumps(run(args.output,args.expected_head,train=args.train,paired=args.paired,
         packed=args.packed_averages,compact=args.compact_strategy,scaled=args.scaled_averages,
         sealed=args.sealed_menus,paged=args.paged_strategy,directory=args.compact_directory,
@@ -1101,8 +1584,10 @@ def main():
         ten_buffered=args.ten_buffered,ten_virtual_zero=args.ten_virtual_zero,
         ten_ordered_state=args.ten_ordered_state,ten_row_coverage=args.ten_row_coverage,
         ten_shared_policy=args.ten_shared_policy,ten_paged_directory=args.ten_paged_directory,
-        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,
-        ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division),sort_keys=True))
+        ten_sweep_stream=args.ten_sweep_stream,proof9_t3=args.proof9_t3,proof9_t4=args.proof9_t4,proof9_quality32=args.proof9_quality32,proof9_linear32=args.proof9_linear32,
+        ten_sparse_chance=args.ten_sparse_chance,ten_single_division=args.ten_single_division,
+        ten_phase_payload=args.ten_phase_payload,ten_row_batched=args.ten_row_batched,
+        ten_indexed_cache=args.ten_indexed_cache,ten_complement=args.ten_complement),sort_keys=True))
 
 
 if __name__=='__main__':main()

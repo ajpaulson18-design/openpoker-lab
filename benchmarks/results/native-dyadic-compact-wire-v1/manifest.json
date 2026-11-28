@@ -1,0 +1,371 @@
+{
+  "archive": {
+    "bytes": 2904404,
+    "members": 81,
+    "path": "verification.zip",
+    "sha256": "ddcae919d0330f270af7092d7f031f2aeb9178dc54ce727407adad1350ce107c"
+  },
+  "compact_composed_entries": 364468,
+  "compact_composed_payload_bits": 20302720,
+  "compact_composed_work": 1756554322,
+  "compact_encoding_receipt": {
+    "compact_encoding_work": 43019392
+  },
+  "compact_sweep_capture": {
+    "contract": {
+      "copy_work": 11943624,
+      "frame_header_bytes": 32,
+      "frames": 2,
+      "image_bytes": 23701776,
+      "read_bytes": 47403552,
+      "retained_bytes": 3103848,
+      "scratch_bytes": 32768,
+      "version": 1,
+      "wire_bytes": 50507464
+    },
+    "frames": [
+      {
+        "bytes": 23701776,
+        "sha256": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a",
+        "slot": 1,
+        "sweep": 1
+      },
+      {
+        "bytes": 23701776,
+        "sha256": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+        "slot": 0,
+        "sweep": 2
+      }
+    ],
+    "retained_sha256": "f8e583887add8baf027f61deef80107ead1b48ede4ea40187ed0738d6f440afb",
+    "wire_sha256": "6fe54d1d6c80126f151488c2560dccddcfe640e3edd95848fa5a53ffe4e85981"
+  },
+  "comparison": {
+    "combined_divisions_after": 186152,
+    "combined_divisions_before": 325666,
+    "combined_divisions_removed": 139514,
+    "indexed_baseline_head": "0122ce9de10bac680f3f8aad7d9d68173de7fab2",
+    "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+    "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+  },
+  "earlier_format_only_trial": {
+    "limitation": "Precedes separate compact encoding resource accounting.",
+    "source_head": "3a10f8ec47d4f7b6731efadb5944a070f72781ec",
+    "training_invocations": 1
+  },
+  "earlier_metered_trial": {
+    "scope": "Metered semantic and wire replay before legacy-only emission adjustment.",
+    "source_head": "581956d6676825e318800f3d6ae3e78bd29c92dc",
+    "training_invocations": 1
+  },
+  "expansion": {
+    "compact_bytes": 3103848,
+    "legacy_bytes": 9833076,
+    "row_metadata_offset": 106304
+  },
+  "host_retained_bytes": {
+    "compact": 3103848,
+    "expanded_for_verification": 9833076
+  },
+  "n11_output_projection": {
+    "compact_encoding_work": 136982368,
+    "compact_retained_bytes": 9614478,
+    "compact_wire_bytes": 165201774,
+    "composed_entries_with_encoder_scratch": 625444,
+    "composed_payload_bits_with_encoder_scratch": 22390528,
+    "composed_work_ceiling_unchanged": 2150000000,
+    "composed_work_with_compact_encoding": 5496134543,
+    "headroom_bytes": 218598,
+    "legacy_retained_bytes": 31041732,
+    "native_retained_ceiling": 9833076,
+    "native_training_calls": 0,
+    "prior_composed_work_projection": 5359152175,
+    "rows": 380172,
+    "slots": 892910,
+    "source_forecast_sha256": "9dca297f0110c6e978afcb83e9a43acbfd6e79e94de2daa31fe4091e8874d40a",
+    "status": "rank_free_output_projection_only"
+  },
+  "native_memory": {
+    "peak_commit_bytes": 1888256,
+    "peak_working_set_bytes": 4546560,
+    "source": "windows.K32GetProcessMemoryInfo"
+  },
+  "native_seconds": 4.078109699999914,
+  "quality_gate": null,
+  "source_files": 2560,
+  "source_head": "cf5d480ceb96ee66d18359e86e7eccc542ecc801",
+  "timing": {
+    "all_complete_streams_and_checkpoint_images_exact": true,
+    "imported_source_closure": {
+      "scripts/virtual_dyadic_compact_wire.py": "fd80756a613d0bbc65e06227cfcde2f3e6b2c9ffea89c8165359e7786a524c8b",
+      "tests/virtual_dyadic_sweep_capture.py": "3adce45c669949abfc2e3e2e89e916bb0721a9e5ab42bec3e8dd2217c28d5fc6",
+      "tests/virtual_frozen_run_control.py": "cc5237122b13bf834288c4a73d60c5ff824f5767f2bad653b3d0fe19f66a34e5"
+    },
+    "limits": "one Windows host and this ten-card T2 fixture, four alternating pairs",
+    "median_paired_ratio": 0.9796103213200866,
+    "median_seconds": {
+      "compact": 4.2768872500018915,
+      "legacy": 4.367336850002175
+    },
+    "observations": [
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "legacy",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 1,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 4.428581800006214,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1863680,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "compact",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 1,
+        "request": "TRAIN_TEN_COMPACT_WIRE",
+        "retained_sha256": "f8e583887add8baf027f61deef80107ead1b48ede4ea40187ed0738d6f440afb",
+        "seconds": 4.236978700006148,
+        "wire_sha256": "6fe54d1d6c80126f151488c2560dccddcfe640e3edd95848fa5a53ffe4e85981"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "compact",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 2,
+        "request": "TRAIN_TEN_COMPACT_WIRE",
+        "retained_sha256": "f8e583887add8baf027f61deef80107ead1b48ede4ea40187ed0738d6f440afb",
+        "seconds": 4.317756199990981,
+        "wire_sha256": "6fe54d1d6c80126f151488c2560dccddcfe640e3edd95848fa5a53ffe4e85981"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1871872,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "legacy",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 2,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 4.074625799999922,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1863680,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "legacy",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 3,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 4.577688200006378,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1871872,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "compact",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 3,
+        "request": "TRAIN_TEN_COMPACT_WIRE",
+        "retained_sha256": "f8e583887add8baf027f61deef80107ead1b48ede4ea40187ed0738d6f440afb",
+        "seconds": 3.918152000012924,
+        "wire_sha256": "6fe54d1d6c80126f151488c2560dccddcfe640e3edd95848fa5a53ffe4e85981"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "compact",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 4,
+        "request": "TRAIN_TEN_COMPACT_WIRE",
+        "retained_sha256": "f8e583887add8baf027f61deef80107ead1b48ede4ea40187ed0738d6f440afb",
+        "seconds": 4.316795799997635,
+        "wire_sha256": "6fe54d1d6c80126f151488c2560dccddcfe640e3edd95848fa5a53ffe4e85981"
+      },
+      {
+        "memory": {
+          "peak_commit_bytes": 1867776,
+          "peak_working_set_bytes": 4505600,
+          "source": "windows.K32GetProcessMemoryInfo"
+        },
+        "mode": "legacy",
+        "paging": {
+          "cache_hits": 476612,
+          "cache_misses": 1498,
+          "completed_sweeps": 2,
+          "logical_read_words": 10555076,
+          "physical_read_requests": 1498,
+          "physical_write_requests": 18836,
+          "read_calls": 834372,
+          "read_words": 6130244,
+          "stage_calls": 476784,
+          "synthetic_read_calls": 357588,
+          "synthetic_read_words": 4629632,
+          "write_words": 5925444
+        },
+        "pair": 4,
+        "request": "TRAIN_TEN_COMPLEMENT",
+        "retained_sha256": "bc8dec192151dfa15da335bfd63eb19629bf0c19bc1d126296304b93d3881ca9",
+        "seconds": 4.306091899998137,
+        "wire_sha256": "b4010b16d51b489d5f37edc3978dd0a38804e9e26b81ecd5b67da54b996640f5"
+      }
+    ],
+    "paired_compact_to_legacy_ratios": [
+      0.9567348851951212,
+      1.0596693811714106,
+      0.8559237389753773,
+      1.002485757445052
+    ],
+    "pairs": 4,
+    "quality_evidence": "native-dyadic-compact-wire-v1",
+    "raw_source_stable": true,
+    "seconds": {
+      "compact": [
+        4.236978700006148,
+        4.317756199990981,
+        3.918152000012924,
+        4.316795799997635
+      ],
+      "legacy": [
+        4.428581800006214,
+        4.074625799999922,
+        4.577688200006378,
+        4.306091899998137
+      ]
+    },
+    "source_files": 2560,
+    "source_head": "cf5d480ceb96ee66d18359e86e7eccc542ecc801",
+    "status": "same_executable_alternating_timing_complete",
+    "training_invocations": 8
+  },
+  "training_invocations": 1,
+  "version": "native-dyadic-compact-wire-v1",
+  "wire_reconstruction": {
+    "bytes": 50507464,
+    "sha256": "6fe54d1d6c80126f151488c2560dccddcfe640e3edd95848fa5a53ffe4e85981",
+    "status": "independent_exact_reconstruction"
+  },
+  "work_plan": {
+    "chance": 132742404,
+    "history": 99754616,
+    "parent": 732040030,
+    "quantizer": 433472328,
+    "state": 261025384,
+    "template": 42556544
+  }
+}

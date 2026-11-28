@@ -1,0 +1,7 @@
+test_source_forgeries_reject_before_numeric_import (tests.test_native_grid_raw_saved_controls.SavedRawControls.test_source_forgeries_reject_before_numeric_import) ... ok
+test_unobserved_retried_or_corrupted_process_rejects (tests.test_native_grid_raw_saved_controls.SavedRawControls.test_unobserved_retried_or_corrupted_process_rejects) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.026s
+
+OK

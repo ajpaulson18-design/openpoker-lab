@@ -73,6 +73,9 @@ class CompactHistoryControls(unittest.TestCase):
                 self.assertEqual((tag,int(b),int(k),int(p),int(n),tuple(tokens)),
                                  ('ROW',variant,visible,phase,len(history),history))
                 key,literal,source = int(key),int(literal),int(source)
+                expected_key=(literal<<33)|(visible<<30)|sum(
+                    card<<(6*i) for i,card in enumerate(BOARDS[variant][:visible]))
+                self.assertEqual(key,expected_key)
                 self.assertEqual(history_to_key.setdefault(history,key),key)
                 self.assertEqual(key_to_history.setdefault(key,history),history)
                 literals.add(literal)
@@ -90,7 +93,7 @@ class CompactHistoryControls(unittest.TestCase):
         self.assertEqual(depth,max(len(h) for h in key_to_history.values()))
         names = ('raised_work','literal_nodes','literal_entries','literal_bytes','source_depth','construction_work',
                  'default_cursor','foreign_cursor','action_menu','poisoned_root','reveal_phase','export_scratch',
-                 'noncanonical_flop','foreign_flop')
+                 'noncanonical_flop','foreign_flop','changed_turn_prefix','foreign_turn_card','duplicate_turn_card')
         self.assertEqual(lines[offset+1:], [*(f'REJECT {name}' for name in names),'END'])
 
 

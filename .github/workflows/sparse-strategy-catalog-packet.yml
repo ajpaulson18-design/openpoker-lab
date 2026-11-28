@@ -1,0 +1,44 @@
+name: Sparse strategy catalog immutable packet replay
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  catalog-packet-replay:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Replay immutable packets normally
+        run: python -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay.json 2> sparse-catalog-packet-replay.stderr.log
+      - name: Replay immutable packets with optimized Python
+        run: python -O -B -m scripts.replay_strategy_catalog_packet > sparse-catalog-packet-replay-optimized.json 2> sparse-catalog-packet-replay-optimized.stderr.log
+      - name: Replay sparse state and independent reference packets
+        run: python -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay.json 2> sparse-component-packet-replay.stderr.log
+      - name: Replay sparse state packets with optimized Python
+        run: python -O -B -m scripts.replay_sparse_epoch_component_packet > sparse-component-packet-replay-optimized.json 2> sparse-component-packet-replay-optimized.stderr.log
+      - name: Replay immutable changing-policy observations
+        run: python -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay.json 2> sparse-whole-packet-replay.stderr.log
+      - name: Replay changing-policy observations with optimized Python
+        run: python -O -B -m scripts.replay_sparse_two_epoch_packet > sparse-whole-packet-replay-optimized.json 2> sparse-whole-packet-replay-optimized.stderr.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sparse-catalog-packet-${{ matrix.os }}
+          path: |
+            sparse-catalog-packet-replay.json
+            sparse-catalog-packet-replay-optimized.json
+            sparse-component-packet-replay.json
+            sparse-component-packet-replay-optimized.json
+            sparse-whole-packet-replay.json
+            sparse-whole-packet-replay-optimized.json
+            sparse-*.stderr.log
+          if-no-files-found: warn

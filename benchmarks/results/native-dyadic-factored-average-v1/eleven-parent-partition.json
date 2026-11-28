@@ -1,0 +1,44 @@
+{
+  "eleven_parent_partition": {
+    "details": {
+      "average_build": 83548782,
+      "directory": 79395904,
+      "factored_metadata": 1203613696,
+      "packed_average": 284374664,
+      "packed_regret": 491480032,
+      "paging": 385291990,
+      "policy_spill": 47881968
+    },
+    "hand_rank_calls": 0,
+    "hypothetical_average_saving": {
+      "after": 74450085,
+      "before": 83548782,
+      "reduction": 9098697
+    },
+    "parent": {
+      "average": 373488182,
+      "geometry": 3000000,
+      "output": 49769852,
+      "reach": 156881300,
+      "route": 1025869790,
+      "support": 45896000,
+      "terminal_scale": 469977848,
+      "value_add": 155008700,
+      "visit": 28558112
+    },
+    "sum": 2308449784,
+    "training_invocations": 0
+  },
+  "forecast_average_build": {
+    "10": {
+      "after": 23285828,
+      "before": 26064384,
+      "reduction": 2778556
+    },
+    "11": {
+      "after": 74450085,
+      "before": 83548782,
+      "reduction": 9098697
+    }
+  }
+}

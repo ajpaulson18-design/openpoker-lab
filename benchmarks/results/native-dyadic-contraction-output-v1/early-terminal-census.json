@@ -1,0 +1,62 @@
+[
+  {
+    "all_showdown_calls_per_pass": 103020,
+    "cards": 10,
+    "early_terminal_groups": 9070,
+    "hidden_full_board_calls": 23800,
+    "prefix_counts": {
+      "0": 1,
+      "3": 46,
+      "4": 156,
+      "5": 340
+    },
+    "repeat_groups_after_first_board": 14730,
+    "scope": "rank-free geometry for fixed betting tree, before zero-reach effects",
+    "showdown_history_counts": {
+      "0": 2,
+      "3": 14,
+      "4": 54,
+      "5": 233
+    }
+  },
+  {
+    "all_showdown_calls_per_pass": 339360,
+    "cards": 11,
+    "early_terminal_groups": 19412,
+    "hidden_full_board_calls": 78400,
+    "prefix_counts": {
+      "0": 1,
+      "3": 75,
+      "4": 340,
+      "5": 1120
+    },
+    "repeat_groups_after_first_board": 58988,
+    "scope": "rank-free geometry for fixed betting tree, before zero-reach effects",
+    "showdown_history_counts": {
+      "0": 2,
+      "3": 14,
+      "4": 54,
+      "5": 233
+    }
+  },
+  {
+    "all_showdown_calls_per_pass": 15749697600,
+    "cards": 52,
+    "early_terminal_groups": 58786002,
+    "hidden_full_board_calls": 3638544000,
+    "prefix_counts": {
+      "0": 1,
+      "3": 22100,
+      "4": 1082900,
+      "5": 51979200
+    },
+    "repeat_groups_after_first_board": 3579757998,
+    "scope": "rank-free geometry for fixed betting tree, before zero-reach effects",
+    "showdown_history_counts": {
+      "0": 2,
+      "3": 14,
+      "4": 54,
+      "5": 233
+    }
+  }
+]

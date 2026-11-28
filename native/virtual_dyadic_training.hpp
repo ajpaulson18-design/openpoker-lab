@@ -2,6 +2,9 @@
 // Fixed PROOF9 and PROOF10, q=1, bounded simultaneous CFR+ sweeps. No board, world, reach,
 // or payoff table is retained. This front door has no general solver dispatch.
 #include "prepared_public_chance.hpp"
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+#include "training_phase_trace.hpp"
+#endif
 #include "virtual_dyadic_state.hpp"
 #include <algorithm>
 #include <array>
@@ -25,6 +28,9 @@ namespace prepared=prepared_public_chance;
 namespace history=virtual_dyadic_history;
 namespace state=virtual_dyadic_state;
 namespace paging=virtual_dyadic_paged_image;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+namespace phase_trace=training_phase_trace;
+#endif
 using chance::Integer;
 using Values=std::array<Integer,2>;
 using Cursor=history::History::Cursor;
@@ -33,7 +39,10 @@ enum class Traversal { by_seat, paired };
 enum class StrategyProfile {
     dense, packed_averages, compact, scaled, sealed, paged, directory, rank_sets, split_checkpoint, ten_card,
     ten_card_buffered, ten_card_virtual_zero, ten_card_ordered_state, ten_card_row_coverage, ten_card_shared_policy,
-    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division
+    ten_card_paged_directory, proof9_three_sweep, proof9_four_sweep, ten_card_sparse_chance, ten_card_single_division,
+    ten_card_phase_payload,
+    ten_card_row_batched,
+    ten_card_indexed_cache, proof9_quality32, proof9_linear32, ten_card_complement, ten_card_compact_wire, ten_card_factored, ten_card_checked_history, ten_card_history_visit, ten_card_equal_quantizer, ten_card_reuse_snapshot, ten_card_zero_policy_bootstrap, ten_card_first_regret_bound, ten_card_initial_packed_stage, ten_card_bounded_stage_width, ten_card_pair_complement, eleven_card_forecast, ten_card_bounded_division
 };
 inline constexpr std::uint64_t visit_cost(Traversal mode) {
     // Paired frames carry one additional two-holding lane and lane routing.
@@ -53,6 +62,7 @@ inline constexpr std::size_t entries_cap=2000000, payload_cap=std::size_t{1}<<30
 inline constexpr std::uint64_t chance_setup_bound=65536;
 inline constexpr std::uint64_t proof9_t3_parent_cap=298417808;
 inline constexpr std::size_t proof9_t3_directory_page_limit=2122;
+inline constexpr std::size_t directory_forecast_pages11=24350;
 inline constexpr std::uint64_t proof9_t3_general_quantizer_expected=78506392;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_copy_work=3669084;
 inline constexpr std::uint64_t proof9_t3_sweep_stream_image_bytes=4853840;
@@ -68,6 +78,13 @@ inline constexpr std::uint64_t proof9_t4_sweep_stream_retained_bytes=3045420;
 inline constexpr std::uint64_t proof9_t4_sweep_stream_read_bytes=4*proof9_t4_sweep_stream_image_bytes;
 inline constexpr std::uint64_t proof9_t4_sweep_stream_wire_bytes=22460908;
 inline constexpr std::uint64_t proof9_t4_sweep_stream_frames=4;
+inline constexpr std::uint64_t proof9_q32_parent_cap=2500000000ULL;
+inline constexpr std::uint64_t proof9_q32_sweep_stream_copy_work=39136896;
+inline constexpr std::uint64_t proof9_q32_sweep_stream_image_bytes=4853840;
+inline constexpr std::uint64_t proof9_q32_sweep_stream_retained_bytes=16084908;
+inline constexpr std::uint64_t proof9_q32_sweep_stream_read_bytes=155322880;
+inline constexpr std::uint64_t proof9_q32_sweep_stream_wire_bytes=171408812;
+inline constexpr std::uint64_t proof9_q32_sweep_stream_frames=32;
 inline constexpr std::uint64_t sweep_stream_header_bytes=32;
 inline constexpr std::uint64_t sweep_stream_scratch_bytes=paging::maximum_checkpoint_stream_scratch_bytes;
 inline constexpr std::uint64_t sweep_stream_entries=(sweep_stream_scratch_bytes+sweep_stream_header_bytes+7)/8;
@@ -85,6 +102,7 @@ inline void require(bool condition,const char* message) { if (!condition) throw 
 
 inline constexpr std::array<std::uint8_t,9> deck_cards{16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::uint8_t,10> ten_cards{0,16,17,24,32,33,35,37,43,48};
+inline constexpr std::array<std::uint8_t,11> eleven_cards{0,1,16,17,24,32,33,35,37,43,48};
 inline constexpr std::array<std::array<chance::WeightedHand,2>,2> ranges{
     std::array{chance::WeightedHand{{43,48},std::bit_cast<std::uint64_t>(.125)},
                chance::WeightedHand{{32,43},std::bit_cast<std::uint64_t>(.75)}},
@@ -166,6 +184,14 @@ inline std::uint64_t scaled_average_cost(std::size_t past_bits,std::size_t base_
     const auto row_bits=past_bits+base_bits;
     return 32+mul_cost(past_bits+1,base_bits)+copy_cost(row_bits)+actions*(8+mul_cost(row_bits,53));
 }
+inline std::uint64_t checked_weighted_marginal(std::uint64_t marginal,std::size_t sweep) {
+    require(marginal>=1 && marginal<=580 && sweep>=1 && sweep<=32,
+        "linear average marginal or sweep outside PROOF9 bounds");
+    require(marginal<=std::numeric_limits<std::uint64_t>::max()/sweep,
+        "linear average weighted marginal overflows uint64");
+    return marginal*static_cast<std::uint64_t>(sweep);
+}
+static_assert(580ULL*528ULL<(1ULL<<19) && 580ULL*528ULL>=(1ULL<<18));
 
 struct Prefix {
     std::array<std::uint8_t,5> cards{};
@@ -255,6 +281,12 @@ inline constexpr Fixture proof10{
     ten_cards,{1,20,60,120},{1,46,156,340},{288946,270487,18458,49182,77857,88290,119196,281066},
     644,637,17,42,103020,70912,2150000000,450000000,100000000,300000000,520000000,1200000000,9833076
 };
+// Apply the ten-card comparison caps to the eleven-card forecast only.
+inline constexpr Fixture proof11_forecast{
+    eleven_cards,{1,35,140,420},{1,75,340,1120},{892441,834475,57965,121355,239515,280372,380172,892910},
+    646,639,56,144,339360,176530,proof10.work_limit,proof10.chance_limit,proof10.history_limit,
+    proof10.state_limit,proof10.quantizer_limit,proof10.payload_limit,proof10.output_limit
+};
 inline constexpr Fixture proof9_t3{
     deck_cards,{1,10,20,20},{1,25,56,60},{61099,57363,3735,15662,16631,17356,24420,58164},
     642,635,3,7,18180,22168,750000000,125000000,32000000,77000000,184000000,
@@ -265,6 +297,13 @@ inline constexpr Fixture proof9_t4{
     642,635,3,7,18180,22168,950000000,171000000,38000000,99000000,262000000,
     payload_cap,3045420,4
 };
+// The named Q32 lifetime retains the N9 game and equal-sweep average.
+// Every owner remains alive across all 32 updates.
+inline constexpr Fixture proof9_q32{
+    deck_cards,{1,10,20,20},{1,25,56,60},{61099,57363,3735,15662,16631,17356,24420,58164},
+    644,635,3,7,18180,22168,5800000000ULL,400000000,220000000,725000000,1870000000,
+    payload_cap,proof9_q32_sweep_stream_retained_bytes,32
+};
 struct PrefixStats {
     std::uint64_t count=0;
     std::array<std::uint64_t,2> supported{};
@@ -274,9 +313,14 @@ struct Plan {
     const Fixture* fixture=&proof9;
     [[nodiscard]] const Fixture& game() const noexcept { return *fixture; }
     [[nodiscard]] bool ten_card() const noexcept { return fixture==&proof10; }
+    [[nodiscard]] bool eleven_card_forecast() const noexcept { return fixture==&proof11_forecast; }
     [[nodiscard]] bool proof9_three_sweep() const noexcept { return fixture==&proof9_t3; }
     [[nodiscard]] bool proof9_four_sweep() const noexcept { return fixture==&proof9_t4; }
-    [[nodiscard]] bool bounded_proof9() const noexcept { return proof9_three_sweep() || proof9_four_sweep(); }
+    [[nodiscard]] bool proof9_q32_base() const noexcept { return fixture==&proof9_q32; }
+    [[nodiscard]] bool proof9_quality32() const noexcept { return proof9_q32_base() && !linear_average; }
+    bool linear_average=false;
+    [[nodiscard]] bool proof9_linear32() const noexcept { return proof9_q32_base() && linear_average; }
+    [[nodiscard]] bool bounded_proof9() const noexcept { return proof9_three_sweep() || proof9_four_sweep() || proof9_q32_base(); }
     Counts shape;
     std::array<PrefixStats,4> prefixes{};
     std::array<std::uint64_t,3> quantizer_terms{};
@@ -292,6 +336,26 @@ struct Plan {
     bool rank_board_sets=false;
     bool sparse_chance=false;
     bool single_division=false;
+    bool phase_payload=false;
+    bool row_batched=false;
+    bool indexed_cache=false;
+    bool complement_division=false;
+    bool compact_wire=false;
+    bool factored=false;
+    bool checked_history=false;
+    bool history_visit=false;
+    bool equal_quantizer=false;
+    bool reuse_snapshot=false;
+    bool zero_policy_bootstrap=false;
+    bool first_regret_bound=false;
+    bool initial_packed_stage=false;
+    bool bounded_stage_width=false;
+    bool pair_complement=false;
+    bool bounded_division=false;
+    bool mixed_policy_cache=false;
+    bool factored_average_stage=false;
+    std::uint64_t stage_arithmetic_work=0;
+    std::uint64_t history_decisions=0;
     bool split_checkpoint=false;
     std::size_t requested_sweeps=sweeps,seat_passes=targets*sweeps,public_walks=targets*sweeps;
     std::size_t H=0,M=0,shift=0,denominator_bits=0,pay_bits=0,max_first_exponent=0;
@@ -300,6 +364,19 @@ struct Plan {
     std::uint64_t normalizer=0,denominator_base=0,expected_rank_calls=0;
     std::size_t rank_planes=0;
     std::uint64_t showdown_contractions=0,hidden_candidates=0;
+    std::uint64_t prepared_showdown_groups=0,prepared_showdown_boards=0;
+#ifdef OPENPOKER_TRAINING_ALLIN_REACH_STUDY
+    std::array<bool,4> prepare_reach_on_street{};
+#endif
+
+    [[nodiscard]] bool weighted_reach(std::size_t street) const {
+#ifdef OPENPOKER_TRAINING_ALLIN_REACH_STUDY
+        return prepare_reach_on_street[street_index(street)];
+#else
+        (void)street;
+        return false;
+#endif
+    }
     std::uint64_t template_work=0,chance_work=0,history_work=0,state_work=0,quantizer_work=0,total_work=0;
     std::uint64_t state_entries=0,state_payload=0,entries=0,payload_bits=0,output_bytes=0;
     std::uint64_t packed_average_limbs=0,packed_average_work=0;
@@ -340,6 +417,36 @@ inline std::uint64_t artifact_bytes(const Counts& c,bool split,std::size_t reque
         requested_sweeps*(8*c.slots*(1+checkpoint_words)+4*8*(integer_words+1))+
         8*c.slots+c.rows+8+8*footer_words;
 }
+
+inline std::uint64_t compact_artifact_bytes(const Counts& c) {
+    require(c.slots>=c.rows,"compact row geometry");
+    return 8+8*header_words+8*integer_words+literal_count*literal_bytes+
+        6*c.rows+2*4*8*(integer_words+1)+14*(c.slots-c.rows)+(c.rows+7)/8+8+8*footer_words;
+}
+
+inline std::uint64_t compact_encoding_work(const Counts& c) {
+    constexpr auto limit=std::numeric_limits<std::uint64_t>::max();
+    require(c.rows<=limit/224 && c.slots<=limit/128,"compact encoding dimensions overflow");
+    const auto rows=208*c.rows+16*((c.rows+7)/8);
+    const auto slots=64*c.slots;
+    require(slots<=limit-rows,"compact encoding work overflow");
+    return rows+slots;
+}
+
+inline factored_dyadic::Receipt factored_census(const Plan& p) {
+    factored_dyadic::Receipt counts;
+    counts.additions=p.parent[work_index(Work::value_add)]/add_cost(p.game().value_bits);
+    require(counts.additions*add_cost(p.game().value_bits)==p.parent[work_index(Work::value_add)],
+        "factored addition census is not integral");
+    counts.from_values=2*p.seat_passes*(p.shape.folds+p.showdown_contractions);
+    counts.scales=4*p.requested_sweeps*(p.shape.folds+p.shape.showdowns);
+    counts.subtractions=p.requested_sweeps*p.shape.slots;
+    counts.expansions=4*p.requested_sweeps;
+    counts.mixes=p.requested_sweeps*p.shape.rows;
+    counts.work=64*(counts.from_values+counts.scales+counts.additions+counts.subtractions+counts.expansions)+320*counts.mixes;
+    return counts;
+}
+inline std::uint64_t factored_metadata_work(const Plan& p) { return factored_census(p).work; }
 
 class Forecast final {
     struct Suffix { std::size_t decisions=0,uniform=0; unsigned mark=0; };
@@ -404,9 +511,11 @@ class Forecast final {
         result.mark=2;
         return result;
     }
-    std::uint64_t chance_cost(bool showdown,std::size_t size,std::size_t target,std::size_t exp) {
+    std::uint64_t chance_cost(bool showdown,std::size_t size,std::size_t target,
+                              std::size_t exp,bool reuse=false) {
         const auto& population=plan_.prefixes[street_index(size)].unblocked;
-        const auto lookup=plan_.rank_board_sets?prepared::PreparedPublicChance::board_set_probe_work*plan_.rank_planes:6*64;
+        const auto lookup=plan_.indexed_cache?prepared::PreparedPublicChance::sorted_lookup_work(plan_.rank_planes):
+            plan_.rank_board_sets?prepared::PreparedPublicChance::board_set_probe_work*plan_.rank_planes:6*64;
         std::uint64_t sum=0;
         for (std::size_t sb=0;sb<3;++sb) for (std::size_t bb=0;bb<3;++bb) {
             meter_.charge(Work::geometry,8);
@@ -416,13 +525,14 @@ class Forecast final {
             // All unblocked opponent rows may have a full-width positive reach.
             // Both normalized ranges have weights of at most four bits.
             const auto bucket=4+reach+logceil(opp)+4, out=4+bucket;
-            const auto input=12+(6+size)+2*(4+2*words(reach))+4;
+            const auto input=12+(6+size)+(reuse?4:2*(4+2*words(reach)))+4;
+            const auto products=reuse?0:opp*mul_cost(4,reach);
             const auto bucket_count=showdown?2+own:1;
             const auto dynamic=plan_.sparse_chance?
                 prepared::PreparedPublicChance::sparse_pairs_dynamic_cost(2,2,own,opp,
-                    opp*mul_cost(4,reach),bucket,out,4,
+                    products,bucket,out,4,
                     showdown?chance::TerminalKind::showdown:chance::TerminalKind::fold):
-                12+opp*mul_cost(4,reach)+53*bucket_count+
+                12+products+53*bucket_count+
                 (showdown?9:3)*opp*add_cost(bucket)+
                 own*((showdown?12:3)*add_cost(bucket)+mul_cost(4,bucket)+copy_cost(out)+2*words(bucket))+128;
             // This is the full lookup bound. Miss construction is admitted separately.
@@ -430,11 +540,20 @@ class Forecast final {
         }
         return sum;
     }
-    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t value_bits) const {
-        const auto sum=effective+logceil(n)+1,scaled=effective+grid_bits;
+    std::uint64_t quantizer_cost(std::size_t n,std::size_t effective,std::size_t input_bits,
+                                std::size_t max_positive) const {
+        const auto sparse=256+32*n;
+        const auto inspect=64+16*n;
+        if (max_positive==1) return inspect+sparse;
+        const auto sum=effective+logceil(max_positive)+1,scaled=effective+grid_bits;
         const auto bits=std::max({std::size_t{53},sum,scaled});
-        return 64+16*n+4*n*(words(value_bits)+1)+256+16*n*(words(bits)+1)+
-            8*n*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+4*n*n*(words(sum)+1);
+        const auto scans=words(input_bits)+1;
+        const auto equal=plan_.equal_quantizer?16+4*n*scans:0;
+        const auto cache=plan_.mixed_policy_cache?dyadic_policy::Quantizer::mixed_cache_probe_work(n,input_bits):0;
+        const auto mixed=cache+4*max_positive*scans+256+16*n*(words(bits)+1)+
+            8*max_positive*((plan_.single_division?1:2)*words(scaled)*words(sum)+4*words(bits)+8)+
+            4*n*n*(words(sum)+1);
+        return inspect+equal+std::max(sparse,mixed);
     }
     void literal(std::size_t id,std::array<std::size_t,2> past,std::array<std::size_t,2> first) {
         meter_.charge(Work::geometry,256);
@@ -451,6 +570,7 @@ class Forecast final {
             const auto actor=node.state.actor;
             require(actor<2 && m>=2 && m<=4,"pinned decision census");
             const auto rows=population.supported[actor],slots=rows*m;
+            plan_.history_decisions+=np;
             shape.rows+=rows;
             shape.slots+=slots;
             shape.actions+=np*m;
@@ -462,22 +582,37 @@ class Forecast final {
             require(E+plan_.M<=plan_.shift && EA<=plan_.shift,"pinned fixed-scale divisibility forecast");
             if (plan_.packed_averages)
                 plan_.packed_average_limbs+=slots*words(value_bits-(plan_.shift-EA));
+            auto regret_bits=value_bits;
             if (plan_.packed_regrets) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
-                plan_.packed_regret_limbs+=slots*words(value_bits-shift);
+                regret_bits=value_bits-shift;
+                if (plan_.bounded_stage_width) {
+                    const auto first_width=state::stage_width(value_bits,shift,m,true);
+                    const auto second_width=state::stage_width(value_bits,shift,m,false);
+                    plan_.stage_arithmetic_work+=rows*(16*m+8)*(words(first_width)+words(second_width));
+                }
+                plan_.packed_regret_limbs+=slots*words(regret_bits);
             }
-            plan_.quantizer_terms[0]+=rows*(320+48*m);
-            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,value_bits);
-            plan_.quantizer_terms[2]+=rows*quantizer_cost(m,base_bits+2+EA,value_bits);
+            if (!plan_.zero_policy_bootstrap) plan_.quantizer_terms[0]+=rows*(320+48*m);
+            // One clipped update from zero has at least one zero action.
+            // The packed image separately bounds raw widths before cancellation.
+            plan_.quantizer_terms[1]+=rows*quantizer_cost(m,base_bits+2+width(payoff_ceiling_)+plan_.M+E,
+                plan_.first_regret_bound?regret_bits:value_bits,plan_.first_regret_bound?m-1:m);
+            plan_.quantizer_terms[2]+=rows*quantizer_cost(m,
+                base_bits+(plan_.proof9_q32_base()?(plan_.proof9_linear32()?9:5):2)+EA,
+                plan_.first_regret_bound?value_bits-(plan_.shift-EA):value_bits,m);
             for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep) {
                 const auto shift=regret_shift(plan_.H,past[1-actor],suffix_[id].decisions);
-                plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits);
+                plan_.general_quantizer_work+=rows*quantizer_cost(m,value_bits-shift,value_bits,m);
             }
             plan_.max_actor_depth[actor]=std::max(plan_.max_actor_depth[actor],past[actor]+1);
             work[work_index(Work::reach)]+=plan_.public_walks*np*m*(24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
             work[work_index(Work::value_add)]+=plan_.requested_sweeps*np*m*2*add_cost(value_bits);
             if (plan_.scaled_averages) {
-                const auto build=plan_.requested_sweeps*rows*scaled_average_cost(grid_bits*past[actor],base_bits,m);
+                const auto full_cost=scaled_average_cost(grid_bits*past[actor],
+                    plan_.proof9_linear32()?15:base_bits,m)+(plan_.proof9_linear32()?8:0);
+                const auto first_cost=plan_.factored_average_stage?scaled_average_cost(first[actor],base_bits,m):full_cost;
+                const auto build=rows*(first_cost+(plan_.requested_sweeps-1)*full_cost);
                 plan_.scaled_average_build_work+=build;
                 work[work_index(Work::average)]+=build;
             } else {
@@ -497,10 +632,15 @@ class Forecast final {
             const auto showdown=node.state.phase==betting::Phase::showdown;
             require(!m && (showdown?node.state.winner==2:node.state.phase==betting::Phase::fold && node.state.winner<2),"pinned terminal census");
             (showdown?shape.showdowns:shape.folds)+=np;
+            const bool reuse=showdown && k<5 && plan_.weighted_reach(k);
             if (showdown) {
                 const auto full=plan_.prefixes[3].count;
                 plan_.showdown_contractions+=full;
                 if (k<5) {
+                    if (reuse) {
+                        plan_.prepared_showdown_groups+=np;
+                        plan_.prepared_showdown_boards+=full;
+                    }
                     constexpr std::array<std::size_t,3> visible{0,3,4};
                     for (auto street=street_index(k);street<visible.size();++street)
                         plan_.hidden_candidates+=plan_.prefixes[street].count*candidate_count(deck_size,visible[street]);
@@ -508,10 +648,19 @@ class Forecast final {
                 }
             }
             for (std::size_t target=0;target<2;++target) {
-                contractions_+=chance_cost(showdown,showdown?5:k,target,first[1-target]);
-                contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
-                for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep)
-                    contractions_+=chance_cost(showdown,showdown?5:k,target,grid_bits*past[1-target]);
+                const auto terminal_cost=[&](std::size_t exponent) {
+                    const auto prepare=reuse?np*(28+2*(4+2*words(exponent+1)+mul_cost(4,exponent+1))):0;
+                    return chance_cost(showdown,showdown?5:k,target,exponent,reuse)+prepare;
+                };
+                contractions_+=terminal_cost(first[1-target]);
+                contractions_+=terminal_cost(grid_bits*past[1-target]);
+                if (plan_.proof9_q32_base()) {
+                    // All later grid-policy operands share the same full-width
+                    // bound. Census that bound once and multiply its lifetime.
+                    contractions_+=(plan_.requested_sweeps-2)*
+                        terminal_cost(grid_bits*past[1-target]);
+                } else for (std::size_t sweep=2;sweep<plan_.requested_sweeps;++sweep)
+                    contractions_+=terminal_cost(grid_bits*past[1-target]);
             }
             work[work_index(Work::terminal_scale)]+=plan_.seat_passes*np*2*(16+mul_cost(value_bits,plan_.pay_bits)+mul_cost(value_bits,6)+copy_cost(value_bits));
         }
@@ -543,7 +692,7 @@ class Forecast final {
         const auto flop=remaining*(remaining-1)*(remaining-2)/6;
         require(game.divisors==std::array<std::uint64_t,4>{1,flop,flop*(remaining-3),flop*(remaining-3)*(remaining-4)},"pinned chance divisor drift");
         plan_.denominator_base=plan_.normalizer*game.divisors[3];
-        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.ten_card()?3480u:580u),"pinned root prior changed");
+        require(plan_.normalizer==29 && plan_.denominator_base==(plan_.eleven_card_forecast()?12180u:plan_.ten_card()?3480u:580u),"pinned root prior changed");
     }
 public:
     Forecast(const betting::Template& source,Meter& meter,Traversal mode,StrategyProfile profile)
@@ -553,14 +702,41 @@ public:
         plan_.traversal=mode;
         const bool t3=profile==StrategyProfile::proof9_three_sweep;
         const bool t4=profile==StrategyProfile::proof9_four_sweep;
-        const bool bounded=t3||t4;
+        const bool linear32=profile==StrategyProfile::proof9_linear32;
+        const bool q32=profile==StrategyProfile::proof9_quality32 || linear32;
+        const bool bounded=t3||t4||q32;
         if (bounded) {
-            plan_.fixture=t3?&proof9_t3:&proof9_t4;
+            plan_.fixture=q32?&proof9_q32:t3?&proof9_t3:&proof9_t4;
+            plan_.linear_average=linear32;
             plan_.requested_sweeps=plan_.fixture->requested_sweeps;
             plan_.seat_passes=targets*plan_.requested_sweeps;
-            meter_.bootstrap_ceiling(t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
+            meter_.bootstrap_ceiling(q32?proof9_q32_parent_cap:t3?proof9_t3_parent_cap:proof9_t4_parent_cap);
         }
-        plan_.single_division=profile==StrategyProfile::ten_card_single_division;
+        const bool eleven=profile==StrategyProfile::eleven_card_forecast;
+        plan_.initial_packed_stage=profile==StrategyProfile::ten_card_initial_packed_stage;
+        plan_.bounded_division=profile==StrategyProfile::ten_card_bounded_division;
+#ifdef OPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY
+        plan_.factored_average_stage=plan_.bounded_division;
+#endif
+#ifdef OPENPOKER_TRAINING_MIXED_POLICY_CACHE_STUDY
+        plan_.mixed_policy_cache=plan_.bounded_division;
+#endif
+        plan_.pair_complement=profile==StrategyProfile::ten_card_pair_complement || plan_.bounded_division;
+        plan_.bounded_stage_width=profile==StrategyProfile::ten_card_bounded_stage_width || plan_.pair_complement || eleven;
+        plan_.first_regret_bound=profile==StrategyProfile::ten_card_first_regret_bound ||
+            plan_.initial_packed_stage || plan_.bounded_stage_width;
+        plan_.zero_policy_bootstrap=profile==StrategyProfile::ten_card_zero_policy_bootstrap || plan_.first_regret_bound;
+        plan_.reuse_snapshot=profile==StrategyProfile::ten_card_reuse_snapshot || plan_.zero_policy_bootstrap;
+        plan_.equal_quantizer=profile==StrategyProfile::ten_card_equal_quantizer || plan_.reuse_snapshot;
+        plan_.history_visit=profile==StrategyProfile::ten_card_history_visit || plan_.equal_quantizer;
+        plan_.checked_history=profile==StrategyProfile::ten_card_checked_history || plan_.history_visit;
+        plan_.factored=profile==StrategyProfile::ten_card_factored || plan_.checked_history;
+        plan_.compact_wire=profile==StrategyProfile::ten_card_compact_wire || plan_.factored;
+        plan_.complement_division=profile==StrategyProfile::ten_card_complement || plan_.compact_wire;
+        plan_.indexed_cache=profile==StrategyProfile::ten_card_indexed_cache || plan_.complement_division;
+        plan_.row_batched=profile==StrategyProfile::ten_card_row_batched || plan_.indexed_cache || q32;
+        plan_.phase_payload=profile==StrategyProfile::ten_card_phase_payload || (plan_.row_batched && !q32);
+        plan_.single_division=profile==StrategyProfile::ten_card_single_division || plan_.phase_payload || q32;
         plan_.sparse_chance=profile==StrategyProfile::ten_card_sparse_chance || plan_.single_division;
         plan_.paged_directory=profile==StrategyProfile::ten_card_paged_directory || bounded || plan_.sparse_chance;
         plan_.shared_policy=profile==StrategyProfile::ten_card_shared_policy || plan_.paged_directory;
@@ -568,12 +744,13 @@ public:
         plan_.ordered_state=profile==StrategyProfile::ten_card_ordered_state || plan_.row_coverage;
         const bool virtual_zero=profile==StrategyProfile::ten_card_virtual_zero || plan_.ordered_state || bounded;
         const bool buffered=profile==StrategyProfile::ten_card_buffered || virtual_zero;
-        if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
-        if (buffered) plan_.page_limits.write_requests=t3?5931:t4?paging::n9_t4_write_requests:virtual_zero?18836:19560;
+        if (eleven) plan_.fixture=&proof11_forecast;
+        else if (profile==StrategyProfile::ten_card || (buffered && !bounded)) plan_.fixture=&proof10;
+        if (buffered) plan_.page_limits.write_requests=q32?paging::n9_q32_write_requests:t3?5931:t4?paging::n9_t4_write_requests:eleven?59328:virtual_zero?18836:19560;
         plan_.page_limits.virtual_initial_zero=virtual_zero;
         plan_.packed_averages=profile!=StrategyProfile::dense;
-        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded;
-        require(!plan_.split_checkpoint || plan_.requested_sweeps<=4,"split checkpoint sweep count exceeds fixed receipt");
+        plan_.split_checkpoint=profile==StrategyProfile::split_checkpoint || plan_.ten_card() || bounded || eleven;
+        require(!plan_.split_checkpoint || (q32 || plan_.requested_sweeps<=4),"split checkpoint sweep count exceeds fixed receipt");
         plan_.rank_board_sets=profile==StrategyProfile::rank_sets || plan_.split_checkpoint;
         plan_.compact_directory=profile==StrategyProfile::directory || plan_.rank_board_sets;
         plan_.paged_strategy=profile==StrategyProfile::paged || plan_.compact_directory;
@@ -585,15 +762,32 @@ public:
     Plan make() {
         const bool t3=plan_.proof9_three_sweep();
         const bool t4=plan_.proof9_four_sweep();
-        const bool bounded=t3||t4;
+        const bool q32=plan_.proof9_q32_base();
+        const bool bounded=t3||t4||q32;
         const auto& game=plan_.game();
         const auto value_bits=game.value_bits;
+        const bool eleven=plan_.eleven_card_forecast();
         const auto& template_receipt=source_.receipt();
         require(template_receipt.nodes==template_count && template_receipt.edges==410 &&
             template_receipt.logical_occurrences==literal_count && template_receipt.max_depth==15 &&
             !template_receipt.history_suffix_only,"pinned betting source shape changed");
         meter_.charge(Work::geometry,256*template_count);
         prior_geometry();
+        // Terminal scaling combines a stake significand (at most 16) with
+        // one exact street-divisor ratio before multiplying the wide value.
+        const auto full_divisor=game.divisors.back();
+        require(full_divisor<=std::numeric_limits<std::uint64_t>::max()/16,
+            "pinned terminal scale exceeds uint64");
+        for (const auto divisor:game.divisors)
+            require(divisor && full_divisor%divisor==0,"pinned terminal divisor must divide the full divisor");
+#ifdef OPENPOKER_TRAINING_ALLIN_REACH_STUDY
+        if (plan_.bounded_division && plan_.traversal==Traversal::paired) {
+            // Every physically compatible private pair has this many ordered
+            // completions. Preparation is reserved for genuine fan-out.
+            for (std::size_t i=0;i+1<game.divisors.size();++i)
+                plan_.prepare_reach_on_street[i]=full_divisor/game.divisors[i]>=4;
+        }
+#endif
         prefixes(Prefix{},physical_support(0));
         const auto& p=plan_.prefixes;
         for (std::size_t i=0;i<p.size();++i)
@@ -614,7 +808,7 @@ public:
         plan_.shift=grid_bits*plan_.H+plan_.M;
         plan_.denominator_bits=width(plan_.denominator_base)+plan_.shift;
         require(plan_.H==12 && plan_.M==1 && payoff_ceiling_==8 && plan_.max_first_exponent==420 &&
-            plan_.denominator_bits==game.denominator_bits && plan_.denominator_bits+width(payoff_ceiling_)+3==value_bits,
+            plan_.denominator_bits==game.denominator_bits && (q32?plan_.denominator_bits+9:plan_.denominator_bits+width(payoff_ceiling_)+3)==value_bits,
             "pinned fixed denominator bounds changed");
         if (plan_.packed_regrets) {
             for (std::size_t id=0;id<source_.nodes().size();++id) {
@@ -646,6 +840,9 @@ public:
         plan_.chance_work=chance_setup_bound+contractions_+
             (plan_.rank_board_sets?4096*plan_.expected_rank_calls+plan_.rank_planes*(512+64+4*plan_.rank_planes):
                 p[3].count*(4*4096+512+64+4*64));
+        if (plan_.indexed_cache)
+            plan_.chance_work+=prepared::PreparedPublicChance::index_setup_work(plan_.rank_planes)+
+                plan_.rank_planes*prepared::PreparedPublicChance::index_update_work(plan_.rank_planes);
         const auto public_walks=plan_.public_walks;
         plan_.history_work=4096*literal_count+1280+(public_walks+1)*(40*g.actions+72*g.reveals+48*g.visits+40*R);
         const auto lookup=plan_.paged_directory?32:16*logceil(static_cast<std::size_t>(R+1));
@@ -663,9 +860,27 @@ public:
             plan_.registration_path_work=history::History::decision_path_work*R;
             plan_.history_work+=plan_.registration_path_work;
         }
+        if (plan_.checked_history) {
+            // Construction and one root. Three traversals, one checked
+            // source/street lookup per visit, and ordinals only in learning.
+            // Sealed registration calls decision_key once per holding and
+            // decision_actions once for each distinct menu source.
+            require((plan_.ten_card() || eleven) && plan_.sealed_menus && plan_.ordered_state &&
+                public_walks==plan_.requested_sweeps,"checked History requires the fixed ordered lifecycle");
+            plan_.history_work=4096*literal_count+1288+
+                (public_walks+1)*((plan_.history_visit?history::History::visit_action_work:40)*g.actions+
+                    (plan_.history_visit?history::History::visit_reveal_work:72)*g.reveals+8*g.visits)+
+                (plan_.history_visit?0:32*public_walks*plan_.history_decisions)+64*R+
+                24*plan_.sealed_menu_count+16*plan_.sealed_token_count;
+        }
         plan_.state_work=1024+8*R+16*S+4*words(plan_.denominator_bits)+(128+lookup)*R+registration_work+8*S+2*R+
-            plan_.requested_sweeps*(4*R+16*R+4*S+64*R+128*S+(16*S+8*R)*words(value_bits+58)+4*R)+
+            plan_.requested_sweeps*(4*R+16*R+4*S+64*R+128*S+4*R)+
             (4*words(value_bits)+4)*S+20*R+4*S;
+        plan_.state_work+=plan_.bounded_stage_width?plan_.stage_arithmetic_work:
+            plan_.requested_sweeps*(16*S+8*R)*words(value_bits+58);
+        if (plan_.zero_policy_bootstrap) plan_.state_work+=state::initial_uniform_policy_work*R;
+        if (plan_.mixed_policy_cache)
+            plan_.quantizer_terms[0]+=dyadic_policy::Quantizer::mixed_cache_setup_work;
         for (const auto work:plan_.quantizer_terms) plan_.quantizer_work+=work;
         plan_.quantizer_work+=plan_.general_quantizer_work;
         auto& w=plan_.parent;
@@ -700,16 +915,24 @@ public:
             const auto A=plan_.packed_average_limbs,G=plan_.packed_regret_limbs,L=A+G;
             // The two page files retain sweep 1 and sweep 2. The split
             // stream skips both fields of both checkpoint scans.
-            const auto requests=(plan_.split_checkpoint?11:15)*S;
+            const auto request_units=plan_.row_batched?R:S;
+            const auto requests=(plan_.split_checkpoint?11:15)*request_units-(plan_.zero_policy_bootstrap?R:0)
+                -(plan_.initial_packed_stage?2*R:0);
             const bool virtual_zero=plan_.page_limits.virtual_initial_zero;
-            const auto read_words=t4?paging::n9_t4_read_words:t3?2223164u:virtual_zero?6130244u:
+            const auto read_words=q32?paging::n9_q32_read_words:t4?paging::n9_t4_read_words:t3?2223164u:eleven?20750932u:virtual_zero?6130244u:
                 plan_.ten_card()?paging::n10_read_words:plan_.split_checkpoint?2250000u:3500000u;
-            const auto write_requests=t4?paging::n9_t4_write_requests:plan_.page_limits.write_requests;
+            const auto write_requests=q32?paging::n9_q32_write_requests:t4?paging::n9_t4_write_requests:plan_.page_limits.write_requests;
             plan_.page_limits={static_cast<std::size_t>(L),4096,16,read_words,
-                t4?paging::n9_t4_write_words:t3?1820190u:(virtual_zero?2:3)*L,
-                t4?paging::n9_t4_logical_requests:t3?930624u:requests,2,
-                t4?paging::Profile::proof9_t4:plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
-                t4?paging::n9_t4_stage_split_words:write_requests?static_cast<std::size_t>(A):0,write_requests,virtual_zero};
+                q32?paging::n9_q32_write_words:t4?paging::n9_t4_write_words:t3?1820190u:(virtual_zero?2:3)*L,
+                q32?paging::n9_q32_logical_requests:t4?paging::n9_t4_logical_requests:t3?930624u:requests,2,
+                q32?paging::Profile::proof9_q32:t4?paging::Profile::proof9_t4:plan_.ten_card()?paging::Profile::proof10:paging::Profile::legacy,
+                q32?paging::n9_q32_stage_split_words:t4?paging::n9_t4_stage_split_words:write_requests?static_cast<std::size_t>(A):0,write_requests,virtual_zero};
+#ifdef OPENPOKER_TRAINING_STAGED_PAGE_STUDY
+            if (plan_.bounded_division) {
+                plan_.page_limits.cache_pages=14;
+                plan_.page_limits.two_dirty_pages_per_field=true;
+            }
+#endif
             // Arithmetic bookkeeping for bounded requests, scratch copies,
             // write-once bits, initialization chunks and bitmap resets.
             // Physical file traffic has its own independent word ceilings.
@@ -726,8 +949,12 @@ public:
                 // Up to two page fragments per staged extent, one copy and
                 // mark per staged word, and at most 64 bitmap words to scan
                 // and clear per nonempty flush, plus bookkeeping per run.
-                plan_.paging_work+=8*(2*plan_.requested_sweeps*S)+2*plan_.requested_sweeps*L+160*write_requests+2*(4096+64+1);
+                plan_.paging_work+=8*(2*plan_.requested_sweeps*request_units)+2*plan_.requested_sweeps*L+160*write_requests+2*(4096+64+1);
             }
+            if (plan_.page_limits.two_dirty_pages_per_field)
+                // At most two fragments per row extent. Retain baseline read and
+                // write ceilings and charge the additional buffer choice.
+                plan_.paging_work+=4*(2*plan_.requested_sweeps*request_units)+128;
             w[work_index(Work::route)]+=plan_.paging_work;
         }
         if (plan_.shared_policy) {
@@ -738,11 +965,17 @@ public:
         if (plan_.compact_directory) {
             // Table initialization plus compact row encode/decode across both
             // sweeps and checkpoint export. Probes use the existing lookup budget.
+            if (eleven) {
+                plan_.admitted_directory_page_limit=directory_forecast_pages11;
+                plan_.admitted_directory_read_rows=directory_forecast_pages11*128;
+            }
             if (bounded) {
                 plan_.admitted_directory_page_limit=proof9_t3_directory_page_limit;
                 if (t4) plan_.admitted_directory_page_limit=state::proof9_t4_directory_page_limit;
+                if (q32) plan_.admitted_directory_page_limit=state::State::proof9_q32_directory_page_limit;
                 plan_.admitted_directory_read_rows=plan_.admitted_directory_page_limit*128;
             }
+            // Retain the earlier work envelope while changing the read schedule.
             plan_.directory_work=plan_.paged_directory?
                 4*state::State::row_directory_resident_entries+16*R+
                     16*(bounded?(2+4*plan_.requested_sweeps):10)*R+4*plan_.admitted_directory_read_rows:96*R;
@@ -753,14 +986,26 @@ public:
         const auto wide_output=plan_.split_checkpoint?0:4*S*(4+2*integer_words);
         w[work_index(Work::output)]=wide_output+3*S*2+24*R+
             plan_.requested_sweeps*(6*S+32*R)+160*literal_count+65536;
+        if (q32) w[work_index(Work::output)]+=plan_.requested_sweeps*sizeof(state::PolicySpillSweep);
         const auto other_work=plan_.template_work+plan_.chance_work+plan_.history_work+
             plan_.state_work+plan_.quantizer_work;
-        require(other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
-        if (plan_.packed_regrets) plan_.parent_allowance=game.work_limit-other_work;
+        require(eleven || other_work<=game.work_limit,"fixed non-parent work exceeds aggregate cap");
+        if (plan_.packed_regrets) plan_.parent_allowance=other_work<=game.work_limit?game.work_limit-other_work:0;
         plan_.total_work=other_work+sum_work(w);
         plan_.state_entries=1024+16*R+10*S;
         plan_.state_payload=(5*S+256)*(value_bits+58)+640*S+16*R;
-        if (plan_.packed_averages) {
+        if (eleven) {
+            // Reuse the fixed State envelope and add the new row-tag bytes.
+            // This projection deliberately does not authorize the pager or State.
+            const auto added_tags=R-proof10.shape.rows;
+            const auto baseline=state::State::storage_forecast(
+                {119196,281066,2,15,644,1,1}, {388,410,true}, {1295812,1666910},
+                paging::Limits{2962722,4096,16,6130244,5925444,1311156,2,
+                    paging::Profile::proof10,1295812,18836,true}, true,true,true,true,true,
+                state::Lifecycle::fixed_two_sweep,state::PayloadModel::paged_phases,true);
+            plan_.state_entries=baseline.entries+added_tags;
+            plan_.state_payload=baseline.payload_bits+8*added_tags;
+        } else if (plan_.packed_averages) {
             const auto storage=state::State::storage_forecast(
                 {static_cast<std::size_t>(R),static_cast<std::size_t>(S),plan_.requested_sweeps,15,value_bits,
             plan_.state_work,plan_.quantizer_work},
@@ -768,7 +1013,9 @@ public:
                  static_cast<std::size_t>(plan_.packed_regret_limbs)},
                 plan_.paged_strategy?std::optional<paging::Limits>{plan_.page_limits}:std::nullopt,
                 plan_.compact_directory,plan_.ordered_state,plan_.row_coverage,plan_.shared_policy,plan_.paged_directory,
-                bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep);
+                q32?state::Lifecycle::quality32:bounded?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
+                plan_.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,
+                plan_.row_batched,plan_.mixed_policy_cache);
             plan_.state_entries=storage.entries;
             plan_.state_payload=storage.payload_bits;
         }
@@ -776,23 +1023,31 @@ public:
             chance_entries+32*literal_count+1+parent_entries+(plan_.shared_policy?Plan::policy_frame_entries:0)+
             (plan_.paged_directory?Plan::directory_frame_entries:0);
         plan_.payload_bits=plan_.state_payload+chance_payload+8*history_bytes+parent_payload+32*181;
-        plan_.output_bytes=artifact_bytes(g,plan_.split_checkpoint,plan_.requested_sweeps);
+        plan_.output_bytes=plan_.compact_wire?compact_artifact_bytes(g):artifact_bytes(g,plan_.split_checkpoint,plan_.requested_sweeps);
         if (bounded) {
             plan_.entries+=sweep_stream_entries;
             plan_.payload_bits+=sweep_stream_payload_bits;
+            if (q32) {
+                plan_.entries+=plan_.requested_sweeps*sizeof(state::PolicySpillSweep)/8;
+                plan_.payload_bits+=8*plan_.requested_sweeps*sizeof(state::PolicySpillSweep);
+            }
             if (t4) {
                 // Driver returns a bounded copy of the per-sweep sidecar in
                 // addition to State's own generation receipts.
                 plan_.entries+=8;
                 plan_.payload_bits+=512;
             }
-            require(plan_.general_quantizer_work==(t4?proof9_t4_general_quantizer_expected:
+            require(q32 || plan_.general_quantizer_work==(t4?proof9_t4_general_quantizer_expected:
                 proof9_t3_general_quantizer_expected),"bounded PROOF9 general quantizer forecast changed");
-            require(plan_.denominator_bits+width(2*payoff_ceiling_*plan_.requested_sweeps)<=value_bits,
+            // R_t <= 16tD. The Q32 multiplier 512 is exactly 2^9.
+            require(q32?(2*payoff_ceiling_*plan_.requested_sweeps==512 &&
+                plan_.denominator_bits+9<=value_bits):
+                plan_.denominator_bits+width(2*payoff_ceiling_*plan_.requested_sweeps)<=value_bits,
                 "bounded PROOF9 retained value width exceeds fixed integer");
             require(plan_.parent_allowance==game.work_limit-other_work,
                 "bounded PROOF9 parent allowance setup changed");
         }
+        if (eleven) return plan_;
         require(plan_.template_work<=template_cap,"pinned template forecast exceeds fixture cap");
         require(plan_.chance_work<=game.chance_limit,"pinned chance forecast exceeds fixture cap");
         require(plan_.history_work<=game.history_limit,"pinned history forecast exceeds fixture cap");
@@ -810,10 +1065,35 @@ public:
 };
 
 struct Reach { Values numerators{1,1}; std::size_t exponent=0; };
+// Internal arithmetic primitive; callers provide State-validated row units and
+// charge the unchanged reach ledger before calling. No binary64 conversion.
+inline Reach advanced_exact_reach(const Reach& previous,
+        const std::array<std::span<const std::uint64_t>,2>& policy,std::size_t action,unsigned support) {
+    unsigned common=grid_bits;
+    bool nonzero=false;
+    std::array<std::uint64_t,2> units{};
+    for (std::size_t holding=0;holding<2;++holding) if (support&(1U<<holding)) {
+        units[holding]=policy[holding][action];
+        if (units[holding]) {
+            common=std::min(common,static_cast<unsigned>(std::countr_zero(units[holding])));
+            nonzero=true;
+        }
+    }
+    Reach next{{0,0},0};
+    if (nonzero) {
+        next.exponent=previous.exponent+grid_bits-common;
+        require(next.exponent<reach_operand_bits,"sequence reach depth exceeds forecast");
+        for (std::size_t holding=0;holding<2;++holding)
+            next.numerators[holding]=previous.numerators[holding]*(units[holding]>>common);
+    }
+    return next;
+}
 struct Marginal { Values numerators{}; std::uint64_t scale=0; };
 
-template<bool Paired> class Walk final {
+template<bool Paired,bool Factored=false> class Walk final {
     static constexpr std::size_t lanes=Paired?targets:1;
+    using Value=std::conditional_t<Factored,factored_dyadic::Value,Integer>;
+    using Values=std::array<Value,2>;
     using LaneValues=std::array<Values,lanes>;
     using Marginals=std::array<Marginal,lanes>;
     const betting::Template& source_;
@@ -823,6 +1103,8 @@ template<bool Paired> class Walk final {
     prepared::PreparedPublicChance& chance_;
     state::State& state_;
     std::size_t target_;
+    const std::size_t averaging_sweep_;
+    factored_dyadic::Execution* factored_;
     Counts shape_{};
     std::uint64_t showdown_contractions_=0,hidden_candidates_=0;
     static constexpr std::size_t catalog=targets;
@@ -830,19 +1112,42 @@ template<bool Paired> class Walk final {
     [[nodiscard]] std::size_t seat(std::size_t lane) const { return Paired?lane:target_; }
     static const Reach& opposite(std::size_t player,const Reach& sb,const Reach& bb) { return player?sb:bb; }
 
+    Value make_value(Integer value) {
+        if constexpr (Factored) return factored_->from_integer(std::move(value));
+        else return value;
+    }
     void add_values(Values& total,const Values& child) {
         meter_.charge(Work::value_add,2*add_cost(plan_.game().value_bits));
-        for (std::size_t holding=0;holding<2;++holding) total[holding]+=child[holding];
+        for (std::size_t holding=0;holding<2;++holding) {
+            if constexpr (Factored) total[holding]=factored_->added(total[holding],child[holding]);
+            else total[holding]+=child[holding];
+        }
     }
     void add_lanes(LaneValues& total,const LaneValues& child) {
         for (std::size_t lane=0;lane<lanes;++lane) add_values(total[lane],child[lane]);
     }
+#ifdef OPENPOKER_TRAINING_TERMINAL_BUFFER_STUDY
+    struct BufferedContraction {
+        std::array<Integer,2> numerators{};
+        std::uint64_t prefix_divisor=1;
+    };
+    BufferedContraction contraction(std::size_t target,const Prefix& prefix,chance::TerminalKind kind,const Reach& reach) {
+        BufferedContraction result;
+        const auto scale=chance_.contraction_into(target,prefix.view(),kind,reach.numerators,reach.exponent,
+                                                   result.numerators);
+        require(scale.reach_exponent==reach.exponent &&
+            scale.prefix_divisor==plan_.game().divisors[street_index(prefix.size)],"prepared contraction identity changed");
+        result.prefix_divisor=scale.prefix_divisor;
+        return result;
+    }
+#else
     prepared::Contraction contraction(std::size_t target,const Prefix& prefix,chance::TerminalKind kind,const Reach& reach) {
         auto result=chance_.contraction(target,prefix.view(),kind,reach.numerators,reach.exponent);
         require(result.numerators.size()==2 && result.reach_exponent==reach.exponent &&
             result.prefix_divisor==plan_.game().divisors[street_index(prefix.size)],"prepared contraction identity changed");
         return result;
     }
+#endif
     Marginals marginal(const Prefix& prefix,Support support) {
         Marginals masses{};
         for (std::size_t lane=0;lane<lanes;++lane) {
@@ -859,19 +1164,29 @@ template<bool Paired> class Walk final {
         }
         return masses;
     }
+    template<bool Reuse=false>
     LaneValues ranked(const Prefix& board,const Reach& sb,const Reach& bb) {
         require(board.size==5 && ++showdown_contractions_<=plan_.showdown_contractions,"ranked completion census changed");
         LaneValues values{};
         for (std::size_t lane=0;lane<lanes;++lane) {
             const auto target=seat(lane);
-            auto result=contraction(target,board,chance::TerminalKind::showdown,opposite(target,sb,bb));
-            values[lane]={std::move(result.numerators[0]),std::move(result.numerators[1])};
+            const auto& reach=opposite(target,sb,bb);
+            auto result=[&] {
+                if constexpr (Reuse) {
+                    auto exact=chance_.family_showdown(target,board.view());
+                    require(exact.numerators.size()==2 && exact.reach_exponent==reach.exponent &&
+                            exact.prefix_divisor==plan_.game().divisors[3],"prepared family identity changed");
+                    return exact;
+                } else return contraction(target,board,chance::TerminalKind::showdown,reach);
+            }();
+            values[lane]={make_value(std::move(result.numerators[0])),make_value(std::move(result.numerators[1]))};
         }
         return values;
     }
+    template<bool Reuse=false>
     void hidden_completions(const Prefix& prefix,const Reach& sb,const Reach& bb,LaneValues& sum) {
         if (prefix.size==5) {
-            add_lanes(sum,ranked(prefix,sb,bb));
+            add_lanes(sum,ranked<Reuse>(prefix,sb,bb));
             return;
         }
         const auto deck=plan_.game().deck;
@@ -880,7 +1195,7 @@ template<bool Paired> class Walk final {
         hidden_candidates_+=candidates;
         require(hidden_candidates_<=plan_.hidden_candidates,"hidden runout candidate census changed");
         reveal(deck,prefix,[&](const Prefix& next) {
-            if (physical_support(next.mask)[0]) hidden_completions(next,sb,bb,sum);
+            if (physical_support(next.mask)[0]) hidden_completions<Reuse>(next,sb,bb,sum);
         });
     }
     LaneValues terminal(const betting::State& node,const Prefix& prefix,const Reach& sb,const Reach& bb) {
@@ -898,52 +1213,42 @@ template<bool Paired> class Walk final {
             shifts[lane]=static_cast<unsigned>(shift);
         }
         LaneValues result{};
-        std::uint64_t divisor=game.divisors[3];
         if (showdown) {
             if (prefix.size==5) result=ranked(prefix,sb,bb);
             // An all-in has no later information sets. Integrate completions
             // as raw full-board numerators on one scale, with no History reveal.
-            else hidden_completions(prefix,sb,bb,result);
+            else if (plan_.weighted_reach(prefix.size)) {
+                chance_.with_showdown_reaches({prepared::ReachInput{sb.numerators,sb.exponent},
+                                               prepared::ReachInput{bb.numerators,bb.exponent}},[&] {
+                    hidden_completions<true>(prefix,sb,bb,result);
+                });
+            } else hidden_completions(prefix,sb,bb,result);
         } else {
-            divisor=game.divisors[street_index(prefix.size)];
             for (std::size_t lane=0;lane<lanes;++lane) {
                 const auto target=seat(lane);
                 auto raw=contraction(target,prefix,chance::TerminalKind::fold,opposite(target,sb,bb));
-                result[lane]={std::move(raw.numerators[0]),std::move(raw.numerators[1])};
+                result[lane]={make_value(std::move(raw.numerators[0])),make_value(std::move(raw.numerators[1]))};
             }
         }
+        const auto divisor=showdown?game.divisors.back():game.divisors[street_index(prefix.size)];
+        const auto factor=money.significand*(game.divisors.back()/divisor);
         for (std::size_t lane=0;lane<lanes;++lane)
             for (auto& value:result[lane]) {
-                value*=money.significand;
-                value*=game.divisors[3]/divisor;
-                value<<=shifts[lane];
-                if (!showdown && node.winner!=seat(lane)) value=-value;
+                if constexpr (Factored) {
+                    value=factored_->scaled(value,factor,shifts[lane],!showdown && node.winner!=seat(lane));
+                    require(value.expanded_bits()<=value_bits,"factored terminal exceeds fixed value width");
+                } else {
+                    value*=factor;
+                    value<<=shifts[lane];
+                    if (!showdown && node.winner!=seat(lane)) value=-value;
+                }
             }
         return result;
     }
     Reach advance(const Reach& previous,const std::array<std::span<const std::uint64_t>,2>& policy,
                   std::size_t action,unsigned support) {
-        // The pinned source has at most seven actions by any one actor.
-        // Each reduced numerator is at most 2^exponent, independently of D.
         meter_.charge(Work::reach,24+2*(mul_cost(reach_operand_bits,53)+copy_cost(reach_operand_bits)));
-        unsigned common=grid_bits;
-        bool nonzero=false;
-        std::array<std::uint64_t,2> units{};
-        for (std::size_t holding=0;holding<2;++holding) if (support&(1U<<holding)) {
-            units[holding]=policy[holding][action];
-            if (units[holding]) {
-                common=std::min(common,static_cast<unsigned>(std::countr_zero(units[holding])));
-                nonzero=true;
-            }
-        }
-        Reach next{{0,0},0};
-        if (nonzero) {
-            next.exponent=previous.exponent+grid_bits-common;
-            require(next.exponent<reach_operand_bits,"sequence reach depth exceeds forecast");
-            for (std::size_t holding=0;holding<2;++holding)
-                next.numerators[holding]=previous.numerators[holding]*(units[holding]>>common);
-        }
-        return next;
+        return advanced_exact_reach(previous,policy,action,support);
     }
     void stage_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
                        const Marginal& prior,const Reach& own,std::size_t holding) {
@@ -961,28 +1266,41 @@ template<bool Paired> class Walk final {
             out[action]<<=scale-grid_bits;
         }
     }
-    void stage_scaled_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
+    [[nodiscard]] std::size_t stage_scaled_average(std::span<Integer> out,std::span<const std::uint64_t> policy,
                               const Marginal& prior,const Reach& own,std::size_t holding,
                               std::size_t row_shift) {
         require(row_shift<=plan_.shift-grid_bits,"scaled average row shift outside fixed game scale");
         const auto past_bits=plan_.shift-grid_bits-row_shift;
-        meter_.charge(Work::average,scaled_average_cost(past_bits,width(plan_.denominator_base),out.size()));
         require(own.exponent<=past_bits && prior.scale && prior.numerators[holding]>0 &&
             prior.numerators[holding]<=plan_.denominator_base/prior.scale,
             "scaled average reach exponent or marginal outside fixed bounds");
-        const auto marginal=prior.numerators[holding].convert_to<std::uint64_t>()*prior.scale;
+        const auto cost_bits=plan_.factored_average_stage?own.exponent:past_bits;
+        meter_.charge(Work::average,scaled_average_cost(cost_bits,
+            plan_.proof9_linear32()?15:width(plan_.denominator_base),out.size())+(plan_.proof9_linear32()?8:0));
+        const auto raw_marginal=prior.numerators[holding].convert_to<std::uint64_t>()*prior.scale;
+        const auto marginal=plan_.linear_average?checked_weighted_marginal(raw_marginal,averaging_sweep_):raw_marginal;
         // The reduced own reach is at most one. Factor the row scale out
         // before multiplying by the frozen action units, including zeros.
         Integer row_base=own.numerators[holding]*marginal;
-        row_base<<=past_bits-own.exponent;
+        const auto coefficient_shift=past_bits-own.exponent;
+        if (!plan_.factored_average_stage) row_base<<=coefficient_shift;
         for (std::size_t action=0;action<out.size();++action) out[action]=row_base*policy[action];
+        return plan_.factored_average_stage?coefficient_shift:0;
     }
     LaneValues visit(std::size_t id,Cursor cursor,const Prefix& prefix,Support support,
                      const Reach& sb,const Reach& bb,const Marginals& prior,std::array<std::size_t,2> past={}) {
         meter_.charge(Work::visit,visit_cost(Paired?Traversal::paired:Traversal::by_seat));
         require(++shape_.visits<=plan_.shape.visits && support[0] && support[1] &&
-            id<source_.nodes().size() && history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
+            id<source_.nodes().size(),"dense public visit identity changed");
+        std::optional<history::History::Visit> checked;
+        std::size_t checked_ordinal=0;
+        if (plan_.history_visit) checked.emplace(history_.enter_visit(cursor,id,prefix.size,checked_ordinal));
+        else require(plan_.checked_history?history_.identity_matches(cursor,id,prefix.size):
+            history_.source_node(cursor)==id && history_.visible_size(cursor)==prefix.size,
             "dense public visit identity changed");
+        const auto action_cursor=[&](std::size_t action) {
+            return checked?history_.visit_action(*checked,action):history_.append_action(cursor,action);
+        };
         const auto& node=source_.nodes()[id];
         require(node.state.street==prefix.size,"dense visible street changed");
         if (node.state.phase==betting::Phase::reveal) {
@@ -996,7 +1314,7 @@ template<bool Paired> class Walk final {
                 const auto live=physical_support(next.mask);
                 if (!live[0]) return; // prior physical support only
                 require(++shape_.reveals<=plan_.shape.reveals,"dense positive reveal count changed");
-                const auto child=history_.append_reveal(cursor,next.view());
+                const auto child=checked?history_.visit_reveal(*checked,next.view()):history_.append_reveal(cursor,next.view());
                 if (target_==catalog) (void)visit(node.edges[0].child,child,next,live,sb,bb,prior,past);
                 else {
                     const auto child_prior=marginal(next,live);
@@ -1038,21 +1356,25 @@ template<bool Paired> class Walk final {
             }
             for (std::size_t action=0;action<menu;++action) {
                 ++shape_.actions;
-                const auto child=history_.append_action(cursor,action);
+                const auto child=action_cursor(action);
                 (void)visit(node.edges[action].child,child,prefix,support,sb,bb,prior,past);
             }
             return {};
         }
-        const auto key=history_.ordinal(cursor);
+        const auto key=checked?checked_ordinal:history_.ordinal(cursor);
         std::array<std::size_t,2> row_ids{};
         std::array<std::array<std::uint64_t,4>,2> policy_copies{};
+        std::array<std::optional<state::State::FrozenRow>,2> snapshots{};
         std::array<std::span<const std::uint64_t>,2> policy{};
         for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
             meter_.charge(Work::route,16);
             require(shape_.rows<state_.row_count(),"dense policy row overflow");
             const auto row=static_cast<std::size_t>(shape_.rows++);
             state::PolicySnapshot snapshot{};
-            if (plan_.paged_directory) snapshot=state_.copy_policy_snapshot(row,policy_copies[holding]);
+            if (plan_.reuse_snapshot) {
+                snapshots[holding].emplace(state_.capture_frozen_row(row));
+                snapshot={snapshots[holding]->descriptor(),snapshots[holding]->units()};
+            } else if (plan_.paged_directory) snapshot=state_.copy_policy_snapshot(row,policy_copies[holding]);
             const auto record=plan_.paged_directory?snapshot.descriptor.row:state_.row_at(row);
             // Menus come from the same immutable source used at registration.
             // Check the complete identity and packed extent before policy access.
@@ -1074,12 +1396,12 @@ template<bool Paired> class Walk final {
             } else policy[holding]=state_.policy_units(row);
         }
         LaneValues result{};
-        std::array<std::array<Integer,4>,2> action_values{};
+        std::array<std::array<Value,4>,2> action_values{};
         const auto& actor_reach=actor?bb:sb;
         const std::size_t acting_lane=Paired?actor:(actor==target_?0:lanes);
         for (std::size_t action=0;action<menu;++action) {
             require(++shape_.actions<=plan_.shape.actions,"dense action count changed");
-            const auto child=history_.append_action(cursor,action);
+            const auto child=action_cursor(action);
             const auto next=advance(actor_reach,policy,action,support[actor]);
             auto values=actor?visit(node.edges[action].child,child,prefix,support,sb,next,prior,past):
                 visit(node.edges[action].child,child,prefix,support,next,bb,prior,past);
@@ -1093,13 +1415,23 @@ template<bool Paired> class Walk final {
             for (std::size_t holding=0;holding<2;++holding) if (support[actor]&(1U<<holding)) {
                 std::array<Integer,4> increments{};
                 const std::span<Integer> average{increments.data(),menu};
-                const std::span<const Integer> values{action_values[holding].data(),menu};
+                const std::span<const Value> values{action_values[holding].data(),menu};
                 if (plan_.scaled_averages) {
-                    stage_scaled_average(average,policy[holding],prior[acting_lane],actor_reach,holding,row_shift);
-                    result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,{average,row_shift});
+                    const auto left=stage_scaled_average(average,policy[holding],prior[acting_lane],
+                        actor_reach,holding,row_shift);
+                    const state::ScaledAverageIncrements scaled{average,row_shift,left};
+                    if constexpr (Factored) {
+                        if (snapshots[holding])
+                            result[acting_lane][holding]=state_.stage_frozen_row(*snapshots[holding],values,scaled);
+                        else result[acting_lane][holding]=state_.stage_factored_scaled_row(row_ids[holding],values,scaled);
+                    }
+                    else result[acting_lane][holding]=state_.stage_scaled_row(row_ids[holding],values,scaled);
                 } else {
-                    stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
-                    result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                    if constexpr (Factored) require(false,"factored traversal requires scaled averages");
+                    else {
+                        stage_average(average,policy[holding],prior[acting_lane],actor_reach,holding);
+                        result[acting_lane][holding]=state_.stage_row(row_ids[holding],values,average);
+                    }
                 }
             }
         }
@@ -1107,11 +1439,16 @@ template<bool Paired> class Walk final {
     }
 public:
     Walk(const betting::Template& source,const Plan& plan,Meter& meter,history::History& history,
-         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target)
-        :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target) {}
+         prepared::PreparedPublicChance& chance,state::State& state,std::size_t target,std::size_t averaging_sweep=1,factored_dyadic::Execution* factored=nullptr)
+        :source_(source),plan_(plan),meter_(meter),history_(history),chance_(chance),state_(state),target_(target),
+         averaging_sweep_(averaging_sweep),factored_(factored) {
+        require(!Factored || factored_,"factored traversal needs its admitted execution owner");
+    }
     LaneValues run(Cursor root) {
         require(Paired?(target_==0 && plan_.traversal==Traversal::paired):
             (target_==catalog || (target_<catalog && plan_.traversal==Traversal::by_seat)),"invalid fixed sweep target");
+        require(!plan_.linear_average || (averaging_sweep_>=1 && averaging_sweep_<=32),
+            "linear average sweep is outside its admitted one-based horizon");
         const auto support=physical_support(0);
         const auto prior=target_==catalog?Marginals{}:marginal(Prefix{},support);
         auto value=visit(source_.root(),root,Prefix{},support,Reach{},Reach{},prior);
@@ -1126,9 +1463,10 @@ class Binary final {
     std::ostream& out_;
     std::uint64_t capacity_,written_=0;
     std::size_t value_bits_;
+    std::uint64_t compact_limit_=0,compact_work_=0;
 public:
-    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits)
-        :out_(out),capacity_(capacity),value_bits_(value_bits) {
+    Binary(std::ostream& out,std::uint64_t capacity,std::size_t value_bits,std::uint64_t compact_limit=0)
+        :out_(out),capacity_(capacity),value_bits_(value_bits),compact_limit_(compact_limit) {
         static_assert(std::endian::native==std::endian::little,"fixed binary producer requires little endian");
         require(value_bits_==proof9.value_bits || value_bits_==proof10.value_bits || value_bits_==proof9_t3.value_bits ||
             value_bits_==proof9_t4.value_bits,"unsupported fixed output width");
@@ -1141,6 +1479,43 @@ public:
     }
     void text(std::string_view value) { bytes(value.data(),value.size()); }
     void u64(std::uint64_t value) { bytes(&value,sizeof(value)); }
+    void charge_compact(std::uint64_t work) {
+        require(work<=compact_limit_-compact_work_,"compact encoding work cap exceeded");
+        compact_work_+=work;
+    }
+    [[nodiscard]] std::uint64_t compact_work() const noexcept { return compact_work_; }
+    void bounded_word(std::uint64_t value,std::size_t count) {
+        require((count==6 || count==7) && value<(1ULL<<(8*count)),"compact output word exceeds width");
+        bytes(&value,count);
+    }
+    void policy(std::span<const std::uint64_t> units,bool compact) {
+        // Source-level scalar packing/check operations. The existing output
+        // ledger retains common stream emission and policy access charges.
+        if (!compact) {
+            for (const auto unit:units) u64(unit);
+            return;
+        }
+        require(units.size()<=4,"compact policy menu exceeds packing model");
+        charge_compact(64+32*units.size());
+        std::uint64_t total=0;
+        for (std::size_t i=0;i<units.size();++i) {
+            require(units[i]<=grid-total,"policy output exceeds fixed grid");
+            total+=units[i];
+            if (i+1<units.size()) bounded_word(units[i],7);
+        }
+        require(!units.empty() && units.size()<=4 && total==grid,"policy output partition differs");
+    }
+    void fallback_bits(std::span<const unsigned char> flags) {
+        charge_compact(16*flags.size()+16*((flags.size()+7)/8));
+        for (std::size_t start=0;start<flags.size();start+=8) {
+            unsigned char byte=0;
+            for (std::size_t bit=0;bit<8 && start+bit<flags.size();++bit) {
+                require(flags[start+bit]<=1,"compact fallback flag outside boolean range");
+                byte|=static_cast<unsigned char>(flags[start+bit]<<bit);
+            }
+            bytes(&byte,1);
+        }
+    }
     void wide(const Integer& value,bool signed_field=false) {
         const auto& raw=value.backend();
         using Limb=std::remove_cvref_t<decltype(raw.limbs()[0])>;
@@ -1160,10 +1535,19 @@ public:
     }
     void finish() {
         require(written_==capacity_,"fixed training output length changed");
+        require(compact_work_==compact_limit_,"compact encoding work differs from reservation");
         out_.flush();
         require(bool(out_),"fixed training output flush failed");
     }
 };
+
+static_assert(proof9_q32_sweep_stream_read_bytes==proof9_q32_sweep_stream_frames*
+    proof9_q32_sweep_stream_image_bytes);
+static_assert(proof9_q32_sweep_stream_wire_bytes==proof9_q32_sweep_stream_retained_bytes+
+    proof9_q32_sweep_stream_read_bytes+proof9_q32_sweep_stream_frames*sweep_stream_header_bytes);
+static_assert(proof9_q32_sweep_stream_copy_work==proof9_q32_sweep_stream_frames*
+    (2ULL*paging::n9_image_words+64*((proof9_q32_sweep_stream_image_bytes+sweep_stream_scratch_bytes-1)/
+        sweep_stream_scratch_bytes)+sweep_stream_header_bytes));
 
 struct TrainingIO {
     std::optional<paging::Receipt> paging;
@@ -1171,7 +1555,11 @@ struct TrainingIO {
     std::optional<state::RowDirectoryReceipt> directory;
     std::unique_ptr<state::PolicySpillSweep[]> bounded_policy;
     std::size_t bounded_policy_count=0;
-    std::uint64_t combined_divisions=0;
+    std::uint64_t combined_divisions=0,compact_encoding_work=0,equal_rows=0,equal_divisions_avoided=0;
+    std::uint64_t mixed_cache_hits=0,mixed_cache_misses=0;
+    std::optional<prepared::RankIndexReceipt> rank_index;
+    std::optional<factored_dyadic::Receipt> factored;
+    packed_signed_update::Counts packed_updates{};
 };
 
 inline constexpr std::uint64_t sweep_stream_frames=sweeps;
@@ -1236,7 +1624,7 @@ class Driver final {
     }
     void prelude(Binary& out,const state::State& state,const Integer& denominator) const {
         const auto& p=plan_;
-        out.text(p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
+        out.text(p.compact_wire?"OPLDTC01":p.proof9_linear32()?"OPLDSL31":p.proof9_quality32()?"OPLDSQ31":p.proof9_four_sweep()?"OPLDST41":p.proof9_three_sweep()?"OPLDST31":p.ten_card()?"OPLDTP01":p.split_checkpoint?"OPLDSP01":"OPLDYA01");
         for (const auto word:std::array<std::uint64_t,header_words>{p.bounded_proof9()?p.requested_sweeps:1ULL,grid_bits,integer_words,p.shape.rows,
             p.shape.slots,literal_count,p.requested_sweeps,p.H,p.M,p.denominator_bits,p.game().value_bits,p.output_bytes,2,2,
             p.normalizer,p.game().divisors[3]}) out.u64(word);
@@ -1244,12 +1632,20 @@ class Driver final {
         skeleton(out);
         for (std::size_t i=0;i<state.row_count();++i) {
             const auto row=state.row_at(i);
-            out.u64(row.history_ordinal);
-            out.u64(row.actor|(row.holding_index<<8)|(row.actions.size()<<16));
-            out.u64(row.offset);
+            if (p.compact_wire) {
+                out.charge_compact(64);
+                require(row.history_ordinal<(1ULL<<44) && row.actor<2 && row.holding_index<2 &&
+                    !row.actions.empty() && row.actions.size()<=4,"compact row identity exceeds width");
+                out.bounded_word((static_cast<std::uint64_t>(row.history_ordinal)<<4)|
+                    (row.actor<<3)|(row.holding_index<<2)|(row.actions.size()-1),6);
+            } else {
+                out.u64(row.history_ordinal);
+                out.u64(row.actor|(row.holding_index<<8)|(row.actions.size()<<16));
+                out.u64(row.offset);
+            }
         }
     }
-    static std::uint64_t profile(Binary& out,state::State& state,std::size_t sweep,bool shared_policy,bool paged_directory) {
+    static std::uint64_t profile(Binary& out,state::State& state,std::size_t sweep,bool shared_policy,bool paged_directory,bool compact_wire) {
         std::uint64_t changed=0;
         for (std::size_t row=0;row<state.row_count();++row) {
             std::array<std::uint64_t,4> copied{};
@@ -1265,9 +1661,9 @@ class Driver final {
             bool distinct=false;
             for (std::size_t action=0;action<units.size();++action) {
                 distinct=distinct || units[action]!=uniform_unit(units.size(),action);
-                out.u64(units[action]);
             }
             require(sweep || !distinct,"first policy differs from the admitted uniform grid");
+            if (!compact_wire || sweep) out.policy(units,compact_wire);
             if (distinct) ++changed;
         }
         return changed;
@@ -1303,8 +1699,12 @@ class Driver final {
             state.completed_sweeps==p.requested_sweeps && state.rows==p.shape.rows && state.slots==p.shape.slots &&
             state.reserved_entries==p.state_entries && state.reserved_integer_and_text_payload_bits==p.state_payload &&
             feedback && history.owned_bytes<=history_bytes,"completed training receipt differs from admission");
+        require(chance.weighted_families==p.requested_sweeps*p.prepared_showdown_groups &&
+                chance.weighted_showdowns==p.seat_passes*p.prepared_showdown_boards,
+                "prepared reach family cadence changed");
+        require(!p.checked_history || history.work==p.history_work,"checked History census realization differs");
         require((chance.sparse_pair_visits>0)==p.sparse_chance,"sparse chance execution receipt differs");
-        out.text(p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
+        out.text(p.proof9_linear32()?"OPLDSL32":p.proof9_quality32()?"OPLDSQ32":p.proof9_four_sweep()?"OPLDST42":p.proof9_three_sweep()?"OPLDST32":p.ten_card()?"OPLDTP02":p.split_checkpoint?"OPLDSP02":
             p.traversal==Traversal::paired?"OPLDEND2":"OPLDEND1");
         for (const auto word:forecast) out.u64(word);
         for (const auto word:actual) out.u64(word);
@@ -1340,8 +1740,19 @@ class Driver final {
         require(bool(stream),"sweep checkpoint frame flush failed");
     }
 public:
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+    explicit Driver(Traversal mode=Traversal::by_seat,StrategyProfile profile=StrategyProfile::dense,
+                    const phase_trace::Sink* trace=nullptr)
+        :plan_([&] {
+            phase_trace::mark(trace,phase_trace::Phase::plan_preflight,phase_trace::Edge::begin);
+            auto plan=Forecast(source_,meter_,mode,profile).make();
+            phase_trace::mark(trace,phase_trace::Phase::plan_preflight,phase_trace::Edge::end);
+            return plan;
+        }()) {}
+#else
     explicit Driver(Traversal mode=Traversal::by_seat,StrategyProfile profile=StrategyProfile::dense)
         :plan_(Forecast(source_,meter_,mode,profile).make()) {}
+#endif
     Driver(const Driver&)=delete;
     Driver& operator=(const Driver&)=delete;
     Driver(Driver&&)=delete;
@@ -1350,8 +1761,30 @@ public:
     [[nodiscard]] std::uint64_t admission_work() const noexcept { return meter_.total(); }
 
     void validate_sweep_stream() const {
+        require(!plan_.eleven_card_forecast(),"eleven-card forecast has no stream entry");
         const auto& p=plan_;
         const auto& game=p.game();
+        if (p.proof9_q32_base()) {
+            require(p.paged_directory && p.split_checkpoint && p.requested_sweeps==32 &&
+                p.shape.rows==24420 && p.shape.slots==58164 && p.game().value_bits==644 &&
+                p.row_batched && !p.phase_payload && p.single_division && p.sparse_chance && !p.indexed_cache &&
+                p.page_limits.profile==paging::Profile::proof9_q32 &&
+                p.page_limits.image_words==paging::n9_image_words &&
+                p.page_limits.read_words==paging::n9_q32_read_words &&
+                p.page_limits.write_words==paging::n9_q32_write_words &&
+                p.page_limits.write_requests==paging::n9_q32_write_requests &&
+                p.page_limits.requests==paging::n9_q32_logical_requests &&
+                p.page_limits.stage_split_words==paging::n9_q32_stage_split_words &&
+                p.admitted_directory_page_limit==state::State::proof9_q32_directory_page_limit &&
+                p.output_bytes==proof9_q32_sweep_stream_retained_bytes &&
+                proof9_q32_sweep_stream_image_bytes==8ULL*p.page_limits.image_words,
+                "sweep streaming is restricted to the fixed PROOF9 Q32 profile");
+            require(p.entries<=entries_cap && p.payload_bits<=game.payload_limit,
+                "Q32 sweep streaming scratch exceeds scoped storage admission");
+            require(p.total_work<=game.work_limit && proof9_q32_sweep_stream_copy_work<=game.work_limit-p.total_work,
+                "Q32 sweep streaming copy work exceeds transport work cap");
+            return;
+        }
         if (p.proof9_four_sweep()) {
             require(p.paged_directory && p.split_checkpoint && p.requested_sweeps==4 &&
                 p.shape.rows==24420 && p.shape.slots==58164 &&
@@ -1392,7 +1825,7 @@ public:
             p.shape.rows==119196 && p.shape.slots==281066 &&
             p.page_limits.profile==paging::Profile::proof10 &&
             p.page_limits.image_words==paging::n10_image_words &&
-            p.output_bytes==sweep_stream_retained_bytes &&
+            p.output_bytes==(p.compact_wire?compact_artifact_bytes(p.shape):sweep_stream_retained_bytes) &&
             p.page_limits.image_words<=std::numeric_limits<std::uint64_t>::max()/8 &&
             8*static_cast<std::uint64_t>(p.page_limits.image_words)==sweep_stream_image_bytes,
             "sweep streaming is restricted to the fixed ten-card paged-directory profile");
@@ -1401,10 +1834,28 @@ public:
             "sweep streaming scratch exceeds existing storage admission");
         require(p.total_work<=game.work_limit && sweep_stream_copy_work<=game.work_limit-p.total_work,
             "sweep streaming copy work exceeds transport work cap");
+        require(!p.compact_wire || compact_encoding_work(p.shape)<=
+            game.work_limit-p.total_work-sweep_stream_copy_work,
+            "compact encoding exceeds composed transport work cap");
+        // Bounded scalar encoder counters, temporary packed row and flag byte.
+        require(!p.compact_wire || (32<=entries_cap-p.entries-sweep_stream_entries &&
+            2048<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits),
+            "compact encoder scratch exceeds composed storage cap");
+        require(!p.factored || (factored_metadata_work(p)<=
+            game.work_limit-p.total_work-sweep_stream_copy_work-compact_encoding_work(p.shape) &&
+            (8192+(p.reuse_snapshot?2048:0))<=entries_cap-p.entries-sweep_stream_entries-32 &&
+            (524288+(p.reuse_snapshot?131072:0))<=game.payload_limit-p.payload_bits-sweep_stream_payload_bits-2048),
+            "factored execution exceeds composed resource caps");
     }
 
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+    TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
+                     bool streamed_checkpoints=false,const phase_trace::Sink* trace=nullptr) {
+#else
     TrainingIO train(std::ostream& stream,const std::filesystem::path& page_scratch={},
                      bool streamed_checkpoints=false) {
+#endif
+        require(!plan_.eleven_card_forecast(),"eleven-card forecast has no training entry");
         require(!entered_,"fixed training owner already entered");
         entered_=true;
         const auto& p=plan_;
@@ -1416,6 +1867,9 @@ public:
             "sparse chance profile requires explicit sweep checkpoint streaming");
         if (streamed_checkpoints) validate_sweep_stream();
         require(p.paged_strategy==!page_scratch.empty(),"paged strategy requires explicit private scratch");
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::chance_setup,phase_trace::Edge::begin);
+#endif
         const auto deck=chance::DeckDefinition::reduced(game.deck);
         chance::Limits chance_limits;
         chance_limits.max_hands_per_side=2;
@@ -1426,9 +1880,15 @@ public:
         prepared::PreparedPublicChance chance(ranges[0],ranges[1],deck,chance_limits,
             p.rank_board_sets?p.rank_planes:64,
             p.rank_board_sets?prepared::RankCacheKey::board_set:prepared::RankCacheKey::ordered_prefix,
-            p.sparse_chance?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets);
-        require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=chance_setup_bound,
+            p.sparse_chance?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets,
+            p.indexed_cache?prepared::RankCacheIndex::sorted_board_set:prepared::RankCacheIndex::linear);
+        require(chance.normalizer_integer()==p.normalizer && chance.receipt().modeled_work<=
+            chance_setup_bound+(p.indexed_cache?prepared::PreparedPublicChance::index_setup_work(p.rank_planes):0),
             "prepared prior differs from admitted source prior");
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::chance_setup,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::owners_setup,phase_trace::Edge::begin);
+#endif
         history::Limits history_limits;
         history_limits.work=p.history_work;
         history_limits.nodes=literal_count;
@@ -1442,6 +1902,15 @@ public:
         if (p.paged_strategy) meter_.charge(Work::route,p.paging_work);
         if (p.shared_policy) meter_.charge(Work::route,p.policy_spill_work);
         if (p.compact_directory) meter_.charge(Work::route,p.directory_work);
+        auto division_kernel=dyadic_policy::DivisionKernel::separate;
+        if (p.bounded_division) division_kernel=dyadic_policy::DivisionKernel::bounded_complement;
+        else if (p.pair_complement) division_kernel=dyadic_policy::DivisionKernel::pair_complement;
+        else if (p.equal_quantizer) division_kernel=dyadic_policy::DivisionKernel::equal_complement;
+        else if (p.complement_division) division_kernel=dyadic_policy::DivisionKernel::complement;
+        else if (p.single_division) division_kernel=dyadic_policy::DivisionKernel::combined;
+        std::optional<factored_dyadic::Execution> factored_execution;
+        if (p.factored) factored_execution.emplace(factored_metadata_work(p));
+        static_assert(sizeof(factored_dyadic::Value)<=sizeof(Integer)+16);
         state::State state(history,{2,2},denominator,
             {static_cast<std::size_t>(p.shape.rows),static_cast<std::size_t>(p.shape.slots),p.requested_sweeps,15,value_bits,
              p.state_work,p.quantizer_work},
@@ -1451,34 +1920,75 @@ public:
              static_cast<std::size_t>(p.packed_regret_limbs)},
             p.paged_strategy?std::optional<state::PagedStrategy>{
                 state::PagedStrategy{page_scratch,p.page_limits,p.compact_directory,p.ordered_state,p.row_coverage,
-                    p.shared_policy,p.paged_directory,p.paged_directory?p.admitted_directory_page_limit:0,
-                    p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
-                    p.single_division?dyadic_policy::DivisionKernel::combined:dyadic_policy::DivisionKernel::separate}}:std::nullopt);
+                    p.shared_policy,p.paged_directory,p.paged_directory?(p.reuse_snapshot?7456:p.admitted_directory_page_limit):0,
+                    p.proof9_q32_base()?state::Lifecycle::quality32:p.bounded_proof9()?state::Lifecycle::bounded_v1:state::Lifecycle::fixed_two_sweep,
+                    division_kernel,
+                    p.phase_payload?state::PayloadModel::paged_phases:state::PayloadModel::legacy,p.row_batched,factored_execution?&*factored_execution:nullptr,p.reuse_snapshot,p.zero_policy_bootstrap,p.first_regret_bound,p.initial_packed_stage,p.bounded_stage_width,p.mixed_policy_cache}}:std::nullopt);
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::owners_setup,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::row_registration,phase_trace::Edge::begin);
+#endif
         const auto root=history.root();
         (void)Walk<false>(source_,p,meter_,history,chance,state,targets).run(root);
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::row_registration,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::freeze,phase_trace::Edge::begin);
+#endif
         state.freeze();
         if (p.sealed_menus) {
             const auto actions=state.action_storage();
             require(actions.stored_menus==p.sealed_menu_count && actions.stored_tokens==p.sealed_token_count,
                 "sealed action catalog realization differs from admission");
         }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::freeze,phase_trace::Edge::end);
 
+        phase_trace::mark(trace,phase_trace::Phase::prelude,phase_trace::Edge::begin);
+#endif
         meter_.charge(Work::output,p.parent[work_index(Work::output)]);
-        Binary out(stream,p.output_bytes,value_bits);
+        Binary out(stream,p.output_bytes,value_bits,p.compact_wire?compact_encoding_work(p.shape):0);
         prelude(out,state,denominator);
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::prelude,phase_trace::Edge::end);
+#endif
         std::uint64_t feedback=0;
         for (std::size_t sweep=0;sweep<p.requested_sweeps;++sweep) {
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            const auto sweep_number=static_cast<std::uint32_t>(sweep+1);
+            phase_trace::mark(trace,phase_trace::Phase::policy_build,phase_trace::Edge::begin,sweep_number);
+#endif
             state.begin_sweep();
-            feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory);
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            phase_trace::mark(trace,phase_trace::Phase::policy_build,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::policy_emit,phase_trace::Edge::begin,sweep_number);
+#endif
+            feedback=profile(out,state,sweep,p.shared_policy,p.paged_directory,p.compact_wire);
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            phase_trace::mark(trace,phase_trace::Phase::policy_emit,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::walk,phase_trace::Edge::begin,sweep_number);
+#endif
             std::array<Values,targets> roots{};
-            if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0).run(root);
+            if (p.factored) {
+                auto values=Walk<true,true>(source_,p,meter_,history,chance,state,0,sweep+1,&*factored_execution).run(root);
+                for (std::size_t lane=0;lane<targets;++lane)
+                    for (std::size_t holding=0;holding<2;++holding)
+                        roots[lane][holding]=factored_execution->expanded(values[lane][holding]);
+            } else if (p.traversal==Traversal::paired) roots=Walk<true>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
             else {
-                auto sb=Walk<false>(source_,p,meter_,history,chance,state,0).run(root);
-                auto bb=Walk<false>(source_,p,meter_,history,chance,state,1).run(root);
+                auto sb=Walk<false>(source_,p,meter_,history,chance,state,0,sweep+1).run(root);
+                auto bb=Walk<false>(source_,p,meter_,history,chance,state,1,sweep+1).run(root);
                 roots={std::move(sb[0]),std::move(bb[0])};
             }
             require(roots[0][0]+roots[0][1]+roots[1][0]+roots[1][1]==0,"simultaneous fixed profile is not zero-sum");
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            phase_trace::mark(trace,phase_trace::Phase::walk,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::commit,phase_trace::Edge::begin,sweep_number);
+#endif
             state.commit_sweep();
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            phase_trace::mark(trace,phase_trace::Phase::commit,phase_trace::Edge::end,sweep_number);
+            phase_trace::mark(trace,phase_trace::Phase::checkpoint,phase_trace::Edge::begin,sweep_number);
+#endif
             if (!p.split_checkpoint) wide_checkpoint(out,state);
             for (const auto& root_value:roots) for (const auto& value:root_value) out.wide(value,true);
             if (streamed_checkpoints) {
@@ -1489,13 +1999,20 @@ public:
             emit_sweep_checkpoint(stream,state,scratch,sweep+1,
                 p.bounded_proof9()?proof9_t3_sweep_stream_image_bytes:sweep_stream_image_bytes);
             }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            phase_trace::mark(trace,phase_trace::Phase::checkpoint,phase_trace::Edge::end,sweep_number);
+#endif
         }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::average_export,phase_trace::Edge::begin);
+#endif
         if (p.shared_policy) {
             const auto flags=state.stream_average([&](std::span<const std::uint64_t> units) {
-                for (const auto unit:units) out.u64(unit);
+                out.policy(units,p.compact_wire);
             });
             require(flags.size()==p.shape.rows,"streamed export row count changed");
-            out.bytes(flags.data(),flags.size());
+            if (p.compact_wire) out.fallback_bits(flags);
+            else out.bytes(flags.data(),flags.size());
         } else {
             const auto image=state.export_average(!p.packed_averages);
             require(image.kind==dyadic_policy::ImageKind::exported_average && image.rows==p.shape.rows && image.slots==p.shape.slots,
@@ -1503,11 +2020,26 @@ public:
             for (std::size_t i=0;i<image.slots;++i) out.u64(image.units[i]);
             out.bytes(image.uniform_fallback.get(),image.rows);
         }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::average_export,phase_trace::Edge::end);
+        phase_trace::mark(trace,phase_trace::Phase::footer,phase_trace::Edge::begin);
+#endif
         const auto& state_receipt=state.receipt();
         require((state_receipt.combined_divisions>0)==p.single_division,"combined division execution receipt differs");
         footer(out,chance.receipt(),history.receipt(),state_receipt,feedback);
         out.finish();
         TrainingIO result;
+        result.compact_encoding_work=out.compact_work();
+        if (factored_execution) {
+            result.factored=factored_execution->receipt();
+            const auto expected=factored_census(p);
+            const auto& actual=*result.factored;
+            require(actual.work==expected.work && actual.from_values==expected.from_values &&
+                actual.scales==expected.scales && actual.additions==expected.additions &&
+                actual.subtractions==expected.subtractions && actual.mixes==expected.mixes &&
+                actual.expansions==expected.expansions,"factored event realization differs");
+            result.packed_updates=state.packed_update_counts();
+        }
         result.paging=state.paged_receipt();
         if (p.bounded_proof9()) {
             const auto receipts=state.policy_sweep_receipts();
@@ -1518,6 +2050,14 @@ public:
         } else result.policy=state.policy_spill_receipt();
         result.directory=state.row_directory_receipt();
         result.combined_divisions=state_receipt.combined_divisions;
+        result.mixed_cache_hits=state_receipt.mixed_cache_hits;
+        result.mixed_cache_misses=state_receipt.mixed_cache_misses;
+        result.equal_rows=state_receipt.equal_rows;
+        result.equal_divisions_avoided=state_receipt.equal_divisions_avoided;
+        if (p.indexed_cache) result.rank_index=chance.rank_index_receipt();
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        phase_trace::mark(trace,phase_trace::Phase::footer,phase_trace::Edge::end);
+#endif
         return result;
     }
 };

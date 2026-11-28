@@ -1,0 +1,34 @@
+name: Weighted joint immutable evidence replay
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  weighted-packet:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Authenticate all sources and replay primary full52 arithmetic
+        run: python -B -X "pycache_prefix=${{ runner.temp }}/weighted-packet-normal-cache" -m scripts.replay_weighted_joint_packet > weighted-packet-normal.json 2> weighted-packet-normal.stderr.log
+      - name: Repeat with optimized Python
+        run: python -O -B -X "pycache_prefix=${{ runner.temp }}/weighted-packet-optimized-cache" -m scripts.replay_weighted_joint_packet > weighted-packet-optimized.json 2> weighted-packet-optimized.stderr.log
+      - name: Refuse tampering before numerical imports
+        run: python -B -m unittest tests.test_weighted_packet_admission -v > weighted-packet-admission.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weighted-joint-packet-${{ matrix.os }}
+          path: |
+            weighted-packet-*.json
+            weighted-packet-*.stderr.log
+            weighted-packet-admission.log
+          if-no-files-found: warn

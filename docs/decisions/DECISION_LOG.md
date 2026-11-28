@@ -1119,3 +1119,48 @@ tests pass normally and optimized, including compiled controls and adversarial
 subprocesses; mechanical conversion of three validators preserves complete AST
 predicates/messages. Local full-suite execution was interrupted after source-drift
 guards fired during ongoing edits; final clean-head CI remains a separate gate.
+
+D054 (2026-11-22, America/New_York): under the owner's continuing scalable
+foundation priority, separate stable information identity from mutable policy
+epochs. Reuse the existing exact native raw walk, owned History and prepared
+Chance; Catalog row handles are the only numerical strategy key. The initial
+Q52 uniform policy is implicit, signed cumulative regrets remain unclipped,
+and only changed regret rows are quantized after both seats complete a frozen
+epoch. This experimental vanilla transition has a separate contract from the
+existing CFR+ trainer. No solver default or resource ceiling changes.
+
+The bounded two-observation PROOF9 path passes independent complete numerical
+reconstruction, normal/optimized byte parity, saved replay, and dedicated
+Windows/Linux/sanitizer checks at `8652d5d`. Preserve the failed compile,
+weaker historical witness and immutable component/reference packets. These
+results establish a shared changing-policy path; longer learning, a sampler,
+solution quality and realistic-range feasibility require further evidence.
+The older eleven-card rejections remain valid. See the
+[epoch contract and executed evidence](../sparse-policy-epochs.md).
+
+D055 (2026-11-23, America/New_York): prioritize a deterministic joint private-pair
+and public-board chance-sampling proof before further native storage changes.
+The full-range one-board row census shows that compressing numeric values alone
+does not remove the current row, validation and quantization barriers. Sample
+the true globally conditioned joint law, preserve actor/own-holding/visible
+history identities, exhaust betting actions under one frozen Q52 policy, and
+compare complete raw expectations with the independent literal joint reference.
+The design cancels the physical/proposal ratio in each observation; it must not
+inherit the public-board estimator's prefix correction. This is a proposed
+implementation gate, not executed native capacity, convergence or quality.
+Retain the earlier public-proposal proof and failed resource experiments. Keep
+all existing limits, defaults and eleven-card rejections. See the
+[design and acceptance requirements](../joint-chance-sampling-foundation.md).
+
+D056 (2026-11-23, America/New_York): integrate the independently proved
+true-joint estimator through the existing Prepared, Template, History, Catalog
+and sparse EpochLease owners. Preserve two genuine target passes and the
+existing two-read/complete-stage boundary. Bind the exact pure-power arithmetic
+contract when constructing the Store; legacy public-board modes remain exact.
+The N9 native matrix now passes complete independent cumulative R/A, root and
+all-row policy replay, including E2 reading E1, with no RNG or quality claim.
+Preserve the first compile refusal and both invalid test-fixture attempts.
+Use realistic-range preparation/storage evidence to determine the next step;
+do not raise limits or expand iterations as a substitute. Cross-platform
+acceptance and larger-range admission remain separate gates. See the
+[executed native path and limits](../joint-chance-sampling-foundation.md).

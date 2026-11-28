@@ -1,0 +1,42 @@
+{
+  "version": "frozen-q52-crlf-replay-fix-v1",
+  "source_head": "c60398d324dab792f441a84a8c5c2723d6d24097",
+  "status": "fresh CRLF checkout reproduced old rejection and passed all four maintained replays after correction",
+  "files_sha256": {
+    "windows-ci-failure.log": "7022b607f11e81a345dbf1e5b82a80567505dd136f72024e8d28e347d081edad",
+    "authentication.json": "a865194582e3778076f7ea4c3e44afad7cfaba5cd5177d73946f28c361a2ffc4",
+    "replay.json": "5cdd3ab3072d4e627b51e2d1b92f8ebd1a935e5b2ecccf256d89fcda68de6b25",
+    "controls-normal.log": "9104960e2e95a9c2c9b4f07561dba0a2ba53807f5edd222a0673ff0d63937b32",
+    "controls-optimized.log": "3d8afb6f15a6783cc389bde5251c74205cab0412645d710489c01bc5b586893a"
+  },
+  "failed_ci_jobs": [
+    135166684311,
+    135166499738
+  ],
+  "failure_head": "aaf8ca0c304184fdcc86aa105c6d7825b3a483f3",
+  "failure": "current oracle source drift: tests/test_native_dyadic_policy.py before mathematical replay",
+  "log_scope": "decoded GitHub Actions job135166684311 log retained with LF line endings",
+  "accepted_source_forms": [
+    "exact archived raw bytes",
+    "exact committed blob bytes",
+    "exact uniform CRLF expansion of an LF-only committed blob"
+  ],
+  "candidate_source_normalized": false,
+  "unknown_mixed_endings_rejected": true,
+  "changed_code_rejected": true,
+  "controls": {
+    "normal": 7,
+    "optimized": 7
+  },
+  "frozen_archive_changed": false,
+  "native_calls": 0,
+  "candidate_calls": 0,
+  "quality_gate": null,
+  "archive": {
+    "path": "evidence.zip",
+    "sha256": "b323cacd3b00835acc9605dd812f206eb8f8466a35c1fdf7dd03ec7bb2db5bd7",
+    "bytes": 15775,
+    "members": 5
+  },
+  "files_sha256_scope": "exact archived member bytes; readable text copies may follow Git checkout line endings"
+}

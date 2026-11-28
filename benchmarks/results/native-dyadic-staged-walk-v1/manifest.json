@@ -1,0 +1,81 @@
+{
+  "all_numerical_and_owner_artifacts_equal": true,
+  "analysis_controls_per_mode": 8,
+  "analysis_modes": [
+    "normal",
+    "optimized"
+  ],
+  "analysis_skips": 0,
+  "analysis_source_head": "c0ae60927ecaa96b90d57b35cfb33db1c7eccb00",
+  "archive": {
+    "bytes": 16912218,
+    "members": 347,
+    "path": "verification.zip",
+    "sha256": "c857969fa3d7be2bd6143ac66302e02461c56b3e7cb81ba45764b67ff9c760ad"
+  },
+  "artifact_sha256": {
+    "capture-1.json.gz": "807f42c08bf0452da629b939be1a419eb7bfbda9ddf2b98bc8000933bd6b8e16",
+    "capture-2.json.gz": "d144e8cc4e9180208a32aeeacbe259cc729125357080b41447591f05c0a040a2",
+    "capture-3.json.gz": "952c19334216ed655579081a7fd5e2e8bc24a65b344b23aea562a2ad44449c14",
+    "capture-4.json.gz": "6002b409d32693a3c2b4bdd67891236974087bff5650aed9cb9bbb87697fda60",
+    "capture-5.json.gz": "e9335cb12fb0970a11ba77027d602a55d38b7bb3e3d9ebe2f6b84b0f742f67cf",
+    "capture-6.json.gz": "73d355fdb1a2b93f11385e41d2aaf4eda25232c7579a8e1b6ab177baa492b0ee",
+    "capture-7.json.gz": "5c4092d23059e1bade49d7d1bc6e338416db3124946477d3d320488a647f205f",
+    "capture-8.json.gz": "38e01622a37b1e322b61d669793e78d2a86c0ffe2a543d3bad854975f863f1e3",
+    "independent-review.json": "bf9797f3d44d1ae4ad365652be120d7061b70e84e483f9c3fabe281e325b6123",
+    "initial-result.json": "5a1bef2594579702c6545a2f68b4979c378f5c304ed29905b540584ef8525aa7",
+    "map-identity.json": "17eb66e7a8437fd9d1b38350a55589f53dffa104dd090ea0196b137f5bb35298",
+    "protocol.json": "456a1ccc65d34300f9983dcdb244d3a0d2490eeec064d85cc720e320f0b74abe",
+    "saved-replay.json": "f40695c0b69075e925bfa6a1ed6f812c60d88f3af20a9a1601673dece8f3a9e1"
+  },
+  "classification_correction": "The initial controller matched only a non-template Chance contract prefix. Saved-only replay additionally matches the current template contract symbol. Initial counts remain retained.",
+  "complete_training_calls": 32,
+  "contract": "native-dyadic-staged-walk-v1",
+  "coverage_and_overhead_gates_passed": true,
+  "enabled_calls": 8,
+  "enabled_samples": 811,
+  "exit_race_events": 1,
+  "independent_source_review": "independent-review.json",
+  "introduced_source_entries": 26,
+  "limits": [
+    "One Windows host with uncontrolled load.",
+    "Partial unwinds, folded aliases and unproven extents retained.",
+    "Object identity recorded at relink; original build manifest did not attest object bytes.",
+    "The source and toolchain manifests do not exhaustively attest SDK/linker-library inputs.",
+    "These observations are not directly comparable with historical ETW CPU percentages."
+  ],
+  "measurement": "periodic primary-thread wall-time contexts of an owned child; no CPU attribution",
+  "minimum_enabled_samples_per_call": 50,
+  "nested_walk_contexts": {
+    "chance_contract": 82,
+    "chance_contraction": 83,
+    "pager_flush_dirty": 0,
+    "pager_stage": 31,
+    "state_stage_direct": 50,
+    "state_stage_row": 119,
+    "terminal": 177,
+    "walk": 504
+  },
+  "new_capacity_claim": false,
+  "observer_source_head": "c3fe3535ce25e68db1ad946cc87305be460fb509",
+  "overhead_controls": {
+    "instrumentation": {
+      "gate_passed": true,
+      "median_paired_ratio": 0.9946301884033821
+    },
+    "wrapper": {
+      "gate_passed": true,
+      "median_paired_ratio": 1.0052814999243052
+    }
+  },
+  "prior_observer_packet": {
+    "manifest_path": "benchmarks/results/native-owned-child-walk-v1/manifest.json",
+    "source_head": "c3fe3535ce25e68db1ad946cc87305be460fb509",
+    "wrapper_overhead_miss_preserved": true
+  },
+  "quality_gate": null,
+  "saved_replay_native_producer_calls": 0,
+  "trainer_compiled_closure_head": "299b4ec4ee011d63db9cf3b91fe2ab7e5e97e1d7",
+  "trainer_source_head": "7c10ea680e2075e8592cb978f2a0fa09c0c6b867",
+  "walk_observations": 504
+}

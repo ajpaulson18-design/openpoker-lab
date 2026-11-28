@@ -1,0 +1,366 @@
+{
+  "capacity_axes": {
+    "chance_fixture_work": {
+      "fits": true,
+      "projected": 448157615,
+      "ten_card_limit": 450000000
+    },
+    "chance_owner_work": {
+      "fits": true,
+      "projected": 448157615,
+      "ten_card_limit": 500000000
+    },
+    "composed_entries": {
+      "fits": true,
+      "projected": 625412,
+      "ten_card_limit": 2000000
+    },
+    "composed_payload_bits": {
+      "fits": true,
+      "projected": 22388480,
+      "ten_card_limit": 1200000000
+    },
+    "composed_work": {
+      "fits": false,
+      "projected": 5359152175,
+      "ten_card_limit": 2150000000
+    },
+    "history_fixture_work": {
+      "fits": false,
+      "projected": 300450512,
+      "ten_card_limit": 100000000
+    },
+    "native_retained_output_bytes": {
+      "fits": false,
+      "projected": 31041732,
+      "ten_card_limit": 9833076
+    },
+    "quantizer_fixture_work": {
+      "fits": false,
+      "projected": 1384208056,
+      "ten_card_limit": 520000000
+    },
+    "state_and_quantizer_owner_work": {
+      "fits": false,
+      "projected": 2214254096,
+      "ten_card_limit": 810000000
+    },
+    "state_fixture_work": {
+      "fits": false,
+      "projected": 830046040,
+      "ten_card_limit": 300000000
+    },
+    "template_work": {
+      "fits": true,
+      "projected": 42556544,
+      "ten_card_limit": 43000000
+    }
+  },
+  "capacity_blockers": [
+    "history_fixture_work",
+    "state_fixture_work",
+    "quantizer_fixture_work",
+    "state_and_quantizer_owner_work",
+    "composed_work",
+    "native_retained_output_bytes"
+  ],
+  "hand_rank_calls": 0,
+  "n10_calibrated_fields": [
+    "component_work",
+    "parent_work",
+    "quantizer_terms",
+    "numerical_work",
+    "transport_work",
+    "retained_numerical_bytes",
+    "wire_bytes",
+    "owner_entries",
+    "state_payload_bits",
+    "owner_payload_bits",
+    "paging_work",
+    "directory_work"
+  ],
+  "n10_calibration_manifest_sha256": "dd8dff3aa4c6ace00ffb88e064a83e75ab651e6d0d62c3a3429eb4c759a68a8d",
+  "n10_reproduced": {
+    "component_work": {
+      "chance": 132742404,
+      "history": 99754616,
+      "parent": 732040030,
+      "quantizer": 433472328,
+      "state": 261025384,
+      "template": 42556544
+    },
+    "composed_entries": 364436,
+    "composed_payload_bits": 20300672,
+    "composed_work_with_transport": 1713534930,
+    "d5": 120,
+    "deck_cards": 10,
+    "denominator_base": 3480,
+    "denominator_bits": 637,
+    "denominator_shift": 625,
+    "directory_work": 24916800,
+    "numerical_work": 1701591306,
+    "owner_entries": 360336,
+    "owner_payload_bits": 20038272,
+    "paging_work": 120030330,
+    "parent_work": {
+      "average": 116524928,
+      "geometry": 3000000,
+      "output": 15790772,
+      "reach": 50851556,
+      "route": 318209514,
+      "support": 18519680,
+      "terminal_scale": 150196888,
+      "value_add": 49700420,
+      "visit": 9246272
+    },
+    "quantizer_terms": [
+      51633888,
+      156086912,
+      225751528
+    ],
+    "retained_numerical_bytes": 9833076,
+    "shape": {
+      "actions": 270487,
+      "candidates": 49182,
+      "folds": 77857,
+      "hidden_candidates": 70912,
+      "reveals": 18458,
+      "rows": 119196,
+      "showdown_contractions": 103020,
+      "showdowns": 88290,
+      "slots": 281066,
+      "visits": 288946
+    },
+    "state_entries": 200919,
+    "state_integer_bits_with_scratch": 702,
+    "state_payload_bits": 6400992,
+    "supported_prefixes": {
+      "0": 1,
+      "3": 46,
+      "4": 156,
+      "5": 340
+    },
+    "transport_work": 11943624,
+    "value_bits": 644,
+    "wire_bytes": 57236692
+  },
+  "n11_independent_io_traces": {
+    "row_batched_pager": {
+      "average_words": 4188150,
+      "batched_write_calls": 59328,
+      "cache_hits": 1519992,
+      "cache_misses": 5068,
+      "direct_write_calls": 1520688,
+      "image_words": 9724202,
+      "initialization_calls": 0,
+      "logical_read_calls": 2661204,
+      "logical_read_words": 34708658,
+      "per_sweep_dirty_runs": 29664,
+      "per_sweep_stage_calls": 760344,
+      "physical_read_words": 20750932,
+      "read_epochs": [
+        {
+          "cache_hits": 0,
+          "cache_misses": 0,
+          "logical_reads": 380172,
+          "logical_words": 5536052,
+          "name": "sweep_1_policy",
+          "physical_words": 0,
+          "virtual_reads": 380172,
+          "virtual_words": 5536052
+        },
+        {
+          "cache_hits": 0,
+          "cache_misses": 0,
+          "logical_reads": 760344,
+          "logical_words": 9724202,
+          "name": "sweep_1_stage",
+          "physical_words": 0,
+          "virtual_reads": 760344,
+          "virtual_words": 9724202
+        },
+        {
+          "cache_hits": 380069,
+          "cache_misses": 1353,
+          "logical_reads": 380172,
+          "logical_words": 5536052,
+          "name": "sweep_2_policy",
+          "physical_words": 5538090,
+          "virtual_reads": 0,
+          "virtual_words": 0
+        },
+        {
+          "cache_hits": 759838,
+          "cache_misses": 2692,
+          "logical_reads": 760344,
+          "logical_words": 9724202,
+          "name": "sweep_2_stage",
+          "physical_words": 11022634,
+          "virtual_reads": 0,
+          "virtual_words": 0
+        },
+        {
+          "cache_hits": 380085,
+          "cache_misses": 1023,
+          "logical_reads": 380172,
+          "logical_words": 4188150,
+          "name": "export_average",
+          "physical_words": 4190208,
+          "virtual_reads": 0,
+          "virtual_words": 0
+        }
+      ],
+      "regret_words": 5536052,
+      "rows": 380172,
+      "slots": 892910,
+      "sweeps": 2,
+      "virtual_read_calls": 1140516,
+      "virtual_read_words": 15260254,
+      "written_words": 19448404
+    },
+    "row_directory": {
+      "append_bytes": 12165504,
+      "append_calls": 380172,
+      "cache_pages": 8,
+      "hits": 3777370,
+      "logical_reads": 3801720,
+      "misses": 24350,
+      "page_count": 2971,
+      "page_rows": 128,
+      "phases": [
+        {
+          "hits": 377201,
+          "logical_reads": 380172,
+          "misses": 2971,
+          "phase": "prelude",
+          "read_bytes": 12165504
+        },
+        {
+          "hits": 377201,
+          "logical_reads": 380172,
+          "misses": 2971,
+          "phase": "sweep_1_begin",
+          "read_bytes": 12165504
+        },
+        {
+          "hits": 377201,
+          "logical_reads": 380172,
+          "misses": 2971,
+          "phase": "sweep_1_profile",
+          "read_bytes": 12165504
+        },
+        {
+          "hits": 757081,
+          "logical_reads": 760344,
+          "misses": 3263,
+          "phase": "sweep_1_walk",
+          "read_bytes": 13361536
+        },
+        {
+          "hits": 377202,
+          "logical_reads": 380172,
+          "misses": 2970,
+          "phase": "sweep_2_begin",
+          "read_bytes": 12161408
+        },
+        {
+          "hits": 377201,
+          "logical_reads": 380172,
+          "misses": 2971,
+          "phase": "sweep_2_profile",
+          "read_bytes": 12165504
+        },
+        {
+          "hits": 757081,
+          "logical_reads": 760344,
+          "misses": 3263,
+          "phase": "sweep_2_walk",
+          "read_bytes": 13361536
+        },
+        {
+          "hits": 377202,
+          "logical_reads": 380172,
+          "misses": 2970,
+          "phase": "export",
+          "read_bytes": 12161408
+        }
+      ],
+      "read_bytes": 99707904,
+      "record_bytes": 32,
+      "rows": 380172,
+      "slots": 892910,
+      "write_calls": 2971,
+      "written_rows": 380172
+    }
+  },
+  "n11_prospective": {
+    "component_work": {
+      "chance": 448157615,
+      "history": 300450512,
+      "parent": 2314532536,
+      "quantizer": 1384208056,
+      "state": 830046040,
+      "template": 42556544
+    },
+    "composed_entries": 625412,
+    "composed_payload_bits": 22388480,
+    "composed_work_with_transport": 5359152175,
+    "d5": 420,
+    "deck_cards": 11,
+    "denominator_base": 12180,
+    "denominator_bits": 639,
+    "denominator_shift": 625,
+    "directory_work": 79395904,
+    "numerical_work": 5319951303,
+    "owner_entries": 621312,
+    "owner_payload_bits": 22126080,
+    "paging_work": 391374742,
+    "parent_work": {
+      "average": 373488182,
+      "geometry": 3000000,
+      "output": 49769852,
+      "reach": 156881300,
+      "route": 1031952542,
+      "support": 45896000,
+      "terminal_scale": 469977848,
+      "value_add": 155008700,
+      "visit": 28558112
+    },
+    "quantizer_terms": [
+      164514720,
+      495614000,
+      724079336
+    ],
+    "retained_numerical_bytes": 31041732,
+    "shape": {
+      "actions": 834475,
+      "candidates": 121355,
+      "folds": 239515,
+      "hidden_candidates": 176530,
+      "reveals": 57965,
+      "rows": 380172,
+      "showdown_contractions": 339360,
+      "showdowns": 280372,
+      "slots": 892910,
+      "visits": 892441
+    },
+    "state_entries": 461895,
+    "state_integer_bits_with_scratch": 704,
+    "state_payload_bits": 8488800,
+    "supported_prefixes": {
+      "0": 1,
+      "3": 75,
+      "4": 340,
+      "5": 1120
+    },
+    "transport_work": 39200872,
+    "value_bits": 646,
+    "wire_bytes": 186629028
+  },
+  "native_producer_calls": 0,
+  "status": "rank_free_projection_only",
+  "terminal_scale_fusion": {
+    "modeled_work_saved": 0,
+    "structural_operations_eliminated": 4159096
+  }
+}

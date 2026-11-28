@@ -1,0 +1,7 @@
+test_changed_manifest (tests.test_opponent_role_cost_packet_admission.RoleCostPacketAdmissionTests.test_changed_manifest) ... ok
+test_changed_objects (tests.test_opponent_role_cost_packet_admission.RoleCostPacketAdmissionTests.test_changed_objects) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 8.340s
+
+OK

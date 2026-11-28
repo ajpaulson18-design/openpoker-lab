@@ -273,3 +273,201 @@ before pager reservation and 1,977,942 with the current
 cache geometry. The 35,361 required History entries alone
 would then put the composed total above two million.
 Other owners and work remain separate admission terms.
+
+### Phase payload and eleven-card work
+
+The accepted ten-card phase ledger reserves 6,398,880 State payload
+bits for the paged directory and streamed policy layout. Extending
+its formula to the named eleven-card geometry projects 8,486,688 State
+bits and 22,123,968 composed bits before transport scratch. The
+eleven-card denominator has 639 bits from `29 × 420 × 2^625`,
+and the existing width formula retains 646 bits.
+
+The independent two-sweep census projects 380,172 rows, 892,910 slots,
+9,822,010 pager requests and 5.41 billion total modeled work units under
+the prospective sparse, indexed-rank, combined-division layout. Parent
+routing, State and quantizer work are separate admission barriers. A
+row-batched pager trace projects 4,181,892 logical requests with the same
+physical read and write words. These are rank-free projections. The
+archive contains the source and traces, and the eleven-card request
+still needs its own native admission and training evidence.
+[Projection and ten-card evidence](../benchmarks/results/native-dyadic-phase-payload-ten-card-accepted-v1/manifest.json)
+
+### Eleven-card row-batched resource forecast
+
+Run `python -m scripts.project_virtual_dyadic_eleven` to reproduce the
+forecast for the same ranges and betting template with an eleven-card
+deck and two sweeps. It reconstructs the pager and directory access
+schedules, uses the indexed-cache study's rank-free Chance ledger,
+and checks the composed equations against the accepted ten-card
+receipt before projecting the larger deck.
+
+The forecast gives 461,895 State entries and 625,412 composed entries
+including stream scratch, below the two-million-entry limit. The earlier
+1,977,942-entry State projection above used the resident row directory.
+The paged directory and row-batched codec yield 22,388,480 composed
+payload bits with stream scratch, below the 1.2-billion-bit ceiling.
+The modeled work totals 5,359,152,175 units including transport, above
+the current 2.15-billion-unit limit. History, State, quantization and the
+combined State-owner work budget also exceed their limits. The indexed
+Chance estimate of 448,157,615 fits the 450-million fixture ceiling.
+Retained numerical output projects to 31,041,732 bytes against the
+existing 9,833,076-byte native profile ceiling. The projected full wire
+is 186,629,028 bytes. This census performs no hand ranking, native
+admission, training, or saved-policy quality run.
+[Eleven-card forecast](../benchmarks/results/native-dyadic-eleven-card-forecast-v1/forecast.json)
+
+A saved-only ten-card experiment checked a candidate quantization
+shortcut. Given the summed quotient and remainder of the earlier
+positive actions, the last quotient and remainder follow from the
+grid total. The experiment verified the derived pair against direct
+division and matched 238,392 saved grid rows, including zero weights and
+ties. One fewer division on 139,514 eligible rows would reduce the
+recorded division count from 325,666 to 186,152. The named
+[complement profile](native-dyadic-two-sweep.md#complement-quantization-on-the-fixed-ten-card-profile)
+integrates the shortcut and preserves the original admission ledger.
+[Saved-only quantizer receipt](../benchmarks/results/native-dyadic-terminal-scaling-v1/manifest.json)
+
+### Compact numerical output projection
+
+The [compact transport](native-dyadic-two-sweep.md#compact-exact-numerical-transport)
+projects 9,614,478 retained numerical bytes for eleven cards, with
+218,598 bytes of room under the unchanged native output ceiling.
+Including its separate encoder work gives 5,496,134,543 modeled units
+against the 2.15-billion cap. The composed encoder scratch projection
+is 625,444 entries and 22,390,528 payload bits. Ten-card training and
+full exact replay validate the format; eleven-card native admission
+and quality remain open.
+[Output and resource projection](../benchmarks/results/native-dyadic-compact-wire-v1/manifest.json)
+
+
+### Compiled eleven-card forecast
+
+The native request `DYADIC_T2_V1 FORECAST_ELEVEN` now runs the actual
+training planner on the pinned eleven-card deck and ranges. It reports
+380,172 rows, 892,910 action slots, 56 prospective rank planes, and
+646-bit retained values. Rank-free Python schedules independently
+reconstruct the tree, row, History, staging, quantizer and pager work.
+The Chance component is calibrated to the retained independent Chance
+forecast. The compiled request performs zero training and hand-ranking calls.
+
+| Resource | Compiled projection | Ten-card comparison ceiling |
+| --- | --- | --- |
+| Chance work | 448,157,615 | 450,000,000 |
+| History work | 98,688,160 | 100,000,000 |
+| State work | 662,607,040 | 300,000,000 |
+| Quantizer work | 1,014,146,272 | 520,000,000 |
+| Composed work | 5,954,402,351 | 2,150,000,000 |
+| Composed entries | 635,684 | 2,000,000 |
+| Composed payload bits | 23,045,888 | 1,200,000,000 |
+| Compact retained bytes | 9,614,478 | 9,833,076 |
+
+The composed work includes checkpoint transport, compact encoding and
+factored execution metadata. The wire contains 165,201,774 bytes,
+including both checkpoint frames. The storage envelope extends the
+ten-card row-tag and scratch census. Eleven-card State and pager
+construction still need their own admitted profiles and verification.
+
+The output marks training admission false and quality unknown. Native
+training and stream entry guards reject the forecast profile, and the
+public request parser rejects eleven-card training. The test packet
+also checks rejection of scratch arguments and exact integers above
+2^32.
+[Compiled forecast evidence](../benchmarks/results/native-dyadic-eleven-native-forecast-v1/manifest.json)
+
+### Quantizer work by phase and exact mixed-row reuse
+
+The [quantizer study](../benchmarks/results/native-dyadic-mixed-policy-cache-v1/manifest.json)
+reconstructs the compiled eleven-card quantizer forecast from physical
+row support, menu width, and each row's signed-regret and average scales.
+Of its 1,014,146,272 work units, 286,195,384 belong to the second regret
+policy and 727,950,888 to final average export. Two-action river average
+rows alone account for 431,249,280.
+
+| Eleven-card accounting case | Quantizer work |
+| --- | ---: |
+| Compiled forecast | 1,014,146,272 |
+| Exclude one division term per unequal mixed row | 921,245,072 |
+| Exclude every division term | 801,653,984 |
+| Existing comparison ceiling | 520,000,000 |
+
+The accounting cases hold all other terms fixed. They isolate the
+division charge and provide no new training admission. The compiled
+parent work alone is 2,308,449,784 units against the 2,150,000,000
+composed ceiling, before adding any child owner or transport work.
+
+The ten-card saved checkpoint census independently verifies the row
+directory and both generations. It finds 19,758 unequal mixed regret
+rows with 272 distinct exact ordered inputs, and 25,592 mixed average
+rows with 208 distinct exact ordered inputs. An opt-in 16-slot
+direct-mapped cache compares the complete ordered weight words on a
+hit. A hash collision with a different input goes through the normal
+exact allocator. Zero, pure, and equal-positive rows keep their
+existing paths. Exact canonical keys use the same logical 64-bit
+representation on both supported backend limb widths.
+
+The saved-only replay predicted all 24,119 hits, 21,231 misses,
+and 33,795 actual divisions in the cached run. The baseline used
+72,928 divisions. Recorded quantizer work fell from 154,758,136 to
+138,305,756. The cache adds 192 retained entries and 6,400 bytes.
+The worst-case quantizer forecast grows by 40,092,208 because it
+reserves every potential miss and probe under the existing ceilings.
+
+All 18 complete native calls reproduced the numerical stream,
+checkpoint images, policy spill, and row directory. Only the six
+forecast, observed work, and resource reservation footer fields
+changed. Four of eight alternating pairs were faster, and the median
+elapsed ratio was 1.00114. This misses the preset timing gate and
+leaves the cache as a separate study target.
+
+Recount the forecast with
+`python -m scripts.forecast_virtual_dyadic_quantizer_components`.
+Use `python -m scripts.census_virtual_dyadic_mixed_policy_cache --help`
+for the independent saved checkpoint analysis. The source-frozen
+paired Windows operator is
+`python -m scripts.benchmark_native_mixed_policy_cache --help`.
+
+### Parent work inside the eleven-card forecast
+
+The [factored-average packet](../benchmarks/results/native-dyadic-factored-average-v1/manifest.json)
+adds a compiled report of the existing parent partitions. An independent
+rank-free traversal reproduces all nine partitions and their supporting
+storage-codec and bookkeeping formulas. The common forecast remains exactly
+equal to the earlier compiled eleven-card receipt, including its rejection
+and zero-training status.
+
+| Parent category | Modeled work units |
+| --- | ---: |
+| Geometry | 3,000,000 |
+| Visit | 28,558,112 |
+| Support | 45,896,000 |
+| Reach | 156,881,300 |
+| Value additions | 155,008,700 |
+| Terminal scaling | 469,977,848 |
+| Average construction and codec | 373,488,182 |
+| Routing, regret codec, paging, directory and policy spill | 1,025,869,790 |
+| Output | 49,769,852 |
+| Total parent | 2,308,449,784 |
+
+Routing includes 491,480,032 regret-codec units, 385,291,990 pager bookkeeping
+units, 79,395,904 directory units, 47,881,968 policy-spill units and 21,819,896
+row-routing units. Average codec work accounts for another 284,374,664 units.
+Factored execution metadata adds 1,203,613,696 units outside the parent partition.
+These are conservative modeled charges, not runtime percentages or new
+primitive-operation bounds. Existing State and codec reservations overlap
+conservatively and require a justified operation bound before any charge is removed.
+
+The new average-coefficient representation reduces observed ten-card average
+construction by 6,174,850 units. Its rank-free first-sweep bound would save
+9,098,697 units on eleven cards, and that representation is not enabled for
+eleven-card training. Even removing the entire 83,548,782-unit eleven-card
+average-construction category would leave the combined forecast far above
+the unchanged 2,150,000,000-unit ceiling. This experiment therefore does not
+resolve the scaling barrier.
+
+The next architectural investigation remains repeated packed-state conversion,
+parent routing and metadata work across the traversal. The bounds must follow
+actual operations and shared lifetimes, with independent output and resource
+validation. The preserved full-width Chance component measurement is useful
+evidence for larger ranges, while its two ten-card training misses and the
+average-staging timing miss remain unchanged.

@@ -4,6 +4,7 @@ from __future__ import annotations
 from copy import deepcopy
 import os
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 import uuid
@@ -419,22 +420,23 @@ class RiverDirectTailEvidenceTests(unittest.TestCase):
             root.rmdir()
 
     def test_post_link_foreign_replacement_survives_bundle_rollback(self):
-        TEST_TMP.mkdir(exist_ok=True)
-        root = TEST_TMP / f"direct-tail-post-link-foreign-{uuid.uuid4().hex}"
-        results = root / "benchmarks" / "results"
-        results.mkdir(parents=True, exist_ok=False)
-        unrelated = results / "keep.me"
-        unrelated.write_bytes(b"unrelated")
-        targets = runner._fixed_targets(root)
-        foreign = b"foreign report replacement"
-        real_publish = runner._publish_staged
+        # Keep staged filenames below the Windows path limit even in a deep
+        # checkout; ownership/foreign-replacement assertions stay identical.
+        with TemporaryDirectory(prefix="opl-river-foreign-") as temporary:
+            root = Path(temporary)
+            results = root / "benchmarks" / "results"
+            results.mkdir(parents=True, exist_ok=False)
+            unrelated = results / "keep.me"
+            unrelated.write_bytes(b"unrelated")
+            targets = runner._fixed_targets(root)
+            foreign = b"foreign report replacement"
+            real_publish = runner._publish_staged
 
-        def replace_after_links(staged, target_map, owned):
-            real_publish(staged, target_map, owned)
-            target_map["report"].unlink()
-            target_map["report"].write_bytes(foreign)
+            def replace_after_links(staged, target_map, owned):
+                real_publish(staged, target_map, owned)
+                target_map["report"].unlink()
+                target_map["report"].write_bytes(foreign)
 
-        try:
             with patch.object(runner, "_guard_generation"), \
                  patch.object(runner, "_verify_bundle"), \
                  patch.object(runner, "_publish_staged", side_effect=replace_after_links):
@@ -449,13 +451,6 @@ class RiverDirectTailEvidenceTests(unittest.TestCase):
             self.assertFalse(targets["river-polarised-bluffcatcher"].exists())
             self.assertFalse(targets["river-weighted-raises"].exists())
             self.assertEqual(unrelated.read_bytes(), b"unrelated")
-        finally:
-            for path in (targets["report"], unrelated):
-                if path.exists():
-                    path.unlink()
-            results.rmdir()
-            (root / "benchmarks").rmdir()
-            root.rmdir()
 
     def test_final_readonly_bundle_guard_detects_late_byte_drift(self):
         TEST_TMP.mkdir(exist_ok=True)

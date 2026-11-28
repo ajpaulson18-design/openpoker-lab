@@ -1,0 +1,29 @@
+{
+  "status": "development observations, not accepted frozen producer evidence",
+  "provenance": "transcribed from retained tool outputs in the active chat",
+  "observations": [
+    {
+      "output_chunk": "acf0d7",
+      "error": "TypeError: 'Fraction' object is not subscriptable",
+      "stage": "before first proposal, uncommitted source",
+      "correction": "uniform law stores one constant board probability; use recomputed admission.board_probability"
+    },
+    {
+      "output_chunk": "38422f",
+      "uniform_full_row_equality": true,
+      "stage": "exploratory uncommitted source"
+    },
+    {
+      "output_chunk": "7903f1",
+      "tests": 10,
+      "mode": "normal",
+      "status": "passed before final controls"
+    },
+    {
+      "output_chunk": "639d03",
+      "tests": 10,
+      "mode": "optimized",
+      "status": "passed before final controls"
+    }
+  ]
+}

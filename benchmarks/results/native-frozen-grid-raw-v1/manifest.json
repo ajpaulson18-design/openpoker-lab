@@ -1,0 +1,47 @@
+{
+  "version": "native-frozen-grid-raw-v1",
+  "native_source_head": "40470425ce55602245cb83abfde580f45b3dd85e",
+  "observed_source_head": "4c643855b83f09e3c9e92a18dd3204d2b502679b",
+  "maintained_head": "296836f25b38810c30f27b2fc3aadd7ae58fea2d",
+  "native_executable_sha256": "4f50ca01bde937d51179cc55c21041e244ac0c039d737d5b71595cedf57a6e07",
+  "scope": "fixed-policy four-street raw arithmetic only; no clipping, State update, sampled training, quality or wider capacity acceptance",
+  "modes": [
+    "normal",
+    "optimized"
+  ],
+  "successful_cases_per_mode": 20,
+  "rejected_requests_per_mode": 6,
+  "exact_mode_output_parity": true,
+  "maximum_actual_work": 217037204,
+  "maximum_forecast_work": 312899776,
+  "work_ceiling_per_request": 500000000,
+  "observed_peak_integer_bits": 698,
+  "existing_integer_carrier_bits": 704,
+  "native_state_regret_updates": 0,
+  "training_iterations": 0,
+  "saved_replay_candidate_calls": 0,
+  "archived_source_executed": false,
+  "retained_build_refusal": "64-bit-only Boost limb assumption rejected at compile time before any raw invocation; corrected for 32/64-bit internals",
+  "timing": "no runtime acceptance; optimized host controller interval overlapped a tool-host interruption, all native exits revalidated",
+  "archives": {
+    "normal": {
+      "bytes": 4606322,
+      "sha256": "527f77a5bbce5faf365b16c89006a865ea792f2289534907b2a23aed1df3d9b2",
+      "members": 234,
+      "expanded_bytes": 44591731
+    },
+    "optimized": {
+      "bytes": 4606418,
+      "sha256": "6039823ffa32b1f1c930895d94f5d0eb5bb2fe8c69e6fa5519e8d576b012199b",
+      "members": 234,
+      "expanded_bytes": 44591811
+    },
+    "development": {
+      "bytes": 1020556,
+      "sha256": "c17c6c8f17b98d7892730f2f889049b4c1b7288dad2c0c4c7c60281210246e2c",
+      "members": 63,
+      "expanded_bytes": 6678318
+    }
+  },
+  "system_build_inputs": "SDK/runtime/standard headers not exhaustively byte-attested; bit reproducibility unproven"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "single-pass-primary-saved-numerics-and-timing-exact",
+  "authentication": {
+    "candidate-normal": {
+      "source_closures": 3,
+      "process_receipts": 37
+    },
+    "candidate-optimized": {
+      "source_closures": 3,
+      "process_receipts": 37
+    },
+    "baseline": {
+      "source_closures": 2,
+      "process_receipts": 32
+    },
+    "legacy": {
+      "source_closures": 4,
+      "process_receipts": 28
+    },
+    "timing": {
+      "source_closures": 0,
+      "process_receipts": 132
+    },
+    "builds-and-first-failure": {
+      "source_closures": 0,
+      "process_receipts": 0
+    }
+  },
+  "independent_cases_per_python_mode": 10,
+  "retained_report_sha256": "8ccb04b077d5f827c49d2b93b5720e743f11dcd98f1314a9e331cdfd9eb10964",
+  "median_candidate_baseline_ratio": 0.8468400117861005,
+  "faster_pairs": 7,
+  "performance_gate_pass": true,
+  "expanded_bytes": 53666088,
+  "candidate_calls": 0,
+  "archived_source_executed": false,
+  "scope": "Fresh current all-row replay of both expanded primary matrices and all132 timing observations. Legacy/guards/build logs authenticate only; no long learning, universal speedup or quality claim."
+}

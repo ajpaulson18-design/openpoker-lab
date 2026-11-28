@@ -1,0 +1,1171 @@
+{
+  "status": "joint-two-epoch-packets-exact",
+  "primary_numerical_replays": {
+    "normal": {
+      "status": "all-joint-two-epoch-rows-exact",
+      "cases": [
+        {
+          "case": "different-pairs",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                11,
+                0
+              ],
+              "holdings": [
+                1,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "numeric_rows": 865,
+              "numeric_slots": 2071,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "28c197bfd7bf5b58d7e24602a1891ccaaa6b9450bf71f50e5636676047acee27",
+              "root": [
+                "123368691810488333951666448021779071446695422574744172608993179447185119731124141626443862020674444178798028196292407630960139",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 702
+            }
+          ],
+          "work_actual": 105483197,
+          "work_forecast": 117690568,
+          "output_bytes": 501592,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 702,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "reversed",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                11,
+                0
+              ],
+              "holdings": [
+                1,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "ebb08004204f7debd8699b9dc088676418f6c6adebee0838bb990459c0fa1696",
+              "root": [
+                "88077198834014879984261302660316379600258260917830600754290967262912061183173702850810435546907298019443957235688185895974303",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 865,
+              "numeric_slots": 2071,
+              "input_policy_sha256": "ebb08004204f7debd8699b9dc088676418f6c6adebee0838bb990459c0fa1696",
+              "policy_sha256": "e1f667814a1c706aedcc9dabdd15f673986f14a61528e61a354794bae4e1b72d",
+              "root": [
+                "1731204486170217599660720915845433055968620187628363587055023918186273821299213715752451023227201784734607301",
+                "9394170331095332911557922387157348109502730195633279482829163886128836100458433773854795993539074812127739904"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 677
+            }
+          ],
+          "work_actual": 105481365,
+          "work_forecast": 117690568,
+          "output_bytes": 501592,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 677,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "same-world",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "0",
+                "1"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 443
+            }
+          ],
+          "work_actual": 99897585,
+          "work_forecast": 117690568,
+          "output_bytes": 335744,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 443,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "equivalent-tickets",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                2,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "0",
+                "1"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 443
+            }
+          ],
+          "work_actual": 99897585,
+          "work_forecast": 117690568,
+          "output_bytes": 335744,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 443,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "shared-flop-future",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                1
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                35,
+                33
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "0",
+                "1"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 443
+            }
+          ],
+          "work_actual": 99554641,
+          "work_forecast": 117690568,
+          "output_bytes": 335744,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 443,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "boundaries",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                28,
+                19
+              ],
+              "holdings": [
+                1,
+                0
+              ],
+              "board": [
+                33,
+                35,
+                48,
+                17,
+                16
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "5d85160dab8655f7776610952f7c48b147c2254712aad4abd9fbf5b1937a0bd9",
+              "root": [
+                "88077198834014879984261302660316379600258260917830600754290967262912061183173702850810435546907298019443957235688185895974303",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                19
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                32,
+                33,
+                35,
+                17,
+                16
+              ],
+              "numeric_rows": 865,
+              "numeric_slots": 2071,
+              "input_policy_sha256": "5d85160dab8655f7776610952f7c48b147c2254712aad4abd9fbf5b1937a0bd9",
+              "policy_sha256": "999a459c0ea9e37d66d81db8f70fd6d35bdc253708cbc2014f91515ac1f769ad",
+              "root": [
+                "1731204486170217599660720915845433055968620187628363587055023918186273821299213715752451023227201784734607301",
+                "9394170331095332911557922387157348109502730195633279482829163886128836100458433773854795993539074812127739904"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 677
+            }
+          ],
+          "work_actual": 105481365,
+          "work_forecast": 117690568,
+          "output_bytes": 501592,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 677,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        }
+      ],
+      "successful_observed_requests": 6,
+      "rejected_observed_requests": 7,
+      "observed_native_invocations": 13,
+      "epochs_per_request": 2,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "scope": "Deterministic PROOF9 two-joint-observation sparse signed-regret epochs only; no RNG, convergence, solved quality or full-range admission.",
+      "empty_argument_candidate_tested": false,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "observed_source_head": "8c42ee1410992bd5be8deb4ab65dd4ec649a1135",
+      "active_source_sha256": {
+        "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+        "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+        "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+        "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+        "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+        "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+        "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+        "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+        "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+        "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+        "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+        "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+        "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+        "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+        "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+        "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+        "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+        "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+        "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+        "tests/virtual_joint_sample_reference.py": "271906f11d8acc2c72bc7e2cb4e5836cb60b9ea237e8e15f7457d99119c6c936",
+        "tests/virtual_joint_two_epoch_reference.py": "efba0b07825acd717a25eac3efeb5c8f01ff65f99de6435ee390497d4670dce0",
+        "tests/virtual_joint_two_epoch_forecast_reference.py": "aad9a70580e13cf76eba569aff8d464fbb4eed66693ad27e71a0c4a8339699e1",
+        "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239",
+        "tests/virtual_target_board_reference.py": "aa31b50d3f7c1c25eb0f1ab22bb2e35512cdda4cf74a1436056f63afb01bd6c4",
+        "tests/virtual_native_joint_two_epoch_reference.py": "f2f314bb75decc548101c93bef28c27a991587bf709918b8791d5018c0c100cd",
+        "scripts/replay_joint_two_epoch.py": "3f365c8ca9d4d7f79a82c22e5c0ea8259adc6f58a73293e44ff0f21036cab07b",
+        "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+        "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+      },
+      "stdout_sha256": {
+        "different-pairs": "d2b1afc95d0bd8f404c7032e4de31d38c916094c3d9f3af4b596ebe13edb875e",
+        "reversed": "2c75852811e0656dc9641393f78adfe18cc023bdb8b1a82671d397fa6435afc2",
+        "same-world": "8e9c31ade82ee4e047be42a99189ddb71b8038cc456f02a97a8c7cf412b2596f",
+        "equivalent-tickets": "82e1c892b085f49ec94768e4130285b7baad6a154e7bb8dedfdfcf6caf98cc22",
+        "shared-flop-future": "2dc1c8751ff6bc9090bd2ca5e7e5952958a11a32b48e6ae8cf5c6bb6447e75e1",
+        "boundaries": "030e617e8238433cfda54abf31e858f0b18b36674ef9b4cdf7b66b30f9b69743"
+      },
+      "invocation_receipts": "Saved direct controller commands and observed exits/streams; no independent syscall attestation."
+    },
+    "optimized": {
+      "status": "all-joint-two-epoch-rows-exact",
+      "cases": [
+        {
+          "case": "different-pairs",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                11,
+                0
+              ],
+              "holdings": [
+                1,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "numeric_rows": 865,
+              "numeric_slots": 2071,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "28c197bfd7bf5b58d7e24602a1891ccaaa6b9450bf71f50e5636676047acee27",
+              "root": [
+                "123368691810488333951666448021779071446695422574744172608993179447185119731124141626443862020674444178798028196292407630960139",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 702
+            }
+          ],
+          "work_actual": 105483197,
+          "work_forecast": 117690568,
+          "output_bytes": 501592,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 702,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "reversed",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                11,
+                0
+              ],
+              "holdings": [
+                1,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "ebb08004204f7debd8699b9dc088676418f6c6adebee0838bb990459c0fa1696",
+              "root": [
+                "88077198834014879984261302660316379600258260917830600754290967262912061183173702850810435546907298019443957235688185895974303",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 865,
+              "numeric_slots": 2071,
+              "input_policy_sha256": "ebb08004204f7debd8699b9dc088676418f6c6adebee0838bb990459c0fa1696",
+              "policy_sha256": "e1f667814a1c706aedcc9dabdd15f673986f14a61528e61a354794bae4e1b72d",
+              "root": [
+                "1731204486170217599660720915845433055968620187628363587055023918186273821299213715752451023227201784734607301",
+                "9394170331095332911557922387157348109502730195633279482829163886128836100458433773854795993539074812127739904"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 677
+            }
+          ],
+          "work_actual": 105481365,
+          "work_forecast": 117690568,
+          "output_bytes": 501592,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 677,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "same-world",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "0",
+                "1"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 443
+            }
+          ],
+          "work_actual": 99897585,
+          "work_forecast": 117690568,
+          "output_bytes": 335744,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 443,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "equivalent-tickets",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                2,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "0",
+                "1"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 443
+            }
+          ],
+          "work_actual": 99897585,
+          "work_forecast": 117690568,
+          "output_bytes": 335744,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 443,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "shared-flop-future",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                0,
+                0
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "-2138477927459035504243686284463584599415377421516085542579488910784599918929878417642661541684297052066913741314236444418711",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                1
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                16,
+                17,
+                32,
+                35,
+                33
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "policy_sha256": "8fa02c1b8ea6400b7040863c55d78c35d4360e53fbb9736cb3e2b96ff29018dd",
+              "root": [
+                "0",
+                "1"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 443
+            }
+          ],
+          "work_actual": 99554641,
+          "work_forecast": 117690568,
+          "output_bytes": 335744,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 443,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        },
+        {
+          "case": "boundaries",
+          "status": "joint-two-epochs-all-rows-exact",
+          "epochs": [
+            {
+              "epoch": 1,
+              "selector": [
+                28,
+                19
+              ],
+              "holdings": [
+                1,
+                0
+              ],
+              "board": [
+                33,
+                35,
+                48,
+                17,
+                16
+              ],
+              "numeric_rows": 434,
+              "numeric_slots": 1039,
+              "input_policy_sha256": "8309ad0047336aa6a15e5d4d3ddd9263d5d91dfef0269bdaef4b34be08971562",
+              "policy_sha256": "5d85160dab8655f7776610952f7c48b147c2254712aad4abd9fbf5b1937a0bd9",
+              "root": [
+                "88077198834014879984261302660316379600258260917830600754290967262912061183173702850810435546907298019443957235688185895974303",
+                "42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 434
+            },
+            {
+              "epoch": 2,
+              "selector": [
+                0,
+                19
+              ],
+              "holdings": [
+                0,
+                0
+              ],
+              "board": [
+                32,
+                33,
+                35,
+                17,
+                16
+              ],
+              "numeric_rows": 865,
+              "numeric_slots": 2071,
+              "input_policy_sha256": "5d85160dab8655f7776610952f7c48b147c2254712aad4abd9fbf5b1937a0bd9",
+              "policy_sha256": "999a459c0ea9e37d66d81db8f70fd6d35bdc253708cbc2014f91515ac1f769ad",
+              "root": [
+                "1731204486170217599660720915845433055968620187628363587055023918186273821299213715752451023227201784734607301",
+                "9394170331095332911557922387157348109502730195633279482829163886128836100458433773854795993539074812127739904"
+              ],
+              "raw_rows": 434,
+              "raw_slots": 1039,
+              "quantized_rows": 677
+            }
+          ],
+          "work_actual": 105481365,
+          "work_forecast": 117690568,
+          "output_bytes": 501592,
+          "policy_reads": 1736,
+          "staged_rows": 868,
+          "quantized_rows": 677,
+          "implicit_policy_rows": 24420,
+          "rank_calls": 4,
+          "chance_contractions": 0,
+          "joint_ticket_queries": 2,
+          "rng_calls": 0,
+          "quality_gate": null,
+          "scope": "two deterministic true-joint PROOF9 observations; no RNG, convergence, quality or full-range admission"
+        }
+      ],
+      "successful_observed_requests": 6,
+      "rejected_observed_requests": 7,
+      "observed_native_invocations": 13,
+      "epochs_per_request": 2,
+      "rng_calls": 0,
+      "quality_gate": null,
+      "scope": "Deterministic PROOF9 two-joint-observation sparse signed-regret epochs only; no RNG, convergence, solved quality or full-range admission.",
+      "empty_argument_candidate_tested": false,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "observed_source_head": "8c42ee1410992bd5be8deb4ab65dd4ec649a1135",
+      "active_source_sha256": {
+        "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+        "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+        "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+        "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+        "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+        "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+        "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+        "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+        "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+        "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+        "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+        "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+        "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+        "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+        "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+        "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+        "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+        "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+        "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+        "tests/virtual_joint_sample_reference.py": "271906f11d8acc2c72bc7e2cb4e5836cb60b9ea237e8e15f7457d99119c6c936",
+        "tests/virtual_joint_two_epoch_reference.py": "efba0b07825acd717a25eac3efeb5c8f01ff65f99de6435ee390497d4670dce0",
+        "tests/virtual_joint_two_epoch_forecast_reference.py": "aad9a70580e13cf76eba569aff8d464fbb4eed66693ad27e71a0c4a8339699e1",
+        "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239",
+        "tests/virtual_target_board_reference.py": "aa31b50d3f7c1c25eb0f1ab22bb2e35512cdda4cf74a1436056f63afb01bd6c4",
+        "tests/virtual_native_joint_two_epoch_reference.py": "f2f314bb75decc548101c93bef28c27a991587bf709918b8791d5018c0c100cd",
+        "scripts/replay_joint_two_epoch.py": "3f365c8ca9d4d7f79a82c22e5c0ea8259adc6f58a73293e44ff0f21036cab07b",
+        "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+        "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+      },
+      "stdout_sha256": {
+        "different-pairs": "d2b1afc95d0bd8f404c7032e4de31d38c916094c3d9f3af4b596ebe13edb875e",
+        "reversed": "2c75852811e0656dc9641393f78adfe18cc023bdb8b1a82671d397fa6435afc2",
+        "same-world": "8e9c31ade82ee4e047be42a99189ddb71b8038cc456f02a97a8c7cf412b2596f",
+        "equivalent-tickets": "82e1c892b085f49ec94768e4130285b7baad6a154e7bb8dedfdfcf6caf98cc22",
+        "shared-flop-future": "2dc1c8751ff6bc9090bd2ca5e7e5952958a11a32b48e6ae8cf5c6bb6447e75e1",
+        "boundaries": "030e617e8238433cfda54abf31e858f0b18b36674ef9b4cdf7b66b30f9b69743"
+      },
+      "invocation_receipts": "Saved direct controller commands and observed exits/streams; no independent syscall attestation."
+    }
+  },
+  "archive_authentication": {
+    "normal": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 1,
+      "canonical_reconstructions": 0,
+      "source_heads": [
+        "8c42ee1410992bd5be8deb4ab65dd4ec649a1135"
+      ],
+      "process_receipts": 13,
+      "fresh_numerical_replay": true
+    },
+    "optimized": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 1,
+      "canonical_reconstructions": 0,
+      "source_heads": [
+        "8c42ee1410992bd5be8deb4ab65dd4ec649a1135"
+      ],
+      "process_receipts": 13,
+      "fresh_numerical_replay": true
+    },
+    "components": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 4,
+      "canonical_reconstructions": 0,
+      "source_heads": [
+        "78825aa44eb250a6999ff4b155ed1466f02f3232",
+        "ae88da49bf7326c03b1fbb0861e0ca632049f584"
+      ],
+      "process_receipts": 4,
+      "fresh_numerical_replay": false
+    },
+    "legacy-prepared-normal": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 0,
+      "canonical_reconstructions": 1,
+      "source_heads": [
+        "78825aa44eb250a6999ff4b155ed1466f02f3232"
+      ],
+      "process_receipts": 114,
+      "fresh_numerical_replay": false
+    },
+    "legacy-prepared-optimized": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 0,
+      "canonical_reconstructions": 1,
+      "source_heads": [
+        "78825aa44eb250a6999ff4b155ed1466f02f3232"
+      ],
+      "process_receipts": 114,
+      "fresh_numerical_replay": false
+    },
+    "legacy-epoch": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 2,
+      "canonical_reconstructions": 0,
+      "source_heads": [
+        "78825aa44eb250a6999ff4b155ed1466f02f3232"
+      ],
+      "process_receipts": 2,
+      "fresh_numerical_replay": false
+    },
+    "legacy-public": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 2,
+      "canonical_reconstructions": 0,
+      "source_heads": [
+        "78825aa44eb250a6999ff4b155ed1466f02f3232"
+      ],
+      "process_receipts": 26,
+      "fresh_numerical_replay": false
+    },
+    "development": {
+      "status": "source-build-process-authenticated",
+      "original_source_closures": 2,
+      "canonical_reconstructions": 1,
+      "source_heads": [
+        "8c42ee1410992bd5be8deb4ab65dd4ec649a1135",
+        "ae88da49bf7326c03b1fbb0861e0ca632049f584",
+        "b033782d606f72642ea890166f123d94f4823fd5"
+      ],
+      "process_receipts": 2,
+      "fresh_numerical_replay": false
+    }
+  },
+  "expanded_bytes": 62973715,
+  "parity": {
+    "comparisons": 7,
+    "current_normal_optimized_comparisons": 6,
+    "historical_public_scope": "Receipt linked to current archived streams; historical original packet not freshly replayed."
+  },
+  "active_bootstrap": {
+    "head": "ea267afd524ba3d92942cba2b5d4a88f61728128",
+    "raw_sha256": {
+      "scripts/replay_joint_two_epoch_packet.py": "4ce95b59e39a7d0d66f82781c9ce604d6b6b14c0362ad9033b3179f4e46fbdd7",
+      "scripts/replay_joint_two_epoch.py": "3f365c8ca9d4d7f79a82c22e5c0ea8259adc6f58a73293e44ff0f21036cab07b",
+      "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+      "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+    }
+  },
+  "active_math_sha256": {
+    "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+    "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+    "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+    "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+    "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+    "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+    "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+    "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+    "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+    "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+    "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+    "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+    "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+    "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+    "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+    "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+    "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+    "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+    "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+    "tests/virtual_joint_sample_reference.py": "271906f11d8acc2c72bc7e2cb4e5836cb60b9ea237e8e15f7457d99119c6c936",
+    "tests/virtual_joint_two_epoch_reference.py": "efba0b07825acd717a25eac3efeb5c8f01ff65f99de6435ee390497d4670dce0",
+    "tests/virtual_joint_two_epoch_forecast_reference.py": "aad9a70580e13cf76eba569aff8d464fbb4eed66693ad27e71a0c4a8339699e1",
+    "tests/virtual_sparse_epoch_reference.py": "1e52f5d5cf23389ffe1c196f3c504c4f026e17dcb86e20990e493eee28663239",
+    "tests/virtual_target_board_reference.py": "aa31b50d3f7c1c25eb0f1ab22bb2e35512cdda4cf74a1436056f63afb01bd6c4",
+    "tests/virtual_native_joint_two_epoch_reference.py": "f2f314bb75decc548101c93bef28c27a991587bf709918b8791d5018c0c100cd"
+  },
+  "candidate_calls": 0,
+  "archived_source_executed": false,
+  "other_archives_scope": "Source/build/process/parity authentication only; no fresh component, legacy or failure numerical replay.",
+  "python_imports": "Fresh current process and empty bytecode-cache prefix; archived paths never added to sys.path.",
+  "scope": "Deterministic PROOF9 two-joint-observation foundation; no RNG, convergence, quality, full-range admission, RSS or runtime claim."
+}

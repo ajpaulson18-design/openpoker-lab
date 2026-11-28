@@ -1,0 +1,539 @@
+{
+  "decks": [
+    {
+      "by_phase": {
+        "average": {
+          "cache_probe_reserve": 26966488,
+          "one_fewer_division_term": 201792728,
+          "retained_forecast": 226782520,
+          "rows": 119196,
+          "without_division_charge": 168992184
+        },
+        "regret": {
+          "cache_probe_reserve": 13124696,
+          "one_fewer_division_term": 87200112,
+          "retained_forecast": 91070736,
+          "rows": 119196,
+          "without_division_charge": 82714864
+        }
+      },
+      "by_phase_street_and_menu": [
+        {
+          "cache_probe_reserve": 896,
+          "menu": 2,
+          "one_fewer_division_term": 7232,
+          "phase": "average",
+          "retained_forecast": 7552,
+          "rows": 8,
+          "street": 0,
+          "without_division_charge": 6912
+        },
+        {
+          "cache_probe_reserve": 312,
+          "menu": 3,
+          "one_fewer_division_term": 2312,
+          "phase": "average",
+          "retained_forecast": 2376,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 2184
+        },
+        {
+          "cache_probe_reserve": 400,
+          "menu": 4,
+          "one_fewer_division_term": 2976,
+          "phase": "average",
+          "retained_forecast": 3040,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 2784
+        },
+        {
+          "cache_probe_reserve": 135584,
+          "menu": 2,
+          "one_fewer_division_term": 1074784,
+          "phase": "average",
+          "retained_forecast": 1164576,
+          "rows": 954,
+          "street": 3,
+          "without_division_charge": 984992
+        },
+        {
+          "cache_probe_reserve": 76320,
+          "menu": 3,
+          "one_fewer_division_term": 628368,
+          "phase": "average",
+          "retained_forecast": 658896,
+          "rows": 424,
+          "street": 3,
+          "without_division_charge": 567312
+        },
+        {
+          "cache_probe_reserve": 70000,
+          "menu": 4,
+          "one_fewer_division_term": 592704,
+          "phase": "average",
+          "retained_forecast": 612768,
+          "rows": 318,
+          "street": 3,
+          "without_division_charge": 532512
+        },
+        {
+          "cache_probe_reserve": 2187520,
+          "menu": 2,
+          "one_fewer_division_term": 16548096,
+          "phase": "average",
+          "retained_forecast": 18577664,
+          "rows": 12432,
+          "street": 4,
+          "without_division_charge": 14518528
+        },
+        {
+          "cache_probe_reserve": 1108608,
+          "menu": 3,
+          "one_fewer_division_term": 8727936,
+          "phase": "average",
+          "retained_forecast": 9388416,
+          "rows": 4704,
+          "street": 4,
+          "without_division_charge": 7406976
+        },
+        {
+          "cache_probe_reserve": 682368,
+          "menu": 4,
+          "one_fewer_division_term": 5548800,
+          "phase": "average",
+          "retained_forecast": 5838592,
+          "rows": 2352,
+          "street": 4,
+          "without_division_charge": 4679424
+        },
+        {
+          "cache_probe_reserve": 15167040,
+          "menu": 2,
+          "one_fewer_division_term": 110051200,
+          "phase": "average",
+          "retained_forecast": 126902720,
+          "rows": 73500,
+          "street": 5,
+          "without_division_charge": 93199680
+        },
+        {
+          "cache_probe_reserve": 4794240,
+          "menu": 3,
+          "one_fewer_division_term": 36680960,
+          "phase": "average",
+          "retained_forecast": 40216320,
+          "rows": 16800,
+          "street": 5,
+          "without_division_charge": 29610240
+        },
+        {
+          "cache_probe_reserve": 2743200,
+          "menu": 4,
+          "one_fewer_division_term": 21927360,
+          "phase": "average",
+          "retained_forecast": 23409600,
+          "rows": 7700,
+          "street": 5,
+          "without_division_charge": 17480640
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 3328,
+          "phase": "regret",
+          "retained_forecast": 3328,
+          "rows": 8,
+          "street": 0,
+          "without_division_charge": 3328
+        },
+        {
+          "cache_probe_reserve": 1176,
+          "menu": 3,
+          "one_fewer_division_term": 4864,
+          "phase": "regret",
+          "retained_forecast": 5760,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 3968
+        },
+        {
+          "cache_probe_reserve": 1552,
+          "menu": 4,
+          "one_fewer_division_term": 7360,
+          "phase": "regret",
+          "retained_forecast": 8256,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 5568
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 396864,
+          "phase": "regret",
+          "retained_forecast": 396864,
+          "rows": 954,
+          "street": 3,
+          "without_division_charge": 396864
+        },
+        {
+          "cache_probe_reserve": 182880,
+          "menu": 3,
+          "one_fewer_division_term": 755936,
+          "phase": "regret",
+          "retained_forecast": 858784,
+          "rows": 424,
+          "street": 3,
+          "without_division_charge": 653088
+        },
+        {
+          "cache_probe_reserve": 206064,
+          "menu": 4,
+          "one_fewer_division_term": 947568,
+          "phase": "regret",
+          "retained_forecast": 1040016,
+          "rows": 318,
+          "street": 3,
+          "without_division_charge": 762672
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 5171712,
+          "phase": "regret",
+          "retained_forecast": 5171712,
+          "rows": 12432,
+          "street": 4,
+          "without_division_charge": 5171712
+        },
+        {
+          "cache_probe_reserve": 1823616,
+          "menu": 3,
+          "one_fewer_division_term": 7685568,
+          "phase": "regret",
+          "retained_forecast": 8541504,
+          "rows": 4704,
+          "street": 4,
+          "without_division_charge": 6829632
+        },
+        {
+          "cache_probe_reserve": 1353088,
+          "menu": 4,
+          "one_fewer_division_term": 4388672,
+          "phase": "regret",
+          "retained_forecast": 4581952,
+          "rows": 2352,
+          "street": 4,
+          "without_division_charge": 4002112
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 30576000,
+          "phase": "regret",
+          "retained_forecast": 30576000,
+          "rows": 73500,
+          "street": 5,
+          "without_division_charge": 30576000
+        },
+        {
+          "cache_probe_reserve": 5999040,
+          "menu": 3,
+          "one_fewer_division_term": 25292240,
+          "phase": "regret",
+          "retained_forecast": 27588560,
+          "rows": 16800,
+          "street": 5,
+          "without_division_charge": 22995920
+        },
+        {
+          "cache_probe_reserve": 3557280,
+          "menu": 4,
+          "one_fewer_division_term": 11970000,
+          "phase": "regret",
+          "retained_forecast": 12298000,
+          "rows": 7700,
+          "street": 5,
+          "without_division_charge": 11314000
+        }
+      ],
+      "deck": 10,
+      "totals": {
+        "cache_probe_reserve": 40092208,
+        "one_fewer_division_term": 288992840,
+        "retained_forecast": 317853256,
+        "without_division_charge": 251707048
+      }
+    },
+    {
+      "by_phase": {
+        "average": {
+          "cache_probe_reserve": 86849448,
+          "one_fewer_division_term": 646763880,
+          "retained_forecast": 727950888,
+          "rows": 380172,
+          "without_division_charge": 540602920
+        },
+        "regret": {
+          "cache_probe_reserve": 42548488,
+          "one_fewer_division_term": 274481192,
+          "retained_forecast": 286195384,
+          "rows": 380172,
+          "without_division_charge": 261051064
+        }
+      },
+      "by_phase_street_and_menu": [
+        {
+          "cache_probe_reserve": 896,
+          "menu": 2,
+          "one_fewer_division_term": 7232,
+          "phase": "average",
+          "retained_forecast": 7552,
+          "rows": 8,
+          "street": 0,
+          "without_division_charge": 6912
+        },
+        {
+          "cache_probe_reserve": 312,
+          "menu": 3,
+          "one_fewer_division_term": 2312,
+          "phase": "average",
+          "retained_forecast": 2376,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 2184
+        },
+        {
+          "cache_probe_reserve": 400,
+          "menu": 4,
+          "one_fewer_division_term": 2976,
+          "phase": "average",
+          "retained_forecast": 3040,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 2784
+        },
+        {
+          "cache_probe_reserve": 230240,
+          "menu": 2,
+          "one_fewer_division_term": 1825120,
+          "phase": "average",
+          "retained_forecast": 1977600,
+          "rows": 1620,
+          "street": 3,
+          "without_division_charge": 1672640
+        },
+        {
+          "cache_probe_reserve": 129600,
+          "menu": 3,
+          "one_fewer_division_term": 1067040,
+          "phase": "average",
+          "retained_forecast": 1118880,
+          "rows": 720,
+          "street": 3,
+          "without_division_charge": 963360
+        },
+        {
+          "cache_probe_reserve": 118880,
+          "menu": 4,
+          "one_fewer_division_term": 1006560,
+          "phase": "average",
+          "retained_forecast": 1040640,
+          "rows": 540,
+          "street": 3,
+          "without_division_charge": 904320
+        },
+        {
+          "cache_probe_reserve": 4946560,
+          "menu": 2,
+          "one_fewer_division_term": 37421440,
+          "phase": "average",
+          "retained_forecast": 42008960,
+          "rows": 28120,
+          "street": 4,
+          "without_division_charge": 32833920
+        },
+        {
+          "cache_probe_reserve": 2506560,
+          "menu": 3,
+          "one_fewer_division_term": 19734560,
+          "phase": "average",
+          "retained_forecast": 21227040,
+          "rows": 10640,
+          "street": 4,
+          "without_division_charge": 16749600
+        },
+        {
+          "cache_probe_reserve": 1542720,
+          "menu": 4,
+          "one_fewer_division_term": 12545280,
+          "phase": "average",
+          "retained_forecast": 13200000,
+          "rows": 5320,
+          "street": 4,
+          "without_division_charge": 10581120
+        },
+        {
+          "cache_probe_reserve": 51773120,
+          "menu": 2,
+          "one_fewer_division_term": 374059840,
+          "phase": "average",
+          "retained_forecast": 431249280,
+          "rows": 249900,
+          "street": 5,
+          "without_division_charge": 316870400
+        },
+        {
+          "cache_probe_reserve": 16283520,
+          "menu": 3,
+          "one_fewer_division_term": 124613760,
+          "phase": "average",
+          "retained_forecast": 136609920,
+          "rows": 57120,
+          "street": 5,
+          "without_division_charge": 100621440
+        },
+        {
+          "cache_probe_reserve": 9316640,
+          "menu": 4,
+          "one_fewer_division_term": 74477760,
+          "phase": "average",
+          "retained_forecast": 79505600,
+          "rows": 26180,
+          "street": 5,
+          "without_division_charge": 59394240
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 3328,
+          "phase": "regret",
+          "retained_forecast": 3328,
+          "rows": 8,
+          "street": 0,
+          "without_division_charge": 3328
+        },
+        {
+          "cache_probe_reserve": 1176,
+          "menu": 3,
+          "one_fewer_division_term": 4864,
+          "phase": "regret",
+          "retained_forecast": 5760,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 3968
+        },
+        {
+          "cache_probe_reserve": 1552,
+          "menu": 4,
+          "one_fewer_division_term": 7360,
+          "phase": "regret",
+          "retained_forecast": 8256,
+          "rows": 2,
+          "street": 0,
+          "without_division_charge": 5568
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 673920,
+          "phase": "regret",
+          "retained_forecast": 673920,
+          "rows": 1620,
+          "street": 3,
+          "without_division_charge": 673920
+        },
+        {
+          "cache_probe_reserve": 310560,
+          "menu": 3,
+          "one_fewer_division_term": 1283640,
+          "phase": "regret",
+          "retained_forecast": 1458280,
+          "rows": 720,
+          "street": 3,
+          "without_division_charge": 1109000
+        },
+        {
+          "cache_probe_reserve": 349920,
+          "menu": 4,
+          "one_fewer_division_term": 1608960,
+          "phase": "regret",
+          "retained_forecast": 1765920,
+          "rows": 540,
+          "street": 3,
+          "without_division_charge": 1295040
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 11697920,
+          "phase": "regret",
+          "retained_forecast": 11697920,
+          "rows": 28120,
+          "street": 4,
+          "without_division_charge": 11697920
+        },
+        {
+          "cache_probe_reserve": 4305600,
+          "menu": 3,
+          "one_fewer_division_term": 17463040,
+          "phase": "regret",
+          "retained_forecast": 19400320,
+          "rows": 10640,
+          "street": 4,
+          "without_division_charge": 15525760
+        },
+        {
+          "cache_probe_reserve": 3060800,
+          "menu": 4,
+          "one_fewer_division_term": 9930400,
+          "phase": "regret",
+          "retained_forecast": 10368160,
+          "rows": 5320,
+          "street": 4,
+          "without_division_charge": 9054880
+        },
+        {
+          "cache_probe_reserve": 0,
+          "menu": 2,
+          "one_fewer_division_term": 103958400,
+          "phase": "regret",
+          "retained_forecast": 103958400,
+          "rows": 249900,
+          "street": 5,
+          "without_division_charge": 103958400
+        },
+        {
+          "cache_probe_reserve": 21660480,
+          "menu": 3,
+          "one_fewer_division_term": 86777840,
+          "phase": "regret",
+          "retained_forecast": 94663280,
+          "rows": 57120,
+          "street": 5,
+          "without_division_charge": 78892400
+        },
+        {
+          "cache_probe_reserve": 12858400,
+          "menu": 4,
+          "one_fewer_division_term": 41071520,
+          "phase": "regret",
+          "retained_forecast": 42191840,
+          "rows": 26180,
+          "street": 5,
+          "without_division_charge": 38830880
+        }
+      ],
+      "deck": 11,
+      "totals": {
+        "cache_probe_reserve": 129398960,
+        "one_fewer_division_term": 921245072,
+        "retained_forecast": 1014146272,
+        "without_division_charge": 801653984
+      }
+    }
+  ],
+  "scope": "rank-free arithmetic accounting; no training or new admission"
+}

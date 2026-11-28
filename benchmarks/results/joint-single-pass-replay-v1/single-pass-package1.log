@@ -1,0 +1,58 @@
+{
+  "status": "packaged-observed-single-pass-evidence",
+  "manifest_bytes": 2417,
+  "manifest_sha256": "24b443274da4dd7261b202186a9f4363e683eb40f0fb72be7f84fba787dac68c",
+  "archives": [
+    {
+      "file": "candidate-normal.zip",
+      "bytes": 2928893,
+      "sha256": "000cb834ad44db49f5c9eff2286f270ade6bf284b1a55ffa0dbc200761b6b079",
+      "members": 276,
+      "expanded_bytes": 12974130,
+      "manifest_sha256": "a7ba14cae88d77747ca8806354d5d39e0564fb1759fcb8130d3738891babb1e3"
+    },
+    {
+      "file": "candidate-optimized.zip",
+      "bytes": 2928608,
+      "sha256": "4c488800bb24cb61bfb0b7349b0daac559dde513557cf878858f8051a5eb4231",
+      "members": 275,
+      "expanded_bytes": 12973866,
+      "manifest_sha256": "48c02f46163fb7c4d987acbccb6de9ecdf2a7e4de41991b98313f7f7d401f9b9"
+    },
+    {
+      "file": "baseline.zip",
+      "bytes": 2109311,
+      "sha256": "1bbf04f8b61eaf5003146268e964cdec08c4ca827dcf792c2a09c04ccf2d38a9",
+      "members": 220,
+      "expanded_bytes": 10323946,
+      "manifest_sha256": "3579b8a01ea7478ba16af1ec5bdd3a5e9e69b392fcf0b83d847481b26a8e8dde"
+    },
+    {
+      "file": "legacy.zip",
+      "bytes": 3688299,
+      "sha256": "52dab3053e71b5d48270542752d71e0020e32ae83709d9a6063076f3bd1dfa26",
+      "members": 383,
+      "expanded_bytes": 13552746,
+      "manifest_sha256": "8e1c7aadf9526be23611cb18d2a00e4d1828897068b8f374b3ba19445ecc84cf"
+    },
+    {
+      "file": "timing.zip",
+      "bytes": 405156,
+      "sha256": "5c9eb032c97caf2a24c138db08d7a215eb171b36651292d2172154c40bc2b06b",
+      "members": 550,
+      "expanded_bytes": 2438787,
+      "manifest_sha256": "d5e7157be8dfbcc0d43d4a9c6a4bf96dc8449a63fbf6a99dce15229c9c84c8d2"
+    },
+    {
+      "file": "builds-and-first-failure.zip",
+      "bytes": 721312,
+      "sha256": "0d11326d771cc23a4400f0d2cbb868d312a48882720ca8f6c485c483d489bf33",
+      "members": 57,
+      "expanded_bytes": 1402613,
+      "manifest_sha256": "78af489ca11c5c80c272227ed52f0e7d97e72bc6b52a68b50db693b211b8d2be"
+    }
+  ],
+  "expanded_bytes": 53666088,
+  "native_calls": 0,
+  "archived_source_executed": false
+}

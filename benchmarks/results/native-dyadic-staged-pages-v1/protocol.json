@@ -1,0 +1,47 @@
+{
+  "alternating_pairs": 8,
+  "baseline": "53a4072c3bd055e1fca9b787556da170af3c3c6d",
+  "baseline_wire_sha256": "7fde396c4c2e645087d9fd8abdc373a97a485265bf157e537e3cfd181c538945",
+  "candidate": "35c216bee267406a854fc87b350ec5821fe949fd",
+  "candidate_faster_pairs_min": 6,
+  "duration_scope": "one complete native child with stdout streamed to file on one host",
+  "expected_candidate_pager": {
+    "cache_hits": 476615,
+    "cache_misses": 1495,
+    "completed_sweeps": 2,
+    "logical_read_words": 8888166,
+    "physical_read_requests": 1495,
+    "physical_write_requests": 2390,
+    "read_calls": 715176,
+    "read_words": 6115174,
+    "stage_calls": 476784,
+    "synthetic_read_calls": 238392,
+    "synthetic_read_words": 2962722,
+    "write_words": 5925444
+  },
+  "footer_word_delta": {
+    "5": 1907264,
+    "11": 1907264,
+    "19": 1907264,
+    "28": 1907264,
+    "38": 128,
+    "39": 8176,
+    "62": 128,
+    "63": 8176
+  },
+  "median_elapsed_ratio_max": 0.96,
+  "stable_sidecars": {
+    "compact-wire.json": "c55af3248c718078e54d35382bd2290165a74c639305d4e4b599b755c0da9d56",
+    "equal-quantizer.json": "f13894666de6e640c75d432f69039a19b282d4dcb8d75b9ece2fd59ba3d9f6bd",
+    "factored-execution.json": "ba6a9d1e39d9f81385a789d0ceced0a1def6ceea47014f1b75ab2218ba79f2fd",
+    "page-images-rows/rows.bin": "5ceab6207caa89d39d961268b434614533e11496e40e11335ba280b1c611a625",
+    "page-images-rows/rows.json": "f7853567dc545f4efffead7a9751edfb07e20045726a4a61e29fefa67a273a8f",
+    "page-images/committed.bin": "fba2b68d8bfb1a4d624d626794e1917c2527a79fc2ee413029205796eb85923e",
+    "page-images/policy.bin": "020f6878fc6fede39a3fb05b512a4cf739126c392ce2636929f6ab15bab8ea3c",
+    "page-images/policy.json": "a56e3bd59bd30b840dd422f3cd8b86de034d909628aedc63f73a3323a32d56a1",
+    "page-images/quantizer.json": "834e9297bf994bd6e08bc2f9c63447f0425e1686b2b3dff2563d516b0cd65d89",
+    "page-images/rank-index.json": "4ae7ec7065cefc02e4e5f63786882f50ad2c2e1409aa13686124a8219b50b6de",
+    "page-images/staged.bin": "b9b1f88d1ed333908e3b49aec481ebe394e02a5f01281370eba4eafe6295f14a"
+  },
+  "warmup_pairs": 1
+}

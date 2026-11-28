@@ -1,0 +1,59 @@
+name: Native fixed-policy Q52 raw rows
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  raw-grid-conformance:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build explicit raw-study target
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-frozen-grid-raw-update --output-dir "$RUNNER_TEMP/grid-raw-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_FROZEN_GRID_RAW_EXE=$RUNNER_TEMP/grid-raw-build/native-virtual-frozen-grid-raw-update$suffix" >> "$GITHUB_ENV"
+      - name: Twenty independent raw cases and six rejection controls
+        env:
+          OPENPOKER_NATIVE_FROZEN_GRID_RAW_DIR: ${{ runner.temp }}/grid-raw-normal
+        run: python -B -m unittest tests.test_native_frozen_grid_raw -v
+      - name: Optimized independent conformance
+        env:
+          OPENPOKER_NATIVE_FROZEN_GRID_RAW_DIR: ${{ runner.temp }}/grid-raw-optimized
+        run: python -O -B -m unittest tests.test_native_frozen_grid_raw -v
+      - name: Saved-file replay without candidate calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_native_grid_raw "$RUNNER_TEMP/grid-raw-normal" > "$RUNNER_TEMP/grid-raw-normal/replay.json"
+          python -O -B -m scripts.replay_native_grid_raw "$RUNNER_TEMP/grid-raw-optimized" > "$RUNNER_TEMP/grid-raw-optimized/replay.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-grid-raw-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/grid-raw-build/build.log
+            ${{ runner.temp }}/grid-raw-build/build-failure.json
+            ${{ runner.temp }}/grid-raw-build/native-exact-build-manifest.json
+            ${{ runner.temp }}/grid-raw-build/native-virtual-frozen-grid-raw-update*
+            ${{ runner.temp }}/grid-raw-normal/**
+            ${{ runner.temp }}/grid-raw-optimized/**
+          if-no-files-found: warn

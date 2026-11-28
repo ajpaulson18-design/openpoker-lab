@@ -1,5 +1,124 @@
 # Foundation-first execution record
 
+## Native fixed-policy raw walk (November 21)
+
+[PR331](https://github.com/ajpaulson18-design/openpoker-lab/pull/331) implements
+the [four-street raw schedule](native-frozen-grid-raw.md) through the existing
+History, immutable policy State and Prepared Chance owners. Twenty cases in
+each normal/optimized run match every raw regret, prefix average and root
+against independent rules, Fraction arithmetic and ranking. Six requests per
+mode reject malformed input without partial output. The dedicated Windows,
+Linux and sanitizer jobs pass; the broader Windows History-control compiler
+failure and unsuccessful isolated retry remain separate unresolved evidence.
+
+The immutable packet preserves complete source, input/output, actual exits,
+the initial refused build and both successful directory replays. Maintained
+archive replay enters no native producer or archived source. Maximum observed
+modeled work is 217,037,204; the unchanged global forecast is 312,947,940 under
+500 million. These figures are logical resource counts, not elapsed-time gains.
+There is no numerical State update, clipping, sampled training, quality result
+or eleven-card admission. The next architectural gate is sharing policy/setup
+lifetimes under cumulative request bounds, then independently validated
+changing-policy sparse/paged learning. Realistic heads-up NLHE remains the goal.
+
+## Proposed native Q52 update schedule (November 18)
+
+[PR330](https://github.com/ajpaulson18-design/openpoker-lab/pull/330) derives a
+[complete provisional update envelope](frozen-grid-update-envelope.md) after
+immutable policy import. Native and independent rank-free equations match all
+5,040 board/proposal cases; corrected V2 reserves eight prefix-marginal queries
+that the superseded V1 design omitted. Both original versions and the omission
+are retained. Normal/optimized controls, zero-candidate-call archive replay and
+Windows/Linux/sanitizer CI pass. The proposed maximum is 312,947,940 modeled work
+units within the unchanged 500-million cap. This justifies implementing and
+metering the exact native raw walk; it grants no update admission, training,
+speedup, quality or larger-game capability. Eleven-card State/quantizer/parent
+failures remain unresolved.
+
+## Immutable native policy boundary (November 18)
+
+[PR329](https://github.com/ajpaulson18-design/openpoker-lab/pull/329) connects
+complete externally supplied Q52 policy images to the existing native History
+and State owners. Independent replay matches every one of 24,420 rows and
+58,164 slots for two profiles. Both normal/optimized native suites pass, as do
+Windows, Linux and sanitized Linux conformance jobs. The
+[contract and execution evidence](native-frozen-policy-state.md) retain whole
+request resource equations, exact source/build records, unchanged legacy control
+output, immutable failures and zero-native-call archive replay. This establishes
+the policy-input gate only: no raw update, learning, speedup or eleven-card
+capacity is claimed. State/quantizer/storage and parent work remain the scaling
+gates; resource limits are unchanged.
+
+## Sorted terminal-rank lookup (November 8)
+
+The explicit ten-card indexed-cache profile at `0122ce9` passed a
+source-frozen training run, independent saved-policy replay and the outer
+controller. The full 2,542-file source inventory stayed byte-identical.
+Both checkpoint images, the policy/update payload and exact best responses
+match the row-batched baseline. An independent rank-free traversal
+derives all 412,080 showdown queries and 79,560 nonrecent searches, and
+the observed index receipt matches it exactly.
+
+The fixed index reserves 66 logical entries within the existing chance
+owner's 12,000-entry allowance. Each miss reserves its complete update
+before rank fill and publishes the key-to-slot mapping after successful
+fill. The generic linear cache keeps its previous receipts. Native
+controls include nonmonotone insertion, recent hits, a full 64-plane
+LRU eviction sequence, invalid inputs, poisoning and one-short resource
+limits. Sixty-six focused checks pass normally and optimized. Terra
+independently reviewed the source, implemented the controls and derived
+the complete work forecast.
+
+Ten-card Chance work rises to 132,742,404 reserved units and 70,637,650
+actual metered units, including the additional scalar bookkeeping.
+The single native observation was 8.50 seconds versus the earlier
+row-batched sample's 7.29 seconds. The
+[published evidence](../benchmarks/results/native-dyadic-indexed-cache-ten-card-accepted-v1/manifest.json)
+preserves that comparison.
+
+The independent eleven-card Chance forecast falls from 526,856,639
+linear-lookup units to 448,157,615 indexed units within the existing
+500-million owner ceiling. It performs no native calls or hand ranking.
+The forecast's source closure is captured and authenticated. Eleven-card
+whole-request admission, precision, storage, transport, training and
+saved-policy verification remain open. The executed ten-card result
+retains about 2.9843 big blinds of exploitability and an unset quality
+threshold. Pull-request CI and merge remain publication gates.
+
+## Contiguous compact row requests (November 8)
+
+The named ten-card T2 row batching run at `7a85266` passed native,
+independent saved-only replay and outer-controller execution. Its full
+2,536-file source inventory stayed byte-identical. Both checkpoint
+images, numerical policy/update payload and exact best responses match
+the phase-payload baseline. The independently modeled and observed pager
+request counts fall from 3,091,726 to 1,311,156. Read misses, dirty write
+runs and physical word traffic match the baseline.
+
+The profile reserves 264 extra codec bytes and 33 extra logical entries.
+The composed payload is 20,038,272 bits before transport scratch, and
+modeled work is 1,696,642,046 before transport. Fifty focused checks pass
+normally and optimized, including a 44-word boundary read rejected one
+physical word below its required page budget and a one-bit-short State
+payload rejected before file creation. The separate native timing samples
+were 7.29 seconds with row batching and 3.59 seconds in the phase baseline.
+A separate same-executable comparison then ran four alternating pairs.
+All eight complete streams and checkpoint images matched their accepted
+identities. The median paired row/phase time ratio was 0.9455, with three
+faster pairs and one slower pair. Median times were 6.001 and 6.523
+seconds on this Windows host. The
+[timing packet](../benchmarks/results/native-dyadic-row-batched-ten-card-timing-v1/manifest.json)
+retains all observations and eight additional process receipts.
+
+Terra supplied the independent pager trace. The final Sol implementation
+review stopped at its usage limit. The primary agent completed the source
+audit, integration and remaining controls. The
+[evidence packet](../benchmarks/results/native-dyadic-row-batched-ten-card-accepted-v1/manifest.json)
+records exact replay, process measurements, source hashes and all control
+logs. Final pull-request CI and merge remain separate publication gates.
+This finite two-sweep result retains approximately 2.9843 big blinds of
+exploitability and an unset quality threshold.
+
 ## Integrated training and paged row storage
 
 The [two-sweep unified native path](native-dyadic-two-sweep.md) now has
@@ -9,7 +128,7 @@ and payoff calculations without retaining complete private-hand/board
 worlds. Strategy state remains a separately admitted owner with packed
 integer fields, private files and immutable ordered history identities.
 
-The latest source-frozen ten-card run at `56a27a2` uses a paged row
+The source-frozen paged-directory ten-card run at `56a27a2` uses a paged row
 directory with a 32 KiB cache and copied decision descriptors. Native,
 saved-only verifier and outer controller exited zero; the complete
 2,515-file captured source inventory remained unchanged. Both checkpoint
@@ -1143,3 +1262,180 @@ streams the existing wire order. The ten-card source-frozen
 study preserves the prior checkpoints and independent replay,
 with 832,287 composed entries. Its admission covers the
 all-mixed case separately from the observed sparse policy.
+
+## Named N9 32-sweep quality lifecycle
+
+The [Q32 study](native-dyadic-quality32.md#frozen-result-and-preserved-target-miss)
+at source 38f77e4 completes one native run and independent replay of all 32
+updates, checkpoint hashes and the complete wire. Its original controller was
+interrupted during review. Fresh source-only recovery exited 0 without another
+native producer, with all source and input identities revalidated.
+
+Exploitability improves from 2.241987 at T4 to 0.396942 at T32 in the same
+finite game. The predeclared 0.1-big-blind target is still a miss. The first
+four policy/root sweeps and checkpoint images match accepted T4. The packet
+preserves all policies, exact metrics, forecasts, process/source records and
+failures. The 72 focused checks pass normally and optimized; all 42 source
+GitHub checks pass. The broad solver foundation goal remains active.
+
+## Linear-weight averaging
+
+The [nine-card linear-weight study](native-dyadic-linear32.md#frozen-result)
+passed the 0.1 big blind target at 0.0800386101 after 32 sweeps. All current
+policy and root blocks match the equal-weight run. The full saved-only
+replay, frozen source checks and a matched storage census passed. The
+published packet preserves the initial pretraining controller rejection.
+
+## Exact payoff scaling and eleven-card resource forecast
+
+The [terminal scaling comparison](native-dyadic-two-sweep.md#exact-terminal-payoff-scaling)
+reduces wide multiplications while retaining exact saved outputs on two
+frozen fixtures. The [eleven-card resource forecast](native-dyadic-storage-census.md#eleven-card-row-batched-resource-forecast)
+reproduces the accepted ten-card ledger and projects separate work,
+entry, payload and output requirements for the next deck size. The
+paged directory brings the entry reservation below its ceiling.
+Whole-request work and retained output still exceed the current
+profile limits.
+
+## Exact complement quantization
+
+The [complement quantizer](native-dyadic-two-sweep.md#complement-quantization-on-the-fixed-ten-card-profile)
+integrates the saved-only arithmetic experiment into a named ten-card
+training profile. The existing indexed profile supplies the exact byte,
+checkpoint and resource baseline. The new path records executed wide
+division counts separately from conservative admission work.
+
+## Compact numerical evidence transport
+
+The [compact transport](native-dyadic-two-sweep.md#compact-exact-numerical-transport)
+uses exact reconstruction to reduce the fixed trainer's numerical output.
+The eleven-card rank-free projection fits the current native output
+ceiling with this format. Compute admission, a native eleven-card run
+and independently verified quality remain required.
+
+## Factored arithmetic in ten-card training
+
+The factored profile runs through both sweeps of the fixed four-street
+game, including direct packed regret and average updates. The frozen
+source study matched the accepted compact wire and both checkpoints
+byte for byte. Independent saved-policy replay passed. The same
+executable comparison recorded a median paired ratio of 0.947 on a
+Windows host. The eleven-card work caps remain unresolved.
+[Execution contract](native-dyadic-two-sweep.md#factored-payoff-arithmetic-and-direct-packed-updates)
+[Evidence manifest](../benchmarks/results/native-dyadic-factored-training-v1/manifest.json)
+
+## Checked History in ten-card training
+
+The cursor retains its checked physical board code and combines the
+source and visible street checks. The fixed ten-card schedule consumed
+62,890,960 History work units. A frozen run reproduced both checkpoints
+and every numerical section, with two expected work receipt changes.
+The eleven-card projection still exceeds the existing History cap.
+[Cursor contract and evidence](native-dyadic-two-sweep.md#checked-history-cursor)
+
+## Reusing the checked public visit
+
+The ten-card factored trainer reuses the authenticated occurrence along
+child edges. A frozen two-sweep run exactly realized 34,741,384 History
+units. Independent replay reproduced both checkpoints, all policy and
+root values, and the best responses. The eleven-card rank-free History
+projection fits with 1,311,840 units of headroom. State, quantizer and
+whole-request compute admission are still open.
+[Visit contract](native-dyadic-two-sweep.md#reusing-a-validated-public-visit)
+
+## Equal-weight quantization in ten-card training
+
+The equal-weight path reproduced both checkpoints, all policy and root
+values, and both best responses. An independent scan of the regenerated
+packed row masses counted 94,164 shortcut rows and 113,224 avoided wide
+divisions. Realized quantizer work fell from 241,704,336 to 206,392,024
+units. The conservative reservation increases to cover comparisons even
+when every row follows the generic path. Eleven-card admission remains
+open.
+[Quantizer contract](native-dyadic-two-sweep.md#equal-positive-weights-in-the-policy-quantizer)
+
+## Owned row snapshots during State staging
+
+The ten-card traversal keeps an owned four-unit row snapshot across
+recursion and gives it back to State during exact staging. The independent
+trace checks directory cache behavior, and saved policies reconstruct
+the mixed policy spill read count. The retained arithmetic work
+reservation has yet to be reduced for the wider fixture.
+[Snapshot verification](native-dyadic-two-sweep.md#reusing-an-owned-frozen-row-during-staging)
+
+## First-sweep policy from the owned zero image
+
+The ten-card trainer now builds its first frozen policy from State's
+virtual-zero invariant. It removes one packed regret read and one
+generic quantizer call per row. The eleven-card forecast retires
+158,431,968 net work units, with 542,211,544 State units and 797,578,200
+quantizer units still above their individual caps.
+[Initial policy contract](native-dyadic-two-sweep.md#initial-policy-from-virtual-zero)
+
+
+## Bounded first-sweep regret support
+
+The ten-card admission forecast now accounts for at least one clipped
+zero after the initial regret update and uses the packed row widths
+for raw quantizer scans. This retires 94,781,792 quantizer work units
+from the ten-card reservation. The eleven-card quantizer projection
+still exceeds its cap by 494,146,272 work units.
+[Regret support contract](native-dyadic-two-sweep.md#first-sweep-regret-support-and-packed-widths)
+
+
+## Direct first-sweep packed State updates
+
+The ten-card profile writes both first-sweep State fields directly from
+their increments. It skips the synthetic zero image reads while retaining
+the signed exactness checks, row coverage, and fixed checkpoint layout.
+The same schedule projects zero synthetic first-sweep reads at eleven cards.
+[Direct staging contract](native-dyadic-two-sweep.md#direct-first-sweep-packed-updates)
+
+
+## Certified State arithmetic widths
+
+Packed State staging charges the factored mix and signed difference
+using each row's certified scale. This saves 56,387,712 State work units
+in the ten-card receipt. The eleven-card rank-free forecast still
+exceeds the State cap by 362,607,040 units.
+[Factored width contract](native-dyadic-two-sweep.md#factored-staging-width-by-row)
+
+
+## Exact allocation for two positive weights
+
+The ten-card quantizer can allocate two unequal positive weights with
+one quotient/remainder and one complementary-remainder comparison.
+This removes remainder sorting for those rows while preserving the
+policy grid and legal-action tie order.
+[Two-positive policy contract](native-dyadic-two-sweep.md#exact-two-positive-policy-allocation)
+
+
+## Compiled eleven-card resource boundary
+
+The native planner now exposes a forecast-only eleven-card request.
+It matches independent tree and integer schedules with 5,954,402,351
+composed work units and 165,201,774 wire bytes. State, quantizer and
+whole-request limits remain exceeded under the ten-card comparison
+ceilings. The request reports zero training and rank calls.
+[Native forecast contract](native-dyadic-storage-census.md#compiled-eleven-card-forecast)
+
+
+## Portable policy-grid division
+
+The opt-in ten-card trainer uses fixed base-2^32 arrays for an exact
+52-bit-grid quotient and remainder. Independent vectors and saved-only
+whole-game replay reproduce the previous division path. Four alternating
+pairs on one Windows host measured an 8.6 percent median paired
+improvement, with background-load limits preserved in the packet.
+The existing weighted-invocation work model is unchanged.
+[Bounded division contract](native-dyadic-two-sweep.md#bounded-exact-policy-grid-division)
+
+
+## Coarse native phase diagnostics
+
+The ten-card T2 trainer now has a bounded phase recorder and an independent
+sidecar verifier. Diagnostics use a dedicated native build; the standard
+trainer compiles without hooks. The source-frozen evidence retains the first
+code-layout timing miss and the revised split-build study, complete output
+parity, saved-only replay, and 89 focused controls in each Python mode.
+[Measurement contract and limits](native-training-phase-profile.md)

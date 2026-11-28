@@ -1,0 +1,1740 @@
+{
+  "schema": "uniform-joint-learning-lifetime-worksheet-v1",
+  "deck_size": 52,
+  "law": "iid uniform complete legal private-pair/board worlds; all fixed-tree action paths walked",
+  "independent_template_receipt": {
+    "nodes": 388,
+    "edges": 410,
+    "max_depth": 15,
+    "logical_occurrences": 1105,
+    "python_reference_steps": 798,
+    "rule_budget": {
+      "limits": {
+        "work": 43000000,
+        "entries": 131072,
+        "integer_bits": 4096,
+        "created_bits": 1000000000
+      },
+      "work": 29080329,
+      "entries": 53853,
+      "created_bits": 5454550,
+      "max_forecast_bits": 1075,
+      "counters": {
+        "case_metadata_scan": 40,
+        "range_text_scan": 8,
+        "range_expansion_visits_upper": 2652,
+        "config_validation": 14,
+        "numeric_input_conversion_upper": 81536,
+        "fraction_operations": 2537,
+        "bounded_float_conversion_work_upper": 2930200,
+        "money_quantization_work_upper": 40416,
+        "runout_validation": 22,
+        "public_action_menu_rule_work_upper": 13644256,
+        "public_successor_rule_work_upper": 12378648
+      }
+    },
+    "decisions": [
+      [
+        3,
+        3
+      ],
+      [
+        16,
+        16
+      ],
+      [
+        58,
+        58
+      ],
+      [
+        140,
+        140
+      ]
+    ],
+    "reveals": [
+      0,
+      3,
+      15,
+      47
+    ],
+    "folds": [
+      5,
+      26,
+      86,
+      186
+    ],
+    "showdowns": [
+      2,
+      14,
+      54,
+      233
+    ],
+    "action_slots": [
+      15,
+      84,
+      288,
+      652
+    ]
+  },
+  "reports": [
+    {
+      "observations": 2,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              2651,
+              221
+            ],
+            "upper": [
+              2651,
+              221
+            ],
+            "integer_floor_lower": 11,
+            "integer_ceil_upper": 12
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              353592,
+              5525
+            ],
+            "upper": [
+              353592,
+              5525
+            ],
+            "integer_floor_lower": 63,
+            "integer_ceil_upper": 64
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              51979199,
+              812175
+            ],
+            "upper": [
+              51979199,
+              812175
+            ],
+            "integer_floor_lower": 63,
+            "integer_ceil_upper": 64
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              62808171,
+              270725
+            ],
+            "upper": [
+              62808171,
+              270725
+            ],
+            "integer_floor_lower": 231,
+            "integer_ceil_upper": 232
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              70847649571,
+              305377800
+            ],
+            "upper": [
+              70847649571,
+              305377800
+            ],
+            "integer_floor_lower": 231,
+            "integer_ceil_upper": 232
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              103958399,
+              185640
+            ],
+            "upper": [
+              103958399,
+              185640
+            ],
+            "integer_floor_lower": 559,
+            "integer_ceil_upper": 560
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              112379030399,
+              200676840
+            ],
+            "upper": [
+              112379030399,
+              200676840
+            ],
+            "integer_floor_lower": 559,
+            "integer_ceil_upper": 560
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          5600748661,
+          6497400
+        ],
+        "upper": [
+          5600748661,
+          6497400
+        ],
+        "integer_floor_lower": 861,
+        "integer_ceil_upper": 862
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          121930612169,
+          140473788
+        ],
+        "upper": [
+          121930612169,
+          140473788
+        ],
+        "integer_floor_lower": 867,
+        "integer_ceil_upper": 868
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          29190294190523,
+          14047378800
+        ],
+        "upper": [
+          29190294190523,
+          14047378800
+        ],
+        "integer_floor_lower": 2077,
+        "integer_ceil_upper": 2078
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 862,
+        "information_rows": 868,
+        "action_slots": 2078
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          1205851928633,
+          6497400
+        ],
+        "upper": [
+          1205851928633,
+          6497400
+        ],
+        "integer_floor_lower": 185589,
+        "integer_ceil_upper": 185590
+      },
+      "catalog_deterministic_logical_word_upper": 185590,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": false,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          29190294190523,
+          1755922350
+        ],
+        "upper": [
+          29190294190523,
+          1755922350
+        ],
+        "integer_floor_lower": 16623,
+        "integer_ceil_upper": 16624
+      },
+      "conservative_numerator_bits": {
+        "regret": 631,
+        "average": 366,
+        "four_action_positive_regret_sum": 633,
+        "positive_sum_times_q52": 685
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": true,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 3,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              5270851,
+              293046
+            ],
+            "upper": [
+              5270851,
+              293046
+            ],
+            "integer_floor_lower": 17,
+            "integer_ceil_upper": 18
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              2930327402,
+              30525625
+            ],
+            "upper": [
+              2930327402,
+              30525625
+            ],
+            "integer_floor_lower": 95,
+            "integer_ceil_upper": 96
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              2026377846511201,
+              21108103380000
+            ],
+            "upper": [
+              2026377846511201,
+              21108103380000
+            ],
+            "integer_floor_lower": 95,
+            "integer_ceil_upper": 96
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              102022405457729,
+              293168102500
+            ],
+            "upper": [
+              102022405457729,
+              293168102500
+            ],
+            "integer_floor_lower": 347,
+            "integer_ceil_upper": 348
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              129811796113841805629,
+              373022402931360000
+            ],
+            "upper": [
+              129811796113841805629,
+              373022402931360000
+            ],
+            "integer_floor_lower": 347,
+            "integer_ceil_upper": 348
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              8105511541982401,
+              9649418688000
+            ],
+            "upper": [
+              8105511541982401,
+              9649418688000
+            ],
+            "integer_floor_lower": 839,
+            "integer_ceil_upper": 840
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              9471784855064524574401,
+              11275934351467968000
+            ],
+            "upper": [
+              9471784855064524574401,
+              11275934351467968000
+            ],
+            "integer_floor_lower": 839,
+            "integer_ceil_upper": 840
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          435669672734034659,
+          337729654080000
+        ],
+        "upper": [
+          435669672734034659,
+          337729654080000
+        ],
+        "integer_floor_lower": 1289,
+        "integer_ceil_upper": 1290
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          513838970822647468567693,
+          394657702301378880000
+        ],
+        "upper": [
+          513838970822647468567693,
+          394657702301378880000
+        ],
+        "integer_floor_lower": 1301,
+        "integer_ceil_upper": 1302
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          52346155913181095322137,
+          16793944778782080000
+        ],
+        "upper": [
+          52346155913181095322137,
+          16793944778782080000
+        ],
+        "integer_floor_lower": 3116,
+        "integer_ceil_upper": 3117
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 1290,
+        "information_rows": 1302,
+        "action_slots": 3117
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          70340222179312156927,
+          337729654080000
+        ],
+        "upper": [
+          70340222179312156927,
+          337729654080000
+        ],
+        "integer_floor_lower": 208273,
+        "integer_ceil_upper": 208274
+      },
+      "catalog_deterministic_logical_word_upper": 208274,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": false,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          52346155913181095322137,
+          2099243097347760000
+        ],
+        "upper": [
+          52346155913181095322137,
+          2099243097347760000
+        ],
+        "integer_floor_lower": 24935,
+        "integer_ceil_upper": 24936
+      },
+      "conservative_numerator_bits": {
+        "regret": 631,
+        "average": 366,
+        "four_action_positive_regret_sum": 633,
+        "positive_sum_times_q52": 685
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 10,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              3872629375,
+              64763166
+            ],
+            "upper": [
+              2920535,
+              48841
+            ],
+            "integer_floor_lower": 59,
+            "integer_ceil_upper": 60
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              10791663420179,
+              33730815625
+            ],
+            "upper": [
+              1953242248,
+              6105125
+            ],
+            "integer_floor_lower": 319,
+            "integer_ceil_upper": 320
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              835948295037550531199,
+              2612338874308800000
+            ],
+            "upper": [
+              56288265933901,
+              175900861500
+            ],
+            "integer_floor_lower": 319,
+            "integer_ceil_upper": 320
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              5260938371072620513,
+              4535310545675000
+            ],
+            "upper": [
+              17003679285949,
+              14658405125
+            ],
+            "integer_floor_lower": 1159,
+            "integer_ceil_upper": 1160
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              2516929561759253255134665571,
+              2169766871578900339200000
+            ],
+            "upper": [
+              3605883215052545729,
+              3108520024428000
+            ],
+            "integer_floor_lower": 1159,
+            "integer_ceil_upper": 1160
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6687586939265436422399,
+              2388424113653760000
+            ],
+            "upper": [
+              225153083227801,
+              80411822400
+            ],
+            "integer_floor_lower": 2799,
+            "integer_ceil_upper": 2800
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              8447857127803597675598878214399,
+              3017091831600054905948160000
+            ],
+            "upper": [
+              263105134846514851801,
+              93966119595566400
+            ],
+            "integer_floor_lower": 2799,
+            "integer_ceil_upper": 2800
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          27560125524616959443473,
+          6430372613683200000
+        ],
+        "upper": [
+          12062379868969259,
+          2814413784000
+        ],
+        "integer_floor_lower": 4285,
+        "integer_ceil_upper": 4286
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          65467826311429705683568024649383,
+          15085459158000274529740800000
+        ],
+        "upper": [
+          14272785048248357017693,
+          3288814185844824000
+        ],
+        "integer_floor_lower": 4339,
+        "integer_ceil_upper": 4340
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          2194223562483483339066644503327157,
+          211196428212003843416371200000
+        ],
+        "upper": [
+          1454004598839284885537,
+          139949539823184000
+        ],
+        "integer_floor_lower": 10389,
+        "integer_ceil_upper": 10390
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 4286,
+        "information_rows": 4340,
+        "action_slots": 10390
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          2360321502949433263304069,
+          6430372613683200000
+        ],
+        "upper": [
+          1033053879092106727,
+          2814413784000
+        ],
+        "integer_floor_lower": 367058,
+        "integer_ceil_upper": 367059
+      },
+      "catalog_deterministic_logical_word_upper": 367062,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": false,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          2194223562483483339066644503327157,
+          26399553526500480427046400000
+        ],
+        "upper": [
+          1454004598839284885537,
+          17493692477898000
+        ],
+        "integer_floor_lower": 83115,
+        "integer_ceil_upper": 83116
+      },
+      "conservative_numerator_bits": {
+        "regret": 633,
+        "average": 368,
+        "four_action_positive_regret_sum": 635,
+        "positive_sum_times_q52": 687
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 100,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              74884808125,
+              129526332
+            ],
+            "upper": [
+              28237600,
+              48841
+            ],
+            "integer_floor_lower": 578,
+            "integer_ceil_upper": 579
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              43078881605951,
+              13492326250
+            ],
+            "upper": [
+              3898541336,
+              1221025
+            ],
+            "integer_floor_lower": 3192,
+            "integer_ceil_upper": 3193
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              477683912929562101333,
+              149276507103360000
+            ],
+            "upper": [
+              656421789773,
+              205132200
+            ],
+            "integer_floor_lower": 3199,
+            "integer_ceil_upper": 3200
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              3006125576360468371,
+              259160602610000
+            ],
+            "upper": [
+              693998886407,
+              59830225
+            ],
+            "integer_floor_lower": 11599,
+            "integer_ceil_upper": 11600
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              1438245410878025358132420257,
+              123986678375937162240000
+            ],
+            "upper": [
+              294357802629649519,
+              25375673668800
+            ],
+            "integer_floor_lower": 11599,
+            "integer_ceil_upper": 11600
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              3821474942638969323733,
+              136481377923072000
+            ],
+            "upper": [
+              18379827616811,
+              656423040
+            ],
+            "integer_floor_lower": 27999,
+            "integer_ceil_upper": 28000
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              4827346926307449753721475307733,
+              172405247520003137482752000
+            ],
+            "upper": [
+              21477970174351360811,
+              767070364045440
+            ],
+            "integer_floor_lower": 27999,
+            "integer_ceil_upper": 28000
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          15726224454106082857691,
+          367449863639040000
+        ],
+        "upper": [
+          983282341585249,
+          22974806400
+        ],
+        "integer_floor_lower": 42798,
+        "integer_ceil_upper": 42799
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          37393092163064377303024270747661,
+          862026237600015687413760000
+        ],
+        "upper": [
+          1164593185676536044623,
+          26847462741590400
+        ],
+        "integer_floor_lower": 43378,
+        "integer_ceil_upper": 43379
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          1253243726960462513978542337692519,
+          12068367326400219623792640000
+        ],
+        "upper": [
+          118637643210962121907,
+          1142445223046400
+        ],
+        "integer_floor_lower": 103845,
+        "integer_ceil_upper": 103846
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 42806,
+        "information_rows": 43400,
+        "action_slots": 103900
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          884897601790178643617623,
+          367449863639040000
+        ],
+        "upper": [
+          55328231418603797,
+          22974806400
+        ],
+        "integer_floor_lower": 2408213,
+        "integer_ceil_upper": 2408214
+      },
+      "catalog_deterministic_logical_word_upper": 2408622,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": true,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          1253243726960462513978542337692519,
+          1508545915800027452974080000
+        ],
+        "upper": [
+          118637643210962121907,
+          142805652880800
+        ],
+        "integer_floor_lower": 830762,
+        "integer_ceil_upper": 830763
+      },
+      "conservative_numerator_bits": {
+        "regret": 636,
+        "average": 371,
+        "four_action_positive_regret_sum": 638,
+        "positive_sum_times_q52": 690
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 1000,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              90674190625,
+              21587722
+            ],
+            "upper": [
+              210351000,
+              48841
+            ],
+            "integer_floor_lower": 4200,
+            "integer_ceil_upper": 4307
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              42214124314301,
+              1349232625
+            ],
+            "upper": [
+              7640595472,
+              244205
+            ],
+            "integer_floor_lower": 31287,
+            "integer_ceil_upper": 31288
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              7802035487888570011589,
+              243818294935488000
+            ],
+            "upper": [
+              75049591835663,
+              2345344820
+            ],
+            "integer_floor_lower": 31999,
+            "integer_ceil_upper": 32000
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              147238960407239732329,
+              1269886952789000
+            ],
+            "upper": [
+              67983636721786,
+              586336205
+            ],
+            "integer_floor_lower": 115946,
+            "integer_ceil_upper": 115947
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              23491333056890590170464588881,
+              202511574680697364992000
+            ],
+            "upper": [
+              4807842338426899027,
+              41446933659040
+            ],
+            "integer_floor_lower": 115999,
+            "integer_ceil_upper": 116000
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              62416883699458031390789,
+              222919583941017600
+            ],
+            "upper": [
+              300201252132863,
+              1072157632
+            ],
+            "integer_floor_lower": 279997,
+            "integer_ceil_upper": 279998
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              78846665831569359737904415262789,
+              281595237616005124555161600
+            ],
+            "upper": [
+              350806843371596484863,
+              1252881594607552
+            ],
+            "integer_floor_lower": 279999,
+            "integer_ceil_upper": 280000
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          256414218594052864081003,
+          600168110610432000
+        ],
+        "upper": [
+          16032306190556637,
+          37525517120
+        ],
+        "integer_floor_lower": 427237,
+        "integer_ceil_upper": 427238
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          608526747839103730340469704982013,
+          1407976188080025622775808000
+        ],
+        "upper": [
+          18956996312706342715859,
+          43850855811264320
+        ],
+        "integer_floor_lower": 432199,
+        "integer_ceil_upper": 432307
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          20391698018424493538740169525999927,
+          19711666633120358718861312000
+        ],
+        "upper": [
+          1930865876508376422631,
+          1865993864309120
+        ],
+        "integer_floor_lower": 1034498,
+        "integer_ceil_upper": 1034766
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 428006,
+        "information_rows": 434000,
+        "action_slots": 1039000
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          13673919504831643674821159,
+          600168110610432000
+        ],
+        "upper": [
+          854962198046658241,
+          37525517120
+        ],
+        "integer_floor_lower": 22783482,
+        "integer_ceil_upper": 22783489
+      },
+      "catalog_deterministic_logical_word_upper": 22824222,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": true,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          20391698018424493538740169525999927,
+          2463958329140044839857664000
+        ],
+        "upper": [
+          1930865876508376422631,
+          233249233038640
+        ],
+        "integer_floor_lower": 8275991,
+        "integer_ceil_upper": 8278124
+      },
+      "conservative_numerator_bits": {
+        "regret": 639,
+        "average": 374,
+        "four_action_positive_regret_sum": 641,
+        "positive_sum_times_q52": 693
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 10000,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              1060800,
+              151
+            ],
+            "upper": [
+              7956,
+              1
+            ],
+            "integer_floor_lower": 7025,
+            "integer_ceil_upper": 7956
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              5340699307354,
+              20757425
+            ],
+            "upper": [
+              12626646944,
+              48841
+            ],
+            "integer_floor_lower": 257291,
+            "integer_ceil_upper": 258526
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              1800158021490503494559,
+              5626576036972800
+            ],
+            "upper": [
+              225109796605489,
+              703603446
+            ],
+            "integer_floor_lower": 319938,
+            "integer_ceil_upper": 319939
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              11279145591455111833,
+              9768361175300
+            ],
+            "upper": [
+              135403913121572,
+              117267241
+            ],
+            "integer_floor_lower": 1154660,
+            "integer_ceil_upper": 1154662
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              5421056888296803098380139011,
+              4673344031093016115200
+            ],
+            "upper": [
+              14423473879702953581,
+              12434080097712
+            ],
+            "integer_floor_lower": 1159995,
+            "integer_ceil_upper": 1159996
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              14402649324473331689759,
+              5144298090946560
+            ],
+            "upper": [
+              4502628965485445,
+              1608236448
+            ],
+            "integer_floor_lower": 2799730,
+            "integer_ceil_upper": 2799731
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              18195382965472277275359142121759,
+              6498351637292425951272960
+            ],
+            "upper": [
+              5262102229152610765445,
+              1879322391911328
+            ],
+            "integer_floor_lower": 2799999,
+            "integer_ceil_upper": 2800000
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          758316380031147682146109,
+          180050433183129600
+        ],
+        "upper": [
+          47427637578004067,
+          11257655136
+        ],
+        "integer_floor_lower": 4211688,
+        "integer_ceil_upper": 4212924
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          21032914246650722008594069496057953,
+          4906255486155781593211084800
+        ],
+        "upper": [
+          3318134509173060895709,
+          773838631963488
+        ],
+        "integer_floor_lower": 4286958,
+        "integer_ceil_upper": 4287890
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          704555193401267307433619861237881187,
+          68687576806180942304955187200
+        ],
+        "upper": [
+          5743370168720070481433,
+          559798159292736
+        ],
+        "integer_floor_lower": 10257388,
+        "integer_ceil_upper": 10259717
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 4280006,
+        "information_rows": 4287956,
+        "action_slots": 10259890
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          40215957917454879717302177,
+          180050433183129600
+        ],
+        "upper": [
+          2515239782618362495,
+          11257655136
+        ],
+        "integer_floor_lower": 223359406,
+        "integer_ceil_upper": 223424839
+      },
+      "catalog_deterministic_logical_word_upper": 226980222,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": true,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          704555193401267307433619861237881187,
+          8585947100772617788119398400
+        ],
+        "upper": [
+          5743370168720070481433,
+          69974769911592
+        ],
+        "integer_floor_lower": 82059111,
+        "integer_ceil_upper": 82077729
+      },
+      "conservative_numerator_bits": {
+        "regret": 643,
+        "average": 378,
+        "four_action_positive_regret_sum": 645,
+        "positive_sum_times_q52": 697
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 100000,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              10608000,
+              1351
+            ],
+            "upper": [
+              7956,
+              1
+            ],
+            "integer_floor_lower": 7851,
+            "integer_ceil_upper": 7956
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              70720000000,
+              122099
+            ],
+            "upper": [
+              707200,
+              1
+            ],
+            "integer_floor_lower": 579202,
+            "integer_ceil_upper": 707200
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              23361583840950869374267,
+              7314548848064640
+            ],
+            "upper": [
+              1123602512952445,
+              351801723
+            ],
+            "integer_floor_lower": 3193851,
+            "integer_ceil_upper": 3193852
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              140709975903073668829,
+              12698869527890
+            ],
+            "upper": [
+              1299425699015720,
+              117267241
+            ],
+            "integer_floor_lower": 11080511,
+            "integer_ceil_upper": 11080893
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              70471143389862717739552212143,
+              6075347240420920949760
+            ],
+            "upper": [
+              72114712691402592905,
+              6217040048856
+            ],
+            "integer_floor_lower": 11599525,
+            "integer_ceil_upper": 11599526
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              187072445279819459911867,
+              6687587518230528
+            ],
+            "upper": [
+              22493666377052225,
+              804118224
+            ],
+            "integer_floor_lower": 27973083,
+            "integer_ceil_upper": 27973084
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              236539789115566113424378835527867,
+              8447857128480153736654848
+            ],
+            "upper": [
+              26310490074708603452225,
+              939661195955664
+            ],
+            "integer_floor_lower": 27999975,
+            "integer_ceil_upper": 27999976
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          1132672684182329104050976118947,
+          28579171193595023339520
+        ],
+        "upper": [
+          223808838821175143,
+          5628827568
+        ],
+        "integer_floor_lower": 39632803,
+        "integer_ceil_upper": 39761183
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          348923209394245519673094718799945027,
+          8152182128983348355871928320
+        ],
+        "upper": [
+          16560652787058875506169,
+          386919315981744
+        ],
+        "integer_floor_lower": 42801203,
+        "integer_ceil_upper": 42801308
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          11687225507021877748244891654750468233,
+          114130549805766876982206996480
+        ],
+        "upper": [
+          28662369348279485796485,
+          279899079646368
+        ],
+        "integer_floor_lower": 102402253,
+        "integer_ceil_upper": 102402514
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 40307206,
+        "information_rows": 42807956,
+        "action_slots": 102419890
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          60035650602030111232847026510271,
+          28579171193595023339520
+        ],
+        "upper": [
+          11862655953014356051,
+          5628827568
+        ],
+        "integer_floor_lower": 2100678504,
+        "integer_ceil_upper": 2107482564
+      },
+      "catalog_deterministic_logical_word_upper": 2136421822,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": true,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          11687225507021877748244891654750468233,
+          14266318725720859622775874560
+        ],
+        "upper": [
+          28662369348279485796485,
+          34987384955796
+        ],
+        "integer_floor_lower": 819218028,
+        "integer_ceil_upper": 819220110
+      },
+      "conservative_numerator_bits": {
+        "regret": 646,
+        "average": 381,
+        "four_action_positive_regret_sum": 648,
+        "positive_sum_times_q52": 700
+      },
+      "current_numeric_widths_cover_conservative_bounds": true,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    },
+    {
+      "observations": 1000000,
+      "streets": [
+        {
+          "visible_cards": 0,
+          "public_cells_per_path": 1,
+          "own_prefix_cells_per_path": 1326,
+          "decision_paths": 6,
+          "action_slots_per_world": 15,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              6,
+              1
+            ],
+            "upper": [
+              6,
+              1
+            ],
+            "integer_floor_lower": 6,
+            "integer_ceil_upper": 6
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              8160000,
+              1027
+            ],
+            "upper": [
+              7956,
+              1
+            ],
+            "integer_floor_lower": 7945,
+            "integer_ceil_upper": 7956
+          }
+        },
+        {
+          "visible_cards": 3,
+          "public_cells_per_path": 22100,
+          "own_prefix_cells_per_path": 25989600,
+          "decision_paths": 32,
+          "action_slots_per_world": 84,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              54400000000,
+              78623
+            ],
+            "upper": [
+              707200,
+              1
+            ],
+            "integer_floor_lower": 691909,
+            "integer_ceil_upper": 707200
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              84109781878355709979,
+              2679321922368
+            ],
+            "upper": [
+              40453674439650,
+              1288651
+            ],
+            "integer_floor_lower": 31392189,
+            "integer_ceil_upper": 31392266
+          }
+        },
+        {
+          "visible_cards": 4,
+          "public_cells_per_path": 1082900,
+          "own_prefix_cells_per_path": 1221511200,
+          "decision_paths": 116,
+          "action_slots_per_world": 288,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              1048292904215888119,
+              13954801679
+            ],
+            "upper": [
+              101708942529200,
+              1288651
+            ],
+            "integer_floor_lower": 75120587,
+            "integer_ceil_upper": 78926678
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              258040984696811012302770191,
+              2225401919568102912
+            ],
+            "upper": [
+              1320295838787194925,
+              11386520236
+            ],
+            "integer_floor_lower": 115952530,
+            "integer_ceil_upper": 115952531
+          }
+        },
+        {
+          "visible_cards": 5,
+          "public_cells_per_path": 51979200,
+          "own_prefix_cells_per_path": 56189515200,
+          "decision_paths": 280,
+          "action_slots_per_world": 652,
+          "expected_encountered_public_blocks": {
+            "lower": [
+              3396753165446482405895,
+              12248328787968
+            ],
+            "upper": [
+              408427094749125,
+              1472744
+            ],
+            "integer_floor_lower": 277323806,
+            "integer_ceil_upper": 277323890
+          },
+          "expected_encountered_information_rows": {
+            "lower": [
+              4332195874925946354146075365895,
+              15472265803077204645888
+            ],
+            "upper": [
+              481873248450578749125,
+              1720991201384
+            ],
+            "integer_floor_lower": 279997508,
+            "integer_ceil_upper": 279997509
+          }
+        }
+      ],
+      "expected_encountered_public_blocks": {
+        "lower": [
+          2380492741338935098828278511,
+          6741002480074856448
+        ],
+        "upper": [
+          3679951937230323,
+          10309208
+        ],
+        "integer_floor_lower": 353136309,
+        "integer_ceil_upper": 356957774
+      },
+      "expected_encountered_information_rows": {
+        "lower": [
+          522353963642908615414898388726797,
+          1222308998443099167025152
+        ],
+        "upper": [
+          302838957181639158909,
+          708643435864
+        ],
+        "integer_floor_lower": 427350174,
+        "integer_ceil_upper": 427350261
+      },
+      "expected_encountered_action_slots": {
+        "lower": [
+          17493942915741056997064135185289063,
+          17112325978203388338352128
+        ],
+        "upper": [
+          524067929835687425145,
+          512635677008
+        ],
+        "integer_floor_lower": 1022300705,
+        "integer_ceil_upper": 1022300931
+      },
+      "deterministic_encounter_upper": {
+        "public_blocks": 396707206,
+        "information_rows": 428007956,
+        "action_slots": 1024019890
+      },
+      "catalog_expected_logical_words": {
+        "lower": [
+          126167058384174532630615262075,
+          6741002480074856448
+        ],
+        "upper": [
+          195038894972643151,
+          10309208
+        ],
+        "integer_floor_lower": 18716364332,
+        "integer_ceil_upper": 18918901915
+      },
+      "catalog_deterministic_logical_word_upper": 21025621822,
+      "catalog_expected_words_lower_exceeds_current_two_million_cap": true,
+      "hypothetical_eight_byte_units_for_every_encountered_slot": {
+        "lower": [
+          17493942915741056997064135185289063,
+          2139040747275423542294016
+        ],
+        "upper": [
+          524067929835687425145,
+          64079459626
+        ],
+        "integer_floor_lower": 8178405641,
+        "integer_ceil_upper": 8178407448
+      },
+      "conservative_numerator_bits": {
+        "regret": 649,
+        "average": 384,
+        "four_action_positive_regret_sum": 651,
+        "positive_sum_times_q52": 703
+      },
+      "current_numeric_widths_cover_conservative_bounds": false,
+      "current_epoch_limit_allows_lifetime": false,
+      "whole_request_admitted": false,
+      "attempted_training": false,
+      "quality_gate": null
+    }
+  ],
+  "numeric_retained_rows": "Unknown and policy dependent; at most encountered rows. Encounter lower bounds are not numerical Store lower bounds.",
+  "integer_argument": "Fixed Q52, depth and q=P keep denominators fixed at 2^625/2^364; per-coordinate increments are bounded by16 and1 before scaling. Cumulative numerator bounds grow logarithmically in observation count.",
+  "scope": "Scalar architecture worksheet only, not native execution, an RNG implementation, whole-lifetime work admission, allocated memory, convergence or quality. Weighted nonuniform-law expectations are not covered. No caps are changed."
+}

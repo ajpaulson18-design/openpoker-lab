@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_two_epoch_packet.py", line 114, in <module>
+    print(json.dumps(replay_packets(), indent=2))
+                     ^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_two_epoch_packet.py", line 92, in replay_packets
+    require((record['sha256'], record['bytes'], record['member_count']) == (digest, size, count),
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_native_frozen_policy_state.py", line 38, in require
+    if not value:raise ValueError(message)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: sparse whole manifest/archive pin agreement

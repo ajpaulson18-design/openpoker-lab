@@ -120,6 +120,17 @@ class NativeDyadicPolicyTests(unittest.TestCase):
         self.assertTrue(tiny_positive_zero)
         self.assertEqual(self.lines[361],f'END 360 {previous_work}')
 
+    def test_mixed_cache_returns_literal_grid_and_checks_first_sweep_guards(self):
+        records = [line.split() for line in self.lines if line.startswith('MEMO_ROW ')]
+        self.assertEqual(len(records), 48)
+        self.assertEqual(len({tuple(row[6:]) for row in records}), 48)
+        for index, row in enumerate(records):
+            self.assertEqual(int(row[1]), index)
+            expected, total = allocation([int(value, 16) for value in row[2:6]])
+            self.assertGreater(total, 0)
+            self.assertEqual(list(map(int, row[6:])), list(expected))
+        self.assertIn('MEMO_GUARD PASS', self.lines)
+
     def test_rejected_rows_limits_and_cumulative_exhaustion(self):
         end = self.lines.index('GUARDS_END PASS')
         guards = self.lines[362:end]
@@ -151,9 +162,31 @@ class NativeDyadicPolicyTests(unittest.TestCase):
             self.assertEqual(units,expected,(kind,profile,count))
             self.assertEqual(bool(fallback),not total)
             self.assertEqual(sum(units),Q)
-        self.assertEqual(self.lines[-1],f'COMBINED_END 80 {divisions} PASS')
+        self.assertIn(f'COMBINED_END 80 {divisions} PASS',self.lines)
         for label in ('combined_width','combined_intermediate_width','combined_work'):
             self.assertIn('GUARD '+label+' PASS',self.lines)
+
+    def test_q32_named_quantizer_profile_accepts_combined_divisions(self):
+        self.assertIn('Q32_PROFILE PASS',self.lines)
+
+    def test_complement_reconstruction_matches_exact_fraction_oracle(self):
+        rows=[line.split() for line in self.lines if line.startswith('COMPLEMENT ')]
+        self.assertEqual(len(rows),54)
+        divisions=0
+        for fields in rows:
+            kind,profile,count=map(int,fields[1:4])
+            self.assertEqual(len(fields),4+2*count)
+            weights=[int(x,16) for x in fields[4::2]]
+            positives=sum(value>0 for value in weights)
+            if positives>1:
+                divisions+=positives-1
+            units=list(map(int,fields[5::2]))
+            expected,total=allocation(weights,average=bool(kind))
+            self.assertEqual(units,expected,(kind,profile,count))
+            self.assertEqual(sum(units),Q)
+        self.assertIn(f'COMPLEMENT_END 54 {divisions} PASS',self.lines)
+        self.assertIn('GUARD complement_profile PASS',self.lines)
+        self.assertIn('GUARD complement_menu PASS',self.lines)
 
 
 if __name__ == '__main__':

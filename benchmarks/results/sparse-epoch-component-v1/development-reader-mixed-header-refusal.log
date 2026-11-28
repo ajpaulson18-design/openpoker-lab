@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 426, in <module>
+    if __name__=='__main__':print(json.dumps(replay_packets(),indent=2,sort_keys=True))
+                                             ^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 409, in replay_packets
+    results['component']=replay_component(archives['component'][0],ACTIVE_HASHES)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 195, in replay_component
+    normal=verify_git_closure(files,'runs/normal',closure)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 158, in verify_git_closure
+    require(body==canonical or (b'\r' not in canonical and body==canonical.replace(b'\n',b'\r\n')),
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_sparse_epoch_component_packet.py", line 52, in require
+    if not value:raise ValueError(message)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: captured source bytes differ from pinned committed source: native/training_phase_profile.hpp

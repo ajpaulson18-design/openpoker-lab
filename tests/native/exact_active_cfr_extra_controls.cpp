@@ -9,10 +9,14 @@ std::unique_ptr<g::Plan> extra_plan(unsigned kind) {
     if (kind==0) {
         sb={{{48,49},bits(1.)},{{48,50},bits(1.)},{{48,51},bits(1.)}};
         bb={{{44,45},bits(1.)},{{44,46},bits(1.)},{{44,47},bits(1.)}};
-        std::array<std::uint8_t,3> suits{1,2,3};
-        do { g::SelectedBoard board{{suits[0],static_cast<g::Card>(4+suits[1]),static_cast<g::Card>(8+suits[2]),12,16}};
-             std::sort(board.cards.begin(),board.cards.begin()+3);boards.push_back(board); }
-        while(std::next_permutation(suits.begin(),suits.end()));
+        constexpr std::array<std::array<std::uint8_t,3>,6> suit_orders{{
+            {1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,1,2},{3,2,1}}};
+        for (const auto& suits : suit_orders) {
+            g::SelectedBoard board{{suits[0],static_cast<g::Card>(4+suits[1]),
+                static_cast<g::Card>(8+suits[2]),12,16}};
+            std::sort(board.cards.begin(),board.cards.begin()+3);
+            boards.push_back(board);
+        }
         std::vector<std::string> labels;
         for(const auto& board:boards) labels.push_back(g::detail::card_text(board.cards[0])+g::detail::card_text(board.cards[1])+g::detail::card_text(board.cards[2]));
         std::sort(labels.begin(),labels.end());std::vector<g::Branch> branches;

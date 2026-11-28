@@ -4,10 +4,12 @@
 #include <bit>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace chance = openpoker::full_deck_public_chance;
 namespace prepared = openpoker::prepared_public_chance;
@@ -192,7 +194,7 @@ int setup_guards() {
     }
     return ok ? 0 : 1;
 }
-int same_fixture() {
+int same_fixture(bool buffered=false) {
     const std::array<chance::WeightedHand,3> side0{{
         {{43,48},std::bit_cast<std::uint64_t>(0.5)},
         {{16,32},std::bit_cast<std::uint64_t>(0.25)},
@@ -209,11 +211,194 @@ int same_fixture() {
             k==1 ? std::span<const std::uint8_t>(flop) : std::span<const std::uint8_t>(full);
         const auto kind=k==3 ? chance::TerminalKind::showdown : chance::TerminalKind::fold;
         const auto reach=p==0 ? std::span<const Integer>(reach1) : std::span<const Integer>(reach0);
-        const auto value=owner.contraction(p,board,kind,reach,2);
-        std::cout<<"SAME "<<p<<' '<<k<<' '<<hex(owner.normalizer_integer())<<' '<<value.prefix_divisor;
-        for (const auto& n:value.numerators) std::cout<<' '<<hex(n);
+        std::array<Integer,3> storage{77,77,77};
+        prepared::Contraction owned;
+        auto numerators=std::span<Integer>(storage).first(p==0?3u:2u);
+        std::uint64_t divisor=0;
+        if (buffered) {
+            divisor=owner.contraction_into(p,board,kind,reach,2,numerators).prefix_divisor;
+            if (p==1 && storage.back()!=77) return 1;
+        } else {
+            owned=owner.contraction(p,board,kind,reach,2);
+            numerators=owned.numerators;
+            divisor=owned.prefix_divisor;
+        }
+        std::cout<<"SAME "<<p<<' '<<k<<' '<<hex(owner.normalizer_integer())<<' '<<divisor;
+        for (const auto& n:numerators) std::cout<<' '<<hex(n);
         std::cout<<'\n';
     }
+    return ledger(owner.receipt()) ? 0 : 1;
+}
+int buffer_guards() {
+    for (bool alias:{false,true}) {
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck));
+        auto reach=fixture(0);
+        std::array<Integer,1> short_buffer{41};
+        const auto output=alias?std::span<Integer>(reach.n):std::span<Integer>(short_buffer);
+        bool rejected=false;
+        try {
+            (void)owner.contraction_into(0,board_a,chance::TerminalKind::showdown,
+                                         reach.n,reach.exponent,output);
+        } catch (const chance::KernelError& error) {
+            rejected=error.code()==chance::ErrorCode::invalid_query;
+        }
+        if (!rejected || !owner.failed() || owner.receipt().query_array_admissions ||
+            owner.receipt().rank_calls || reach.n!=fixture(0).n || short_buffer[0]!=41) return 1;
+    }
+    std::cout<<"BUFFER_GUARDS PASS\n";
+    return 0;
+}
+int reach_families() {
+    for (auto kernel:{prepared::ContractionKernel::blocker_buckets,
+                      prepared::ContractionKernel::sparse_pairs}) {
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck),
+            kernel_limits(kernel),2,prepared::RankCacheKey::board_set,kernel);
+        const std::array boards{board_a,board_b,board_c};
+        for (std::size_t test=0;test<3;++test) {
+            const auto left=fixture(static_cast<int>(test)),right=fixture(static_cast<int>(5-test));
+            owner.with_showdown_reaches({prepared::ReachInput{left.n,left.exponent},
+                                         prepared::ReachInput{right.n,right.exponent}},[&] {
+                for (std::size_t index=0;index<boards.size();++index) {
+                    for (std::size_t player=0;player<2;++player) {
+                        const auto out=owner.family_showdown(player,boards[index]);
+                        std::cout<<"FAMILY "<<static_cast<int>(kernel)<<' '<<test<<' '<<index<<' '<<player
+                                 <<' '<<out.prefix_divisor<<' '<<out.reach_exponent;
+                        for (const auto& value:out.numerators) std::cout<<' '<<hex(value);
+                        std::cout<<'\n';
+                    }
+                }
+            });
+        }
+        if (!ledger(owner.receipt()) || owner.receipt().weighted_families!=3 ||
+            owner.receipt().weighted_showdowns!=18 || owner.receipt().cache_misses!=2 ||
+            owner.receipt().cache_hits!=16) return 1;
+    }
+    return 0;
+}
+
+int family_guards() {
+    for (unsigned guard=0;guard<3;++guard) {
+        prepared::PreparedPublicChance owner(sb,bb,chance::DeckDefinition::reduced(deck));
+        auto left=fixture(0);
+        const auto right=fixture(1);
+        if (guard==1) left.n[0]=-1;
+        const std::array input{prepared::ReachInput{left.n,left.exponent},
+                               prepared::ReachInput{right.n,right.exponent}};
+        try {
+            if (guard==0) (void)owner.family_showdown(0,board_a);
+            else owner.with_showdown_reaches(input,[&] {
+                owner.with_showdown_reaches(input,[] {});
+            });
+        } catch (const chance::KernelError& error) {
+            const auto& r=owner.receipt();
+            if (error.code()!=chance::ErrorCode::invalid_query || !owner.failed() ||
+                r.query_array_admissions || r.rank_calls || r.weighted_families!=(guard==2?1u:0u)) return 1;
+            continue;
+        }
+        return 1;
+    }
+    std::cout<<"FAMILY_GUARDS PASS\n";
+    return 0;
+}
+
+struct FullWidthFixture {
+    std::array<std::vector<chance::WeightedHand>,2> ranges;
+    std::array<std::vector<Integer>,2> reaches;
+    FullWidthFixture() {
+        for (std::uint8_t a=0;a<52;++a) for (std::uint8_t b=a+1;b<52;++b) {
+            const auto row=ranges[0].size();
+            const std::array<double,2> weights{static_cast<double>(1+row%5),
+                                             static_cast<double>(1+(3*row+1)%7)};
+            for (std::size_t player=0;player<2;++player) {
+                ranges[player].push_back({{a,b},std::bit_cast<std::uint64_t>(weights[player])});
+                reaches[player].emplace_back((row+2*player)%9);
+            }
+        }
+    }
+};
+
+int wide_reach_study(bool reuse) {
+    FullWidthFixture fixture;
+    constexpr std::size_t groups=16, rivers=12;
+    constexpr std::size_t exponent=212;
+    for (auto& side:fixture.reaches)
+        for (auto& n:side) n<<=exponent-3;
+    prepared::PreparedPublicChance owner(fixture.ranges[0],fixture.ranges[1],
+        chance::DeckDefinition::full52(),{},rivers,prepared::RankCacheKey::board_set);
+    std::cout<<"WIDE_REACH_STUDY_V1 "<<groups<<' '<<rivers<<' '<<exponent<<' '
+             <<hex(owner.normalizer_integer())<<'\n';
+    std::size_t bytes=0;
+    for (std::size_t group=0;group<groups;++group) {
+        const auto visit=[&] {
+            for (std::uint8_t river=0;river<rivers;++river) {
+                const std::array<std::uint8_t,5> board{17,24,33,35,river};
+                for (std::size_t player=0;player<2;++player) {
+                    const auto values=reuse?owner.family_showdown(player,board):
+                        owner.contraction(player,board,chance::TerminalKind::showdown,
+                                          fixture.reaches[1-player],exponent);
+                    if (values.reach_exponent!=exponent || values.numerators.size()!=1326)
+                        throw std::runtime_error("wide reach study result identity differs");
+                    if (group!=0) continue;
+                    std::ostringstream line;
+                    line<<"RIVER "<<static_cast<unsigned>(river)<<' '<<player<<' '<<values.prefix_divisor;
+                    for (const auto& value:values.numerators) line<<' '<<hex(value);
+                    line<<'\n';
+                    const auto raw=line.str();
+                    bytes+=raw.size();
+                    if (bytes>2'000'000) throw std::runtime_error("wide reach study output bound");
+                    std::cout<<raw;
+                }
+            }
+        };
+        if (reuse) {
+            owner.with_showdown_reaches({prepared::ReachInput{fixture.reaches[0],exponent},
+                                         prepared::ReachInput{fixture.reaches[1],exponent}},visit);
+        } else visit();
+    }
+    const auto& r=owner.receipt();
+    std::cout<<"WORK "<<r.modeled_work<<' '<<r.input_work<<' '<<r.contraction_work<<' '
+             <<r.peak_live_entries<<' '<<r.peak_integer_payload_bits<<' '<<r.rank_calls<<' '
+             <<r.completed_contractions<<' '<<r.weighted_families<<' '<<r.weighted_showdowns<<'\n';
+    return ledger(r) && r.rank_calls==2162*rivers && r.completed_contractions==2*groups*rivers &&
+           r.weighted_families==(reuse?groups:0) && r.weighted_showdowns==(reuse?2*groups*rivers:0)
+           ? 0 : 1;
+}
+
+int full_deck_buffered(bool family=false) {
+    const FullWidthFixture fixture;
+    const auto& ranges=fixture.ranges;
+    const auto& reaches=fixture.reaches;
+    prepared::PreparedPublicChance owner(ranges[0],ranges[1],chance::DeckDefinition::full52(),
+                                         {},1,prepared::RankCacheKey::board_set);
+    if (family) {
+        owner.with_showdown_reaches({prepared::ReachInput{reaches[0],3},
+                                     prepared::ReachInput{reaches[1],3}},[&] {
+            const std::array boards{board_a,board_c};
+            for (std::size_t index=0;index<boards.size();++index) {
+                for (std::size_t player=0;player<2;++player) {
+                    const auto out=owner.family_showdown(player,boards[index]);
+                    std::cout<<"WIDE_FAMILY "<<index<<' '<<player<<' '<<out.prefix_divisor<<' '
+                             <<out.reach_exponent<<' '<<hex(owner.normalizer_integer());
+                    for (const auto& value:out.numerators) std::cout<<' '<<hex(value);
+                    std::cout<<'\n';
+                }
+            }
+        });
+        const auto& r=owner.receipt();
+        return ledger(r) && r.weighted_families==1 && r.weighted_showdowns==4 &&
+               r.cache_misses==2 && r.cache_hits==2 && r.rank_calls==4324 ? 0 : 1;
+    }
+    std::vector<Integer> output(ranges[0].size(),Integer(77));
+    for (std::size_t player=0;player<2;++player) for (unsigned showdown=0;showdown<2;++showdown) {
+        const auto kind=showdown?chance::TerminalKind::showdown:chance::TerminalKind::fold;
+        const auto scale=owner.contraction_into(player,board_a,kind,reaches[1-player],3,output);
+        std::cout<<"WIDE "<<player<<' '<<showdown<<' '<<scale.prefix_divisor<<' '
+                 <<scale.reach_exponent<<' '<<hex(owner.normalizer_integer());
+        for (const auto& value:output) std::cout<<' '<<hex(value);
+        std::cout<<'\n';
+    }
+    if (owner.receipt().rank_calls!=2162 || owner.receipt().cache_hits!=1 ||
+        owner.receipt().cache_misses!=1 || owner.receipt().completed_contractions!=4) return 1;
     return ledger(owner.receipt()) ? 0 : 1;
 }
 int snapshot() {
@@ -337,24 +522,149 @@ int board_set_controls(prepared::ContractionKernel kernel=prepared::ContractionK
         throw std::runtime_error("rank board-set eviction changed the reloaded contraction");
     return 0;
 }
+int indexed_controls() {
+    using K=prepared::ContractionKernel;
+    using R=prepared::RankCacheKey;
+    using I=prepared::RankCacheIndex;
+    auto limits=kernel_limits(K::sparse_pairs);
+    prepared::PreparedPublicChance sorted(sb,bb,chance::DeckDefinition::reduced(deck),limits,2,R::board_set,K::sparse_pairs,I::sorted_board_set);
+    prepared::PreparedPublicChance linear(sb,bb,chance::DeckDefinition::reduced(deck),limits,2,R::board_set,K::sparse_pairs);
+    if (sorted.receipt().setup_work-linear.receipt().setup_work!=
+        prepared::PreparedPublicChance::index_setup_work(2))
+        throw std::runtime_error("indexed setup charge differs");
+    const std::array<std::uint8_t,5> board_d{17,24,33,37,48};
+    const std::array<std::array<std::uint8_t,5>,6> trace{board_a,board_b,board_c,board_d,board_a,board_c};
+    for (std::size_t i=0;i<trace.size();++i) {
+        const auto reach=fixture(i==0?2:0);
+        const auto actual=sorted.contraction(i%2,trace[i],chance::TerminalKind::showdown,reach.n,reach.exponent);
+        const auto expected=linear.contraction(i%2,trace[i],chance::TerminalKind::showdown,reach.n,reach.exponent);
+        if (actual.numerators!=expected.numerators || actual.prefix_divisor!=expected.prefix_divisor ||
+            actual.reach_exponent!=expected.reach_exponent) throw std::runtime_error("indexed result differs");
+        const auto index=sorted.rank_index_receipt();const auto receipt=sorted.receipt();
+        if (!ledger(receipt)) throw std::runtime_error("indexed parent ledger differs");
+        std::cout<<"INDEXED_ROW "<<i<<' '<<(i%2)<<' '<<(i==0?2:0);
+        for (auto card:trace[i]) std::cout<<' '<<static_cast<unsigned>(card);
+        std::cout<<' '<<actual.prefix_divisor<<' '<<actual.reach_exponent;
+        for (const auto& n:actual.numerators) std::cout<<' '<<hex(n);
+        std::cout<<' '<<index.capacity<<' '<<index.entries<<' '<<index.size<<' '<<index.searches
+            <<' '<<index.updates<<' '<<index.lookup_work<<' '<<index.update_work<<' '<<index.setup_work
+            <<' '<<receipt.cache_hits<<' '<<receipt.cache_misses<<' '<<receipt.cache_evictions
+            <<' '<<receipt.cache_lookup_work<<'\n';
+    }
+    for (std::size_t cap:{std::size_t{1},std::size_t{2},std::size_t{17},std::size_t{56},std::size_t{64}})
+        std::cout<<"INDEXED_BOUND "<<cap<<' '<<prepared::PreparedPublicChance::sorted_lookup_work(cap)<<' '
+            <<prepared::PreparedPublicChance::index_update_work(cap)<<' '
+            <<prepared::PreparedPublicChance::index_setup_work(cap)<<' '
+            <<prepared::PreparedPublicChance::index_storage_entries(cap)<<'\n';
+    bool wrong_key=false;
+    try {prepared::PreparedPublicChance bad(sb,bb,chance::DeckDefinition::reduced(deck),limits,2,R::ordered_prefix,K::sparse_pairs,I::sorted_board_set);}
+    catch (const chance::KernelError&) {wrong_key=true;}
+    if (!wrong_key) throw std::runtime_error("indexed ordered-prefix mode accepted");
+    auto bad_reach=fixture(0);bad_reach.n[0]=-1;
+    const auto before=sorted.rank_index_receipt();
+    bool rejected=false;
+    try {(void)sorted.contraction(0,board_a,chance::TerminalKind::showdown,bad_reach.n,bad_reach.exponent);}
+    catch (const chance::KernelError&) {rejected=true;}
+    const auto after=sorted.rank_index_receipt();
+    if (!rejected || !sorted.failed() || before.searches!=after.searches || before.updates!=after.updates)
+        throw std::runtime_error("invalid blocked reach mutated index");
+    // Fill every sorted slot using a deliberately nonmonotone permutation,
+    // then evict/revisit the true LRU. All boards have canonical sorted flops.
+    {
+        std::vector<std::array<std::uint8_t,5>> all;
+        for (std::size_t a=0;a<deck.size();++a) for (std::size_t b=a+1;b<deck.size();++b)
+        for (std::size_t c=b+1;c<deck.size();++c) for (std::size_t d=c+1;d<deck.size();++d)
+        for (std::size_t e=d+1;e<deck.size();++e)
+            all.push_back({deck[a],deck[b],deck[c],deck[d],deck[e]});
+        if (all.size()!=126) throw std::runtime_error("indexed full-cache board geometry");
+        prepared::PreparedPublicChance indexed(sb,bb,chance::DeckDefinition::reduced(deck),limits,64,
+            R::board_set,K::sparse_pairs,I::sorted_board_set);
+        prepared::PreparedPublicChance baseline(sb,bb,chance::DeckDefinition::reduced(deck),limits,64,
+            R::board_set,K::sparse_pairs);
+        const auto perform=[&](std::size_t position,bool nonzero) {
+            const auto reach=fixture(nonzero?0:2);
+            const auto a=indexed.contraction(position%2,all[position],chance::TerminalKind::showdown,reach.n,reach.exponent);
+            const auto b=baseline.contraction(position%2,all[position],chance::TerminalKind::showdown,reach.n,reach.exponent);
+            if (a.numerators!=b.numerators || a.prefix_divisor!=b.prefix_divisor || a.reach_exponent!=b.reach_exponent)
+                throw std::runtime_error("full indexed cache differs from linear");
+            const auto x=indexed.receipt(),y=baseline.receipt();
+            if (x.cache_hits!=y.cache_hits || x.cache_misses!=y.cache_misses || x.cache_evictions!=y.cache_evictions ||
+                x.rank_calls!=y.rank_calls) throw std::runtime_error("full indexed cache receipt differs");
+        };
+        // gcd(37,126)=1, giving distinct first/middle/last insertion positions.
+        for (std::size_t i=0;i<64;++i) perform((37*i)%126,i%17==0);
+        const auto recent=(37*63)%126;
+        perform(recent,true);
+        if (indexed.receipt().cache_hits!=1 || indexed.receipt().cache_misses!=64 ||
+            indexed.rank_index_receipt().size!=64) throw std::runtime_error("full index warm or recent hit");
+        perform((37*64)%126,true);
+        if (indexed.receipt().cache_evictions!=1 || indexed.receipt().cache_misses!=65)
+            throw std::runtime_error("full index did not evict oldest slot");
+        perform(0,true);
+        const auto index=indexed.rank_index_receipt();
+        if (indexed.receipt().cache_evictions!=2 || indexed.receipt().cache_misses!=66 ||
+            index.capacity!=64 || index.size!=64 || index.updates!=66)
+            throw std::runtime_error("full index did not reload true LRU");
+        std::cout<<"INDEXED_FULL64 PASS\n";
+    }
+    // Independent exact one-short calibration: construction and one complete
+    // miss must fail before granting any rank or index publication.
+    auto make=[&](chance::Limits bounds) {
+        return std::make_unique<prepared::PreparedPublicChance>(sb,bb,chance::DeckDefinition::reduced(deck),
+            kernel_limits(K::sparse_pairs,bounds),2,R::board_set,K::sparse_pairs,I::sorted_board_set);
+    };
+    auto calibrated=make({});
+    const auto construction=calibrated->receipt();
+    auto short_entries=chance::Limits{};
+    short_entries.max_storage_entries=construction.peak_live_entries-1;
+    bool entries_rejected=false;
+    try {(void)make(short_entries);} catch (const chance::KernelError&) {entries_rejected=true;}
+    if (!entries_rejected) throw std::runtime_error("indexed constructor admitted one-short entries");
+    const auto one=fixture(0);
+    (void)calibrated->contraction(0,board_a,chance::TerminalKind::showdown,one.n,one.exponent);
+    auto short_work=chance::Limits{};
+    short_work.max_modeled_work=calibrated->receipt().modeled_work-1;
+    auto capped=make(short_work);
+    bool work_rejected=false;
+    try {(void)capped->contraction(0,board_a,chance::TerminalKind::showdown,one.n,one.exponent);}
+    catch (const chance::KernelError& error) {work_rejected=error.code()==chance::ErrorCode::modeled_work_limit;}
+    const auto failed=capped->receipt();const auto index_failed=capped->rank_index_receipt();
+    if (!work_rejected || !capped->failed() || failed.rank_calls || failed.completed_contractions ||
+        failed.query_array_admissions || index_failed.updates || index_failed.size)
+        throw std::runtime_error("indexed one-short work reached rank publication");
+    std::cout<<"INDEXED_GUARDS PASS\n";
+    return 0;
+}
 } // namespace
 int main(int argc,char** argv) {
     try {
         if (argc==2) {
             const std::string mode=argv[1];
+            if (mode=="indexed") return indexed_controls();
             if (mode=="guards") return guards();
             if (mode=="cache") return cache_control();
             if (mode=="cumulative") return cumulative();
             if (mode=="setup") return setup_guards();
             if (mode=="same") return same_fixture();
+            if (mode=="same-buffered") return same_fixture(true);
+            if (mode=="buffer-guards") return buffer_guards();
+            if (mode=="full-deck-buffered") return full_deck_buffered();
+            if (mode=="full-deck-reach-family") return full_deck_buffered(true);
+            if (mode=="reach-families") return reach_families();
+            if (mode=="wide-reach-baseline") return wide_reach_study(false);
+            if (mode=="wide-reach-reuse") return wide_reach_study(true);
+            if (mode=="family-guards") return family_guards();
             if (mode=="snapshot") return snapshot();
             if (mode=="board-sets") return board_set_controls();
             if (mode=="sparse-board-sets") return board_set_controls(prepared::ContractionKernel::sparse_pairs);
             if (mode=="sparse-guards") return sparse_guards();
             if (mode=="sparse-cumulative") return cumulative(prepared::ContractionKernel::sparse_pairs);
         }
-        const bool sparse=argc==5 && std::string_view(argv[4])=="sparse";
-        if (argc!=4 && !sparse) throw std::runtime_error("three fixed prepared fixture selectors required");
+        const std::string_view storage_mode=argc==5?argv[4]:"";
+        const bool sparse=storage_mode=="sparse" || storage_mode=="sparse-buffered";
+        const bool buffered=storage_mode=="buffered" || storage_mode=="sparse-buffered";
+        if (argc!=4 && !sparse && !buffered)
+            throw std::runtime_error("three fixed prepared fixture selectors required");
         const int profile=digit(argv[1],5),player=digit(argv[2],1),mode=digit(argv[3],1);
         const auto reach=fixture(profile);
         const auto kernel=sparse?prepared::ContractionKernel::sparse_pairs:prepared::ContractionKernel::blocker_buckets;
@@ -362,15 +672,27 @@ int main(int argc,char** argv) {
             prepared::RankCacheKey::ordered_prefix,kernel);
         std::cout<<"PREPARED_CASES_V1 "<<profile<<' '<<player<<' '<<mode<<' '<<hex(owner.normalizer_integer())<<'\n';
         std::size_t index=0,bytes=0;
+        std::array<Integer,2> storage{77,77};
         auto emit=[&](std::span<const std::uint8_t> board) {
             if (mode==1 && board.size()!=5) return;
-            const auto out=owner.contraction(static_cast<std::size_t>(player),board,
-                mode ? chance::TerminalKind::showdown : chance::TerminalKind::fold,reach.n,reach.exponent);
+            const auto kind=mode?chance::TerminalKind::showdown:chance::TerminalKind::fold;
+            const auto seat=static_cast<std::size_t>(player);
+            prepared::Contraction owned;
+            prepared::ContractionScale scale;
+            std::span<const Integer> numerators;
+            if (buffered) {
+                scale=owner.contraction_into(seat,board,kind,reach.n,reach.exponent,storage);
+                numerators=storage;
+            } else {
+                owned=owner.contraction(seat,board,kind,reach.n,reach.exponent);
+                scale={owned.prefix_divisor,owned.reach_exponent};
+                numerators=owned.numerators;
+            }
             const auto& r=owner.receipt();
             if (!ledger(r)) throw std::runtime_error("prepared cumulative ledger mismatch");
             std::ostringstream line;
-            line<<index<<' '<<out.prefix_divisor<<' '<<out.reach_exponent;
-            for (const auto& n:out.numerators) line<<' '<<hex(n);
+            line<<index<<' '<<scale.prefix_divisor<<' '<<scale.reach_exponent;
+            for (const auto& n:numerators) line<<' '<<hex(n);
             line<<' '<<r.modeled_work<<' '<<r.rank_calls<<' '<<r.cache_hits<<' '<<r.cache_misses<<' '
                 <<r.cache_evictions<<' '<<r.retained_entries<<' '<<r.peak_integer_bits<<' '
                 <<r.peak_integer_payload_bits<<'\n';

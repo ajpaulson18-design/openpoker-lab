@@ -1,11 +1,73 @@
+import json
+import os
+import subprocess
+import sys
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from scripts import historical_foundation_sources as bridge
 
 
 class HistoricalFoundationSourceTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == 'win32', 'Windows empty environment values are deleted by _wputenv')
+    def test_committed_bridge_authenticates_after_empty_git_env_roundtrip(self):
+        child = r'''import json, os
+from unittest.mock import patch
+from scripts import historical_foundation_sources as bridge
+
+name = "GIT_CONFIG_VALUE_" + os.environ["BRIDGE_EMPTY_CONFIG_INDEX"]
+count_before = int(os.environ["GIT_CONFIG_COUNT"])
+def authenticated_head():
+    try:
+        value = bridge.require_committed_bridge().get("__git_head__")
+        return value if isinstance(value, str) and len(value) == 40 else None
+    except (OSError, ValueError):
+        return None
+
+before = authenticated_head()
+with patch.dict(os.environ, {"BRIDGE_EMPTY_CONFIG_ROUNDTRIP": "1"}):
+    pass
+present_after = name in os.environ
+empty_after = present_after and os.environ.get(name) == ""
+after = authenticated_head()
+print(json.dumps({
+    "before_authenticated": before is not None,
+    "after_authenticated": after is not None,
+    "head_unchanged": before is not None and before == after,
+    "empty_value_present_after": present_after,
+    "empty_value_empty_after": empty_after,
+    "config_count_before": count_before,
+    "config_count_after": int(os.environ["GIT_CONFIG_COUNT"]),
+}, sort_keys=True))
+'''
+        child_env = os.environ.copy()
+        try:
+            config_count = int(child_env.get('GIT_CONFIG_COUNT', '0'))
+        except ValueError:
+            self.fail('GIT_CONFIG_COUNT must be an integer for the isolated probe')
+        child_env['GIT_CONFIG_KEY_{}'.format(config_count)] = 'core.pager'
+        child_env['GIT_CONFIG_VALUE_{}'.format(config_count)] = ''
+        child_env['GIT_CONFIG_COUNT'] = str(config_count + 1)
+        child_env['BRIDGE_EMPTY_CONFIG_INDEX'] = str(config_count)
+        with TemporaryDirectory(prefix='bridge-current-python-', dir=bridge.ROOT.parent) as cache:
+            result = subprocess.run(
+                [sys.executable, '-B', '-X', 'pycache_prefix=' + cache, '-c', child],
+                cwd=bridge.ROOT, env=child_env,
+                capture_output=True, text=True, timeout=30, check=False)
+        self.assertEqual(result.returncode, 0, 'isolated environment probe failed')
+        observed = json.loads(result.stdout)
+        self.assertEqual(observed, {
+            'before_authenticated': True,
+            'after_authenticated': True,
+            'head_unchanged': True,
+            'empty_value_present_after': True,
+            'empty_value_empty_after': True,
+            'config_count_before': config_count + 1,
+            'config_count_after': config_count + 1,
+        })
+
     def test_reviewed_transition_and_scope(self):
         receipt = bridge.authenticate_preflop_rank_transition()
         self.assertIn('rank-functions-only', receipt['scope'])
@@ -204,6 +266,31 @@ class HistoricalFoundationSourceTests(unittest.TestCase):
             actual, actual_count = bridge._synthetic_test_ast(source, strip=True)
             self.assertEqual(actual_count, count)
             self.assertNotEqual(actual, bridge._synthetic_test_ast(source + b"\nextra = 1\n", strip=True)[0])
+
+    def test_windows_temp_fixture_transition_is_exact_and_preserves_assertions(self):
+        name = "tests/test_benchmark_river_direct_tail.py"
+        path = bridge.ROOT / name
+        archive_name, middle_pin, current_pin = bridge.WINDOWS_FIXTURE_TRANSITION[name]
+        intermediate_path = bridge.ROOT / archive_name
+        self.assertIn(intermediate_path, bridge.BRIDGE_INPUTS)
+        old_path = bridge.ROOT / "tests/fixtures/test_benchmark_river_direct_tail.py.before_synthetic_bridge.txt"
+        versions = (old_path.read_bytes(), intermediate_path.read_bytes(), path.read_bytes())
+        self.assertEqual(bridge._sha(bridge._lf(versions[1])), middle_pin)
+        self.assertEqual(bridge._sha(bridge._lf(versions[2])), current_pin)
+        for raw in versions:
+            for digest in bridge._line_ending_hashes(raw):
+                self.assertTrue(bridge.historical_foundation_source_matches(path, digest))
+
+        current = versions[2]
+        assertion = b'self.assertEqual(targets["report"].read_bytes(), foreign)'
+        self.assertIn(assertion, current)
+        changed_assertion = current.replace(
+            assertion, b'self.assertEqual(targets["report"].read_bytes(), b"forged")', 1)
+        added_operation = current + b"\nextra_fixture_operation = True\n"
+        for changed in (changed_assertion, added_operation):
+            with self.assertRaisesRegex(ValueError, "exact transition pin"):
+                bridge._windows_fixture_transition_ast(changed, source_version="current")
+            self.assertFalse(bridge._synthetic_test_matches(path, bridge._sha(bridge._lf(changed))))
 
     def test_rank_dependencies_detect_changes(self):
         source = bridge.PREFLOP_SOURCE.read_bytes()

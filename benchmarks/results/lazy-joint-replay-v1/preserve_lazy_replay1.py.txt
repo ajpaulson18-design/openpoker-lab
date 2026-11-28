@@ -1,0 +1,31 @@
+"""Preserve completed original outputs; this index is explicitly post-run."""
+from hashlib import sha256
+import json
+from pathlib import Path
+import shutil
+
+BASE = Path(__file__).resolve().parent
+OUT = BASE / 'dyprofile-repo/benchmarks/results/lazy-joint-replay-v1'
+OUT.mkdir(exist_ok=False)
+names = ('lazy-joint-replay1-normal.log', 'lazy-joint-replay1-optimized.log',
+         'lazy-joint-replay2-normal.log', 'lazy-joint-replay2-optimized.log',
+         'lazy-packet-admission1.log', 'lazy-packet-admission2.log', 'lazy-joint-package1.log')
+records = []
+for name in names:
+    raw = (BASE / name).read_bytes(); (OUT / name).write_bytes(raw)
+    records.append({'file': name, 'bytes': len(raw), 'sha256': sha256(raw).hexdigest()})
+normal = (BASE / names[2]).read_bytes(); optimized = (BASE / names[3]).read_bytes()
+if normal != optimized or json.loads(normal)['native_calls'] != 0:
+    raise ValueError('original saved replay mode/native mismatch')
+shutil.copyfile(Path(__file__), OUT / 'preserve_lazy_replay1.py.txt')
+(OUT / 'post-run-index.json').write_text(json.dumps({'version': 'lazy-replay-post-run-index-v1',
+    'created_after_runs': True, 'is_original_execution_receipt': False, 'files': records,
+    'known_source_context': {'first_replay': 'f8c00b85ffa845bec28ddea8c1eae516a2303e17',
+                             'successful_replay': '45de3dbe6676e7194dd20445bbd972ff55ad6af8'},
+    'observed_outer_exits_from_tool_results': {'first_normal': 1, 'first_optimized': 1,
+        'second_normal': 0, 'second_optimized': 0, 'admission_first': 0, 'admission_second': 0, 'packaging': 0},
+    'failure_scope': 'First replay refused before numerical imports because its build registry omitted the paired eager manifest. The fix authenticates that manifest against the already captured identical complete source map. Raw evidence and mathematical authority were unchanged.',
+    'native_calls_during_replay': 0, 'archived_source_executed': False,
+    'successful_report_sha256': sha256(normal).hexdigest()}, indent=2) + '\n')
+print(json.dumps({'status': 'preserved-original-lazy-replay-observations',
+    'successful_report_sha256': sha256(normal).hexdigest(), 'native_calls': 0}))

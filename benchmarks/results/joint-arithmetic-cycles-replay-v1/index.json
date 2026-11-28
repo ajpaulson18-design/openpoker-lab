@@ -1,0 +1,30 @@
+{
+  "created_after_runs": true,
+  "is_original_execution_receipt": false,
+  "reader_head": "59cc9d618f52933ecc7c79a099da4d28918b83d2",
+  "logs": {
+    "arithmetic-normal": {
+      "bytes": 1403,
+      "sha256": "c0fd7c75bebf53aa19d04fab0d6c9496fe7bb59e0239d146e5d14a976c704888"
+    },
+    "arithmetic-optimized": {
+      "bytes": 1403,
+      "sha256": "c0fd7c75bebf53aa19d04fab0d6c9496fe7bb59e0239d146e5d14a976c704888"
+    },
+    "read-regression": {
+      "bytes": 2257,
+      "sha256": "538e79bf94bf9124ffe6e8886dd6c7970018c955a1f18a1d17b9b2ea94f99b66"
+    },
+    "admission": {
+      "bytes": 710,
+      "sha256": "a8b00982082242b734deef33b1acbd2847b5258a1f913ff06cb4f6e92f03020f"
+    }
+  },
+  "observed_outer_exits": {
+    "arithmetic-normal": 0,
+    "arithmetic-optimized": 0,
+    "read-regression": 0,
+    "admission": 0
+  },
+  "scope": "Post-run saved-only replay preservation. Normal/optimized arithmetic reports identical and retain the miss. Accepted read observer regression and four tests/eight pre-numerical refusals pass. No native or hardware call."
+}

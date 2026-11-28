@@ -1,0 +1,54 @@
+{
+  "cache_slots": 16,
+  "native_producer_calls": 0,
+  "phases": {
+    "average": {
+      "by_menu_and_category": {
+        "2-equal": 84074,
+        "2-mixed": 2820,
+        "3-mixed": 21930,
+        "4-equal": 9530,
+        "4-mixed": 842
+      },
+      "divisions_cached": 20207,
+      "divisions_uncached": 49206,
+      "hits": 15267,
+      "misses": 10325,
+      "rows": 119196,
+      "unique_exact_mixed_inputs": 208,
+      "unique_power_of_two_reduced_mixed_inputs": 119,
+      "unique_rational_mixed_inputs": 70,
+      "work_cached": 71001032,
+      "work_uncached": 84177392
+    },
+    "regret": {
+      "by_menu_and_category": {
+        "2-pure": 86862,
+        "2-zero": 32,
+        "3-mixed": 12836,
+        "3-pure": 9094,
+        "4-equal": 560,
+        "4-mixed": 6922,
+        "4-pure": 2890
+      },
+      "divisions_cached": 13588,
+      "divisions_uncached": 23722,
+      "hits": 8852,
+      "misses": 10906,
+      "rows": 119196,
+      "unique_exact_mixed_inputs": 272,
+      "unique_power_of_two_reduced_mixed_inputs": 187,
+      "unique_rational_mixed_inputs": 97,
+      "work_cached": 67303700,
+      "work_uncached": 70580744
+    }
+  },
+  "totals": {
+    "divisions_cached": 33795,
+    "divisions_uncached": 72928,
+    "hits": 24119,
+    "misses": 21231,
+    "work_cached": 138305756,
+    "work_uncached": 154758136
+  }
+}

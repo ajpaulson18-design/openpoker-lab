@@ -1,0 +1,63 @@
+name: Native frozen policy State boundary
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  frozen-policy-state:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build the explicit read-only target
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-frozen-policy-state-controls --output-dir "$RUNNER_TEMP/frozen-policy-state" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_FROZEN_POLICY_STATE_EXE=$RUNNER_TEMP/frozen-policy-state/native-virtual-frozen-policy-state-controls$suffix" >> "$GITHUB_ENV"
+      - name: Full independent conformance
+        env:
+          OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: ${{ runner.temp }}/frozen-policy-normal
+        run: python -B -m unittest tests.test_native_frozen_policy_state -v
+      - name: Optimized conformance
+        env:
+          OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: ${{ runner.temp }}/frozen-policy-optimized
+        run: python -O -B -m unittest tests.test_native_frozen_policy_state -v
+      - name: Replay saved observations without native calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-normal" > "$RUNNER_TEMP/frozen-policy-normal/replay.json"
+          python -O -B -m scripts.replay_native_frozen_policy_state "$RUNNER_TEMP/frozen-policy-optimized" > "$RUNNER_TEMP/frozen-policy-optimized/replay.json"
+      - name: Saved provenance and mathematical corruption controls
+        env:
+          OPENPOKER_NATIVE_FROZEN_POLICY_STATE_CONTROL_DIR: ${{ runner.temp }}/frozen-policy-normal
+        run: python -B -m unittest tests.test_frozen_policy_saved_replay -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-policy-state-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/frozen-policy-state/build.log
+            ${{ runner.temp }}/frozen-policy-state/build-failure.json
+            ${{ runner.temp }}/frozen-policy-state/native-exact-build-manifest.json
+            ${{ runner.temp }}/frozen-policy-state/native-virtual-frozen-policy-state-controls*
+            ${{ runner.temp }}/frozen-policy-normal/**
+            ${{ runner.temp }}/frozen-policy-optimized/**
+          if-no-files-found: warn

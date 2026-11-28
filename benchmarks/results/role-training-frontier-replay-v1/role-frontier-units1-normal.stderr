@@ -1,0 +1,10 @@
+test_closed_domain_before_accounting_and_no_preparation (tests.test_role_training_frontier.RoleTrainingFrontierTests.test_closed_domain_before_accounting_and_no_preparation) ... ok
+test_existing_T2_contract_bridge (tests.test_role_training_frontier.RoleTrainingFrontierTests.test_existing_T2_contract_bridge) ... ok
+test_first_transport_width_and_catalog_cliffs (tests.test_role_training_frontier.RoleTrainingFrontierTests.test_first_transport_width_and_catalog_cliffs) ... ok
+test_changed_manifest (tests.test_role_training_frontier_packet.FrontierPacketAdmission.test_changed_manifest) ... ok
+test_changed_objects (tests.test_role_training_frontier_packet.FrontierPacketAdmission.test_changed_objects) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 14.093s
+
+OK

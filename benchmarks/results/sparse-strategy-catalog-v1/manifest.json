@@ -1,0 +1,42 @@
+{
+  "version": "sparse-strategy-catalog-v1",
+  "native_source_head": "847afaff09aa40c2c0b1f52e374cc424f50d31d9",
+  "introduced_source_head": "436108a8d9775dd112454298fcc4dffe059bfd52",
+  "maintained_head": "03e7fa42eacb561539fda26a41de091c8955710c",
+  "archives": {
+    "catalog": {
+      "bytes": 2463508,
+      "sha256": "8bc5891ea688a7622f24e89d419e4b2d05ef924344e3f720e04e4ce8743b060a",
+      "members": 305,
+      "expanded_bytes": 8093746
+    },
+    "legacy-regression": {
+      "bytes": 7494245,
+      "sha256": "32f4e332320d0e1c622d5bfc81b0562d4cdf2eb6140967547756503346acfc7e",
+      "members": 687,
+      "expanded_bytes": 36488644
+    },
+    "provider-parity": {
+      "bytes": 4638454,
+      "sha256": "3c1181eadfdec6569e575777956a32e02fa26ed7a0895222d190eed1f4cefac9",
+      "members": 386,
+      "expanded_bytes": 41276360
+    },
+    "weak-transition-witness": {
+      "bytes": 332141,
+      "sha256": "07fa828c8c7d106257accef5c2320a4cb39c737f8362609ed34b94f7d1d5f809",
+      "members": 6,
+      "expanded_bytes": 15341751
+    }
+  },
+  "local_controls_per_mode": {
+    "catalog": 4,
+    "legacy_state": 11,
+    "uniform_epoch_reference": 5
+  },
+  "full_legacy_wire_bytes": 50507464,
+  "full_legacy_wire_sha256": "7fde396c4c2e645087d9fd8abdc373a97a485265bf157e537e3cfd181c538945",
+  "scope": "catalog identity and legacy/provider parity only; no native epoch update, learning quality, realistic-range physical support, RSS or wider admission",
+  "archived_source_executed": false,
+  "system_inputs": "SDK/runtime/standard headers are not exhaustively byte-attested"
+}

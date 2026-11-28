@@ -1,0 +1,1614 @@
+{
+  "status": "session-matrices-and-timing-replayed",
+  "results": {
+    "normal": {
+      "status": "exact",
+      "archive_sha256": "31488c428c628b90d0055050774551a1cb92b98fbd7a004319229b803ab65d14",
+      "members_authenticated": 389,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-session-rows-exact",
+          "cases": [
+            {
+              "case": "uniform-different-pairs",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                },
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-4155936961001982794673690385315959695959005709238824732775247528801656745946505685874309138362415145561000312324249645316527625",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "peak_integer_bits": 695
+                }
+              ],
+              "work_actual": 222148239,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-reversed",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-4155936961001982794673690385315959695959005709238824732775247528801656745946505685874309138362415145561000312324249645316527625",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "peak_integer_bits": 695
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                }
+              ],
+              "work_actual": 222148239,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-same-selector",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                }
+              ],
+              "work_actual": 222072189,
+              "work_forecast": 315754753,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-zero-shared-turn",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-673620547149596183836761179606029148815843887777566945912539006897148974462911701557438385630553571401077828513984479991893965",
+                    "1226919878074701399654754811708823049921519091581705942992308164029297148534593857851551174576111568677129289518443353012699136"
+                  ],
+                  "peak_integer_bits": 691
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    24
+                  ],
+                  "law": "uniform",
+                  "rows": 160,
+                  "slots": 402,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 635
+                }
+              ],
+              "work_actual": 219254966,
+              "work_forecast": 314649881,
+              "output_bytes": 1723528,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25620,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-zero-flop-first",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    24,
+                    32,
+                    33
+                  ],
+                  "law": "river_weighted",
+                  "rows": 12,
+                  "slots": 30,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 637
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    33,
+                    35,
+                    48
+                  ],
+                  "law": "uniform",
+                  "rows": 514,
+                  "slots": 1240,
+                  "root": [
+                    "49939771738886436951076158608399387233346433940409950627682978438071138690859489516409516955096437977024723752635201403017429801",
+                    "306729969518675349913688702927205762480379772895426485748077041007324287133648464462887793644027892169282322379610838253174784"
+                  ],
+                  "peak_integer_bits": 694
+                }
+              ],
+              "work_actual": 218588202,
+              "work_forecast": 314539599,
+              "output_bytes": 1688168,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25472,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-maximum-retained-stage",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "uniform",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                },
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "river_weighted",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-2020861641448788551510283538818087446447531663332700837737617020691446923388735104672315156891660714203233485541953439975681895",
+                    "2453839756149402799309509623417646099843038183163411885984616328058594297069187715703102349152223137354258579036886706025398272"
+                  ],
+                  "peak_integer_bits": 691
+                }
+              ],
+              "work_actual": 223700123,
+              "work_forecast": 316023481,
+              "output_bytes": 1936776,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26540,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-different-pairs",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                },
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-211368832449646257709393411868520044707634179553119695847747282092195919091626494955306557626013468192292208685",
+                    "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+                  ],
+                  "peak_integer_bits": 697
+                }
+              ],
+              "work_actual": 221426179,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-reversed",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-211368832449646257709393411868520044707634179553119695847747282092195919091626494955306557626013468192292208685",
+                    "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+                  ],
+                  "peak_integer_bits": 697
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                }
+              ],
+              "work_actual": 221426179,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-same-selector",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                }
+              ],
+              "work_actual": 221447977,
+              "work_forecast": 315754753,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-zero-shared-turn",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-328533162263225405350261384062599046447031807490253033934994012579542306722917429228479457534265",
+                    "60491820353228898817827763163004893870584405418303642898890826784027707077772046826822168477696"
+                  ],
+                  "peak_integer_bits": 694
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    24
+                  ],
+                  "law": "uniform",
+                  "rows": 160,
+                  "slots": 402,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 635
+                }
+              ],
+              "work_actual": 218942680,
+              "work_forecast": 314649881,
+              "output_bytes": 1723528,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25620,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-zero-flop-first",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    24,
+                    32,
+                    33
+                  ],
+                  "law": "river_weighted",
+                  "rows": 12,
+                  "slots": 30,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 637
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    33,
+                    35,
+                    48
+                  ],
+                  "law": "uniform",
+                  "rows": 514,
+                  "slots": 1240,
+                  "root": [
+                    "2553540988719075201",
+                    "32651097298436096"
+                  ],
+                  "peak_integer_bits": 696
+                }
+              ],
+              "work_actual": 218239474,
+              "work_forecast": 314539599,
+              "output_bytes": 1688168,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25472,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-maximum-retained-stage",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "uniform",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-38875045166713449585940919509652268723498517048955172605770330239",
+                    "5964954020289371902811763286770395580562417512921727004638707712"
+                  ],
+                  "peak_integer_bits": 690
+                },
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "river_weighted",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-194375225833567247929704597548261343617492585244775863028851651195",
+                    "23859816081157487611247053147081582322249670051686908018554830848"
+                  ],
+                  "peak_integer_bits": 693
+                }
+              ],
+              "work_actual": 223109729,
+              "work_forecast": 316023481,
+              "output_bytes": 1936776,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26540,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            }
+          ],
+          "observed_successes": 12,
+          "observed_rejections": 7,
+          "observed_source_head": "09a630977399a946dbb43edaae1c3a549ffc6ec0",
+          "active_python_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "tests/virtual_frozen_policy_session_reference.py": "9bd5a066394fc4cf2a9e509e2a2826b89a8d61ed3d1bee33552cc0fedd1bb16d",
+            "tests/virtual_native_policy_session_reference.py": "30bdbcd96d3cd898ee9a63825a88368c267bb961851023c803e31b33f41f4745",
+            "tests/test_native_frozen_policy_session.py": "b6f7470fd0a5413a4a25388ee70cbf1295315fdd3355601c58e641080ff9479d",
+            "tests/test_native_frozen_grid_raw.py": "c14182c558fb2ad72c61f7d5264eae83c3a81d603aca6c7237657a9dde5cb4ac",
+            "scripts/replay_native_policy_session.py": "45b5a46b4681d67a4b4f8126c6bff52905a87878926edcb8c53b44ac9dea0f83",
+            "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "observed_stream_sha256": {
+            "uniform-different-pairs": [
+              "12b4f4a4e002da6c74a0f9dbbb4c04389d4a38690660c87b58e86cd272c601df",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-reversed": [
+              "0d3229da02be31d3ff68fb0be9859e3e48e3f8ceed46f6accdd18f85811fe164",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-same-selector": [
+              "2760cfd8efbad8513a27a5fce4797d05d3b79272964e000158d4ce28f8d07517",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-zero-shared-turn": [
+              "003d5544b0284807e9d00d83f4523dd21e2d88078fd68ff02bf85fa38eb2ee83",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-zero-flop-first": [
+              "9ed2629f0bab2ad77375892ea0503346d75d5528d549c16e65bfcb7398a14924",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-maximum-retained-stage": [
+              "069558b3425faebdb6a8343bde062353e4194f0f2071d2f65d3d6ae9091b5676",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-different-pairs": [
+              "349d0f7add5573e824b0d4025f803548936bd6f8f2ae3481f4ea6a90e50bc464",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-reversed": [
+              "11e59013ae5aff0fa3ef473c0c4fe9ea44c972ca0f41219532c5889aab648b7f",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-same-selector": [
+              "2ecf871eebc225aecbf77ad75ccd5330cba010ef852cfcb15140e5217f743592",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-zero-shared-turn": [
+              "9740fab8ed0815e16cf37cf86f63f04e0812c2a3e73be0c7d4b0bd3afbe68752",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-zero-flop-first": [
+              "45ae0954841e17777b945c6cd73e0169c4a38551a2d9aa5602d51af28eae5292",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-maximum-retained-stage": [
+              "1635e1fd18d610165de6d84a547b638d0242ff769dc6f932bb65d04b70f4c5bc",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "reject-second-law": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "4c1ef898d144bdc86b22eb3fce4c8f9ec4ae0b30e5931ad7715dbf8098f1f854"
+            ],
+            "reject-second-duplicate": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-second-foreign": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-second-unsorted": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "39e718eb1a38cb08d31544df0d894348349bebcf10c7f103e49b5dbef5095de5"
+            ],
+            "reject-arity": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "b0b6c504dc8e88aab9ff729dbe84b6f93b66d0dc5673157534a404d09d79dff7"
+            ],
+            "reject-third-selector": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "b0b6c504dc8e88aab9ff729dbe84b6f93b66d0dc5673157534a404d09d79dff7"
+            ],
+            "reject-late-partition": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "42e124436aa985a6bddb455fea104ae3d137509ff72e780233e048715d621f3d"
+            ]
+          },
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "scope": "immutable two-board raw session only; no policy transition, training, quality or wider admission",
+          "invocation_receipts": "controller commands and observed exits/streams; no independent syscall attestation"
+        }
+      ]
+    },
+    "optimized": {
+      "status": "exact",
+      "archive_sha256": "fddf7fd23cbaaf16ce52cf140ef6543712356d85d2785b3d09f7a0d5b1d5dda4",
+      "members_authenticated": 389,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-session-rows-exact",
+          "cases": [
+            {
+              "case": "uniform-different-pairs",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                },
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-4155936961001982794673690385315959695959005709238824732775247528801656745946505685874309138362415145561000312324249645316527625",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "peak_integer_bits": 695
+                }
+              ],
+              "work_actual": 222148239,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-reversed",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-4155936961001982794673690385315959695959005709238824732775247528801656745946505685874309138362415145561000312324249645316527625",
+                    "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+                  ],
+                  "peak_integer_bits": 695
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                }
+              ],
+              "work_actual": 222148239,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-same-selector",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                }
+              ],
+              "work_actual": 222072189,
+              "work_forecast": 315754753,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-zero-shared-turn",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-673620547149596183836761179606029148815843887777566945912539006897148974462911701557438385630553571401077828513984479991893965",
+                    "1226919878074701399654754811708823049921519091581705942992308164029297148534593857851551174576111568677129289518443353012699136"
+                  ],
+                  "peak_integer_bits": 691
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    24
+                  ],
+                  "law": "uniform",
+                  "rows": 160,
+                  "slots": 402,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 635
+                }
+              ],
+              "work_actual": 219254966,
+              "work_forecast": 314649881,
+              "output_bytes": 1723528,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25620,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-zero-flop-first",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    24,
+                    32,
+                    33
+                  ],
+                  "law": "river_weighted",
+                  "rows": 12,
+                  "slots": 30,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 637
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    33,
+                    35,
+                    48
+                  ],
+                  "law": "uniform",
+                  "rows": 514,
+                  "slots": 1240,
+                  "root": [
+                    "49939771738886436951076158608399387233346433940409950627682978438071138690859489516409516955096437977024723752635201403017429801",
+                    "306729969518675349913688702927205762480379772895426485748077041007324287133648464462887793644027892169282322379610838253174784"
+                  ],
+                  "peak_integer_bits": 694
+                }
+              ],
+              "work_actual": 218588202,
+              "work_forecast": 314539599,
+              "output_bytes": 1688168,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25472,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "uniform-maximum-retained-stage",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "uniform",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                    "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+                  ],
+                  "peak_integer_bits": 688
+                },
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "river_weighted",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-2020861641448788551510283538818087446447531663332700837737617020691446923388735104672315156891660714203233485541953439975681895",
+                    "2453839756149402799309509623417646099843038183163411885984616328058594297069187715703102349152223137354258579036886706025398272"
+                  ],
+                  "peak_integer_bits": 691
+                }
+              ],
+              "work_actual": 223700123,
+              "work_forecast": 316023481,
+              "output_bytes": 1936776,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26540,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-different-pairs",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                },
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-211368832449646257709393411868520044707634179553119695847747282092195919091626494955306557626013468192292208685",
+                    "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+                  ],
+                  "peak_integer_bits": 697
+                }
+              ],
+              "work_actual": 221426179,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-reversed",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    24,
+                    33,
+                    35,
+                    37
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-211368832449646257709393411868520044707634179553119695847747282092195919091626494955306557626013468192292208685",
+                    "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+                  ],
+                  "peak_integer_bits": 697
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                }
+              ],
+              "work_actual": 221426179,
+              "work_forecast": 315976246,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 5,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-same-selector",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "uniform",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                    "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+                  ],
+                  "peak_integer_bits": 692
+                }
+              ],
+              "work_actual": 221447977,
+              "work_forecast": 315754753,
+              "output_bytes": 1850280,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26180,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-zero-shared-turn",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    35
+                  ],
+                  "law": "river_weighted",
+                  "rows": 440,
+                  "slots": 1054,
+                  "root": [
+                    "-328533162263225405350261384062599046447031807490253033934994012579542306722917429228479457534265",
+                    "60491820353228898817827763163004893870584405418303642898890826784027707077772046826822168477696"
+                  ],
+                  "peak_integer_bits": 694
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    32,
+                    33,
+                    24
+                  ],
+                  "law": "uniform",
+                  "rows": 160,
+                  "slots": 402,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 635
+                }
+              ],
+              "work_actual": 218942680,
+              "work_forecast": 314649881,
+              "output_bytes": 1723528,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25620,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-zero-flop-first",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    16,
+                    17,
+                    24,
+                    32,
+                    33
+                  ],
+                  "law": "river_weighted",
+                  "rows": 12,
+                  "slots": 30,
+                  "root": [
+                    "0",
+                    "1"
+                  ],
+                  "peak_integer_bits": 637
+                },
+                {
+                  "board": [
+                    16,
+                    17,
+                    33,
+                    35,
+                    48
+                  ],
+                  "law": "uniform",
+                  "rows": 514,
+                  "slots": 1240,
+                  "root": [
+                    "2553540988719075201",
+                    "32651097298436096"
+                  ],
+                  "peak_integer_bits": 696
+                }
+              ],
+              "work_actual": 218239474,
+              "work_forecast": 314539599,
+              "output_bytes": 1688168,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 25472,
+              "rank_calls": 3,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            },
+            {
+              "case": "zero-skew-maximum-retained-stage",
+              "status": "both-raw-results-exact",
+              "boards": [
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "uniform",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-38875045166713449585940919509652268723498517048955172605770330239",
+                    "5964954020289371902811763286770395580562417512921727004638707712"
+                  ],
+                  "peak_integer_bits": 690
+                },
+                {
+                  "board": [
+                    17,
+                    33,
+                    35,
+                    16,
+                    32
+                  ],
+                  "law": "river_weighted",
+                  "rows": 530,
+                  "slots": 1282,
+                  "root": [
+                    "-194375225833567247929704597548261343617492585244775863028851651195",
+                    "23859816081157487611247053147081582322249670051686908018554830848"
+                  ],
+                  "peak_integer_bits": 693
+                }
+              ],
+              "work_actual": 223109729,
+              "work_forecast": 316023481,
+              "output_bytes": 1936776,
+              "policy_imports": 1,
+              "policy_echoes": 1,
+              "state_reads": 26540,
+              "rank_calls": 2,
+              "chance_contractions": 2440,
+              "training_iterations": 0,
+              "state_updates": 0,
+              "scope": "one immutable two-board raw session only; no policy transition, sampled training or quality"
+            }
+          ],
+          "observed_successes": 12,
+          "observed_rejections": 7,
+          "observed_source_head": "09a630977399a946dbb43edaae1c3a549ffc6ec0",
+          "active_python_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "tests/virtual_frozen_policy_session_reference.py": "9bd5a066394fc4cf2a9e509e2a2826b89a8d61ed3d1bee33552cc0fedd1bb16d",
+            "tests/virtual_native_policy_session_reference.py": "30bdbcd96d3cd898ee9a63825a88368c267bb961851023c803e31b33f41f4745",
+            "tests/test_native_frozen_policy_session.py": "b6f7470fd0a5413a4a25388ee70cbf1295315fdd3355601c58e641080ff9479d",
+            "tests/test_native_frozen_grid_raw.py": "c14182c558fb2ad72c61f7d5264eae83c3a81d603aca6c7237657a9dde5cb4ac",
+            "scripts/replay_native_policy_session.py": "45b5a46b4681d67a4b4f8126c6bff52905a87878926edcb8c53b44ac9dea0f83",
+            "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "observed_stream_sha256": {
+            "uniform-different-pairs": [
+              "12b4f4a4e002da6c74a0f9dbbb4c04389d4a38690660c87b58e86cd272c601df",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-reversed": [
+              "0d3229da02be31d3ff68fb0be9859e3e48e3f8ceed46f6accdd18f85811fe164",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-same-selector": [
+              "2760cfd8efbad8513a27a5fce4797d05d3b79272964e000158d4ce28f8d07517",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-zero-shared-turn": [
+              "003d5544b0284807e9d00d83f4523dd21e2d88078fd68ff02bf85fa38eb2ee83",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-zero-flop-first": [
+              "9ed2629f0bab2ad77375892ea0503346d75d5528d549c16e65bfcb7398a14924",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-maximum-retained-stage": [
+              "069558b3425faebdb6a8343bde062353e4194f0f2071d2f65d3d6ae9091b5676",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-different-pairs": [
+              "349d0f7add5573e824b0d4025f803548936bd6f8f2ae3481f4ea6a90e50bc464",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-reversed": [
+              "11e59013ae5aff0fa3ef473c0c4fe9ea44c972ca0f41219532c5889aab648b7f",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-same-selector": [
+              "2ecf871eebc225aecbf77ad75ccd5330cba010ef852cfcb15140e5217f743592",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-zero-shared-turn": [
+              "9740fab8ed0815e16cf37cf86f63f04e0812c2a3e73be0c7d4b0bd3afbe68752",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-zero-flop-first": [
+              "45ae0954841e17777b945c6cd73e0169c4a38551a2d9aa5602d51af28eae5292",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-maximum-retained-stage": [
+              "1635e1fd18d610165de6d84a547b638d0242ff769dc6f932bb65d04b70f4c5bc",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "reject-second-law": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "4c1ef898d144bdc86b22eb3fce4c8f9ec4ae0b30e5931ad7715dbf8098f1f854"
+            ],
+            "reject-second-duplicate": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-second-foreign": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-second-unsorted": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "39e718eb1a38cb08d31544df0d894348349bebcf10c7f103e49b5dbef5095de5"
+            ],
+            "reject-arity": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "b0b6c504dc8e88aab9ff729dbe84b6f93b66d0dc5673157534a404d09d79dff7"
+            ],
+            "reject-third-selector": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "b0b6c504dc8e88aab9ff729dbe84b6f93b66d0dc5673157534a404d09d79dff7"
+            ],
+            "reject-late-partition": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "42e124436aa985a6bddb455fea104ae3d137509ff72e780233e048715d621f3d"
+            ]
+          },
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "scope": "immutable two-board raw session only; no policy transition, training, quality or wider admission",
+          "invocation_receipts": "controller commands and observed exits/streams; no independent syscall attestation"
+        }
+      ]
+    },
+    "benchmark": {
+      "status": "exact",
+      "archive_sha256": "5e3bc0642a44ade1899ff1cf2daed9cc62195160d4de5f964a6a5f5e8469c935",
+      "members_authenticated": 616,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-timings-and-numerical-wires-recounted",
+          "result": {
+            "status": "measured",
+            "pairs": [
+              {
+                "pair": 0,
+                "order": "baseline-first",
+                "baseline_seconds": 0.48798739997437224,
+                "session_seconds": 0.18951429997105151,
+                "ratio": 0.38835900267302864
+              },
+              {
+                "pair": 1,
+                "order": "session-first",
+                "baseline_seconds": 0.4970780000439845,
+                "session_seconds": 0.18229889997746795,
+                "ratio": 0.36674103452845835
+              },
+              {
+                "pair": 2,
+                "order": "baseline-first",
+                "baseline_seconds": 0.34405230003176257,
+                "session_seconds": 0.27157529996475205,
+                "ratio": 0.7893430735376002
+              },
+              {
+                "pair": 3,
+                "order": "session-first",
+                "baseline_seconds": 0.5295782000175677,
+                "session_seconds": 0.254017399973236,
+                "ratio": 0.47965984998024747
+              },
+              {
+                "pair": 4,
+                "order": "baseline-first",
+                "baseline_seconds": 0.45151839999016374,
+                "session_seconds": 0.1986623999546282,
+                "ratio": 0.43998738469784626
+              },
+              {
+                "pair": 5,
+                "order": "session-first",
+                "baseline_seconds": 0.39084160001948476,
+                "session_seconds": 0.2175582000054419,
+                "ratio": 0.5566403371457795
+              },
+              {
+                "pair": 6,
+                "order": "baseline-first",
+                "baseline_seconds": 0.6491030000033788,
+                "session_seconds": 0.44405000004917383,
+                "ratio": 0.6840979013297772
+              },
+              {
+                "pair": 7,
+                "order": "session-first",
+                "baseline_seconds": 0.5604062999482267,
+                "session_seconds": 0.3033866999903694,
+                "ratio": 0.5413691816426722
+              }
+            ],
+            "median_ratio": 0.5105145158114599,
+            "pairs_faster": 8,
+            "timing_gate_passed": true,
+            "observed_native_children": 27,
+            "all_numerical_wires_verified": true,
+            "automatic_retries": 0,
+            "source_head": "49b989d1ff90bf62b28d0d6d8c9653998530132f",
+            "baseline_sum_actual_work": 432087356,
+            "session_actual_work": 221426179,
+            "baseline_output_bytes": 3292048,
+            "session_output_bytes": 1850280,
+            "scope": "named PROOF9 cold setup amortization only; no training-throughput, RSS or wider-capacity claim"
+          },
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "active_python_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "tests/virtual_frozen_policy_session_reference.py": "9bd5a066394fc4cf2a9e509e2a2826b89a8d61ed3d1bee33552cc0fedd1bb16d",
+            "tests/virtual_native_policy_session_reference.py": "30bdbcd96d3cd898ee9a63825a88368c267bb961851023c803e31b33f41f4745",
+            "tests/test_native_frozen_policy_session.py": "b6f7470fd0a5413a4a25388ee70cbf1295315fdd3355601c58e641080ff9479d",
+            "tests/test_native_frozen_grid_raw.py": "c14182c558fb2ad72c61f7d5264eae83c3a81d603aca6c7237657a9dde5cb4ac",
+            "scripts/replay_policy_session_benchmark.py": "fa0289c5bf3dd96b737cd72360eee8b74c8775eb1c42fb42ca66120d79235ac0",
+            "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "invocation_receipts": "controller commands and exit/stream observations; elapsed records are not independent clock attestations"
+        }
+      ]
+    }
+  },
+  "active_bootstrap": {
+    "head": "5aae3f8f46b8d14442fcfc0676100a93338a39a7",
+    "raw_sha256": {
+      "scripts/replay_native_policy_session_packet.py": "79ae7a9b78d510d24b12f7f740e53ae18601ec8b1b8f1e7e91c8a94329a7b63f",
+      "scripts/replay_native_policy_session.py": "45b5a46b4681d67a4b4f8126c6bff52905a87878926edcb8c53b44ac9dea0f83",
+      "scripts/replay_policy_session_benchmark.py": "fa0289c5bf3dd96b737cd72360eee8b74c8775eb1c42fb42ca66120d79235ac0",
+      "scripts/replay_native_grid_raw.py": "7074bb37083baf3d417784516e44015b9e0ff1c71a4375d1fabe09a12d13e3e6",
+      "scripts/replay_native_policy_packet.py": "de47a3fe586b0b1323fda524d2efac0d1077deff4b8d85ecb67215002c0b1e6b",
+      "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+    }
+  },
+  "current_project_imports": "fresh process, empty cache prefix, bytecode writes disabled",
+  "candidate_calls": 0,
+  "archived_source_executed": false,
+  "scope": "named immutable-session raw math/setup amortization only; no training, quality or wider admission"
+}

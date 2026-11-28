@@ -1,0 +1,44 @@
+"""Capture frozen scalar worksheet/reference exits; no native execution."""
+from hashlib import sha256
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+BASE = Path(__file__).resolve().parent
+ROOT = BASE / 'dyprofile-repo'
+OUT = BASE / 'joint-learning-lifetime1'
+OUT.mkdir(exist_ok=False)
+
+
+def dump(name, value):
+    (OUT / name).write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8')
+
+
+def capture():
+    names = [name for name in subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0') if name.endswith('.py')]
+    return {'head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+            'tracked_python_raw_sha256': {name: sha256((ROOT / name).read_bytes()).hexdigest() for name in names}}
+
+
+before = capture(); dump('sources-before.json', before)
+for mode, flags in (('normal', []), ('optimized', ['-O'])):
+    for label, arguments in (('worksheet', ['-m', 'scripts.forecast_joint_learning_lifetime']),
+                             ('controls', ['-m', 'unittest', '-v', 'tests.test_joint_learning_lifetime'])):
+        command = [sys.executable, *flags, '-B', *arguments]
+        with (OUT / (label + '-' + mode + '.stdout')).open('xb') as output, (OUT / (label + '-' + mode + '.stderr')).open('xb') as errors:
+            child = subprocess.run(command, cwd=ROOT, stdout=output, stderr=errors, timeout=90, check=False)
+        dump(label + '-' + mode + '.process.json', {'command': command, 'observed_exit_code': child.returncode,
+            'actual_exit_observed': True, 'automatic_retries': 0, 'native_calls': 0})
+        if child.returncode:
+            raise RuntimeError('original child failure retained')
+after = capture(); dump('sources-after.json', after)
+if after != before:
+    raise RuntimeError('frozen source drift')
+if (OUT / 'worksheet-normal.stdout').read_bytes() != (OUT / 'worksheet-optimized.stdout').read_bytes():
+    raise RuntimeError('worksheet mode drift')
+dump('result.json', {'status': 'scalar-lifetime-worksheet-and-independent-controls-exact', 'source_head': before['head'],
+    'worksheet_sha256': sha256((OUT / 'worksheet-normal.stdout').read_bytes()).hexdigest(),
+    'child_processes': 4, 'all_actual_exits_zero': True, 'native_calls': 0, 'attempted_training': False,
+    'scope': 'Scalar uniform-law architecture forecast and independent physical/occupancy controls only.'})
+print((OUT / 'result.json').read_text())

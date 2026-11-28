@@ -1,0 +1,7 @@
+test_changed_archive_rejects_before_numerics (tests.test_joint_packet_admission.JointPacketAdmissionTests.test_changed_archive_rejects_before_numerics) ... ok
+test_changed_manifest_rejects_before_numerics (tests.test_joint_packet_admission.JointPacketAdmissionTests.test_changed_manifest_rejects_before_numerics) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.461s
+
+OK

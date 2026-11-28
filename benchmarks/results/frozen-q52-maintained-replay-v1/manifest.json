@@ -1,0 +1,37 @@
+{
+  "version": "frozen-q52-maintained-replay-v1",
+  "source_head": "e2c88208d5aac14a68a996a25d708b03b6489107",
+  "status": "four independent saved replays and six controls in both modes passed locally",
+  "files_sha256": {
+    "replay.json": "0e97d6cae2eafc05c80d8abb2f012bc8727c7ad7a4b43b68be2f3486ccf35f67",
+    "controls-normal.log": "1bd233dd7d1fd6f6ab603a8c0763cbb2b71627bfe58d5c10451af22355a12e1c",
+    "controls-optimized.log": "f76e06718605e7a4bda7763c13cdbff43d13d68be6d593ae9e946e515e1244bd",
+    "arithmetic-audit.json": "0491269444e4d0ec8694099671d1f523a5c839d6cb7739f81b904ca56e661a65"
+  },
+  "source_sha256": {
+    "scripts/replay_frozen_grid_packet.py": "419287f03f4db24244d5f21bc92bad7f19c6ef112696305fe9d3e30910e74502",
+    "tests/test_frozen_grid_packet_replay.py": "0aa5cdc7a4b39017c887cc01c6fae34eed4a7b11198724dd02d127217c1b2728",
+    ".github/workflows/frozen-grid-packet.yml": "df610eca50208407d4404b40ca00e6d28cf38f3eb453ba5c8f4234b565aeb07e"
+  },
+  "frozen_archive_sha256": "f34e7c7e76da800d0d9067f1c73c6cdbbadc7f053f8c6920d495ac8f041c6687",
+  "archived_sources_authenticated": 998,
+  "current_oracle_source_dependencies": 13,
+  "review": {
+    "reviewer": "review_study_ci",
+    "read_only": true,
+    "producer_calls": 0,
+    "finding": "no material source-auth, parser, arithmetic or resource defect found",
+    "limit": "static source/workflow review; executed checks performed separately by lead"
+  },
+  "native_arithmetic_audit": {
+    "status": "source-reviewed design plus independent card-free geometry and scalar checks; no native mode implemented",
+    "source_pin": "0862087c4a524239bb900d96624a8f45efdcf327",
+    "prepared_api": "contraction returns raw integers, prefix divisor and reach exponent; parent owns Z, money and proposal correction",
+    "limits_raised": false
+  },
+  "cross_platform_ci": "new Windows/Linux workflow; acceptance not claimed by local evidence",
+  "candidate_calls": 0,
+  "native_calls": 0,
+  "archived_code_executed": false,
+  "quality_gate": null
+}

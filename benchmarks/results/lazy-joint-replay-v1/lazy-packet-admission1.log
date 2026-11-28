@@ -1,0 +1,7 @@
+test_changed_manifest_refuses_before_numerics (tests.test_lazy_packet_admission.LazyPacketAdmissionTests.test_changed_manifest_refuses_before_numerics) ... ok
+test_changed_pooled_objects_refuse_before_numerics (tests.test_lazy_packet_admission.LazyPacketAdmissionTests.test_changed_pooled_objects_refuse_before_numerics) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 9.555s
+
+OK

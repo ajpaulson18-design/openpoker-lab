@@ -1,0 +1,26 @@
+{
+  "status": "independent card-free geometry and exact scalar checks passed",
+  "route_decisions_max": 12,
+  "actor_decisions_max": [
+    6,
+    7
+  ],
+  "literal_visits": 1105,
+  "proposals": 2520,
+  "weighted_prefix_numerator_max": [
+    1,
+    195,
+    35,
+    9
+  ],
+  "native_calls": 0,
+  "rank_calls": 0,
+  "limits_raised": false,
+  "widths": {
+    "regret_uniform": 646,
+    "regret_weighted": 648,
+    "average_denominator": 381,
+    "average_numerator": 383,
+    "existing_factored_cap": 704
+  }
+}

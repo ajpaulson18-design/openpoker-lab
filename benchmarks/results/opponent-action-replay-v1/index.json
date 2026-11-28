@@ -1,0 +1,25 @@
+{
+  "created_after_runs": true,
+  "is_original_execution_receipt": false,
+  "reader_head": "16b46d969bd0f6ec81f85124df78c5b2a20c08d3",
+  "logs": {
+    "normal": {
+      "bytes": 5526,
+      "sha256": "c4b936c5ff25aaee4c9b22896f9ff305532e600f4cc727a2b2c518d0665beb91"
+    },
+    "optimized": {
+      "bytes": 5526,
+      "sha256": "c4b936c5ff25aaee4c9b22896f9ff305532e600f4cc727a2b2c518d0665beb91"
+    },
+    "admission": {
+      "bytes": 351,
+      "sha256": "a086456668e0c2645e36b8c58cd0c2f35d733c20b07105045b17517e5bf57d50"
+    }
+  },
+  "observed_outer_exits": {
+    "normal": 0,
+    "optimized": 0,
+    "admission": 0
+  },
+  "scope": "Post-run preservation of byte-identical source-admitted replay. Four fresh structural controls in each mode and two tests/four pre-numerical evidence refusals. No native, RNG, training, variance or quality admission."
+}

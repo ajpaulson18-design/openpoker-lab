@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_weighted_joint_packet.py", line 354, in <module>
+    print(json.dumps(replay(parser.parse_args().packet), indent=2))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_weighted_joint_packet.py", line 283, in replay
+    objects, identities, authentication = authenticate(loaded, manifest, helper)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_weighted_joint_packet.py", line 218, in authenticate
+    require(name.startswith(prefix) and raw == objects.body('3eb31c6', name[len(prefix):]),
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_joint_two_epoch_packet.py", line 184, in body
+    safe_name(name); self.tree(head)
+                     ^^^^^^^^^^^^^^^
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_joint_two_epoch_packet.py", line 177, in tree
+    require(type(head) is str and re.fullmatch('[0-9a-f]{40}', head) is not None, 'captured source HEAD grammar')
+  File "C:\Users\pauls\Documents\Codex\2026-10-26\files-pasted-by-the-user-i\work\dyprofile-repo\scripts\replay_joint_two_epoch_packet.py", line 48, in require
+    raise ValueError(message)
+ValueError: captured source HEAD grammar

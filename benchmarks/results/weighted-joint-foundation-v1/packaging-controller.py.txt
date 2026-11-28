@@ -1,0 +1,220 @@
+"""Package preserved executed evidence only. No native/math/archive execution."""
+from pathlib import Path
+from hashlib import sha256
+from io import BytesIO
+import json
+import subprocess
+import zipfile
+
+base = Path(__file__).resolve().parent
+root = base / 'dyprofile-repo'
+destination = base / 'weighted-joint-evidence1'
+MAX_MEMBER = MAX_ARCHIVE = 8 << 20
+MAX_EXPANDED = 80 << 20
+SOURCE_RECOVERIES = {}
+
+
+def digest(raw):
+    return sha256(raw).hexdigest()
+
+
+def read(path):
+    if not path.is_file() or path.is_symlink() or path.stat().st_size > MAX_MEMBER:
+        raise ValueError('bounded regular member: ' + str(path))
+    return path.read_bytes()
+
+
+def tree(directory):
+    result = {}
+    for path in sorted(directory.rglob('*')):
+        if path.is_file():
+            name = path.relative_to(directory).as_posix()
+            if path.suffix.lower() in ('.exe', '.dll', '.obj', '.pdb', '.etl', '.diagsession') or 'empty-cache' in name:
+                raise ValueError('unexpected binary/private/cache evidence member: ' + name)
+            result[name] = read(path)
+    if not result:
+        raise ValueError('empty evidence directory')
+    return result
+
+
+def phase_tree(directory):
+    # Every observed complete wire is byte-identical by the frozen benchmark.
+    # Keep its bytes once per archive and an authenticated object reference
+    # for every original process path. This preserves all132 process receipts
+    # without tripling44MB of identical stdout per attempt or raising80MB.
+    result = {}
+    for path in sorted(directory.rglob('*')):
+        if not path.is_file():
+            continue
+        name = path.relative_to(directory).as_posix()
+        raw = read(path)
+        if path.name == 'stdout.bin':
+            record = json.loads((path.parent / 'process.json').read_text())
+            object_name = 'stdout-objects/' + digest(raw) + '.bin'
+            if record['streams'][0]['sha256'] != digest(raw) or record['streams'][0]['saved_bytes'] != len(raw):
+                raise ValueError('phase stdout object receipt mismatch')
+            result[object_name] = raw
+            result[name.removesuffix('.bin') + '.ref.json'] = (json.dumps({
+                'original_member': name, 'object': object_name, 'bytes': len(raw), 'sha256': digest(raw),
+                'encoding': 'Exact original stdout bytes, content addressed deduplication only.'}, indent=2) + '\n').encode()
+        else:
+            if path.suffix.lower() in ('.etl', '.diagsession', '.exe', '.obj', '.dll', '.pdb'):
+                raise ValueError('private/binary phase member')
+            result[name] = raw
+    return result
+
+
+def capture_build(name):
+    directory = base / name
+    return {path.name: read(path) for path in directory.iterdir()
+            if path.is_file() and path.name in ('native-exact-build-manifest.json', 'compiler-version.log',
+                                               'build.log', 'build-failure.json')}
+
+
+def logs(*names):
+    return {name: read(base / name) for name in names}
+
+
+def archived_source(commit, names, hashes=None):
+    result = {}
+    for name in names:
+        raw = subprocess.check_output(['git', 'show', commit + ':' + name], cwd=root)
+        if hashes and name in hashes:
+            variants = (raw, raw.replace(b'\n', b'\r\n')) if b'\r' not in raw else (raw,)
+            matches = [value for value in variants if digest(value) == hashes[name]]
+            if not matches:
+                # Some unchanged historical headers have a captured mixed
+                # CRLF/LF checkout. Never invent a mixed form or normalize away
+                # its hash. Recover exact already-captured raw bytes and check
+                # both the pre-recorded raw hash and canonical Git LF closure.
+                for directory in ('weighted-whole1-normal', 'weighted-joint2-normal', 'weighted-legacy-joint2-normal'):
+                    original = base / directory / 'source' / name
+                    if original.is_file():
+                        captured = read(original)
+                        if digest(captured) == hashes[name] and captured.replace(b'\r\n', b'\n') == raw.replace(b'\r\n', b'\n'):
+                            matches = [captured]
+                            SOURCE_RECOVERIES[commit + ':' + name] = {
+                                'original_captured_source': directory + '/source/' + name,
+                                'recorded_raw_sha256': hashes[name], 'git_raw_sha256': digest(raw),
+                                'bridge': 'Exact original captured raw bytes recovered by hash; canonical CRLF-to-LF content equals recorded Git blob. No invented line endings or source execution.'}
+                            break
+                if not matches:
+                    raise ValueError('recorded raw source not recoverable from exact captures: ' + name)
+            raw = matches[0]
+        result['source/' + name] = raw
+    return result
+
+
+def package(name, files):
+    files = dict(files)
+    if any(not key or '\\' in key or key.startswith('/') or '..' in Path(key).parts for key in files):
+        raise ValueError('unsafe archive member')
+    inventory = {key: {'bytes': len(raw), 'sha256': digest(raw)} for key, raw in sorted(files.items())}
+    files['inner-manifest.json'] = (json.dumps({'schema': 'weighted-joint-evidence-inner-v1', 'files': inventory},
+                                            indent=2) + '\n').encode()
+    if any(len(raw) > MAX_MEMBER for raw in files.values()):
+        raise ValueError('member cap: ' + name)
+    memory = BytesIO()
+    with zipfile.ZipFile(memory, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for key, raw in sorted(files.items()):
+            info = zipfile.ZipInfo(key, (2026, 11, 24, 0, 0, 0)); info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3; info.external_attr = 0o100644 << 16
+            archive.writestr(info, raw)
+    raw = memory.getvalue()
+    if len(raw) > MAX_ARCHIVE:
+        raise ValueError('archive cap: ' + name)
+    return raw, {'bytes': len(raw), 'sha256': digest(raw), 'members': len(files),
+                 'expanded_bytes': sum(map(len, files.values())), 'inventory': inventory}
+
+
+groups = {}
+groups['law-reference.zip'] = tree(base / 'weighted-law-reference2')
+groups['law-reference.zip'].update(logs('joint-information-universe1.json', 'weighted-raw-reference1-normal.log',
+                                       'weighted-raw-reference1-optimized.log', 'weighted-joint-parity1.json',
+                                       'weighted-ci-3eb31c6-jobs.json', 'history-ci-0ab9af6-annotations.json',
+                                       'weighted-joint-phase2-standard-text.log', 'weighted-joint-phase3-standard-text.log'))
+groups['law-reference.zip']['controllers/run_weighted_reference1.py'] = read(base / 'run_weighted_reference1.py')
+for label, directory in (
+    ('component-normal', 'weighted-joint2-normal'), ('component-optimized', 'weighted-joint2-optimized'),
+    ('whole-normal', 'weighted-whole1-normal'), ('whole-optimized', 'weighted-whole1-optimized'),
+    ('legacy-normal', 'weighted-legacy-joint2-normal'), ('legacy-optimized', 'weighted-legacy-joint2-optimized')):
+    groups[label + '.zip'] = tree(base / directory)
+    groups[label + '.zip']['outer-unittest.log'] = read(base / (directory + '.log'))
+for name, directory in (('component-build', 'weighted-joint3-build'), ('whole-build', 'weighted-whole1-build'),
+                        ('legacy-build', 'weighted-legacy-joint2-build')):
+    groups['builds.zip'] = groups.get('builds.zip', {}) | {name + '/' + member: raw
+                                                       for member, raw in capture_build(directory).items()}
+development = {}
+for name in ('weighted-joint1-normal', 'weighted-joint1-optimized'):
+    development.update({name + '/' + member: raw for member, raw in tree(base / name).items()})
+    development[name + '.log'] = read(base / (name + '.log'))
+for name in ('weighted-joint1-build', 'weighted-joint2-build'):
+    development.update({name + '/' + member: raw for member, raw in capture_build(name).items()})
+    development[name + '.log'] = read(base / (name + '.log'))
+development['scope.json'] = (json.dumps({
+    'first_harness_attempt': 'Normal/optimized exit1 before first native invocation: unchanged1025-byte short-stdin observer refused range wire. No arithmetic mismatch.',
+    'first_file_wire_build': 'Compiler failed at6dd5cca due duplicate local stream/input variable; outer buildexit1/compilerexit2. Preserved log/receipt.',
+    'earlier_law_launcher_attempt': 'WinError206 at4208c70 before importing/executing oracle, because all tracked Python filenames exceeded Windows argv limit. Original console was observed but not separately captured; empty weighted-law-reference1 directory remains external. Corrected runner uses Git pathspec and one ls-tree census; no resource cap raised.',
+}, indent=2) + '\n').encode()
+groups['development.zip'] = development
+groups['cpu-collector-refusal.zip'] = tree(base / 'joint-cpu-profile1') | logs('joint-cpu-profile1.log')
+for number in (1, 2, 3):
+    name = f'weighted-joint-phase{number}'
+    groups[f'phase-{number}.zip'] = phase_tree(base / name) | logs(name + '.log')
+    commit = json.loads(read(base / name / 'protocol.json'))['head']
+    for target in ('virtual-weighted-joint-two-epoch', 'virtual-weighted-joint-two-epoch-profile'):
+        build = f'{target}-phase{number}-build'
+        manifest = json.loads(read(base / build / 'native-exact-build-manifest.json'))
+        reconstructed = archived_source(commit, tuple(manifest['source_sha256']), manifest['source_sha256'])
+        for member, raw in reconstructed.items():
+            if member in groups[f'phase-{number}.zip'] and groups[f'phase-{number}.zip'][member] != raw:
+                raise ValueError('shared phase source closure mismatch')
+            groups[f'phase-{number}.zip'][member] = raw
+        groups[f'phase-{number}.zip'].update({'build/' + target + '/' + member: raw
+                                           for member, raw in capture_build(build).items()})
+
+# Canonical introduced Python sources for post-run standalone reconstruction.
+# Captures above retain complete pre/post tracked source hashes; sources here
+# are labelled Git reconstruction, not an invented pre-run raw source capture.
+source_names = ('tests/virtual_weighted_joint_reference.py', 'tests/test_weighted_joint_reference.py',
+                'tests/virtual_weighted_joint_raw_reference.py', 'tests/test_weighted_joint_raw_reference.py',
+                'tests/virtual_weighted_joint_forecast_reference.py', 'tests/virtual_native_weighted_joint_reference.py',
+                'tests/test_native_weighted_joint_chance.py', 'tests/test_native_weighted_joint_two_epoch.py',
+                'scripts/profile_joint_two_epoch_cpu.py', 'scripts/benchmark_joint_phase_profile.py')
+groups['introduced-source.zip'] = archived_source('3eb31c6', source_names)
+groups['introduced-source.zip'].update({'historical/' + key: raw for key, raw in archived_source('3eb31c6',
+    ('scripts/benchmark_joint_phase_profile.py', 'native/joint_phase_recorder.hpp')).items()})
+
+archives, inventory = {}, {}
+for name, members in groups.items():
+    archives[name], inventory[name] = package(name, members)
+if sum(record['expanded_bytes'] for record in inventory.values()) > MAX_EXPANDED:
+    raise ValueError('combined archive expanded-byte cap')
+manifest = {
+    'schema': 'weighted-joint-foundation-evidence-v1', 'archives': inventory,
+    'limits': {'member_bytes': MAX_MEMBER, 'archive_bytes': MAX_ARCHIVE, 'aggregate_expanded_bytes': MAX_EXPANDED},
+    'scope': 'Independent weighted law/raw references, native component and six-request full52 T2 matrices, legacy stream parity, CPU collector refusal and every coarse timing miss/acceptance. No long learning, RNG, saved-policy quality or unrestricted NLHE.',
+    'provenance': 'Native matrices captured source/build identities before cases and rechecked unchanged raw bytes/HEAD. Law runner pre/post all tracked Python hashes retained. Source ZIP labelled canonical Git reconstruction; introduced source not independently pre-run byte-captured unless its case inventory records that hash. Raw-reference unittest logs have committed-source identity77a588b; no separate pre-run raw capture. External packaging/controller copies are post-run and execute no project code.',
+    'observed_outer_exits': {'law_normal': 0, 'law_optimized': 0, 'raw_reference_normal': 0, 'raw_reference_optimized': 0,
+        'component_normal': 0, 'component_optimized': 0, 'whole_normal': 0, 'whole_optimized': 0,
+        'legacy_normal': 0, 'legacy_optimized': 0, 'collector_attempt': 1, 'coarse_phase1': 0, 'coarse_phase2': 0, 'coarse_phase3': 0},
+    'coarse_gate_note': 'Outer exit0 means measurement completed, not overhead acceptance. Preserve explicit result.overhead_pass in each attempt.',
+    'phase_stdout_encoding': 'Exact content-addressed objects plus per-original-path stdout.ref.json; every observed process receipt retained. No stream data discarded and no archived source executed.',
+    'candidate_calls_by_case_matrix': {'component_per_mode': 26, 'whole_per_mode': 14, 'legacy_per_mode': 13},
+    'parity_report_sha256': digest(read(base / 'weighted-joint-parity1.json')),
+    'exact_captured_source_recoveries': SOURCE_RECOVERIES,
+}
+manifest['coarse_results'] = {str(number): json.loads(read(base / f'weighted-joint-phase{number}' / 'result.json'))
+                              for number in (1, 2, 3)}
+if [manifest['coarse_results'][str(number)]['overhead_pass'] for number in (1, 2, 3)] != [False, False, True]:
+    raise ValueError('unexpected preserved overhead gate outcomes')
+raw_manifest = (json.dumps(manifest, indent=2) + '\n').encode()
+if len(raw_manifest) > MAX_MEMBER:
+    raise ValueError('outer manifest member cap')
+destination.mkdir(exist_ok=False)
+for name, raw in archives.items():
+    (destination / name).write_bytes(raw)
+(destination / 'manifest.json').write_bytes(raw_manifest)
+print(json.dumps({'directory': str(destination), 'manifest_sha256': digest(raw_manifest),
+                  'archive_summary': {name: {key: value for key, value in record.items() if key != 'inventory'}
+                                      for name, record in inventory.items()}}, indent=2))

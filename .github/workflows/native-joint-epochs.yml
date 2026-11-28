@@ -1,0 +1,76 @@
+name: Native true joint policy epochs
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  joint-epochs:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build the shared joint chance, storage and whole-game path
+        shell: bash
+        run: |
+          set -e
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          for target in virtual-joint-chance-controls virtual-joint-epoch-controls virtual-joint-two-epoch; do
+            python -B -m scripts.build_native_exact_four_street --target "$target" --output-dir "$RUNNER_TEMP/$target-build" ${{ matrix.flags }}
+          done
+          echo "OPENPOKER_NATIVE_JOINT_CHANCE_EXE=$RUNNER_TEMP/virtual-joint-chance-controls-build/native-virtual-joint-chance-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_JOINT_EPOCH_EXE=$RUNNER_TEMP/virtual-joint-epoch-controls-build/native-virtual-joint-epoch-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_JOINT_TWO_EPOCH_EXE=$RUNNER_TEMP/virtual-joint-two-epoch-build/native-virtual-joint-two-epoch$suffix" >> "$GITHUB_ENV"
+      - name: Verify every joint ticket and both policy epochs
+        env:
+          OPENPOKER_NATIVE_JOINT_CHANCE_DIR: ${{ runner.temp }}/joint-chance-normal
+          OPENPOKER_NATIVE_JOINT_EPOCH_DIR: ${{ runner.temp }}/joint-epoch-normal
+          OPENPOKER_NATIVE_JOINT_TWO_EPOCH_DIR: ${{ runner.temp }}/joint-whole-normal
+        run: python -B -X "pycache_prefix=${{ runner.temp }}/joint-normal-cache" -m unittest tests.test_native_joint_chance tests.test_native_joint_epoch tests.test_native_joint_two_epoch -v
+      - name: Repeat independent verification with optimized Python
+        env:
+          OPENPOKER_NATIVE_JOINT_CHANCE_DIR: ${{ runner.temp }}/joint-chance-optimized
+          OPENPOKER_NATIVE_JOINT_EPOCH_DIR: ${{ runner.temp }}/joint-epoch-optimized
+          OPENPOKER_NATIVE_JOINT_TWO_EPOCH_DIR: ${{ runner.temp }}/joint-whole-optimized
+        run: python -O -B -X "pycache_prefix=${{ runner.temp }}/joint-optimized-cache" -m unittest tests.test_native_joint_chance tests.test_native_joint_epoch tests.test_native_joint_two_epoch -v
+      - name: Independently replay saved numerical images
+        shell: bash
+        run: |
+          python -B -X "pycache_prefix=$RUNNER_TEMP/joint-replay-normal-cache" -m scripts.replay_joint_two_epoch "$RUNNER_TEMP/joint-whole-normal" > "$RUNNER_TEMP/joint-replay-normal.json" 2> "$RUNNER_TEMP/joint-replay-normal.stderr.log"
+          python -O -B -X "pycache_prefix=$RUNNER_TEMP/joint-replay-optimized-cache" -m scripts.replay_joint_two_epoch "$RUNNER_TEMP/joint-whole-optimized" > "$RUNNER_TEMP/joint-replay-optimized.json" 2> "$RUNNER_TEMP/joint-replay-optimized.stderr.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-joint-epochs-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/virtual-joint-*/build.log
+            ${{ runner.temp }}/virtual-joint-*/build-failure.json
+            ${{ runner.temp }}/virtual-joint-*/compiler-version.log
+            ${{ runner.temp }}/virtual-joint-*/native-exact-build-manifest.json
+            ${{ runner.temp }}/joint-chance-normal/**
+            ${{ runner.temp }}/joint-chance-optimized/**
+            ${{ runner.temp }}/joint-epoch-normal/**
+            ${{ runner.temp }}/joint-epoch-optimized/**
+            ${{ runner.temp }}/joint-whole-normal/**
+            ${{ runner.temp }}/joint-whole-optimized/**
+            ${{ runner.temp }}/joint-replay-*.json
+            ${{ runner.temp }}/joint-replay-*.stderr.log
+          if-no-files-found: warn

@@ -1,0 +1,1481 @@
+{
+  "status": "all-raw-rows-exact",
+  "modes": {
+    "normal": {
+      "status": "exact",
+      "archive_sha256": "527f77a5bbce5faf365b16c89006a865ea792f2289534907b2a23aed1df3d9b2",
+      "members_authenticated": 234,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-raw-rows-exact",
+          "cases": [
+            {
+              "case": "uniform-uniform-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216371384,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 688,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-5818311745402775912543166539442343574342607992934354625885346540322319444325107960224032793707381203785400437253949503443138675",
+                "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216438032,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 693,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "uniform",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "49939771738886436951076158608399387233346433940409950627682978438071138690859489516409516955096437977024723752635201403017429801",
+                "306729969518675349913688702927205762480379772895426485748077041007324287133648464462887793644027892169282322379610838253174784"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 217037204,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 694,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "uniform",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544759,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "uniform",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-673620547149596183836761179606029148815843887777566945912539006897148974462911701557438385630553571401077828513984479991893965",
+                "1226919878074701399654754811708823049921519091581705942992308164029297148534593857851551174576111568677129289518443353012699136"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216371384,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 691,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-4155936961001982794673690385315959695959005709238824732775247528801656745946505685874309138362415145561000312324249645316527625",
+                "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216438032,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 695,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "river_weighted",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "27744317632714687195042310337999659574081352189116639237601654687817299272699716398005287197275798876124846529241778557231905445",
+                "306729969518675349913688702927205762480379772895426485748077041007324287133648464462887793644027892169282322379610838253174784"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 217037204,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 696,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "river_weighted",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544759,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 636,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "river_weighted",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 637,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216059278,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 692,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-295916365429504760793150776615928062590687851374367574186846194929074286728277092937429180676418855469209092159",
+                "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216028078,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 695,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "uniform",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "2553540988719075201",
+                "32651097298436096"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 216688476,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 696,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "uniform",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544579,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "uniform",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-328533162263225405350261384062599046447031807490253033934994012579542306722917429228479457534265",
+                "60491820353228898817827763163004893870584405418303642898890826784027707077772046826822168477696"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216059278,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 694,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-211368832449646257709393411868520044707634179553119695847747282092195919091626494955306557626013468192292208685",
+                "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216028078,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 697,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "river_weighted",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "1418633882621708445",
+                "32651097298436096"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 216688476,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 698,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "river_weighted",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544579,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 636,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "river_weighted",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 637,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            }
+          ],
+          "successful_observed_requests": 20,
+          "rejected_observed_requests": 6,
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "observed_source_head": "4c643855b83f09e3c9e92a18dd3204d2b502679b",
+          "active_replay_head": "9038f723f119a881be09664644fa2bf5a5ca75e1",
+          "active_python_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "scripts/replay_native_grid_raw.py": "32100a1cd9223699f2a7fcc14b4c9a3529cd79d9297730acc6e9ada4860b31fb",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "native_executable_sha256": "4f50ca01bde937d51179cc55c21041e244ac0c039d737d5b71595cedf57a6e07",
+          "scope": "fixed-policy raw replay only; no clipping, State update, sampled training, quality or wider capacity acceptance",
+          "invocation_receipts": "captured controller commands/exits; not independent execution attestations",
+          "observed_stream_sha256": {
+            "reject-arity": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "97872a773787a962e00a3e78a2e7effbe3293f582034e478a4e53cc9e13e375d"
+            ],
+            "reject-duplicate": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-foreign-card": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-late-partition": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "42e124436aa985a6bddb455fea104ae3d137509ff72e780233e048715d621f3d"
+            ],
+            "reject-law": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "30b8bab89c24e85464aa3b4e7e8767abd2cc4eb5f672e7d68cbb057c919a0053"
+            ],
+            "reject-unsorted-flop": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "39e718eb1a38cb08d31544df0d894348349bebcf10c7f103e49b5dbef5095de5"
+            ],
+            "uniform-river_weighted-positive-0": [
+              "d7c32860e86fc3f1b608a67fa179e4be93db01614eaffb84aa11204e6c12f07d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-positive-1": [
+              "24a7bab93a1a21255dd054c088446f9b49045f55e68eb7d42ed2fc0858646f24",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-positive-2": [
+              "601c5240a7475e05c09b2346b79c9953b21ac1da3778e45870aeceb1ca71d85d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-zero-at-flop": [
+              "e094612eca1fc76395440600297b6209f12d3742d9bf5f8bd9c385b67fa04388",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-zero-shared-turn": [
+              "9ae9e2f0141b8349e06e45284c02f259e6cea89273729a9ae2d00c8e3e0a0802",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-positive-0": [
+              "ce82faeb78eb619831ecbbbef4d4da518c320cdc8763914b3cff3d054d519848",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-positive-1": [
+              "fea2a38c71c4cf24c3f3fa84e4d3f4f06edcda8700d08c8f77f4508ef98dde56",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-positive-2": [
+              "d6deba22f40414521568f1364de23be47842e09ef7dafd97ada7cfae0c5b3c6f",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-zero-at-flop": [
+              "1b5c36eafe1bbf8bdfb98ed577975b761430a03dcff9b777da786c4781d3a300",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-zero-shared-turn": [
+              "9c133c514d025b6442ad18f7309bfc780faecf993aec0344456b9c71c9377b33",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-positive-0": [
+              "960333ff1f2e49b47d7e291b2c13b45efeae35a00bffd47960b70cffb41462b7",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-positive-1": [
+              "8d4afb28d22fa623fc234cd92b0d1d016268fe4398bea0ab0634df685004ea45",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-positive-2": [
+              "d0bad444e6679903958f7a02325fb40402d54ebe8d6ec3d7fdfa17707cc0da05",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-zero-at-flop": [
+              "ccf8cf3aba68384fa21171b0aa3a7c7aa4acc66af895aa7dbe69d0c075b2f981",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-zero-shared-turn": [
+              "5e0b846e200ff478eb5316a92a0c6433019f4b5648e1e2c9e7ea6f51a06bf6e0",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-positive-0": [
+              "7e70cd5cfb03363b4cf403291e1037048ddbc84a44c667184c6b2389f8693d19",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-positive-1": [
+              "0fd9a01780e6ee493c79382dcdeeb6e56b8f9394920230d41afde40381870798",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-positive-2": [
+              "5c602508663d27361dd75b111c4190a7d2306bb1131ce33419148f662791e932",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-zero-at-flop": [
+              "a6d979c9109fc3f80502b1a1d2e9cc05388641f5a6a210fae7fc102b76a68032",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-zero-shared-turn": [
+              "1b0f46c5939b5cdd563d3a0aedc99fb96c0d3bbd9e0014519c115f1f9c3a9a98",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          }
+        }
+      ]
+    },
+    "optimized": {
+      "status": "exact",
+      "archive_sha256": "6039823ffa32b1f1c930895d94f5d0eb5bb2fe8c69e6fa5519e8d576b012199b",
+      "members_authenticated": 234,
+      "candidate_calls": 0,
+      "archived_source_executed": false,
+      "results": [
+        {
+          "status": "all-raw-rows-exact",
+          "cases": [
+            {
+              "case": "uniform-uniform-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-404172328289757710302056707763617489289506332666540167547523404138289384677747020934463031378332142840646697108390687995136379",
+                "613459939037350699827377405854411524960759545790852971496154082014648574267296928925775587288055784338564644759221676506349568"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216371384,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 688,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-5818311745402775912543166539442343574342607992934354625885346540322319444325107960224032793707381203785400437253949503443138675",
+                "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216438032,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 693,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "uniform",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "49939771738886436951076158608399387233346433940409950627682978438071138690859489516409516955096437977024723752635201403017429801",
+                "306729969518675349913688702927205762480379772895426485748077041007324287133648464462887793644027892169282322379610838253174784"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 217037204,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 694,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "uniform",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544759,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-uniform-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "uniform",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-673620547149596183836761179606029148815843887777566945912539006897148974462911701557438385630553571401077828513984479991893965",
+                "1226919878074701399654754811708823049921519091581705942992308164029297148534593857851551174576111568677129289518443353012699136"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216371384,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 691,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-4155936961001982794673690385315959695959005709238824732775247528801656745946505685874309138362415145561000312324249645316527625",
+                "76682492379668837478422175731801440620094943223856621437019260251831071783412116115721948411006973042320580594902709563293696"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216438032,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 695,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "river_weighted",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "27744317632714687195042310337999659574081352189116639237601654687817299272699716398005287197275798876124846529241778557231905445",
+                "306729969518675349913688702927205762480379772895426485748077041007324287133648464462887793644027892169282322379610838253174784"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 217037204,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 696,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "river_weighted",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544759,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 636,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "uniform-river_weighted-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "river_weighted",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 637,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-197119897357935243210156830437559427868219084494151820360996407547725384033750457537087674520559",
+                "30245910176614449408913881581502446935292202709151821449445413392013853538886023413411084238848"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216059278,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 692,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "uniform",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-295916365429504760793150776615928062590687851374367574186846194929074286728277092937429180676418855469209092159",
+                "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216028078,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 695,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "uniform",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "2553540988719075201",
+                "32651097298436096"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 216688476,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 696,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "uniform",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544579,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-uniform-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "uniform",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 635,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-positive-0",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                35
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-328533162263225405350261384062599046447031807490253033934994012579542306722917429228479457534265",
+                "60491820353228898817827763163004893870584405418303642898890826784027707077772046826822168477696"
+              ],
+              "work_forecast": 312678283,
+              "work_actual": 216059278,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 694,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-positive-1",
+              "status": "all-raw-rows-exact",
+              "board": [
+                17,
+                24,
+                33,
+                35,
+                37
+              ],
+              "law": "river_weighted",
+              "rows": 440,
+              "slots": 1054,
+              "root": [
+                "-211368832449646257709393411868520044707634179553119695847747282092195919091626494955306557626013468192292208685",
+                "17026933725110290902198734326722693448473698479585319062627859543608515432080911215111817738289573096981528576"
+              ],
+              "work_forecast": 312899776,
+              "work_actual": 216028078,
+              "native_rank_calls": 3,
+              "native_contractions": 1220,
+              "peak_integer_bits": 697,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-positive-2",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                33,
+                35,
+                48
+              ],
+              "law": "river_weighted",
+              "rows": 514,
+              "slots": 1240,
+              "root": [
+                "1418633882621708445",
+                "32651097298436096"
+              ],
+              "work_forecast": 312788565,
+              "work_actual": 216688476,
+              "native_rank_calls": 2,
+              "native_contractions": 1220,
+              "peak_integer_bits": 698,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": true,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-zero-shared-turn",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                32,
+                33,
+                24
+              ],
+              "law": "river_weighted",
+              "rows": 160,
+              "slots": 402,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311573411,
+              "work_actual": 213544579,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 636,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            },
+            {
+              "case": "zero-skew-river_weighted-zero-at-flop",
+              "status": "all-raw-rows-exact",
+              "board": [
+                16,
+                17,
+                24,
+                32,
+                33
+              ],
+              "law": "river_weighted",
+              "rows": 12,
+              "slots": 30,
+              "root": [
+                "0",
+                "1"
+              ],
+              "work_forecast": 311352847,
+              "work_actual": 212212175,
+              "native_rank_calls": 1,
+              "native_contractions": 1220,
+              "peak_integer_bits": 637,
+              "policy_imports": 1,
+              "training_iterations": 0,
+              "state_regret_updates": 0,
+              "nonzero_regret": false,
+              "nonzero_average": true,
+              "scope": "one immutable-policy raw-update case; no clipping, evolving-policy training, quality or wider capacity acceptance"
+            }
+          ],
+          "successful_observed_requests": 20,
+          "rejected_observed_requests": 6,
+          "candidate_calls": 0,
+          "archived_source_executed": false,
+          "observed_source_head": "4c643855b83f09e3c9e92a18dd3204d2b502679b",
+          "active_replay_head": "9038f723f119a881be09664644fa2bf5a5ca75e1",
+          "active_python_sha256": {
+            "pokerlab/__init__.py": "d75ed4a4c5712db5e8bc37f6e9ea50dd417307da3ad62de3391b3519d577184c",
+            "pokerlab/cards.py": "0cd1f1ad4e1048eaceabfa86c31d6d6d17151b07bfa33edabf6def256aaae074",
+            "scripts/matrix_free_certificate_budget.py": "1454f4394c51050968277d17c3bc0df311b6716421043ed20b295d6d8459c80b",
+            "scripts/matrix_free_four_street_rules.py": "2c3abd889b9b6f8909f8d91b2608ff8549cb1dffa125a5e3ad24aa1fe3c97479",
+            "scripts/preflop_validation.py": "ab7c3b4f52c730918a6a199ed7170a174025e1c922266c4483c26cdeddee5878",
+            "tests/full_deck_public_chance_reference.py": "9996dd562c04a6cc2446a47811e86d8f02a67423c0f94ef94e8af6c927e9bd69",
+            "tests/test_native_dyadic_policy.py": "ce41e937752ba553fedc6cda6df0b2a34f3f59138bd6fa4c2022cc24bb7b3e36",
+            "tests/test_native_exact_reach.py": "b0a614ea17e805decc614df02b1d959cea95866359efe435d132747539a51cce",
+            "tests/virtual_betting_template_reference.py": "cd35c59018caa68ea3cf905783dab5bdb93ab5ea71a0eb703cc24c3ee8612119",
+            "tests/virtual_dyadic_training_reference.py": "665600d922ad2e265923e47b2b0679bf990bf18875c7eedeec1df3e2ee969011",
+            "tests/virtual_frozen_run_control.py": "1feb011eeea1ef18fd02242b33d3d948ff7230707763ce73229d0c4e6f963039",
+            "tests/virtual_frozen_update_reference.py": "be068bb064fbb4b3467eb40403da038ef3c956b35ba0ce99120ab1eb5bad3add",
+            "tests/virtual_frozen_value_reference.py": "d0eb6c9e82d89b64ddb2473b6e0638cfe6248da139eef99e94f3b5d1661c4288",
+            "tests/virtual_frozen_policy_input_reference.py": "0af2f1bbd07cb3302c48ef07f6a606bd802c0a0f402abaf85dfdc9aa3381dae5",
+            "tests/virtual_frozen_grid_preflight_reference.py": "bbb7c7804072ade64947938b5f53fc6a67e19f242f9c4d610ce89bd426a893ef",
+            "tests/virtual_frozen_grid_envelope_reference.py": "2475a82aeb76ec8c532a86b016a6b650ce4a98081966ae7e66182a6395bcf694",
+            "tests/virtual_grid_update_reference.py": "918f0533f95658204b9b93fbed39ed3e2f8a759747b0ec4be28bfc02488fed24",
+            "tests/virtual_frozen_sample_reference.py": "952ead82999a584b1a2e6d688198d90b5467232429363bc3a94c2f2a772a8613",
+            "tests/virtual_native_grid_raw_reference.py": "2447f25a2e848419cee9e585eb902df681e84e31b89dfe7f0204676799dd30b7",
+            "scripts/replay_native_grid_raw.py": "32100a1cd9223699f2a7fcc14b4c9a3529cd79d9297730acc6e9ada4860b31fb",
+            "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+          },
+          "native_executable_sha256": "4f50ca01bde937d51179cc55c21041e244ac0c039d737d5b71595cedf57a6e07",
+          "scope": "fixed-policy raw replay only; no clipping, State update, sampled training, quality or wider capacity acceptance",
+          "invocation_receipts": "captured controller commands/exits; not independent execution attestations",
+          "observed_stream_sha256": {
+            "reject-arity": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "97872a773787a962e00a3e78a2e7effbe3293f582034e478a4e53cc9e13e375d"
+            ],
+            "reject-duplicate": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-foreign-card": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "597378a6aeb6c87a7ce5b5781f8e12a072446137a8959545630cb14045753c04"
+            ],
+            "reject-late-partition": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "42e124436aa985a6bddb455fea104ae3d137509ff72e780233e048715d621f3d"
+            ],
+            "reject-law": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "30b8bab89c24e85464aa3b4e7e8767abd2cc4eb5f672e7d68cbb057c919a0053"
+            ],
+            "reject-unsorted-flop": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "39e718eb1a38cb08d31544df0d894348349bebcf10c7f103e49b5dbef5095de5"
+            ],
+            "uniform-river_weighted-positive-0": [
+              "d7c32860e86fc3f1b608a67fa179e4be93db01614eaffb84aa11204e6c12f07d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-positive-1": [
+              "24a7bab93a1a21255dd054c088446f9b49045f55e68eb7d42ed2fc0858646f24",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-positive-2": [
+              "601c5240a7475e05c09b2346b79c9953b21ac1da3778e45870aeceb1ca71d85d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-zero-at-flop": [
+              "e094612eca1fc76395440600297b6209f12d3742d9bf5f8bd9c385b67fa04388",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-river_weighted-zero-shared-turn": [
+              "9ae9e2f0141b8349e06e45284c02f259e6cea89273729a9ae2d00c8e3e0a0802",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-positive-0": [
+              "ce82faeb78eb619831ecbbbef4d4da518c320cdc8763914b3cff3d054d519848",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-positive-1": [
+              "fea2a38c71c4cf24c3f3fa84e4d3f4f06edcda8700d08c8f77f4508ef98dde56",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-positive-2": [
+              "d6deba22f40414521568f1364de23be47842e09ef7dafd97ada7cfae0c5b3c6f",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-zero-at-flop": [
+              "1b5c36eafe1bbf8bdfb98ed577975b761430a03dcff9b777da786c4781d3a300",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "uniform-uniform-zero-shared-turn": [
+              "9c133c514d025b6442ad18f7309bfc780faecf993aec0344456b9c71c9377b33",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-positive-0": [
+              "960333ff1f2e49b47d7e291b2c13b45efeae35a00bffd47960b70cffb41462b7",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-positive-1": [
+              "8d4afb28d22fa623fc234cd92b0d1d016268fe4398bea0ab0634df685004ea45",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-positive-2": [
+              "d0bad444e6679903958f7a02325fb40402d54ebe8d6ec3d7fdfa17707cc0da05",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-zero-at-flop": [
+              "ccf8cf3aba68384fa21171b0aa3a7c7aa4acc66af895aa7dbe69d0c075b2f981",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-river_weighted-zero-shared-turn": [
+              "5e0b846e200ff478eb5316a92a0c6433019f4b5648e1e2c9e7ea6f51a06bf6e0",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-positive-0": [
+              "7e70cd5cfb03363b4cf403291e1037048ddbc84a44c667184c6b2389f8693d19",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-positive-1": [
+              "0fd9a01780e6ee493c79382dcdeeb6e56b8f9394920230d41afde40381870798",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-positive-2": [
+              "5c602508663d27361dd75b111c4190a7d2306bb1131ce33419148f662791e932",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-zero-at-flop": [
+              "a6d979c9109fc3f80502b1a1d2e9cc05388641f5a6a210fae7fc102b76a68032",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ],
+            "zero-skew-uniform-zero-shared-turn": [
+              "1b0f46c5939b5cdd563d3a0aedc99fb96c0d3bbd9e0014519c115f1f9c3a9a98",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "candidate_calls": 0,
+  "active_bootstrap": {
+    "head": "9038f723f119a881be09664644fa2bf5a5ca75e1",
+    "raw_sha256": {
+      "scripts/replay_native_grid_raw_packet.py": "feb19c99c49085277d16f7d305e2f0bfdb16f022cabb3720c4176c98344573d5",
+      "scripts/replay_native_policy_packet.py": "de47a3fe586b0b1323fda524d2efac0d1077deff4b8d85ecb67215002c0b1e6b",
+      "scripts/replay_native_grid_raw.py": "32100a1cd9223699f2a7fcc14b4c9a3529cd79d9297730acc6e9ada4860b31fb",
+      "scripts/replay_native_frozen_policy_state.py": "e6d326857ee1cf8bba3b0118ea2067e6fbc2016a046a5c19b6718c6fec544990"
+    }
+  },
+  "archived_source_executed": false,
+  "scope": "fixed-policy raw arithmetic only; no State update, training, quality or wider admission"
+}

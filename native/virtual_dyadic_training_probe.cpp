@@ -1,10 +1,14 @@
 #include "virtual_dyadic_training.hpp"
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+#include "training_phase_profile.hpp"
+#endif
 #include <array>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string_view>
+#include <type_traits>
 
 #ifdef _WIN32
 #include <fcntl.h>
@@ -12,6 +16,19 @@
 #endif
 
 namespace training=openpoker::virtual_dyadic_training;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+namespace phase_trace=openpoker::training_phase_trace;
+namespace phase_profile=openpoker::training_phase_profile;
+#endif
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+using TrainMethod=training::TrainingIO (training::Driver::*)(
+    std::ostream&,const std::filesystem::path&,bool,const phase_trace::Sink*);
+#else
+using TrainMethod=training::TrainingIO (training::Driver::*)(
+    std::ostream&,const std::filesystem::path&,bool);
+#endif
+static_assert(std::is_same_v<decltype(&training::Driver::train),TrainMethod>,
+    "trainer diagnostic interface differs from its build target");
 namespace {
 enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_packed, admit_compact, train_compact,
                   admit_scaled, train_scaled, admit_sealed, train_sealed, admit_paged, train_paged,
@@ -23,7 +40,11 @@ enum class Mode { admit, train, admit_paired, train_paired, admit_packed, train_
                   admit_ten_sweep_stream, train_ten_sweep_stream,
                   admit_ten_sparse_chance, train_ten_sparse_chance,
                   admit_ten_single_division, train_ten_single_division,
-                  admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4 };
+                  admit_ten_phase_payload, train_ten_phase_payload,
+                  admit_ten_row_batched, train_ten_row_batched,
+                  admit_ten_indexed_cache, train_ten_indexed_cache, admit_ten_complement, train_ten_complement, admit_ten_compact_wire, train_ten_compact_wire, admit_ten_factored, train_ten_factored, admit_ten_checked_history, train_ten_checked_history, admit_ten_history_visit, train_ten_history_visit, admit_ten_equal_quantizer, train_ten_equal_quantizer, admit_ten_reuse_snapshot, train_ten_reuse_snapshot, admit_ten_zero_policy_bootstrap, train_ten_zero_policy_bootstrap, admit_ten_first_regret_bound, train_ten_first_regret_bound, admit_ten_initial_packed_stage, train_ten_initial_packed_stage, admit_ten_bounded_stage_width, train_ten_bounded_stage_width, admit_ten_pair_complement, train_ten_pair_complement, admit_ten_bounded_division, train_ten_bounded_division,
+                  forecast_eleven, admit_proof9_t3, train_proof9_t3, admit_proof9_t4, train_proof9_t4, admit_proof9_q32, train_proof9_q32,
+                  admit_proof9_linear32, train_proof9_linear32 };
 
 Mode request() {
     std::array<char,64> buffer{};
@@ -78,18 +99,105 @@ Mode request() {
     if (line=="DYADIC_T2_V1 TRAIN_TEN_SPARSE_CHANCE") return Mode::train_ten_sparse_chance;
     if (line=="DYADIC_T2_V1 ADMIT_TEN_SINGLE_DIVISION") return Mode::admit_ten_single_division;
     if (line=="DYADIC_T2_V1 TRAIN_TEN_SINGLE_DIVISION") return Mode::train_ten_single_division;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_PHASE_PAYLOAD") return Mode::admit_ten_phase_payload;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_PHASE_PAYLOAD") return Mode::train_ten_phase_payload;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_ROW_BATCHED") return Mode::admit_ten_row_batched;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_ROW_BATCHED") return Mode::train_ten_row_batched;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_INDEXED_CACHE") return Mode::admit_ten_indexed_cache;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_INDEXED_CACHE") return Mode::train_ten_indexed_cache;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_COMPLEMENT") return Mode::admit_ten_complement;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_COMPLEMENT") return Mode::train_ten_complement;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_COMPACT_WIRE") return Mode::admit_ten_compact_wire;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_COMPACT_WIRE") return Mode::train_ten_compact_wire;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_FACTORED") return Mode::admit_ten_factored;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_FACTORED") return Mode::train_ten_factored;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_CHECKED_HISTORY") return Mode::admit_ten_checked_history;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_CHECKED_HISTORY") return Mode::train_ten_checked_history;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_HISTORY_VISIT") return Mode::admit_ten_history_visit;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_HISTORY_VISIT") return Mode::train_ten_history_visit;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_EQUAL_QUANTIZER") return Mode::admit_ten_equal_quantizer;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_EQUAL_QUANTIZER") return Mode::train_ten_equal_quantizer;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_REUSE_SNAPSHOT") return Mode::admit_ten_reuse_snapshot;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_REUSE_SNAPSHOT") return Mode::train_ten_reuse_snapshot;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_ZERO_POLICY_BOOTSTRAP") return Mode::admit_ten_zero_policy_bootstrap;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_ZERO_POLICY_BOOTSTRAP") return Mode::train_ten_zero_policy_bootstrap;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_FIRST_REGRET_BOUND") return Mode::admit_ten_first_regret_bound;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_FIRST_REGRET_BOUND") return Mode::train_ten_first_regret_bound;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_INITIAL_PACKED_STAGE") return Mode::admit_ten_initial_packed_stage;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_INITIAL_PACKED_STAGE") return Mode::train_ten_initial_packed_stage;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_BOUNDED_STAGE_WIDTH") return Mode::admit_ten_bounded_stage_width;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_BOUNDED_STAGE_WIDTH") return Mode::train_ten_bounded_stage_width;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_PAIR_COMPLEMENT") return Mode::admit_ten_pair_complement;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_PAIR_COMPLEMENT") return Mode::train_ten_pair_complement;
+    if (line=="DYADIC_T2_V1 ADMIT_TEN_BOUNDED_DIVISION") return Mode::admit_ten_bounded_division;
+    if (line=="DYADIC_T2_V1 TRAIN_TEN_BOUNDED_DIVISION") return Mode::train_ten_bounded_division;
     if (line=="DYADIC_T3_V1 ADMIT_PROOF9_T3") return Mode::admit_proof9_t3;
+    if (line=="DYADIC_T2_V1 FORECAST_ELEVEN") return Mode::forecast_eleven;
     if (line=="DYADIC_T3_V1 TRAIN_PROOF9_T3") return Mode::train_proof9_t3;
     if (line=="DYADIC_T4_V1 ADMIT_PROOF9_T4") return Mode::admit_proof9_t4;
     if (line=="DYADIC_T4_V1 TRAIN_PROOF9_T4") return Mode::train_proof9_t4;
+    if (line=="DYADIC_T32_V1 ADMIT_PROOF9_Q32") return Mode::admit_proof9_q32;
+    if (line=="DYADIC_T32_V1 TRAIN_PROOF9_Q32") return Mode::train_proof9_q32;
+    if (line=="DYADIC_L32_V1 ADMIT_PROOF9_LINEAR32") return Mode::admit_proof9_linear32;
+    if (line=="DYADIC_L32_V1 TRAIN_PROOF9_LINEAR32") return Mode::train_proof9_linear32;
     throw training::Error("unsupported fixed dyadic request");
 }
 
-void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3=false,bool proof9_t4=false) {
+void forecast_eleven(const training::Driver& driver) {
+    const auto& p=driver.plan();
+    const auto& game=p.game();
+    const auto& g=p.shape;
+    const auto image_bytes=8ULL*p.page_limits.image_words;
+    const auto copy_work=2*(2*p.page_limits.image_words+
+        64*((image_bytes+training::sweep_stream_scratch_bytes-1)/training::sweep_stream_scratch_bytes)+32);
+    const auto composed=p.total_work+copy_work+training::compact_encoding_work(g)+training::factored_metadata_work(p);
+    const auto entries=p.entries+training::sweep_stream_entries+32+8192+2048;
+    const auto payload=p.payload_bits+training::sweep_stream_payload_bits+2048+524288+131072;
+    std::cout<<"{\"status\":\"FORECAST_ONLY\",\"training_admitted\":false,\"quality_gate\":null,\"training_invocations\":0,\"rank_calls\":0"
+        <<",\"deck_cards\":"<<game.deck.size()<<",\"rows\":"<<g.rows<<",\"slots\":"<<g.slots
+        <<",\"D_bits\":"<<p.denominator_bits<<",\"value_bits\":"<<game.value_bits
+        <<",\"normalizer\":"<<p.normalizer<<",\"d5\":"<<game.divisors.back()
+        <<",\"rank_planes\":"<<p.rank_planes<<",\"rank_calls_per_training\":"<<p.expected_rank_calls
+        <<",\"page_image_words\":"<<p.page_limits.image_words<<",\"page_requests\":"<<p.page_limits.requests
+        <<",\"page_read_words\":"<<p.page_limits.read_words<<",\"page_write_words\":"<<p.page_limits.write_words
+        <<",\"page_write_requests\":"<<p.page_limits.write_requests
+        <<",\"directory_page_limit\":"<<p.admitted_directory_page_limit
+        <<",\"compact_retained_bytes\":"<<p.output_bytes
+        <<",\"wire_bytes\":"<<p.output_bytes+2*(image_bytes+training::sweep_stream_header_bytes)
+        <<",\"entries\":"<<p.entries<<",\"payload_bits\":"<<p.payload_bits
+        <<",\"composed_entries\":"<<entries<<",\"composed_payload_bits\":"<<payload
+        <<",\"stage_arithmetic_work\":"<<p.stage_arithmetic_work
+#ifdef OPENPOKER_TRAINING_FACTORED_AVERAGE_STUDY
+        <<",\"parent_work\":[";
+    for (std::size_t i=0;i<p.parent.size();++i) {
+        if (i) std::cout<<',';
+        std::cout<<p.parent[i];
+    }
+    std::cout<<']'<<",\"parent_details\":{\"packed_average\":"<<p.packed_average_work
+        <<",\"packed_regret\":"<<p.packed_regret_work<<",\"paging\":"<<p.paging_work
+        <<",\"policy_spill\":"<<p.policy_spill_work<<",\"directory\":"<<p.directory_work
+        <<",\"average_build\":"<<p.scaled_average_build_work
+        <<",\"factored_metadata\":"<<training::factored_metadata_work(p)<<'}'
+#endif
+        <<",\"quantizer_terms\":["<<p.quantizer_terms[0]<<','<<p.quantizer_terms[1]<<','<<p.quantizer_terms[2]<<']'
+        <<",\"work\":{\"template\":"<<p.template_work<<",\"chance\":"<<p.chance_work
+        <<",\"history\":"<<p.history_work<<",\"state\":"<<p.state_work
+        <<",\"quantizer\":"<<p.quantizer_work<<",\"parent\":"<<training::sum_work(p.parent)
+        <<",\"numerical\":"<<p.total_work<<",\"composed\":"<<composed<<'}'
+        <<",\"comparison_caps\":{\"chance\":"<<game.chance_limit<<",\"history\":"<<game.history_limit
+        <<",\"state\":"<<game.state_limit<<",\"quantizer\":"<<game.quantizer_limit
+        <<",\"composed\":"<<game.work_limit<<"}}\n";
+    std::cout.flush();
+    training::require(bool(std::cout),"eleven-card forecast output failed");
+}
+
+void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3=false,bool proof9_t4=false,bool linear32=false) {
     if (sweep_stream) driver.validate_sweep_stream();
     const auto& plan=driver.plan();
     const auto& counts=plan.shape;
-    std::cout<<"{\"protocol\":\""<<(proof9_t4?"DYADIC_T4_V1":proof9_t3?"DYADIC_T3_V1":"DYADIC_T2_V1")<<"\",\"status\":\"ADMITTED\",\"training_invocations\":0,"
+    const bool q32=plan.proof9_quality32();
+    const bool q32base=q32 || plan.proof9_linear32();
+    std::cout<<"{\"protocol\":\""<<(linear32?"DYADIC_L32_V1":q32?"DYADIC_T32_V1":proof9_t4?"DYADIC_T4_V1":proof9_t3?"DYADIC_T3_V1":"DYADIC_T2_V1")<<"\",\"status\":\"ADMITTED\",\"training_invocations\":0,"
         "\"target_passes\":0,\"completed_sweeps\":0,\"rank_calls\":0,\"rows\":"<<counts.rows
         <<",\"slots\":"<<counts.slots<<",\"visits\":"<<counts.visits<<",\"actions\":"<<counts.actions
         <<",\"reveals\":"<<counts.reveals<<",\"candidates\":"<<counts.candidates
@@ -129,21 +237,51 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
     if (plan.shared_policy)
         std::cout<<",\"shared_policy\":true,\"streamed_average\":true,\"policy_spill_work\":"<<plan.policy_spill_work
             <<",\"policy_spill_word_limit\":"<<counts.slots-counts.rows
-            <<",\"policy_spill_read_call_limit\":"<<3*counts.rows;
+            <<",\"policy_spill_read_call_limit\":"<<(plan.reuse_snapshot?2:3)*counts.rows;
     if (plan.paged_directory)
         std::cout<<",\"paged_row_directory\":true,\"row_directory_entries\":"
             <<training::state::State::row_directory_resident_entries
-            <<",\"row_directory_page_limit\":"<<plan.admitted_directory_page_limit
-            <<",\"row_directory_read_call_limit\":"<<(plan.bounded_proof9()?2+4*plan.requested_sweeps:10)*counts.rows;
+            <<",\"row_directory_page_limit\":"<<(plan.reuse_snapshot?7456:plan.admitted_directory_page_limit)
+            <<",\"row_directory_read_call_limit\":"<<(plan.bounded_proof9()?2+4*plan.requested_sweeps:plan.reuse_snapshot?8:10)*counts.rows;
     if (plan.rank_board_sets)
         std::cout<<",\"rank_cache_planes\":"<<plan.rank_planes
             <<",\"rank_lookup_work_per_query\":"
-            <<training::prepared::PreparedPublicChance::board_set_probe_work*plan.rank_planes;
+            <<(plan.indexed_cache?training::prepared::PreparedPublicChance::sorted_lookup_work(plan.rank_planes):
+                training::prepared::PreparedPublicChance::board_set_probe_work*plan.rank_planes);
     if (plan.split_checkpoint)
         std::cout<<",\"split_checkpoint\":true,\"checkpoint_image_bytes\":"<<8*plan.page_limits.image_words;
     if (plan.ten_card()) std::cout<<",\"ten_card\":true";
     if (plan.sparse_chance) std::cout<<",\"sparse_chance\":true";
     if (plan.single_division) std::cout<<",\"single_division\":true";
+    if (plan.complement_division) std::cout<<",\"complement_division\":true";
+    if (plan.compact_wire) std::cout<<",\"compact_wire\":true,\"compact_encoding_work\":"
+        <<training::compact_encoding_work(plan.shape)<<",\"compact_composed_work\":"
+        <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)
+        <<",\"compact_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32
+        <<",\"compact_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048;
+    if (plan.reuse_snapshot) std::cout<<",\"reuse_snapshot\":true";
+    if (plan.zero_policy_bootstrap) std::cout<<",\"zero_policy_bootstrap\":true";
+    if (plan.first_regret_bound) std::cout<<",\"first_regret_bound\":true";
+    if (plan.initial_packed_stage) std::cout<<",\"initial_packed_stage\":true";
+    if (plan.bounded_division) std::cout<<",\"bounded_division\":true";
+    if (plan.pair_complement) std::cout<<",\"pair_complement\":true";
+    if (plan.bounded_stage_width) std::cout<<",\"bounded_stage_width\":true,\"stage_arithmetic_work\":"<<plan.stage_arithmetic_work;
+    if (plan.equal_quantizer) std::cout<<",\"equal_quantizer\":true";
+    if (plan.history_visit) std::cout<<",\"history_visit\":true";
+    if (plan.checked_history) std::cout<<",\"checked_history\":true,\"history_decisions_per_walk\":"
+        <<plan.history_decisions;
+    if (plan.factored) std::cout<<",\"factored_execution\":true,\"factored_metadata_work\":"
+        <<training::factored_metadata_work(plan)<<",\"factored_composed_work\":"
+        <<plan.total_work+training::sweep_stream_copy_work+training::compact_encoding_work(plan.shape)+training::factored_metadata_work(plan)
+        <<",\"factored_composed_entries\":"<<plan.entries+training::sweep_stream_entries+32+8192+(plan.reuse_snapshot?2048:0)
+        <<",\"factored_composed_payload_bits\":"<<plan.payload_bits+training::sweep_stream_payload_bits+2048+524288+(plan.reuse_snapshot?131072:0);
+    if (plan.phase_payload) std::cout<<",\"phase_payload\":true,\"state_payload_bits\":"<<plan.state_payload;
+    if (plan.row_batched) std::cout<<",\"row_batched\":true";
+    if (plan.indexed_cache)
+        std::cout<<",\"sorted_rank_index\":true,\"rank_index_entries\":"
+            <<training::prepared::PreparedPublicChance::index_storage_entries(plan.rank_planes)
+            <<",\"rank_index_update_work\":"<<training::prepared::PreparedPublicChance::index_update_work(plan.rank_planes)
+            <<",\"rank_index_setup_work\":"<<training::prepared::PreparedPublicChance::index_setup_work(plan.rank_planes);
     std::cout<<",\"H\":"<<plan.H<<",\"M\":"<<plan.M<<",\"D_bits\":"<<plan.denominator_bits
         <<",\"value_bits\":"<<plan.game().value_bits<<",\"normalizer\":"<<plan.normalizer
         <<",\"d5\":"<<plan.game().divisors[3]<<",\"entries\":"<<plan.entries
@@ -172,17 +310,19 @@ void admit(const training::Driver& driver,bool sweep_stream=false,bool proof9_t3
         std::cout<<'"'<<training::work_names[i]<<"\":"<<plan.parent[i];
     }
     std::cout<<"},\"actual_admission_work\":"<<plan.template_work+driver.admission_work();
+    if (q32) std::cout<<",\"proof9_quality32\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
+    if (linear32) std::cout<<",\"proof9_linear32\":true,\"average_weight_sum\":528,\"maximum_average_weight\":32,\"general_quantizer_work\":"<<plan.general_quantizer_work;
     if (proof9_t3) std::cout<<",\"proof9_t3\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
     if (proof9_t4) std::cout<<",\"proof9_t4\":true,\"general_quantizer_work\":"<<plan.general_quantizer_work;
-    if (sweep_stream || proof9_t3 || proof9_t4) std::cout<<",\"sweep_stream\":{\"version\":1,\"frames\":"
-        <<(proof9_t4?training::proof9_t4_sweep_stream_frames:proof9_t3?training::proof9_t3_sweep_stream_frames:training::sweep_stream_frames)
+    if (sweep_stream || proof9_t3 || proof9_t4 || q32 || linear32) std::cout<<",\"sweep_stream\":{\"version\":1,\"frames\":"
+        <<(q32base?training::proof9_q32_sweep_stream_frames:proof9_t4?training::proof9_t4_sweep_stream_frames:proof9_t3?training::proof9_t3_sweep_stream_frames:training::sweep_stream_frames)
         <<",\"frame_header_bytes\":"<<training::sweep_stream_header_bytes
-        <<",\"image_bytes\":"<<(proof9_t4?training::proof9_t4_sweep_stream_image_bytes:proof9_t3?training::proof9_t3_sweep_stream_image_bytes:training::sweep_stream_image_bytes)
-        <<",\"wire_bytes\":"<<(proof9_t4?training::proof9_t4_sweep_stream_wire_bytes:proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:training::sweep_stream_wire_bytes)
-        <<",\"retained_bytes\":"<<(proof9_t4?training::proof9_t4_sweep_stream_retained_bytes:proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:training::sweep_stream_retained_bytes)
-        <<",\"read_bytes\":"<<(proof9_t4?training::proof9_t4_sweep_stream_read_bytes:proof9_t3?training::proof9_t3_sweep_stream_read_bytes:training::sweep_stream_read_bytes)
+        <<",\"image_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_image_bytes:proof9_t4?training::proof9_t4_sweep_stream_image_bytes:proof9_t3?training::proof9_t3_sweep_stream_image_bytes:training::sweep_stream_image_bytes)
+        <<",\"wire_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_wire_bytes:proof9_t4?training::proof9_t4_sweep_stream_wire_bytes:proof9_t3?training::proof9_t3_sweep_stream_wire_bytes:(plan.compact_wire?plan.output_bytes+training::sweep_stream_read_bytes+2*training::sweep_stream_header_bytes:training::sweep_stream_wire_bytes))
+        <<",\"retained_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_retained_bytes:proof9_t4?training::proof9_t4_sweep_stream_retained_bytes:proof9_t3?training::proof9_t3_sweep_stream_retained_bytes:plan.output_bytes)
+        <<",\"read_bytes\":"<<(q32base?training::proof9_q32_sweep_stream_read_bytes:proof9_t4?training::proof9_t4_sweep_stream_read_bytes:proof9_t3?training::proof9_t3_sweep_stream_read_bytes:training::sweep_stream_read_bytes)
         <<",\"scratch_bytes\":"<<training::sweep_stream_scratch_bytes
-        <<",\"copy_work\":"<<(proof9_t4?training::proof9_t4_sweep_stream_copy_work:proof9_t3?training::proof9_t3_sweep_stream_copy_work:training::sweep_stream_copy_work)<<'}';
+        <<",\"copy_work\":"<<(q32base?training::proof9_q32_sweep_stream_copy_work:proof9_t4?training::proof9_t4_sweep_stream_copy_work:proof9_t3?training::proof9_t3_sweep_stream_copy_work:training::sweep_stream_copy_work)<<'}';
     std::cout<<"}\n";
     std::cout.flush();
     training::require(bool(std::cout),"dyadic admission output failed");
@@ -229,6 +369,16 @@ void save_directory(std::filesystem::path scratch,const training::state::RowDire
     stream.close();
     training::require(bool(stream),"row receipt write failed");
 }
+void save_rank_index(const std::filesystem::path& scratch,const training::prepared::RankIndexReceipt& receipt) {
+    std::ofstream stream(scratch/"rank-index.json",std::ios::binary);
+    training::require(bool(stream),"rank index receipt open failed");
+    stream<<"{\"capacity\":"<<receipt.capacity<<",\"entries\":"<<receipt.entries<<",\"size\":"<<receipt.size
+        <<",\"searches\":"<<receipt.searches<<",\"updates\":"<<receipt.updates
+        <<",\"lookup_work\":"<<receipt.lookup_work<<",\"update_work\":"<<receipt.update_work
+        <<",\"setup_work\":"<<receipt.setup_work<<"}\n";
+    stream.close();
+    training::require(bool(stream),"rank index receipt write failed");
+}
 void save_divisions(const std::filesystem::path& scratch,std::uint64_t count) {
     std::ofstream stream(scratch/"quantizer.json",std::ios::binary);
     training::require(bool(stream),"quantizer receipt open failed");
@@ -236,6 +386,71 @@ void save_divisions(const std::filesystem::path& scratch,std::uint64_t count) {
     stream.close();
     training::require(bool(stream),"quantizer receipt write failed");
 }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+struct ProfileOuter {
+    std::uint64_t driver_begin_ns=0,driver_end_ns=0,train_begin_ns=0,train_end_ns=0,
+                  receipts_begin_ns=0,receipts_end_ns=0;
+};
+struct ProfileBudgets {
+    std::uint64_t solver_work=0,with_profile_work=0,solver_entries=0,with_profile_entries=0,
+                  solver_payload_bits=0,with_profile_payload_bits=0;
+};
+ProfileBudgets phase_budgets(const training::Plan& plan) {
+    training::require(plan.ten_card() && plan.bounded_division && plan.factored &&
+        plan.compact_wire && plan.reuse_snapshot && plan.requested_sweeps==2,
+        "phase profiling requires the fixed ten-card bounded divider");
+    ProfileBudgets result;
+    result.solver_work=plan.total_work+training::sweep_stream_copy_work+
+        training::compact_encoding_work(plan.shape)+training::factored_metadata_work(plan);
+    result.solver_entries=plan.entries+training::sweep_stream_entries+32+8192+2048;
+    result.solver_payload_bits=plan.payload_bits+training::sweep_stream_payload_bits+2048+524288+131072;
+    training::require(result.solver_work<=2150000000ULL-phase_profile::work_allowance &&
+        result.solver_entries<=2000000-phase_profile::metadata_entries_reserved &&
+        result.solver_payload_bits<=1200000000-phase_profile::metadata_bytes_reserved*8,
+        "phase diagnostics exceed composed resource admission");
+    result.with_profile_work=result.solver_work+phase_profile::work_allowance;
+    result.with_profile_entries=result.solver_entries+phase_profile::metadata_entries_reserved;
+    result.with_profile_payload_bits=result.solver_payload_bits+phase_profile::metadata_bytes_reserved*8;
+    return result;
+}
+void save_phase_profile(const std::filesystem::path& scratch,const phase_profile::Recorder& recorder,
+                        const ProfileOuter& outer,const ProfileBudgets& budgets) {
+    training::require(recorder.healthy() && recorder.events().size()==36 &&
+        recorder.clock_reads()==43,"incomplete or failed phase recording");
+    const auto path=scratch.parent_path()/"phase-profile.json";
+    training::require(!std::filesystem::exists(path),"phase profile output already exists");
+    std::ofstream out(path,std::ios::binary);
+    training::require(bool(out),"phase profile receipt open failed");
+    out<<"{\"version\":1,\"clock\":\"steady_clock\",\"units\":\"nanoseconds\","
+        <<"\"scope\":\"ten-card-bounded-division-T2\",\"profile_status\":\"complete\","
+        <<"\"diagnostics\":{\"capacity\":"<<phase_profile::capacity
+        <<",\"event_count\":"<<recorder.events().size()<<",\"clock_reads\":"<<recorder.clock_reads()
+        <<",\"max_clock_reads\":"<<phase_profile::clock_limit
+        <<",\"metadata_bytes\":"<<sizeof(phase_profile::Recorder)
+        <<",\"metadata_bytes_reserved\":"<<phase_profile::metadata_bytes_reserved
+        <<",\"metadata_entries_reserved\":"<<phase_profile::metadata_entries_reserved
+        <<",\"work_allowance\":"<<phase_profile::work_allowance<<",\"failed\":false},"
+        <<"\"budgets\":{\"solver_work\":"<<budgets.solver_work<<",\"with_profile_work\":"<<budgets.with_profile_work
+        <<",\"solver_entries\":"<<budgets.solver_entries<<",\"with_profile_entries\":"<<budgets.with_profile_entries
+        <<",\"solver_payload_bits\":"<<budgets.solver_payload_bits
+        <<",\"with_profile_payload_bits\":"<<budgets.with_profile_payload_bits<<"},"
+        <<"\"outer\":{\"driver_begin_ns\":"<<outer.driver_begin_ns<<",\"driver_end_ns\":"<<outer.driver_end_ns
+        <<",\"train_begin_ns\":"<<outer.train_begin_ns<<",\"train_end_ns\":"<<outer.train_end_ns
+        <<",\"receipts_begin_ns\":"<<outer.receipts_begin_ns
+        <<",\"receipts_end_ns\":"<<outer.receipts_end_ns<<"},\"events\":[";
+    bool first=true;
+    for (const auto& event:recorder.events()) {
+        if (!first) out<<',';
+        first=false;
+        out<<"{\"phase\":\""<<phase_trace::name(event.phase)<<"\",\"edge\":\""
+            <<(event.edge==phase_trace::Edge::begin?"begin":"end")<<"\",\"sweep\":"
+            <<event.sweep<<",\"ns\":"<<event.ns<<'}';
+    }
+    out<<"]}\n";
+    out.close();
+    training::require(bool(out),"phase profile receipt write failed");
+}
+#endif
 } // namespace
 
 int main(int argc,char* argv[]) {
@@ -246,19 +461,37 @@ int main(int argc,char* argv[]) {
 #endif
         std::ios::sync_with_stdio(false);
         const auto mode=request();
-        const bool paged_train=mode==Mode::train_paged || mode==Mode::train_directory ||
+        const bool complement_admit=mode==Mode::admit_ten_complement || mode==Mode::admit_ten_compact_wire || mode==Mode::admit_ten_factored || mode==Mode::admit_ten_checked_history || mode==Mode::admit_ten_history_visit || mode==Mode::admit_ten_equal_quantizer || mode==Mode::admit_ten_reuse_snapshot || mode==Mode::admit_ten_zero_policy_bootstrap || mode==Mode::admit_ten_first_regret_bound || mode==Mode::admit_ten_initial_packed_stage || mode==Mode::admit_ten_bounded_stage_width || mode==Mode::admit_ten_pair_complement || mode==Mode::admit_ten_bounded_division;
+        const bool complement_train=mode==Mode::train_ten_complement || mode==Mode::train_ten_compact_wire || mode==Mode::train_ten_factored || mode==Mode::train_ten_checked_history || mode==Mode::train_ten_history_visit || mode==Mode::train_ten_equal_quantizer || mode==Mode::train_ten_reuse_snapshot || mode==Mode::train_ten_zero_policy_bootstrap || mode==Mode::train_ten_first_regret_bound || mode==Mode::train_ten_initial_packed_stage || mode==Mode::train_ten_bounded_stage_width || mode==Mode::train_ten_pair_complement || mode==Mode::train_ten_bounded_division;
+        const bool paged_train=complement_train || mode==Mode::train_paged || mode==Mode::train_directory ||
             mode==Mode::train_rank_sets || mode==Mode::train_split || mode==Mode::train_ten ||
             mode==Mode::train_ten_buffered || mode==Mode::train_ten_virtual_zero || mode==Mode::train_ten_ordered_state ||
             mode==Mode::train_ten_row_coverage || mode==Mode::train_ten_shared_policy ||
             mode==Mode::train_ten_paged_directory || mode==Mode::train_ten_sweep_stream ||
             mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
-            mode==Mode::train_ten_single_division;
+            mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
+            mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        const bool profile_phases=argc==3 && std::string_view(argv[2])=="--profile-phases";
+        training::require(profile_phases?(paged_train && mode==Mode::train_ten_bounded_division):
+            argc==(paged_train?2:1),"fixed request scratch argument count");
+#else
         training::require(argc==(paged_train?2:1),"fixed request scratch argument count");
+#endif
         const std::filesystem::path scratch=paged_train?std::filesystem::path(argv[1]):std::filesystem::path{};
         if (paged_train) training::require(scratch.is_absolute() && scratch.filename()=="page-images",
             "paged request needs an absolute private page-images directory");
+        if (mode==Mode::forecast_eleven) {
+            const training::Driver driver(training::Traversal::paired,training::StrategyProfile::eleven_card_forecast);
+            forecast_eleven(driver);
+            return 0;
+        }
         auto profile=training::StrategyProfile::dense;
-        if (mode==Mode::admit_proof9_t4 || mode==Mode::train_proof9_t4)
+        if (mode==Mode::admit_proof9_linear32 || mode==Mode::train_proof9_linear32)
+            profile=training::StrategyProfile::proof9_linear32;
+        else if (mode==Mode::admit_proof9_q32 || mode==Mode::train_proof9_q32)
+            profile=training::StrategyProfile::proof9_quality32;
+        else if (mode==Mode::admit_proof9_t4 || mode==Mode::train_proof9_t4)
             profile=training::StrategyProfile::proof9_four_sweep;
         else if (mode==Mode::admit_proof9_t3 || mode==Mode::train_proof9_t3)
             profile=training::StrategyProfile::proof9_three_sweep;
@@ -266,6 +499,38 @@ int main(int argc,char* argv[]) {
             profile=training::StrategyProfile::ten_card_sparse_chance;
         else if (mode==Mode::admit_ten_single_division || mode==Mode::train_ten_single_division)
             profile=training::StrategyProfile::ten_card_single_division;
+        else if (mode==Mode::admit_ten_bounded_division || mode==Mode::train_ten_bounded_division)
+            profile=training::StrategyProfile::ten_card_bounded_division;
+        else if (mode==Mode::admit_ten_pair_complement || mode==Mode::train_ten_pair_complement)
+            profile=training::StrategyProfile::ten_card_pair_complement;
+        else if (mode==Mode::admit_ten_bounded_stage_width || mode==Mode::train_ten_bounded_stage_width)
+            profile=training::StrategyProfile::ten_card_bounded_stage_width;
+        else if (mode==Mode::admit_ten_initial_packed_stage || mode==Mode::train_ten_initial_packed_stage)
+            profile=training::StrategyProfile::ten_card_initial_packed_stage;
+        else if (mode==Mode::admit_ten_first_regret_bound || mode==Mode::train_ten_first_regret_bound)
+            profile=training::StrategyProfile::ten_card_first_regret_bound;
+        else if (mode==Mode::admit_ten_zero_policy_bootstrap || mode==Mode::train_ten_zero_policy_bootstrap)
+            profile=training::StrategyProfile::ten_card_zero_policy_bootstrap;
+        else if (mode==Mode::admit_ten_reuse_snapshot || mode==Mode::train_ten_reuse_snapshot)
+            profile=training::StrategyProfile::ten_card_reuse_snapshot;
+        else if (mode==Mode::admit_ten_equal_quantizer || mode==Mode::train_ten_equal_quantizer)
+            profile=training::StrategyProfile::ten_card_equal_quantizer;
+        else if (mode==Mode::admit_ten_history_visit || mode==Mode::train_ten_history_visit)
+            profile=training::StrategyProfile::ten_card_history_visit;
+        else if (mode==Mode::admit_ten_checked_history || mode==Mode::train_ten_checked_history)
+            profile=training::StrategyProfile::ten_card_checked_history;
+        else if (mode==Mode::admit_ten_factored || mode==Mode::train_ten_factored)
+            profile=training::StrategyProfile::ten_card_factored;
+        else if (mode==Mode::admit_ten_compact_wire || mode==Mode::train_ten_compact_wire)
+            profile=training::StrategyProfile::ten_card_compact_wire;
+        else if (complement_admit || complement_train)
+            profile=training::StrategyProfile::ten_card_complement;
+        else if (mode==Mode::admit_ten_indexed_cache || mode==Mode::train_ten_indexed_cache)
+            profile=training::StrategyProfile::ten_card_indexed_cache;
+        else if (mode==Mode::admit_ten_row_batched || mode==Mode::train_ten_row_batched)
+            profile=training::StrategyProfile::ten_card_row_batched;
+        else if (mode==Mode::admit_ten_phase_payload || mode==Mode::train_ten_phase_payload)
+            profile=training::StrategyProfile::ten_card_phase_payload;
         else if (mode==Mode::admit_ten_paged_directory || mode==Mode::train_ten_paged_directory ||
             mode==Mode::admit_ten_sweep_stream || mode==Mode::train_ten_sweep_stream)
             profile=training::StrategyProfile::ten_card_paged_directory;
@@ -289,8 +554,28 @@ int main(int argc,char* argv[]) {
         else if (mode==Mode::admit_compact || mode==Mode::train_compact) profile=training::StrategyProfile::compact;
         else if (mode==Mode::admit_packed || mode==Mode::train_packed) profile=training::StrategyProfile::packed_averages;
         const bool paired=profile!=training::StrategyProfile::dense || mode==Mode::admit_paired || mode==Mode::train_paired;
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+        std::optional<phase_profile::Recorder> recorder;
+        std::optional<phase_trace::Sink> sink;
+        ProfileOuter phase_outer;
+        ProfileBudgets phase_budget;
+        if (profile_phases) {
+            training::require(!std::filesystem::exists(scratch.parent_path()/"phase-profile.json"),
+                "phase profile output already exists");
+            recorder.emplace();
+            sink=recorder->sink();
+            phase_outer.driver_begin_ns=recorder->now_ns();
+        }
+        training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile,
+                                sink?&*sink:nullptr);
+        if (recorder) {
+            phase_outer.driver_end_ns=recorder->now_ns();
+            phase_budget=phase_budgets(driver.plan());
+        }
+#else
         training::Driver driver(paired?training::Traversal::paired:training::Traversal::by_seat,profile);
-        if (mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
+#endif
+        if (complement_admit || mode==Mode::admit || mode==Mode::admit_paired || mode==Mode::admit_packed ||
             mode==Mode::admit_compact || mode==Mode::admit_scaled || mode==Mode::admit_sealed ||
             mode==Mode::admit_paged || mode==Mode::admit_directory || mode==Mode::admit_rank_sets ||
             mode==Mode::admit_split || mode==Mode::admit_ten || mode==Mode::admit_ten_buffered ||
@@ -298,19 +583,83 @@ int main(int argc,char* argv[]) {
             mode==Mode::admit_ten_row_coverage || mode==Mode::admit_ten_shared_policy ||
             mode==Mode::admit_ten_paged_directory || mode==Mode::admit_ten_sweep_stream ||
             mode==Mode::admit_proof9_t3 || mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance ||
-            mode==Mode::admit_ten_single_division)
-            admit(driver,mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3 ||
-                  mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance || mode==Mode::admit_ten_single_division,
-                mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4);
+            mode==Mode::admit_ten_single_division || mode==Mode::admit_ten_phase_payload ||
+            mode==Mode::admit_ten_row_batched || mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32)
+            admit(driver,complement_admit || mode==Mode::admit_ten_sweep_stream || mode==Mode::admit_proof9_t3 ||
+                  mode==Mode::admit_proof9_t4 || mode==Mode::admit_ten_sparse_chance || mode==Mode::admit_ten_single_division ||
+                  mode==Mode::admit_ten_phase_payload || mode==Mode::admit_ten_row_batched ||
+                  mode==Mode::admit_ten_indexed_cache || mode==Mode::admit_proof9_q32 || mode==Mode::admit_proof9_linear32,
+                mode==Mode::admit_proof9_t3,mode==Mode::admit_proof9_t4,mode==Mode::admit_proof9_linear32);
         else {
-            const auto io=driver.train(std::cout,scratch,mode==Mode::train_ten_sweep_stream ||
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            if (recorder) phase_outer.train_begin_ns=recorder->now_ns();
+#endif
+            const auto io=driver.train(std::cout,scratch,complement_train || mode==Mode::train_ten_sweep_stream ||
                 mode==Mode::train_proof9_t3 || mode==Mode::train_proof9_t4 || mode==Mode::train_ten_sparse_chance ||
-                mode==Mode::train_ten_single_division);
+                mode==Mode::train_ten_single_division || mode==Mode::train_ten_phase_payload ||
+                mode==Mode::train_ten_row_batched || mode==Mode::train_ten_indexed_cache || mode==Mode::train_proof9_q32 || mode==Mode::train_proof9_linear32
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+                ,sink?&*sink:nullptr
+#endif
+            );
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            if (recorder) {
+                phase_outer.train_end_ns=recorder->now_ns();
+                phase_outer.receipts_begin_ns=recorder->now_ns();
+            }
+#endif
             if (io.paging) save_paging(scratch,*io.paging,driver.plan().page_limits.virtual_initial_zero);
             if (io.policy) save_policy(scratch,*io.policy);
             if (io.bounded_policy) save_policy(scratch,{io.bounded_policy.get(),io.bounded_policy_count});
             if (io.directory) save_directory(scratch,*io.directory);
             if (io.combined_divisions) save_divisions(scratch,io.combined_divisions);
+            if (driver.plan().equal_quantizer) {
+                std::ofstream receipt(scratch.parent_path()/"equal-quantizer.json",std::ios::binary);
+                training::require(bool(receipt),"equal quantizer receipt open failed");
+                receipt<<"{\"equal_rows\":"<<io.equal_rows<<",\"equal_divisions_avoided\":"
+                    <<io.equal_divisions_avoided<<"}\n";
+                receipt.close();
+                training::require(bool(receipt),"equal quantizer receipt write failed");
+            }
+            if (driver.plan().mixed_policy_cache) {
+                std::ofstream cache(scratch.parent_path()/"mixed-policy-cache.json",std::ios::binary);
+                training::require(bool(cache),"mixed policy cache receipt open failed");
+                cache<<"{\"hits\":"<<io.mixed_cache_hits<<",\"misses\":"<<io.mixed_cache_misses
+                     <<",\"divisions\":"<<io.combined_divisions<<"}\n";
+                cache.close();
+                training::require(bool(cache),"mixed policy cache receipt write failed");
+            }
+            if (io.rank_index) save_rank_index(scratch,*io.rank_index);
+            if (io.factored) {
+                const auto& work=*io.factored;
+                const auto& packed=io.packed_updates;
+                std::ofstream receipt(scratch.parent_path()/"factored-execution.json",std::ios::binary);
+                training::require(bool(receipt),"factored execution receipt open failed");
+                receipt<<"{\"work\":"<<work.work<<",\"from_values\":"<<work.from_values
+                    <<",\"additions\":"<<work.additions<<",\"subtractions\":"<<work.subtractions
+                    <<",\"scales\":"<<work.scales<<",\"mixes\":"<<work.mixes<<",\"expansions\":"<<work.expansions
+                    <<",\"implicit_zero_bits\":"<<work.implicit_zero_bits
+                    <<",\"maximum_coefficient_bits\":"<<work.maximum_coefficient_bits
+                    <<",\"maximum_shift\":"<<work.maximum_shift
+                    <<",\"packed_additions\":"<<packed.additions<<",\"packed_subtractions\":"<<packed.subtractions
+                    <<",\"packed_clipped\":"<<packed.clipped<<",\"packed_target_words_read\":"<<packed.words_read
+                    <<",\"packed_target_words_written\":"<<packed.words_written<<"}\n";
+                receipt.close();
+                training::require(bool(receipt),"factored execution receipt write failed");
+            }
+            if (io.compact_encoding_work) {
+                std::ofstream receipt(scratch.parent_path()/"compact-wire.json",std::ios::binary);
+                training::require(bool(receipt),"compact work receipt open failed");
+                receipt<<"{\"compact_encoding_work\":"<<io.compact_encoding_work<<"}\n";
+                receipt.close();
+                training::require(bool(receipt),"compact work receipt write failed");
+            }
+#ifdef OPENPOKER_TRAINING_PHASE_DIAGNOSTICS
+            if (recorder) {
+                phase_outer.receipts_end_ns=recorder->now_ns();
+                save_phase_profile(scratch,*recorder,phase_outer,phase_budget);
+            }
+#endif
         }
         return 0;
     } catch (const std::exception& error) {

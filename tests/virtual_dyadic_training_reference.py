@@ -36,11 +36,11 @@ class World:
 
 
 class Fixture:
-    def __init__(self, *, ten_card=False):
+    def __init__(self, *, ten_card=False, quality32=False):
         self.deck = tuple(sorted((*PROOF9, 0))) if ten_card else PROOF9
         require(len(set(self.deck)) == (10 if ten_card else 9), 'reference deck geometry')
         self.denominator = (3480 << 625) if ten_card else D
-        self.value_bits = 644 if ten_card else 642
+        self.value_bits = 644 if ten_card or quality32 else 642
         self.row_count = 119_196 if ten_card else ROWS
         self.slot_count = 281_066 if ten_card else SLOTS
         self.runouts = 120 if ten_card else 20
@@ -161,8 +161,9 @@ class Fixture:
             result[key]=tuple(Fraction(u,Q) for u in units)
         return result
 
-    def sweep(self, policy, previous_regrets=None, previous_average=None, *, root_holding_values=False):
+    def sweep(self, policy, previous_regrets=None, previous_average=None, *, root_holding_values=False, average_weight=1):
         """Literal-world full CFR+ update on one supplied frozen current grid."""
+        require(type(average_weight) is int and 1 <= average_weight <= 32, 'invalid average weight')
         require((previous_regrets is None)==(previous_average is None),'incomplete prior sweep')
         p=self._probabilities(policy)
         delta={key:[Fraction(0)]*len(menu) for key,menu in self.menus.items()}
@@ -184,7 +185,7 @@ class Fixture:
             own_mass=w.mass*own
             for a,q in enumerate(probabilities):
                 delta[key][a]+=signed_other*(values[a]-mixed)
-                averages[key][a]+=own_mass*q
+                averages[key][a]+=average_weight*own_mass*q
             return mixed
         root_values=[Fraction(0)]*4
         for w in self.worlds:

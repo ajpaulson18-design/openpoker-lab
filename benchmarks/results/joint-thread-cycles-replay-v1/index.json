@@ -1,0 +1,25 @@
+{
+  "created_after_runs": true,
+  "is_original_execution_receipt": false,
+  "reader_head": "4fb7202",
+  "logs": {
+    "normal": {
+      "bytes": 2257,
+      "sha256": "538e79bf94bf9124ffe6e8886dd6c7970018c955a1f18a1d17b9b2ea94f99b66"
+    },
+    "optimized": {
+      "bytes": 2257,
+      "sha256": "538e79bf94bf9124ffe6e8886dd6c7970018c955a1f18a1d17b9b2ea94f99b66"
+    },
+    "admission": {
+      "bytes": 450,
+      "sha256": "3fc673768cbea0999bbb37f214d822cf8afcd12af401ac26769b3fa96e32f2c9"
+    }
+  },
+  "observed_outer_exits": {
+    "normal": 0,
+    "optimized": 0,
+    "admission": 0
+  },
+  "scope": "Post-run preservation of saved-only replay logs. Normal/optimized outputs identical. Two tests/four corruption refusals before numerical imports. No native call or hardware query."
+}

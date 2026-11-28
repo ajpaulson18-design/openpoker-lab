@@ -1,0 +1,56 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 70093,
+      "expanded_bytes": 374056,
+      "file": "controls.zip",
+      "manifest_sha256": "5d2218ba00fc3c5c9af2a66474115a7f8fa63f36bc9cbf08ca4be9a4c56189a7",
+      "members": 124,
+      "sha256": "12bc1b9c36ccb6a0f94ffc6420f5f801e9f82717a6f78525fb75caa8d06de239"
+    },
+    {
+      "bytes": 943785,
+      "expanded_bytes": 2047725,
+      "file": "parity.zip",
+      "manifest_sha256": "b829dd6b704663565eeb07e6b37ca051b596a66e058a32e89e13459ce5903e74",
+      "members": 1507,
+      "sha256": "387a2c734ddf7642011f7eb7fa45d0896ebb0875a3c2a11c49d15806cf0c21f9"
+    },
+    {
+      "bytes": 528301,
+      "expanded_bytes": 1348675,
+      "file": "overhead.zip",
+      "manifest_sha256": "2b0f435d30ba4b351ec82af2188d6dbc71549737bb0f9cb3237f5f89098614f4",
+      "members": 1135,
+      "sha256": "dc4b47ecc02990b26ced4d765e686049a7ad9dfe10de41145f0929effc0fbeb9"
+    },
+    {
+      "bytes": 26155,
+      "expanded_bytes": 71837,
+      "file": "builds.zip",
+      "manifest_sha256": "079137c1b29247a8f25ae5fea5ec0cc53301f03a59ec3b46722db009d9916d1a",
+      "members": 16,
+      "sha256": "ff8fc387fa61ba60d4958317895cbcf913255ac4a9774085b2df1ff8fdad4992"
+    },
+    {
+      "bytes": 970715,
+      "expanded_bytes": 3275604,
+      "file": "objects.zip",
+      "manifest_sha256": "31dd4acdea9fe5ec8656bfc47e64d887e691415e0aa6e56878aef4382c931fc8",
+      "members": 86,
+      "sha256": "be76f71606e95c09614a710935279177cd018e7c148d2114379483304fa9f1ed"
+    }
+  ],
+  "exact_shared_objects": 85,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "78c42230f56c1bd6df3d3d538ba31ac8397a4fa4e8bb8f2e4af137fa4bab0a84",
+  "scope": "Original arithmetic-observer synthetic/parity processes and failed overhead gate. Raw CPU retained, attribution not admitted. No solver speedup, longer learning, quality or resource-limit change.",
+  "stored_expanded_bytes": 7117897,
+  "version": "joint-cycles-package-v1"
+}

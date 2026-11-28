@@ -1,0 +1,1140 @@
+{
+  "status": "conditional-opponent-action-moments-replayed",
+  "original_source_head": "a8df89a33eda4399aa420d60f9fde3b10947b746",
+  "original_source_files": 28,
+  "current_mathematical_files": 25,
+  "executed_current_files": [
+    "pokerlab/__init__.py",
+    "pokerlab/cards.py",
+    "scripts/matrix_free_certificate_budget.py",
+    "scripts/matrix_free_four_street_rules.py",
+    "scripts/preflop_validation.py",
+    "tests/full_deck_public_chance_reference.py",
+    "tests/test_native_dyadic_policy.py",
+    "tests/test_native_exact_reach.py",
+    "tests/test_opponent_action_moments.py",
+    "tests/virtual_betting_template_reference.py",
+    "tests/virtual_dyadic_training_reference.py",
+    "tests/virtual_frozen_run_control.py",
+    "tests/virtual_frozen_sample_reference.py",
+    "tests/virtual_frozen_update_reference.py",
+    "tests/virtual_frozen_value_reference.py",
+    "tests/virtual_grid_update_reference.py",
+    "tests/virtual_opponent_action_moments.py",
+    "tests/virtual_opponent_action_worlds.py",
+    "tests/virtual_sparse_epoch_reference.py",
+    "tests/virtual_weighted_joint_raw_reference.py",
+    "tests/virtual_weighted_joint_reference.py"
+  ],
+  "original_python_children": 8,
+  "fresh_tests": 8,
+  "layouts": [
+    {
+      "tables": 4,
+      "rows_per_table": 434,
+      "slots_per_table": 1039,
+      "first_moment_coordinates": 8312,
+      "marginal_second_coordinates": 8312,
+      "supported_transcript_witnesses": 4
+    },
+    {
+      "tables": 4,
+      "rows_per_table": 434,
+      "slots_per_table": 1039,
+      "first_moment_coordinates": 8312,
+      "marginal_second_coordinates": 8312,
+      "supported_transcript_witnesses": 4
+    },
+    {
+      "tables": 4,
+      "rows_per_table": 434,
+      "slots_per_table": 1039,
+      "first_moment_coordinates": 8312,
+      "marginal_second_coordinates": 8312,
+      "supported_transcript_witnesses": 4
+    }
+  ],
+  "cases": [
+    {
+      "case": 0,
+      "hands": [
+        [
+          43,
+          48
+        ],
+        [
+          24,
+          37
+        ]
+      ],
+      "board": [
+        17,
+        33,
+        35,
+        16,
+        32
+      ],
+      "showdown_sign": 0,
+      "admission": {
+        "source_case": {
+          "work": 91268448,
+          "entries": 652736,
+          "created_bits": 2447421504,
+          "integer_bits": 4096
+        },
+        "complete": {
+          "work": 159261856,
+          "entries": 2371333,
+          "created_bits": 3499414912,
+          "integer_bits": 4096
+        },
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "created_bits": 16000000000,
+          "integer_bits": 4096
+        },
+        "case_count": 1,
+        "wire_limit": 2135476,
+        "source_scope": "One selected physical hand per seat on full52; conditional operator only.",
+        "scope": "Complete bounded reference/I-O reservation. No native admission or full1326 moment-law proof."
+      },
+      "tables": [
+        {
+          "profile": "uniform",
+          "scheme": "uniform-target-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 1636555,
+              "denominator": 31104
+            },
+            "reads": {
+              "numerator": 1752151,
+              "denominator": 62208
+            },
+            "terminals": {
+              "numerator": 1187227,
+              "denominator": 62208
+            },
+            "reveals": {
+              "numerator": 27811,
+              "denominator": 5184
+            },
+            "actions": {
+              "numerator": 1407481,
+              "denominator": 31104
+            },
+            "target_update_rows": {
+              "numerator": 642037,
+              "denominator": 62208
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 21883070621,
+            "denominator": 859963392
+          },
+          "regret_variance_sum": {
+            "numerator": 168795258207145895772488916632568527323518621609033713097645453833046981340220835702148046382812576978303377338923982693162688031706304371463772982151295582996710999576428364194837065728013486807805518760483392884520529804006894060113712305457321360549,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_variance_sum": {
+            "numerator": 509723014465252634323347782626009632044096397875871672469409644300013626329789680102546076549164274185537125595733034154733486841445589127799709599053615741,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "regret_mean_square_sum": {
+            "numerator": 7052802776826488506432185623650005552018054057789982327965787781372445221680888636475965682229792153127941984391894951127208561805144110909614802800161635002419564692011052430066532339829360045954959786203490449412210319387989013172038637955296545503,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_mean_square_sum": {
+            "numerator": 59220983831194095173855855808205086767903668490750971473121119596318024546948985618955364411977312334599447487608472202521566596748595747187100402556819659,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "uniform",
+          "scheme": "policy-role-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 6092467933441873063962464758456048365273972603312282359513022571630962702227515,
+              "denominator": 115792089237316195423570985008687907853269984665640564039457584007913129639936
+            },
+            "reads": {
+              "numerator": 6522801728049537812987799958684918124385855966580833588195461029457334312835131,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            },
+            "terminals": {
+              "numerator": 4419736841851569024000233017456549978646115641267626948290400618206575209945147,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            },
+            "reveals": {
+              "numerator": 551735233936873866039406051684780786244376926131185082686851249,
+              "denominator": 102844034832575377634685573909834406561420991602098741459288064
+            },
+            "actions": {
+              "numerator": 5239685106475921027646874518053358235809445834592949140164015655816128502110267,
+              "denominator": 115792089237316195423570985008687907853269984665640564039457584007913129639936
+            },
+            "target_update_rows": {
+              "numerator": 2390136496838309572781144150801799801438603719327242278058065126249056066279483,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 1076580483981947597027660760537841981164592286705720156174255899403412702443932715321217122594980234106845944758395972405824097,
+            "denominator": 42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384
+          },
+          "regret_variance_sum": {
+            "numerator": 168795258207145892212517502414657880518518419588092678042091153625474531206952641898229932961356918061424789788129630127357341538041077203663585485830022507911111209636390646301151716832822784479627257382267191748408272980526531875484334620870833321249,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_variance_sum": {
+            "numerator": 136353301454520016660881222611199383373682698446168866610433210970961194700025907048512611724552946237552400340782850139467309516350097189158644263576708917,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "regret_mean_square_sum": {
+            "numerator": 7052802776826488506432185623650005552018054057789982327965787781372445221680888636475965682229792153127941984391894951127208561805144110909614802800161635002419564692011052430066532339829360045954959786203490449412210319387989013172038637955296545503,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_mean_square_sum": {
+            "numerator": 59220983831194095173855855808205086767903668490750971473121119596318024546948985618955364411977312334599447487608472202521566596748595747187100402556819659,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "visible-hash",
+          "scheme": "uniform-target-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 1636555,
+              "denominator": 31104
+            },
+            "reads": {
+              "numerator": 1752151,
+              "denominator": 62208
+            },
+            "terminals": {
+              "numerator": 1187227,
+              "denominator": 62208
+            },
+            "reveals": {
+              "numerator": 27811,
+              "denominator": 5184
+            },
+            "actions": {
+              "numerator": 1407481,
+              "denominator": 31104
+            },
+            "target_update_rows": {
+              "numerator": 642037,
+              "denominator": 62208
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 21883070621,
+            "denominator": 859963392
+          },
+          "regret_variance_sum": {
+            "numerator": 35926907930296353,
+            "denominator": 281474976710656
+          },
+          "average_variance_sum": {
+            "numerator": 3055770585,
+            "denominator": 134217728
+          },
+          "regret_mean_square_sum": {
+            "numerator": 1612624075008799,
+            "denominator": 281474976710656
+          },
+          "average_mean_square_sum": {
+            "numerator": 342765607,
+            "denominator": 134217728
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "visible-hash",
+          "scheme": "policy-role-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 357727,
+              "denominator": 8192
+            },
+            "reads": {
+              "numerator": 378635,
+              "denominator": 16384
+            },
+            "terminals": {
+              "numerator": 263203,
+              "denominator": 16384
+            },
+            "reveals": {
+              "numerator": 4601,
+              "denominator": 1024
+            },
+            "actions": {
+              "numerator": 304535,
+              "denominator": 8192
+            },
+            "target_update_rows": {
+              "numerator": 139507,
+              "denominator": 16384
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 174791579,
+            "denominator": 8388608
+          },
+          "regret_variance_sum": {
+            "numerator": 23863671292624737,
+            "denominator": 281474976710656
+          },
+          "average_variance_sum": {
+            "numerator": 629671897,
+            "denominator": 134217728
+          },
+          "regret_mean_square_sum": {
+            "numerator": 1612624075008799,
+            "denominator": 281474976710656
+          },
+          "average_mean_square_sum": {
+            "numerator": 342765607,
+            "denominator": 134217728
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        }
+      ],
+      "witnesses": [
+        {
+          "profile": 0,
+          "scheme": "uniform-target-average",
+          "choice": "first",
+          "observed_rows": 19,
+          "slots": 65,
+          "visits": [
+            35,
+            2
+          ],
+          "proposal_factors": 16,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": false,
+          "role_observed_regret_bits": 0,
+          "role_observed_average_bits": 0,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 0,
+          "scheme": "policy-role-average",
+          "choice": "first",
+          "observed_rows": 19,
+          "slots": 65,
+          "visits": [
+            35,
+            2
+          ],
+          "proposal_factors": 16,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": true,
+          "role_observed_regret_bits": 366,
+          "role_observed_average_bits": 52,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 1,
+          "scheme": "uniform-target-average",
+          "choice": "last",
+          "observed_rows": 7,
+          "slots": 18,
+          "visits": [
+            14,
+            4
+          ],
+          "proposal_factors": 5,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": false,
+          "role_observed_regret_bits": 0,
+          "role_observed_average_bits": 0,
+          "zero_policy_opponent_choices": 1,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 1,
+          "scheme": "policy-role-average",
+          "choice": "last",
+          "observed_rows": 9,
+          "slots": 23,
+          "visits": [
+            18,
+            4
+          ],
+          "proposal_factors": 6,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": true,
+          "role_observed_regret_bits": 367,
+          "role_observed_average_bits": 52,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        }
+      ],
+      "source_max_own_actions_by_actor": [
+        6,
+        7
+      ],
+      "role_compact_denominator_powers": {
+        "regret": 365,
+        "average": 52
+      },
+      "zero_own_nonzero_regret_rows": 54,
+      "zero_opponent_nonzero_average_rows": 73,
+      "moment_resource_accounting": {
+        "work": 219552,
+        "entries": 450002,
+        "created_bits": 104148092,
+        "integer_bits": 2688
+      },
+      "native_calls": 0,
+      "rng_calls": 0,
+      "attempted_training": false,
+      "quality_gate": null,
+      "scope": "Named full52 conditional-world R/A first/second moments with selected-hand range witnesses. No full1326 moment-law admission, sampler, native training, convergence or quality.",
+      "wire_bytes": 1767712,
+      "wire_sha256": "f89064d9b9aca078b41cb9e2a23184e49929161fa976e82679dbe5f8d1325d4e",
+      "witness_bytes": 30320,
+      "witness_sha256": "12c89eb90b9272f567de13d09f194be9a6eeda110d526d4261bdcf6adc48971b"
+    },
+    {
+      "case": 1,
+      "hands": [
+        [
+          43,
+          48
+        ],
+        [
+          16,
+          32
+        ]
+      ],
+      "board": [
+        17,
+        33,
+        35,
+        24,
+        37
+      ],
+      "showdown_sign": -1,
+      "admission": {
+        "source_case": {
+          "work": 91268448,
+          "entries": 652736,
+          "created_bits": 2447421504,
+          "integer_bits": 4096
+        },
+        "complete": {
+          "work": 159261856,
+          "entries": 2371333,
+          "created_bits": 3499414912,
+          "integer_bits": 4096
+        },
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "created_bits": 16000000000,
+          "integer_bits": 4096
+        },
+        "case_count": 1,
+        "wire_limit": 2135476,
+        "source_scope": "One selected physical hand per seat on full52; conditional operator only.",
+        "scope": "Complete bounded reference/I-O reservation. No native admission or full1326 moment-law proof."
+      },
+      "tables": [
+        {
+          "profile": "uniform",
+          "scheme": "uniform-target-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 1636555,
+              "denominator": 31104
+            },
+            "reads": {
+              "numerator": 1752151,
+              "denominator": 62208
+            },
+            "terminals": {
+              "numerator": 1187227,
+              "denominator": 62208
+            },
+            "reveals": {
+              "numerator": 27811,
+              "denominator": 5184
+            },
+            "actions": {
+              "numerator": 1407481,
+              "denominator": 31104
+            },
+            "target_update_rows": {
+              "numerator": 642037,
+              "denominator": 62208
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 21883070621,
+            "denominator": 859963392
+          },
+          "regret_variance_sum": {
+            "numerator": 540650439948270169752861221392831959646489849853901843733487012893719785561871850899251814017761802157009400066241190223405633320823734267949913830274907025255013471493884806752783225298409682599517880318348443469312287328334782996188404844402219638509,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_variance_sum": {
+            "numerator": 509723014465252634323347782626009632044096397875871672469409644300013626329789680102546076549164274185537125595733034154733486841445589127799709599053615741,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "regret_mean_square_sum": {
+            "numerator": 35696101090845461081649267387751731769020576691070549106004966342885665137715787631864431729227741529601490659631714350898558474633998422111125269311879078755399778775474380610376240472471057866246039018286520441625809302754832648732599511621373271623,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_mean_square_sum": {
+            "numerator": 59220983831194095173855855808205086767903668490750971473121119596318024546948985618955364411977312334599447487608472202521566596748595747187100402556819659,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "uniform",
+          "scheme": "policy-role-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 6092467933441873063962464758456048365273972603312282359513022571630962702227515,
+              "denominator": 115792089237316195423570985008687907853269984665640564039457584007913129639936
+            },
+            "reads": {
+              "numerator": 6522801728049537812987799958684918124385855966580833588195461029457334312835131,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            },
+            "terminals": {
+              "numerator": 4419736841851569024000233017456549978646115641267626948290400618206575209945147,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            },
+            "reveals": {
+              "numerator": 551735233936873866039406051684780786244376926131185082686851249,
+              "denominator": 102844034832575377634685573909834406561420991602098741459288064
+            },
+            "actions": {
+              "numerator": 5239685106475921027646874518053358235809445834592949140164015655816128502110267,
+              "denominator": 115792089237316195423570985008687907853269984665640564039457584007913129639936
+            },
+            "target_update_rows": {
+              "numerator": 2390136496838309572781144150801799801438603719327242278058065126249056066279483,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 1076580483981947597027660760537841981164592286705720156174255899403412702443932715321217122594980234106845944758395972405824097,
+            "denominator": 42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384
+          },
+          "regret_variance_sum": {
+            "numerator": 540650439948270165253612494822757215542450946694563625053882843754663509708524253228554681369288119139566675296405437065174947958747558102829313661093527718543658159775356117615604628662461122582393215178222632109602931220803690516857939285331656565177,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_variance_sum": {
+            "numerator": 136353301454520016660881222611199383373682698446168866610433210970961194700025907048512611724552946237552400340782850139467309516350097189158644263576708917,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "regret_mean_square_sum": {
+            "numerator": 35696101090845461081649267387751731769020576691070549106004966342885665137715787631864431729227741529601490659631714350898558474633998422111125269311879078755399778775474380610376240472471057866246039018286520441625809302754832648732599511621373271623,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_mean_square_sum": {
+            "numerator": 59220983831194095173855855808205086767903668490750971473121119596318024546948985618955364411977312334599447487608472202521566596748595747187100402556819659,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "visible-hash",
+          "scheme": "uniform-target-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 1636555,
+              "denominator": 31104
+            },
+            "reads": {
+              "numerator": 1752151,
+              "denominator": 62208
+            },
+            "terminals": {
+              "numerator": 1187227,
+              "denominator": 62208
+            },
+            "reveals": {
+              "numerator": 27811,
+              "denominator": 5184
+            },
+            "actions": {
+              "numerator": 1407481,
+              "denominator": 31104
+            },
+            "target_update_rows": {
+              "numerator": 642037,
+              "denominator": 62208
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 21883070621,
+            "denominator": 859963392
+          },
+          "regret_variance_sum": {
+            "numerator": 460419600100321,
+            "denominator": 1099511627776
+          },
+          "average_variance_sum": {
+            "numerator": 143839465,
+            "denominator": 8388608
+          },
+          "regret_mean_square_sum": {
+            "numerator": 32339433924127,
+            "denominator": 1099511627776
+          },
+          "average_mean_square_sum": {
+            "numerator": 19288919,
+            "denominator": 8388608
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "visible-hash",
+          "scheme": "policy-role-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 10741,
+              "denominator": 256
+            },
+            "reads": {
+              "numerator": 22807,
+              "denominator": 1024
+            },
+            "terminals": {
+              "numerator": 16023,
+              "denominator": 1024
+            },
+            "reveals": {
+              "numerator": 2067,
+              "denominator": 512
+            },
+            "actions": {
+              "numerator": 18391,
+              "denominator": 512
+            },
+            "target_update_rows": {
+              "numerator": 16879,
+              "denominator": 2048
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 1314813,
+            "denominator": 65536
+          },
+          "regret_variance_sum": {
+            "numerator": 306425643663969,
+            "denominator": 1099511627776
+          },
+          "average_variance_sum": {
+            "numerator": 39077545,
+            "denominator": 8388608
+          },
+          "regret_mean_square_sum": {
+            "numerator": 32339433924127,
+            "denominator": 1099511627776
+          },
+          "average_mean_square_sum": {
+            "numerator": 19288919,
+            "denominator": 8388608
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        }
+      ],
+      "witnesses": [
+        {
+          "profile": 0,
+          "scheme": "uniform-target-average",
+          "choice": "first",
+          "observed_rows": 19,
+          "slots": 65,
+          "visits": [
+            35,
+            2
+          ],
+          "proposal_factors": 16,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": false,
+          "role_observed_regret_bits": 0,
+          "role_observed_average_bits": 0,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 0,
+          "scheme": "policy-role-average",
+          "choice": "first",
+          "observed_rows": 19,
+          "slots": 65,
+          "visits": [
+            35,
+            2
+          ],
+          "proposal_factors": 16,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": true,
+          "role_observed_regret_bits": 366,
+          "role_observed_average_bits": 52,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 1,
+          "scheme": "uniform-target-average",
+          "choice": "last",
+          "observed_rows": 7,
+          "slots": 18,
+          "visits": [
+            14,
+            4
+          ],
+          "proposal_factors": 5,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": false,
+          "role_observed_regret_bits": 0,
+          "role_observed_average_bits": 0,
+          "zero_policy_opponent_choices": 1,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 1,
+          "scheme": "policy-role-average",
+          "choice": "last",
+          "observed_rows": 10,
+          "slots": 25,
+          "visits": [
+            20,
+            4
+          ],
+          "proposal_factors": 7,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": true,
+          "role_observed_regret_bits": 368,
+          "role_observed_average_bits": 53,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        }
+      ],
+      "source_max_own_actions_by_actor": [
+        6,
+        7
+      ],
+      "role_compact_denominator_powers": {
+        "regret": 365,
+        "average": 52
+      },
+      "zero_own_nonzero_regret_rows": 52,
+      "zero_opponent_nonzero_average_rows": 72,
+      "moment_resource_accounting": {
+        "work": 219610,
+        "entries": 450002,
+        "created_bits": 104552426,
+        "integer_bits": 2688
+      },
+      "native_calls": 0,
+      "rng_calls": 0,
+      "attempted_training": false,
+      "quality_gate": null,
+      "scope": "Named full52 conditional-world R/A first/second moments with selected-hand range witnesses. No full1326 moment-law admission, sampler, native training, convergence or quality.",
+      "wire_bytes": 1767712,
+      "wire_sha256": "2fd67f664d38c2e312ab21e08f1de4a570ed7d2a0213249a9fa1e1296702194d",
+      "witness_bytes": 30704,
+      "witness_sha256": "d731b37087d3ebe20100677d64ef10d01c06d74738f0cdc1065f6f5e79d6152e"
+    },
+    {
+      "case": 2,
+      "hands": [
+        [
+          32,
+          43
+        ],
+        [
+          24,
+          37
+        ]
+      ],
+      "board": [
+        17,
+        33,
+        35,
+        16,
+        48
+      ],
+      "showdown_sign": 1,
+      "admission": {
+        "source_case": {
+          "work": 91268448,
+          "entries": 652736,
+          "created_bits": 2447421504,
+          "integer_bits": 4096
+        },
+        "complete": {
+          "work": 159261856,
+          "entries": 2371333,
+          "created_bits": 3499414912,
+          "integer_bits": 4096
+        },
+        "limits": {
+          "work": 500000000,
+          "entries": 8000000,
+          "created_bits": 16000000000,
+          "integer_bits": 4096
+        },
+        "case_count": 1,
+        "wire_limit": 2135476,
+        "source_scope": "One selected physical hand per seat on full52; conditional operator only.",
+        "scope": "Complete bounded reference/I-O reservation. No native admission or full1326 moment-law proof."
+      },
+      "tables": [
+        {
+          "profile": "uniform",
+          "scheme": "uniform-target-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 1636555,
+              "denominator": 31104
+            },
+            "reads": {
+              "numerator": 1752151,
+              "denominator": 62208
+            },
+            "terminals": {
+              "numerator": 1187227,
+              "denominator": 62208
+            },
+            "reveals": {
+              "numerator": 27811,
+              "denominator": 5184
+            },
+            "actions": {
+              "numerator": 1407481,
+              "denominator": 31104
+            },
+            "target_update_rows": {
+              "numerator": 642037,
+              "denominator": 62208
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 21883070621,
+            "denominator": 859963392
+          },
+          "regret_variance_sum": {
+            "numerator": 537040643765132709357140708940201748378513111119989101382087244346701321901511068015172933214788197587342048844223250340122927073937530049051793775615548342057111041695399622352611823958674334938927605147354200230752481777630582740558879831096951310981,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_variance_sum": {
+            "numerator": 509723014465252634323347782626009632044096397875871672469409644300013626329789680102546076549164274185537125595733034154733486841445589127799709599053615741,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "regret_mean_square_sum": {
+            "numerator": 52355847291674995547319615136235712121021425703054015839821767698741991575500036113633082361997735254818299262055458099673686600137865936427789444786227977629165497530765482393855173878120960989510036054476532867616443218531610176433283335899247377455,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_mean_square_sum": {
+            "numerator": 59220983831194095173855855808205086767903668490750971473121119596318024546948985618955364411977312334599447487608472202521566596748595747187100402556819659,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "uniform",
+          "scheme": "policy-role-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 6092467933441873063962464758456048365273972603312282359513022571630962702227515,
+              "denominator": 115792089237316195423570985008687907853269984665640564039457584007913129639936
+            },
+            "reads": {
+              "numerator": 6522801728049537812987799958684918124385855966580833588195461029457334312835131,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            },
+            "terminals": {
+              "numerator": 4419736841851569024000233017456549978646115641267626948290400618206575209945147,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            },
+            "reveals": {
+              "numerator": 551735233936873866039406051684780786244376926131185082686851249,
+              "denominator": 102844034832575377634685573909834406561420991602098741459288064
+            },
+            "actions": {
+              "numerator": 5239685106475921027646874518053358235809445834592949140164015655816128502110267,
+              "denominator": 115792089237316195423570985008687907853269984665640564039457584007913129639936
+            },
+            "target_update_rows": {
+              "numerator": 2390136496838309572781144150801799801438603719327242278058065126249056066279483,
+              "denominator": 231584178474632390847141970017375815706539969331281128078915168015826259279872
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 1076580483981947597027660760537841981164592286705720156174255899403412702443932715321217122594980234106845944758395972405824097,
+            "denominator": 42307582002575910332922579714097346549017899709713998034217522897561970639123926132812109468141778230245837569601494931472384
+          },
+          "regret_variance_sum": {
+            "numerator": 537040643765132690446765724353726426460423555304266395792760567661667906227735037398446028600054717835231095476312564919492791932992276738178491462929278806976308832243251796432620388939165030618277660456723295881231427436920290792980707787207125664721,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_variance_sum": {
+            "numerator": 136353301454520016660881222611199383373682698446168866610433210970961194700025907048512611724552946237552400340782850139467309516350097189158644263576708917,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "regret_mean_square_sum": {
+            "numerator": 52355847291674995547319615136235712121021425703054015839821767698741991575500036113633082361997735254818299262055458099673686600137865936427789444786227977629165497530765482393855173878120960989510036054476532867616443218531610176433283335899247377455,
+            "denominator": 1789931494904685075276173995854677405670108698260665783090090606394441500334556509959080266614039273464334969326187482504649803797317086043777814127597786226282054644248700756391675078842436173515315000514484077967245659600421098975959924194154643456
+          },
+          "average_mean_square_sum": {
+            "numerator": 59220983831194095173855855808205086767903668490750971473121119596318024546948985618955364411977312334599447487608472202521566596748595747187100402556819659,
+            "denominator": 26815615859885194199148049996411692254958731641184786755447122887443528060147093953603748596333806855380063716372972101707507765623893139892867298012168192
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "visible-hash",
+          "scheme": "uniform-target-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 1636555,
+              "denominator": 31104
+            },
+            "reads": {
+              "numerator": 1752151,
+              "denominator": 62208
+            },
+            "terminals": {
+              "numerator": 1187227,
+              "denominator": 62208
+            },
+            "reveals": {
+              "numerator": 27811,
+              "denominator": 5184
+            },
+            "actions": {
+              "numerator": 1407481,
+              "denominator": 31104
+            },
+            "target_update_rows": {
+              "numerator": 642037,
+              "denominator": 62208
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 21883070621,
+            "denominator": 859963392
+          },
+          "regret_variance_sum": {
+            "numerator": 529561496745289,
+            "denominator": 1099511627776
+          },
+          "average_variance_sum": {
+            "numerator": 31289257,
+            "denominator": 2097152
+          },
+          "regret_mean_square_sum": {
+            "numerator": 46740943282871,
+            "denominator": 1099511627776
+          },
+          "average_mean_square_sum": {
+            "numerator": 2636789,
+            "denominator": 1048576
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        },
+        {
+          "profile": "visible-hash",
+          "scheme": "policy-role-average",
+          "rows": 434,
+          "slots": 1039,
+          "expected_traversal_counts": {
+            "visits": {
+              "numerator": 42095,
+              "denominator": 1024
+            },
+            "reads": {
+              "numerator": 88869,
+              "denominator": 4096
+            },
+            "terminals": {
+              "numerator": 62071,
+              "denominator": 4096
+            },
+            "reveals": {
+              "numerator": 545,
+              "denominator": 128
+            },
+            "actions": {
+              "numerator": 35687,
+              "denominator": 1024
+            },
+            "target_update_rows": {
+              "numerator": 32635,
+              "denominator": 4096
+            }
+          },
+          "expected_unique_read_rows": {
+            "numerator": 40710959,
+            "denominator": 2097152
+          },
+          "regret_variance_sum": {
+            "numerator": 295832590029321,
+            "denominator": 1099511627776
+          },
+          "average_variance_sum": {
+            "numerator": 4405835,
+            "denominator": 1048576
+          },
+          "regret_mean_square_sum": {
+            "numerator": 46740943282871,
+            "denominator": 1099511627776
+          },
+          "average_mean_square_sum": {
+            "numerator": 2636789,
+            "denominator": 1048576
+          },
+          "scope": "Conditional selected-world sampling variance only. No global chance variance or quality inference."
+        }
+      ],
+      "witnesses": [
+        {
+          "profile": 0,
+          "scheme": "uniform-target-average",
+          "choice": "first",
+          "observed_rows": 19,
+          "slots": 65,
+          "visits": [
+            35,
+            2
+          ],
+          "proposal_factors": 16,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": false,
+          "role_observed_regret_bits": 0,
+          "role_observed_average_bits": 0,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 0,
+          "scheme": "policy-role-average",
+          "choice": "first",
+          "observed_rows": 19,
+          "slots": 65,
+          "visits": [
+            35,
+            2
+          ],
+          "proposal_factors": 16,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": true,
+          "role_observed_regret_bits": 366,
+          "role_observed_average_bits": 52,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 1,
+          "scheme": "uniform-target-average",
+          "choice": "last",
+          "observed_rows": 7,
+          "slots": 18,
+          "visits": [
+            14,
+            4
+          ],
+          "proposal_factors": 5,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": false,
+          "role_observed_regret_bits": 0,
+          "role_observed_average_bits": 0,
+          "zero_policy_opponent_choices": 1,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        },
+        {
+          "profile": 1,
+          "scheme": "policy-role-average",
+          "choice": "last",
+          "observed_rows": 9,
+          "slots": 23,
+          "visits": [
+            18,
+            4
+          ],
+          "proposal_factors": 6,
+          "probability_materialized": false,
+          "role_compact_denominators_verified": true,
+          "role_observed_regret_bits": 368,
+          "role_observed_average_bits": 52,
+          "zero_policy_opponent_choices": 0,
+          "scope": "A deterministic supported transcript witness, not a draw, native update or quality result."
+        }
+      ],
+      "source_max_own_actions_by_actor": [
+        6,
+        7
+      ],
+      "role_compact_denominator_powers": {
+        "regret": 365,
+        "average": 52
+      },
+      "zero_own_nonzero_regret_rows": 50,
+      "zero_opponent_nonzero_average_rows": 71,
+      "moment_resource_accounting": {
+        "work": 219529,
+        "entries": 450002,
+        "created_bits": 104473695,
+        "integer_bits": 2688
+      },
+      "native_calls": 0,
+      "rng_calls": 0,
+      "attempted_training": false,
+      "quality_gate": null,
+      "scope": "Named full52 conditional-world R/A first/second moments with selected-hand range witnesses. No full1326 moment-law admission, sampler, native training, convergence or quality.",
+      "wire_bytes": 1767712,
+      "wire_sha256": "201b90dc8213aead53ad4b19091e1068372f25739d81df28e636a48cbf0968b8",
+      "witness_bytes": 30320,
+      "witness_sha256": "493cc95b18a498a362f16e0790a29d5c66558d48dd867f26ac5cdc6fbcd04236"
+    }
+  ],
+  "native_calls": 0,
+  "rng_calls": 0,
+  "archived_source_executed": false,
+  "attempted_training": false,
+  "quality_gate": null,
+  "stored_expanded_bytes": 6106450,
+  "scope": "Exact conditional first/second R/A moments and deterministic transcript factors for three named full52 worlds. No full1326 moment-law admission, native sampler, timing, convergence or quality."
+}

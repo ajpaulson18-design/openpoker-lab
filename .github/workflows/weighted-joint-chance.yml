@@ -1,0 +1,81 @@
+name: Weighted compact joint chance
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  weighted-joint:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Resolve canonical external evidence paths
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          base = Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              for kind in ('joint', 'whole'):
+                  for mode in ('normal', 'optimized'):
+                      key = f'WEIGHTED_{kind.upper()}_{mode.upper()}_PATH'
+                      output.write(f'{key}={base / ("weighted-" + kind + "-" + mode)}\n')
+          PY
+      - name: Build the shared compact Prepared purpose
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target prepared-weighted-joint-controls --output-dir "$RUNNER_TEMP/weighted-joint-build" ${{ matrix.flags }}
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-two-epoch --output-dir "$RUNNER_TEMP/weighted-whole-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_WEIGHTED_JOINT_EXE=$RUNNER_TEMP/weighted-joint-build/native-prepared-weighted-joint-controls$suffix" >> "$GITHUB_ENV"
+          echo "OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_EXE=$RUNNER_TEMP/weighted-whole-build/native-virtual-weighted-joint-two-epoch$suffix" >> "$GITHUB_ENV"
+      - name: Check independent law and selected-world arithmetic
+        run: python -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference -v
+      - name: Check candidate private boundaries and selected boards
+        env:
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ env.WEIGHTED_JOINT_NORMAL_PATH }}
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ env.WEIGHTED_WHOLE_NORMAL_PATH }}
+        run: python -B -m unittest tests.test_native_weighted_joint_chance tests.test_native_weighted_joint_two_epoch -v
+      - name: Repeat all weighted gates with optimized Python
+        env:
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_DIR: ${{ env.WEIGHTED_JOINT_OPTIMIZED_PATH }}
+          OPENPOKER_NATIVE_WEIGHTED_JOINT_TWO_EPOCH_DIR: ${{ env.WEIGHTED_WHOLE_OPTIMIZED_PATH }}
+        run: python -O -B -m unittest tests.test_weighted_joint_reference tests.test_weighted_joint_raw_reference tests.test_native_weighted_joint_chance tests.test_native_weighted_joint_two_epoch -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weighted-joint-${{ matrix.label }}
+          path: |
+            ${{ runner.temp }}/weighted-joint-build/build.log
+            ${{ runner.temp }}/weighted-joint-build/build-failure.json
+            ${{ runner.temp }}/weighted-joint-build/compiler-version.log
+            ${{ runner.temp }}/weighted-joint-build/native-exact-build-manifest.json
+            ${{ runner.temp }}/weighted-whole-build/build.log
+            ${{ runner.temp }}/weighted-whole-build/build-failure.json
+            ${{ runner.temp }}/weighted-whole-build/compiler-version.log
+            ${{ runner.temp }}/weighted-whole-build/native-exact-build-manifest.json
+            ${{ env.WEIGHTED_JOINT_NORMAL_PATH }}/**
+            ${{ env.WEIGHTED_JOINT_OPTIMIZED_PATH }}/**
+            ${{ env.WEIGHTED_WHOLE_NORMAL_PATH }}/**
+            ${{ env.WEIGHTED_WHOLE_OPTIMIZED_PATH }}/**
+          if-no-files-found: warn

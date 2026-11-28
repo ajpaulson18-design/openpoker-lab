@@ -1,0 +1,153 @@
+name: Joint own-thread CPU evidence
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  cycle-evidence:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux
+            flags: ''
+          - os: windows-latest
+            label: windows
+            flags: ''
+          - os: ubuntu-latest
+            label: sanitized
+            flags: '--sanitize'
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Replay saved math and CPU accounting without native calls
+        shell: bash
+        run: |
+          python -B -m scripts.replay_joint_cycles_packet > "$RUNNER_TEMP/cpu-replay-normal.json"
+          python -O -B -m scripts.replay_joint_cycles_packet > "$RUNNER_TEMP/cpu-replay-optimized.json"
+          python -B -m scripts.replay_joint_arithmetic_cycles_packet > "$RUNNER_TEMP/cpu-replay-arithmetic-normal.json"
+          python -O -B -m scripts.replay_joint_arithmetic_cycles_packet > "$RUNNER_TEMP/cpu-replay-arithmetic-optimized.json"
+          python -B -m scripts.replay_joint_arithmetic_cycles_packet --light > "$RUNNER_TEMP/cpu-replay-light-normal.json"
+          python -O -B -m scripts.replay_joint_arithmetic_cycles_packet --light > "$RUNNER_TEMP/cpu-replay-light-optimized.json"
+          python -B -m unittest tests.test_joint_cycles_packet_admission tests.test_arithmetic_cycles_packet_admission -v
+      - name: Build actual recorder with a synthetic clock
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target joint-thread-cycle-controls --output-dir "$RUNNER_TEMP/cpu-controls-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          echo "OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_EXE=$RUNNER_TEMP/cpu-controls-build/native-joint-thread-cycle-controls$suffix" >> "$GITHUB_ENV"
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as output:
+              for mode in ('normal','optimized'):
+                  output.write(f'CPU_CONTROLS_{mode.upper()}={base / ("joint-cycle-controls-"+mode)}\n')
+          PY
+      - name: Verify recorder census and failure guards
+        env:
+          OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_DIR: ${{ env.CPU_CONTROLS_NORMAL }}
+        run: python -B -m unittest tests.test_joint_cycle_reference -v
+      - name: Repeat controls with optimized Python
+        env:
+          OPENPOKER_NATIVE_JOINT_CYCLE_CONTROLS_DIR: ${{ env.CPU_CONTROLS_OPTIMIZED }}
+        run: python -O -B -m unittest tests.test_joint_cycle_reference -v
+      # Arithmetic observers retain a separate acceptance gate; CI checks
+      # arithmetic/shape only and never adopts shared-runner elapsed results.
+      - name: Build arithmetic recorder controls
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target joint-arithmetic-cycle-controls --output-dir "$RUNNER_TEMP/cpu-arithmetic-controls-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          export OPENPOKER_NATIVE_ARITHMETIC_CYCLE_EXE="$RUNNER_TEMP/cpu-arithmetic-controls-build/native-joint-arithmetic-cycle-controls$suffix"
+          python -B - <<'PY'
+          import os,subprocess,sys
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          for mode in ('normal','optimized'):
+              environment=dict(os.environ,OPENPOKER_NATIVE_ARITHMETIC_CYCLE_DIR=str(base/('joint-arithmetic-controls-'+mode)))
+              subprocess.run([sys.executable,*(['-O'] if mode=='optimized' else []),'-B','-m','unittest','tests.test_joint_arithmetic_cycles','-v'],env=environment,check=True)
+          PY
+      - name: Check typed-TLS recorder and real foreign-thread guard
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target joint-arithmetic-light-controls --output-dir "$RUNNER_TEMP/cpu-light-controls-build" ${{ matrix.flags }}
+          if [ "$RUNNER_OS" = Windows ]; then suffix=.exe; else suffix=; fi
+          export OPENPOKER_NATIVE_ARITHMETIC_LIGHT_EXE="$RUNNER_TEMP/cpu-light-controls-build/native-joint-arithmetic-light-controls$suffix"
+          python -B - <<'PY'
+          import os,subprocess,sys
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          for mode in ('normal','optimized'):
+              environment=dict(os.environ,OPENPOKER_NATIVE_ARITHMETIC_LIGHT_DIR=str(base/('joint-light-controls-'+mode)))
+              subprocess.run([sys.executable,*(['-O'] if mode=='optimized' else []),'-B','-m','unittest','tests.test_joint_arithmetic_light_cycles','-v'],env=environment,check=True)
+          PY
+      - name: Build Windows diagnostic and identical standard source
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass --output-dir "$RUNNER_TEMP/cpu-standard-build"
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-cycles --output-dir "$RUNNER_TEMP/cpu-diagnostic-build"
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-arithmetic-cycles --output-dir "$RUNNER_TEMP/cpu-arithmetic-build"
+          python -B -m scripts.build_native_exact_four_street --target virtual-weighted-joint-single-pass-arithmetic-light-cycles --output-dir "$RUNNER_TEMP/cpu-light-build"
+      - name: Check every Windows case and offset without elapsed adoption
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import os
+          from pathlib import Path
+          from scripts import joint_evidence_archive as archive, replay_joint_two_epoch_packet as helper, replay_joint_cycles_packet as replay
+          from scripts.benchmark_joint_cycles import benchmark, LABELS
+          from scripts.benchmark_joint_arithmetic_cycles import benchmark as arithmetic_benchmark
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          _,loaded,_=archive.load(replay.PACKET,helper,pin=replay.PIN,version='joint-cycles',labels=('controls','parity','overhead','builds','objects'),packager='package_joint_cycles1.py.txt')
+          expected=base/'joint-cycle-expected';expected.mkdir(exist_ok=False)
+          for i,label in enumerate(LABELS):
+              directory=expected/('baseline-profile-1-'+label);directory.mkdir()
+              (directory/'stdout.bin').write_bytes(loaded['parity'][f'normal/standard-{i}/stdout.bin'])
+          root=Path(os.environ['RUNNER_TEMP'])
+          benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-diagnostic-build/native-virtual-weighted-joint-single-pass-cycles.exe',expected,base/'joint-cycle-native-parity',parity_only=True)
+          arithmetic_benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-arithmetic-build/native-virtual-weighted-joint-single-pass-arithmetic-cycles.exe',expected,base/'joint-arithmetic-native-parity',parity_only=True)
+          arithmetic_benchmark(root/'cpu-standard-build/native-virtual-weighted-joint-single-pass.exe',root/'cpu-light-build/native-virtual-weighted-joint-single-pass-arithmetic-light-cycles.exe',expected,base/'joint-light-native-parity',parity_only=True,light=True)
+          PY
+      - name: Stage bounded evidence under an absolute artifact root
+        if: always()
+        shell: bash
+        run: |
+          python -B - <<'PY'
+          import json,os,shutil
+          from pathlib import Path
+          base=Path(os.environ['GITHUB_WORKSPACE']).resolve().parent
+          temp=Path(os.environ['RUNNER_TEMP']).resolve()
+          output=temp/'joint-cycle-evidence';output.mkdir(exist_ok=False)
+          copied=[]
+          for name in ('joint-cycle-controls-normal','joint-cycle-controls-optimized','joint-cycle-native-parity','joint-arithmetic-controls-normal','joint-arithmetic-controls-optimized','joint-arithmetic-native-parity','joint-light-controls-normal','joint-light-controls-optimized','joint-light-native-parity'):
+              source=base/name
+              if source.is_dir() and not source.is_symlink():
+                  shutil.copytree(source,output/name);copied.append(name)
+          for name in ('cpu-controls-build','cpu-standard-build','cpu-diagnostic-build','cpu-arithmetic-controls-build','cpu-arithmetic-build','cpu-light-controls-build','cpu-light-build'):
+              source=temp/name
+              if source.is_dir() and not source.is_symlink():
+                  target=output/name;target.mkdir()
+                  for path in source.iterdir():
+                      if path.is_file() and not path.is_symlink() and path.suffix in ('.json','.log'):
+                          shutil.copyfile(path,target/path.name);copied.append(name+'/'+path.name)
+          for path in temp.glob('cpu-replay-*.json'):
+              if path.is_file() and not path.is_symlink():shutil.copyfile(path,output/path.name);copied.append(path.name)
+          (output/'inventory.json').write_text(json.dumps({'created_after_checks':True,'copied':copied},indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: joint-thread-cycles-${{ matrix.label }}
+          path: ${{ runner.temp }}/joint-cycle-evidence/
+          if-no-files-found: warn

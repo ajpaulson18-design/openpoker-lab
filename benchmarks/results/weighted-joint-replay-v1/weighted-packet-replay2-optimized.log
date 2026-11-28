@@ -1,0 +1,932 @@
+{
+  "status": "weighted-joint-packet-authenticated-and-primary-numerics-exact",
+  "authentication": {
+    "component-normal": {
+      "source_head": "56fb353ed6f7ea027ba85b147de98ebd8bd84748",
+      "native_process_receipts": 26
+    },
+    "component-optimized": {
+      "source_head": "56fb353ed6f7ea027ba85b147de98ebd8bd84748",
+      "native_process_receipts": 26
+    },
+    "whole-normal": {
+      "source_head": "92efdc5ad3fd7d8281ddaa41d316f571b0d8e9ec",
+      "native_process_receipts": 14
+    },
+    "whole-optimized": {
+      "source_head": "92efdc5ad3fd7d8281ddaa41d316f571b0d8e9ec",
+      "native_process_receipts": 14
+    },
+    "legacy-normal": {
+      "source_head": "92efdc5ad3fd7d8281ddaa41d316f571b0d8e9ec",
+      "native_process_receipts": 13
+    },
+    "legacy-optimized": {
+      "source_head": "92efdc5ad3fd7d8281ddaa41d316f571b0d8e9ec",
+      "native_process_receipts": 13
+    },
+    "phase-1": {
+      "head": "3eb31c68ad2d432d876cdce946cc5571d7d37af4",
+      "actual_processes": 132,
+      "stdout_objects": 1
+    },
+    "phase-2": {
+      "head": "ecdd9356e3fffa0862f64348fd1db203d9fd5c95",
+      "actual_processes": 132,
+      "stdout_objects": 1
+    },
+    "phase-3": {
+      "head": "f756eafa67736d0a0586adc043e746f28e6d5e2e",
+      "actual_processes": 132,
+      "stdout_objects": 1
+    }
+  },
+  "primary_full52_numerical_replays": {
+    "normal": [
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 0,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "2cb1075c85fb0d9709cb16422fd9e2ff730f7031c67ffd2f5d7ba404db774b01",
+        "whole_actual_work": 145132684,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 0,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              1325,
+              1320
+            ],
+            "board": [
+              45,
+              46,
+              47,
+              44,
+              43
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "2139add07525285fef0cf4718497f85a01b3ea1041006f48a04c96c41a600ed9",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 868,
+            "numeric_slots": 2078,
+            "policy_overlay_rows": 868,
+            "sparse_policy_sha256": "93d42325a76e311d4e58d95e0fa328320b05d9163697a857ac4a5aa558817bee",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          }
+        ],
+        "bytes": 502752,
+        "stdout_sha256": "ace992381915479be4812425ba6f97191e06886fc0ea4281fede952f81fb5e73",
+        "whole_actual_work": 150909856,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 0,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              9
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "cadec96e1ee0514be64f634f56bd2a6e14966587381f344461b3f84c3064ad86",
+        "whole_actual_work": 144889996,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "f29e5630e38ed974e1ab3a9e79541b1b55bca5abb5a0a8c6f32ad5f7cbd53374",
+        "whole_actual_work": 145132684,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              1325,
+              1320
+            ],
+            "board": [
+              45,
+              46,
+              47,
+              44,
+              43
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "2139add07525285fef0cf4718497f85a01b3ea1041006f48a04c96c41a600ed9",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 868,
+            "numeric_slots": 2078,
+            "policy_overlay_rows": 868,
+            "sparse_policy_sha256": "93d42325a76e311d4e58d95e0fa328320b05d9163697a857ac4a5aa558817bee",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          }
+        ],
+        "bytes": 502752,
+        "stdout_sha256": "8bbe3baf6a90e395463b3f562059d8acf9933dbde5cd3ccc599ad0b680aa17e9",
+        "whole_actual_work": 150909856,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              9
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "292186533820a89adf83f57322810d6255d05e5a5669b9d787a10fe3074fa677",
+        "whole_actual_work": 144889996,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      }
+    ],
+    "optimized": [
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 0,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "2cb1075c85fb0d9709cb16422fd9e2ff730f7031c67ffd2f5d7ba404db774b01",
+        "whole_actual_work": 145132684,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 0,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              1325,
+              1320
+            ],
+            "board": [
+              45,
+              46,
+              47,
+              44,
+              43
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "2139add07525285fef0cf4718497f85a01b3ea1041006f48a04c96c41a600ed9",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 868,
+            "numeric_slots": 2078,
+            "policy_overlay_rows": 868,
+            "sparse_policy_sha256": "93d42325a76e311d4e58d95e0fa328320b05d9163697a857ac4a5aa558817bee",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          }
+        ],
+        "bytes": 502752,
+        "stdout_sha256": "ace992381915479be4812425ba6f97191e06886fc0ea4281fede952f81fb5e73",
+        "whole_actual_work": 150909856,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 0,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              9
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "cadec96e1ee0514be64f634f56bd2a6e14966587381f344461b3f84c3064ad86",
+        "whole_actual_work": 144889996,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "f29e5630e38ed974e1ab3a9e79541b1b55bca5abb5a0a8c6f32ad5f7cbd53374",
+        "whole_actual_work": 145132684,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              1325,
+              1320
+            ],
+            "board": [
+              45,
+              46,
+              47,
+              44,
+              43
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "2139add07525285fef0cf4718497f85a01b3ea1041006f48a04c96c41a600ed9",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 868,
+            "numeric_slots": 2078,
+            "policy_overlay_rows": 868,
+            "sparse_policy_sha256": "93d42325a76e311d4e58d95e0fa328320b05d9163697a857ac4a5aa558817bee",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          }
+        ],
+        "bytes": 502752,
+        "stdout_sha256": "8bbe3baf6a90e395463b3f562059d8acf9933dbde5cd3ccc599ad0b680aa17e9",
+        "whole_actual_work": 150909856,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      },
+      {
+        "status": "weighted-joint-all-retained-rows-exact",
+        "profile": 1,
+        "epochs": [
+          {
+            "epoch": 1,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "-7037750350729300768745313414708158514361173224563620539245443089671332234386087918713418306612689405062464932134533781384286226471638271545480527191856276805011450452346948421260178096128"
+          },
+          {
+            "epoch": 2,
+            "holding_indices": [
+              0,
+              101
+            ],
+            "board": [
+              4,
+              5,
+              6,
+              7,
+              9
+            ],
+            "numeric_rows": 434,
+            "numeric_slots": 1039,
+            "policy_overlay_rows": 434,
+            "sparse_policy_sha256": "aba5f1db9f9e4dd52207e870bba3334485f3acb3b2ffeadbffde2fa977858944",
+            "root_scaled_integer": "0"
+          }
+        ],
+        "bytes": 335776,
+        "stdout_sha256": "292186533820a89adf83f57322810d6255d05e5a5669b9d787a10fe3074fa677",
+        "whole_actual_work": 144889996,
+        "whole_forecast": {
+          "template_work": 43000000,
+          "catalog_work": 39852640,
+          "history_work": 5803168,
+          "chance_work": 43715840,
+          "store_component_work": 18160320,
+          "parent_numeric_work": 4339976,
+          "output_serialization_work": 8044032,
+          "total_work": 162915976,
+          "total_entries": 971875,
+          "total_payload_bits": 53559470,
+          "output_bytes": 502752,
+          "store_payload_bits": 12202148,
+          "store_entries": 77216,
+          "catalog_words": 185908
+        },
+        "reference_request_reservation": {
+          "work": 498859648,
+          "created_bits": 15965219904,
+          "entries": 843536,
+          "integer_bits": 4096
+        },
+        "candidate_calls": 0,
+        "archived_source_executed": false,
+        "scope": "Named full52 finite fixed-tree T2 sparse witness only; no RNG, longer learning, convergence or quality."
+      }
+    ]
+  },
+  "coarse_diagnostic_gates": {
+    "1": {
+      "median_ratio": 1.064411483346797,
+      "phase_wall_time_accepted": false
+    },
+    "2": {
+      "median_ratio": 1.0798650063384851,
+      "phase_wall_time_accepted": false
+    },
+    "3": {
+      "median_ratio": 1.04213734326561,
+      "phase_wall_time_accepted": true
+    }
+  },
+  "expanded_archive_bytes": 33215985,
+  "candidate_calls": 0,
+  "archived_source_executed": false,
+  "scope": "Fresh full52 primary all-retained-row replay and phase arithmetic. Components/legacy/law logs authenticate only; no fresh independent component census or historical numerical rerun. No convergence or quality claim."
+}

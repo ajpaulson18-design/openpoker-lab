@@ -1,0 +1,58 @@
+{
+  "status": "structural-row-carrier-evidence-replayed",
+  "authentication": {
+    "study1": {
+      "head": "6f04381c576668c1452dd4214e463ee37358615b",
+      "files": 62
+    },
+    "study2": {
+      "head": "d2e003afdbe2ba2b9220f5b67a6cbe62b159229d",
+      "files": 62
+    },
+    "audit1/normal": {
+      "head": "6f04381c576668c1452dd4214e463ee37358615b",
+      "files": 61
+    },
+    "audit1/optimized": {
+      "head": "6f04381c576668c1452dd4214e463ee37358615b",
+      "files": 61
+    },
+    "audit2/normal": {
+      "head": "d2e003afdbe2ba2b9220f5b67a6cbe62b159229d",
+      "files": 61
+    },
+    "audit2/optimized": {
+      "head": "d2e003afdbe2ba2b9220f5b67a6cbe62b159229d",
+      "files": 61
+    }
+  },
+  "original_python_children": 8,
+  "primary_captured_invocations": 4,
+  "first_incomplete_invocation_metadata_preserved": true,
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "native_row_carrier_implemented": false,
+  "counts": {
+    "snapshots": 24,
+    "raw_rows": 372,
+    "raw_slots": 1018,
+    "retained_rows": 460,
+    "retained_slots": 1226
+  },
+  "totals_over_separate_snapshots": {
+    "canonical_numeric_bits": 680510,
+    "global_compact_numeric_bits": 243294,
+    "row_compact_numeric_bits": 147614,
+    "global_compact_used_limb_model": 9238,
+    "row_compact_used_limb_model": 6130,
+    "nonzero_regrets": 532,
+    "removed_extra_regret_bits": 95680
+  },
+  "root_remaining_own_decisions": [
+    6,
+    7
+  ],
+  "quality_gate": null,
+  "stored_expanded_bytes": 2318776,
+  "scope": "Current independent full1326 state replay, structural induction and exact prospective per-row conversion. Original primary commands and all misses retained. No native row-carrier capacity, runtime, longer lifetime or solved quality."
+}
