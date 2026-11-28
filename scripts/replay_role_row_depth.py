@@ -13,6 +13,18 @@ FIRST = '6f04381c576668c1452dd4214e463ee37358615b'
 PRIMARY = 'd2e003afdbe2ba2b9220f5b67a6cbe62b159229d'
 
 
+def same_derived_json_bytes(actual, original):
+    """Only platform LF/CRLF transport may differ in newly derived reports.
+
+    Original packet/source bytes retain their separate exact authentication.
+    No JSON parsing, reordering, whitespace or numeric normalization is used.
+    """
+    if type(actual) is not bytes or type(original) is not bytes:
+        return False
+    lf = original.replace(b'\r\n', b'\n')
+    return b'\r' not in lf and actual in (lf, lf.replace(b'\n', b'\r\n'))
+
+
 def replay(packet=PACKET):
     from scripts import replay_joint_cycles_packet as base, joint_evidence_archive as archive
     from scripts import replay_joint_two_epoch_packet as helper, replay_single_pass_packet as known
@@ -124,7 +136,8 @@ def replay(packet=PACKET):
         need({k: v for k, v in fresh.items() if k != 'source_head'} == {k: v for k, v in primary.items() if k != 'source_head'},
              'row depth complete current independent structural and numerical replay')
         for name in ('row-carriers.json', 'structural-powers.json', 'independent-state-replay.json'):
-            need((output/name).read_bytes() == files['audit2/normal/'+name], 'row depth complete current saved value/policy equality')
+            need(same_derived_json_bytes((output/name).read_bytes(), files['audit2/normal/'+name]),
+                 'row depth complete current saved value/policy equality')
     need(bootstrap() == before and current_math() == math_before and load()[2] == pins, 'row depth final raw source/packet drift')
     return {'status': 'structural-row-carrier-evidence-replayed', 'authentication': authentication,
         'original_python_children': 8, 'primary_captured_invocations': 4, 'first_incomplete_invocation_metadata_preserved': True,

@@ -80,7 +80,7 @@ jobs:
                   for member in ('source-identity.json','build.log','build-failure.json','compiler-version.log','native-exact-build-manifest.json'):
                       if (source/member).is_file():shutil.copyfile(source/member,target/member)
                   if (source/'source').is_dir():shutil.copytree(source/'source',target/'source')
-          for pattern in ('compact-storage-*.json','compact-storage-*.jsonl'):
+          for pattern in ('compact-storage-*.json','compact-storage-*.jsonl','compact-row-depth-*.json'):
               for path in temp.glob(pattern):shutil.copyfile(path,out/path.name)
       - uses: actions/upload-artifact@v4
         if: always()
