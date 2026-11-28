@@ -9,7 +9,9 @@ the 549,280-byte reservation while existing 371/54 compact widths still fit.
 Packed input and a final-only snapshot postpone some bounds but do not supply
 complete future admission. All four original source-frozen children pass,
 with identical paired worksheet bytes and preserved commands/sources. Next
-prioritize a complete bounded state/checkpoint and reproducible stream contract;
+saved-only replay also passes both modes at `302c51b`, report SHA256
+`c8534ebf...`, with five accounting/domain/packet methods passing per mode.
+Prioritize a complete bounded state/checkpoint and reproducible stream contract;
 local value-width optimization is a separate measured arithmetic candidate.
 No lifetime or resource ceilings change; the eleven-card refusal stays fixed.
 

@@ -1,0 +1,15 @@
+{
+  "reader_head": "302c51b76e30baa5d435e99b0200e6b1e4267260",
+  "created_after_runs": true,
+  "preparation_calls": 0,
+  "report_sha256": "c8534ebfb600e35c62259d8637fda7230f4f225a0d0005adb3f7706b4859965e",
+  "scope": "Original four-process worksheet has captured complete source/commands before execution; these are derivative saved-reader/unit/doc logs. No future native admission.",
+  "methods_per_python_mode": 5,
+  "native_calls": 0,
+  "original_exits": [
+    0,
+    0
+  ],
+  "is_original_execution_receipt": false,
+  "archived_source_executed": false
+}

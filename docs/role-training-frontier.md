@@ -94,8 +94,15 @@ preserves all four processes and full sources. Manifest size is 1,485 bytes,
 SHA256 `70914a08a2b67ad02b3aba9a4a8975c5f96251df9a6fa2cc6c69541cab316314`;
 22 pooled objects preserve 371,798 stored expanded bytes under existing caps.
 `python -m scripts.replay_role_training_frontier` authenticates all sources,
-commands and exits before current rank-free reproduction. Reader execution
-and cross-platform acceptance must be recorded separately.
+commands and exits before current rank-free reproduction. At reader
+`302c51b76e30baa5d435e99b0200e6b1e4267260`, saved-only replay passes both
+Python modes with identical report SHA256
+`c8534ebfb600e35c62259d8637fda7230f4f225a0d0005adb3f7706b4859965e`.
+Five accounting/domain/packet methods pass in each mode; altered packet
+tests reject before numerical imports. The
+[derivative receipts](../benchmarks/results/role-training-frontier-replay-v1/replay-scope.json)
+retain raw report, unit and documentation logs. Fresh cross-platform
+acceptance remains separate from these local results.
 
 The next architectural priority is an explicit bounded training/state/
 checkpoint contract with complete component accounting and reproducible
