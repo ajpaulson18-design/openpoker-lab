@@ -18,7 +18,10 @@ def run(output):
     output.mkdir()
     for name, raw in names.items():
         path = output/'source'/name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(raw)
-    (output/'source-identity.json').write_text(json.dumps({'head': head, 'raw_sha256': {n: sha256(b).hexdigest() for n, b in names.items()},
+    executable = Path(sys.executable).resolve(); executable_sha256 = sha256(executable.read_bytes()).hexdigest()
+    (output/'source-identity.json').write_text(json.dumps({'head': head, 'python_version': sys.version,
+        'python_executable': str(executable), 'python_executable_sha256': executable_sha256,
+        'raw_sha256': {n: sha256(b).hexdigest() for n, b in names.items()},
         'committed_blobs': {n: tree[n] for n in names}}, indent=2)+'\n')
     from tests.virtual_frozen_run_control import run_bounded_child
     bootstrap = "import runpy,sys;sys.path.insert(0,sys.argv.pop(1));runpy.run_module(sys.argv.pop(1),run_name='__main__')"
@@ -27,8 +30,12 @@ def run(output):
         mode = 'optimized' if optimized else 'normal'
         for label, module, args in (('controls', 'unittest', ['tests.test_role_row_depth_reference', '-v']),
                                    ('audit', 'scripts.audit_role_row_depth', [str(output.parent/(output.name+'-audit-'+mode))])):
-            receipt = run_bounded_child([sys.executable, '-I', '-S', '-B', *(['-O'] if optimized else []), '-c',
-                bootstrap, str(ROOT), module, *args], b'', output/(label+'-'+mode), stdout_limit=1<<20, timeout=300)
+            command = [sys.executable, '-I', '-S', '-B', *(['-O'] if optimized else []), '-c', bootstrap, str(ROOT), module, *args]
+            invocation = {'argv': command, 'cwd': str(ROOT), 'module': module, 'mode': mode,
+                          'python_executable_sha256': executable_sha256,
+                          'scope': 'Captured exact command before this original child; inherited environment is not captured.'}
+            (output/(label+'-'+mode+'-invocation.json')).write_text(json.dumps(invocation, indent=2)+'\n')
+            receipt = run_bounded_child(command, b'', output/(label+'-'+mode), stdout_limit=1<<20, timeout=300)
             records.append({'label': label, 'mode': mode, 'receipt': receipt})
             need((receipt['status'], receipt['actual_exit_observed'], receipt['returncode'], receipt['failures']) ==
                  ('exited', True, 0, []), 'row depth first original child failed; no retry')
@@ -37,7 +44,8 @@ def run(output):
     for name in ('result.json', 'row-carriers.json', 'structural-powers.json', 'independent-state-replay.json'):
         raw = (first/name).read_bytes(); need(raw == (second/name).read_bytes(), 'row depth exact paired-mode audit bytes')
         hashes[name] = sha256(raw).hexdigest()
-    need(git('rev-parse', 'HEAD').decode().strip() == head and all((ROOT/n).read_bytes() == b for n, b in names.items()),
+    need(sha256(executable.read_bytes()).hexdigest() == executable_sha256 and
+         git('rev-parse', 'HEAD').decode().strip() == head and all((ROOT/n).read_bytes() == b for n, b in names.items()),
          'row depth study source drift')
     result = {'status': 'role-row-depth-original-study-complete', 'source_head': head, 'source_files': len(names),
               'children': records, 'paired_sha256': hashes, 'native_calls': 0, 'attempted_training': False,

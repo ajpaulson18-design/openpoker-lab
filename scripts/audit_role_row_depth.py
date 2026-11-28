@@ -33,6 +33,14 @@ def audit(output):
     from tests.virtual_frozen_update_reference import _template_case
     from tests.compact_role_storage_reference import unwrap
     from tests.role_row_depth_reference import depths, convert, matching
+    # Reserve the whole independent structural/post-replay phase before its
+    # template, DP, literal-path transport or per-coordinate calculations.
+    limits = {'snapshots': 24, 'retained_rows': 7344, 'raw_rows': 4896,
+              'retained_slots': 29376, 'raw_slots': 19584, 'integer_bits': 704}
+    meter = Budget({'work': 16000000, 'entries': 500000, 'created_bits': 1000000000, 'integer_bits': 4096})
+    meter.entries(300000, 'bounded post-replay rows, descriptors and output')
+    meter.charge('row_depth_structure', 1024+64*(388+410+1105+203))
+    meter._reserve((64,)*(2*388+410+1105), 'row depth structural integers and transport')
     source_budget = Budget({'work': 43000000, 'entries': 131072, 'created_bits': 1000000000, 'integer_bits': 4096})
     template = build_reference_template(_template_case(), rule_budget=source_budget); nodes = template.nodes
     graph = tuple((n.phase, n.state.player if n.phase == 'decision' else -1, tuple(e.child for e in n.edges)) for n in nodes)
@@ -48,10 +56,6 @@ def audit(output):
     need(len(paths) == 1105, 'row depth complete literal transport')
     # A separate, bounded post-replay audit; it admits no larger training,
     # reference walk, lifetime or I/O request. All original caps stay fixed.
-    limits = {'snapshots': 24, 'retained_rows': 7344, 'raw_rows': 4896,
-              'retained_slots': 29376, 'raw_slots': 19584, 'integer_bits': 704}
-    meter = Budget({'work': 16000000, 'entries': 500000, 'created_bits': 1000000000, 'integer_bits': 4096})
-    meter.entries(300000, 'bounded post-replay rows, descriptors and output')
     counts = Counter(); totals = Counter(); reports = []; row_images = []; seen = {}; histogram = Counter()
     fields = ('canonical_numeric_bits', 'global_compact_numeric_bits', 'row_compact_numeric_bits',
               'global_compact_used_limb_model', 'row_compact_used_limb_model', 'nonzero_regrets', 'removed_extra_regret_bits')
