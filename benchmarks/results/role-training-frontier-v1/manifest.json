@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 23044,
+      "expanded_bytes": 51031,
+      "file": "observations.zip",
+      "manifest_sha256": "2af3b0137c7eb0505e6820d08279a1dea926662cc76149cf7560fae29a0d15d6",
+      "members": 46,
+      "sha256": "9c18b22fe945b9dff6ea27a69c670cb61ca2e6387a4c4e9f82f6000d96d4420d"
+    },
+    {
+      "bytes": 4555,
+      "expanded_bytes": 9191,
+      "file": "builds.zip",
+      "manifest_sha256": "cd55b5e2ece4c46d59ab6b71e70bb1b32046b81c1041a61657a347c36759935f",
+      "members": 4,
+      "sha256": "9fb433f407dd848d84840c60dec5c7332cac44ece05cfe5361f50c911e1dd29b"
+    },
+    {
+      "bytes": 87766,
+      "expanded_bytes": 311576,
+      "file": "objects.zip",
+      "manifest_sha256": "e7f61aef809c1d7ce00f6447b24b3ebc6e1c0dbd89b7c1d6cba11d57873af455",
+      "members": 23,
+      "sha256": "e4a6a169e5bdbbdcc8dda8f3cd4d6087e58b520182db9a26585910c9159998ef"
+    }
+  ],
+  "exact_shared_objects": 22,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "57702fa63c26769ba020c34c70e250c9435ed35f5fb0eebaffe03de6c00a6fe9",
+  "scope": "All four original processes, exact command/executable identities, complete captured Python/native source closure and full paired worksheet. Partial resource flags are not admission.",
+  "stored_expanded_bytes": 371798,
+  "version": "role-training-frontier-package-v1"
+}

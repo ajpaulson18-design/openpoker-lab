@@ -102,8 +102,14 @@ altered packets per test invocation reject before numerical imports. The
 retain both initial reader failures: math completed, but Python tuple/int-key
 objects were compared directly to serialized JSON array/string-key objects.
 The corrected reader compares complete actual serialized reports; neither
-original math nor packet changes. Cross-platform run 46089133508 at that
-head is newly published and pending; local success is not CI acceptance.
+original math nor packet changes. The first Linux sanitized job at that head
+then fails derived-file byte comparison because Windows produced CRLF and
+Linux LF, after current exact report equality passed (run 46089133508,
+job 140805666770). Its complete decoded log remains in the replay receipts.
+Head `858f094` accepts only the two complete newline forms for newly derived
+JSON, preserving original packet/source byte admission. Numeric, policy,
+whitespace and mixed-newline changes refuse. Six methods pass in each Python
+mode; fresh cross-platform run 46089758687 is pending.
 
 This justifies designing immutable row-carrier binding in the existing
 owner, tagged exports and guarded canonical expansion. Smaller value
@@ -123,5 +129,8 @@ independent complete policies and a frozen same-policy cost gate are required.
 
 Persistent row count, full snapshot export, random-stream ownership, longer
 learning and independent saved-policy quality remain architectural gates.
+The [longer-run frontier](role-training-frontier.md) now quantifies the
+earliest framing/accounting cliffs and prioritizes bounded state/checkpoint
+and stream design before attempting a longer training claim.
 The eleven-card exhaustive State/Quantizer/parent refusal is unchanged.
 Neither this model nor compact native T2 establishes realistic HU NLHE capacity.

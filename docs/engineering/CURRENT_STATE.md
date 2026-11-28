@@ -2,6 +2,17 @@
 
 ## Unified solver foundation in development
 
+The [longer-run frontier](../role-training-frontier.md) now independently
+reproduces current framing/width/Catalog bounds with zero preparation.
+At N=3, ticket input projects 5,024/4,096 bytes and repeated snapshots exceed
+the 549,280-byte reservation while existing 371/54 compact widths still fit.
+Packed input and a final-only snapshot postpone some bounds but do not supply
+complete future admission. All four original source-frozen children pass,
+with identical paired worksheet bytes and preserved commands/sources. Next
+prioritize a complete bounded state/checkpoint and reproducible stream contract;
+local value-width optimization is a separate measured arithmetic candidate.
+No lifetime or resource ceilings change; the eleven-card refusal stays fixed.
+
 The [structural per-row carrier audit](../role-row-depth-carriers.md) proves
 that exact regret denominators depend on remaining own decisions, including
 the current one. Paired source-frozen audits preserve every raw/cumulative
@@ -11,11 +22,12 @@ This is not a native row-specific carrier, capacity/RSS or runtime result;
 normalized Quantizer division widths stay unchanged. Both first incomplete
 metadata and complete primary studies remain preserved. Saved-only reader
 `6c57e7b` passes both Python modes with identical report hash `8769b897...`;
-five structural/packet-admission methods pass per mode. Both first serialized
+five original structural/packet-admission methods pass per mode. Both first serialized
 report-comparison failures remain in the linked receipts. Fresh cross-platform
-run 46089133508 is pending. The next arithmetic candidate applies structural
-value scales inside the shared native walk, with independent full-policy and
-complete-call cost acceptance before adoption.
+run 46089133508 first fails on Linux derived-file LF/CRLF transport after math;
+the decoded job log remains preserved. Head `858f094` accepts only exact LF or
+CRLF forms of derived reports, rejecting numeric, whitespace and mixed-newline
+changes. Six methods pass per Python mode; fresh run 46089758687 is pending.
 
 The [compact persistent role Store](../compact-role-persistent-store.md)
 now passes original local native execution with one policy authority. An

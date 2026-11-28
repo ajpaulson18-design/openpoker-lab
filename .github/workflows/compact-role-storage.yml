@@ -37,8 +37,11 @@ jobs:
           python -O -B -m scripts.replay_compact_role_cost > "$RUNNER_TEMP/compact-storage-cost-optimized.json"
           python -B -m scripts.replay_role_row_depth > "$RUNNER_TEMP/compact-row-depth-normal.json"
           python -O -B -m scripts.replay_role_row_depth > "$RUNNER_TEMP/compact-row-depth-optimized.json"
+          python -B -m scripts.replay_role_training_frontier > "$RUNNER_TEMP/compact-storage-frontier-normal.json"
+          python -O -B -m scripts.replay_role_training_frontier > "$RUNNER_TEMP/compact-storage-frontier-optimized.json"
           python -B -m unittest tests.test_compact_role_storage_admission tests.test_compact_role_storage_packet_admission tests.test_compact_role_cost_packet_admission -v
           python -B -m unittest tests.test_role_row_depth_reference tests.test_role_row_depth_packet_admission -v
+          python -B -m unittest tests.test_role_training_frontier tests.test_role_training_frontier_packet -v
       - name: Build explicit same-Store variants and untouched default protocol
         shell: bash
         run: |
