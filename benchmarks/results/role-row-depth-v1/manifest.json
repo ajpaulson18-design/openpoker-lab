@@ -1,0 +1,40 @@
+{
+  "archived_source_executed": false,
+  "archives": [
+    {
+      "bytes": 307802,
+      "expanded_bytes": 1529488,
+      "file": "observations.zip",
+      "manifest_sha256": "a42bac7edce4dc44e0da5624e3bc535765752cdd585a5c27c62eeaa529db9597",
+      "members": 435,
+      "sha256": "42080e656ab10b835d230844e25a6b69af8f02ca1155a342be7272046c63c003"
+    },
+    {
+      "bytes": 5196,
+      "expanded_bytes": 10528,
+      "file": "builds.zip",
+      "manifest_sha256": "c35e176d79da9f3e0d37d8961692e6a97c04831a0a5bec6c30560eb914bf32ae",
+      "members": 4,
+      "sha256": "5960221f07aedfb4fd7c6ea5d19c3443650041ade7d486570082f778d9aa7655"
+    },
+    {
+      "bytes": 251941,
+      "expanded_bytes": 778760,
+      "file": "objects.zip",
+      "manifest_sha256": "ee95a062d1d2fc2e168575c61f5cd69122d08f69e06b9b7388385c7dba12c275",
+      "members": 68,
+      "sha256": "a875923f6c821804b788b2a33a4315b0b4287ce7d3ac908ec9deef0d48323708"
+    }
+  ],
+  "exact_shared_objects": 67,
+  "limits": {
+    "archive_bytes": 8388608,
+    "expanded_bytes": 83886080,
+    "member_bytes": 8388608
+  },
+  "native_calls_during_packaging": 0,
+  "packager_sha256": "d8f42bd6053a0c90d49f77999f8a765a42b755cb03973ee9c1078dc84661aa92",
+  "scope": "All eight original Python processes and complete captured sources, first incomplete invocation metadata, primary complete commands and all unchanged exact row policies. Prospective carrier model only.",
+  "stored_expanded_bytes": 2318776,
+  "version": "role-row-depth-package-v1"
+}

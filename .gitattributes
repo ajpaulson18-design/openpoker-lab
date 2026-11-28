@@ -294,3 +294,5 @@ benchmarks/results/opponent-role-walk-v1/** -text
 /benchmarks/results/compact-role-storage-v1/** -text
 /benchmarks/results/compact-role-storage-cost-v1/** -text
 /benchmarks/results/compact-role-storage-replay-v1/** -text
+/benchmarks/results/role-row-depth-v1/** -text
+/benchmarks/results/role-row-depth-replay-v1/** -text

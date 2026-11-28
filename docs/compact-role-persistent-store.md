@@ -184,3 +184,8 @@ T2 lifetime, old eleven-card exhaustive refusal, RNG ownership and
 saved-policy quality gates remain unchanged. Next derive a bounded longer-run
 state/export schedule and a reproducible random-stream contract before
 claiming useful learning at larger scale.
+
+The subsequent [structural row-carrier audit](role-row-depth-carriers.md)
+proves additional exact per-row padding removal and checks every saved
+raw/cumulative value. Its prospective model is separate from the native
+backend observations and same-policy timing gate above.

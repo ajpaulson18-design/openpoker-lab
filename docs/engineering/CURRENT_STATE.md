@@ -2,6 +2,16 @@
 
 ## Unified solver foundation in development
 
+The [structural per-row carrier audit](../role-row-depth-carriers.md) proves
+that exact regret denominators depend on remaining own decisions, including
+the current one. Paired source-frozen audits preserve every raw/cumulative
+value and Q52 policy: across 24 separate snapshots, magnitude bits decrease
+prospectively from 243,294 to 147,614 and used-limb models from 9,238 to 6,130.
+This is not a native row-specific carrier, capacity/RSS or runtime result;
+normalized Quantizer division widths stay unchanged. Both first incomplete
+metadata and complete primary studies remain preserved. Saved reader and
+cross-platform results require separate execution.
+
 The [compact persistent role Store](../compact-role-persistent-store.md)
 now passes original local native execution with one policy authority. An
 explicit contract retains R/A on compact scales; canonical defaults stay
