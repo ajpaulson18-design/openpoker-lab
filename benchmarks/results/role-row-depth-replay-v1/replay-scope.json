@@ -1,0 +1,16 @@
+{
+  "created_after_runs": true,
+  "report_sha256": "8769b897bc694a7e600588b6e8d898484001d7c9fadf0b51feb478512eb04ef6",
+  "native_calls": 0,
+  "archived_source_executed": false,
+  "first_reader_head": "466a060eaa77b8123cd65892eb6f041179c54590",
+  "first_failure_scope": "Exact math completed; comparing Python tuples/int keys directly with serialized JSON arrays/string keys rejected the report. Reader2 compares the actual serialized reports. No math or packet change.",
+  "preserved_first_report_failures": 2,
+  "passed_reader_head": "6c57e7b343525636d1a4939ea5b106f456418b26",
+  "tests_per_python_mode": 5,
+  "is_original_execution_receipt": false,
+  "passed_original_exit_codes": [
+    0,
+    0
+  ]
+}

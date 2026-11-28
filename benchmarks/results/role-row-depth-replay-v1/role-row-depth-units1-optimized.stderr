@@ -1,0 +1,10 @@
+test_exact_accumulation_and_policy (tests.test_role_row_depth_reference.RowDepthControls.test_exact_accumulation_and_policy) ... ok
+test_malformed_structures_and_carriers (tests.test_role_row_depth_reference.RowDepthControls.test_malformed_structures_and_carriers) ... ok
+test_selected_opponent_and_own_mixtures (tests.test_role_row_depth_reference.RowDepthControls.test_selected_opponent_and_own_mixtures) ... ok
+test_changed_manifest (tests.test_role_row_depth_packet_admission.RowDepthPacketAdmission.test_changed_manifest) ... ok
+test_changed_objects (tests.test_role_row_depth_packet_admission.RowDepthPacketAdmission.test_changed_objects) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 10.910s
+
+OK

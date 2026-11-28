@@ -9,8 +9,13 @@ value and Q52 policy: across 24 separate snapshots, magnitude bits decrease
 prospectively from 243,294 to 147,614 and used-limb models from 9,238 to 6,130.
 This is not a native row-specific carrier, capacity/RSS or runtime result;
 normalized Quantizer division widths stay unchanged. Both first incomplete
-metadata and complete primary studies remain preserved. Saved reader and
-cross-platform results require separate execution.
+metadata and complete primary studies remain preserved. Saved-only reader
+`6c57e7b` passes both Python modes with identical report hash `8769b897...`;
+five structural/packet-admission methods pass per mode. Both first serialized
+report-comparison failures remain in the linked receipts. Fresh cross-platform
+run 46089133508 is pending. The next arithmetic candidate applies structural
+value scales inside the shared native walk, with independent full-policy and
+complete-call cost acceptance before adoption.
 
 The [compact persistent role Store](../compact-role-persistent-store.md)
 now passes original local native execution with one policy authority. An
@@ -28,6 +33,8 @@ passes Windows 140793226611, Linux 140793226796 and sanitized 140793226858,
 including both fresh twelve-case matrices and saved replays. The separate
 Windows chance workflow still fails compiling the History control translation
 unit with MSVC 19.52/`0xC00000FD` before execution; the PR is not globally green.
+The full Python suite also passes at `45fad5d` on 3.11/3.12/3.13 (run
+46085258640, jobs 140793226015/140793225958/140793225714).
 
 The [native full four-street role walk](../opponent-role-four-street-walk.md)
 now passes twelve full1326-range named cases in both Python modes through the

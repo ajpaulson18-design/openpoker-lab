@@ -93,11 +93,33 @@ sources, processes and primary commands before current independent math;
 it compares complete row images and executes zero native/archived-source
 calls. Fresh reader and cross-platform results require execution separately.
 
+At reader `6c57e7b343525636d1a4939ea5b106f456418b26`, saved-only normal
+and optimized reports pass with identical SHA256
+`8769b897bc694a7e600588b6e8d898484001d7c9fadf0b51feb478512eb04ef6`.
+All five structural/packet-admission methods pass in each Python mode; four
+altered packets per test invocation reject before numerical imports. The
+[replay receipts](../benchmarks/results/role-row-depth-replay-v1/replay-scope.json)
+retain both initial reader failures: math completed, but Python tuple/int-key
+objects were compared directly to serialized JSON array/string-key objects.
+The corrected reader compares complete actual serialized reports; neither
+original math nor packet changes. Cross-platform run 46089133508 at that
+head is newly published and pending; local success is not CI acceptance.
+
 This justifies designing immutable row-carrier binding in the existing
 owner, tagged exports and guarded canonical expansion. Smaller value
 carriers inside the native walk are a separate possible arithmetic gate.
 Both require full-history parity, independent replay, bounded scratch/I/O
 and a predeclared complete-call cost comparison before adoption.
+
+The immediate arithmetic candidate carries a terminal on its half-unit
+scale, aligns children to the maximum own-continuation depth, then forms
+an own Q52 mixture directly at the parent's scale. Opponent/reveal edges
+only align exact powers; raw regrets and roots can expand to the existing
+global wire one coordinate at a time. This could avoid the current global
+365-bit padding in every terminal/value and the extra 52-bit mixture
+dividend. It is not implemented or measured. Explicit scale/source binding,
+all-family preflight charges, signed alignment, old-default byte parity,
+independent complete policies and a frozen same-policy cost gate are required.
 
 Persistent row count, full snapshot export, random-stream ownership, longer
 learning and independent saved-policy quality remain architectural gates.
